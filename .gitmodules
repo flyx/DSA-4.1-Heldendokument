@@ -1,0 +1,3 @@
+[submodule "DSA-LaTeX"]
+	path = DSA-LaTeX
+	url = git@github.com:flyx/DSA-LaTeX.git
