@@ -1,0 +1,7 @@
+build
+*.zip
+*.pdf
+*.vagrant
+*.ttf
+*.pyc
+*.html

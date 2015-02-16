@@ -1,0 +1,121 @@
+\input{common.tex}
+
+\begin{document}
+
+\begin{dsaCharacterSheet}
+\setwp{}
+
+\vspace*{4pt}
+\begin{dsaSheetBox}[\textwidth]
+    \vspace{1pt}
+    \begin{tabular}{llllllllllllllllll}
+        MU: & \smallnum{\FroEigAktuell{0}} &
+        KL: & \smallnum{\FroEigAktuell{1}} &
+        IN: & \smallnum{\FroEigAktuell{2}} &
+        CH: & \smallnum{\FroEigAktuell{3}} &
+        FF: & \smallnum{\FroEigAktuell{4}} &
+        GE: & \smallnum{\FroEigAktuell{5}} &
+        KO: & \smallnum{\FroEigAktuell{6}} &
+        KK: & \smallnum{\FroEigAktuell{7}} & \hspace{10pt}
+        MR: & \smallnum{\FroEigAktuell{13}}
+    \end{tabular}
+    \vspace{-1pt}
+\end{dsaSheetBox}
+
+\vspace{-16pt}
+\begin{center}
+    \huge \shadowtext{Zauberdokument}%
+\end{center}%
+\vspace{-8pt}
+
+\setlength{\tabcolsep}{1pt}
+
+\newcommand{\Rituale}[1]{
+	\begin{dsaSheetBox}
+		\begin{center}
+			\Large Rituale
+		\end{center}
+		\tiny\normalfont\bfseries
+		\begin{tabular}{p{4cm}|p{0.5cm}!{\footnotesize\raisebox{-0.6pt}{•}}p{0.5cm}!{\footnotesize\raisebox{-0.6pt}{•}}p{0.5cm}|p{2cm}|p{2cm}|p{8.2cm}}
+			\centering\scriptsize Ritualname & \multicolumn{3}{c|}{\scriptsize Probe} & \centering\scriptsize Dauer & \centering\scriptsize Kosten & \centering\scriptsize Wirkung / Anmerkung
+			\forloop{ct}{0}{\value{ct} < #1}{%
+				\tabularnewline \hline%
+				\smalltext{\ZauRitName{\thect}}{4cm}{} &
+				\shifttext{-0.15cm}{\smalltext[centered]{\ZauRitEigenschafta{\thect}}{0.7cm}{}} &
+				\shifttext{-0.15cm}{\smalltext[centered]{\ZauRitEigenschaftb{\thect}}{0.7cm}{}} &
+				\shifttext{-0.15cm}{\smalltext[centered]{\ZauRitEigenschaftc{\thect}}{0.7cm}{}} &
+				\smalltext[centered]{\ZauRitZauberdauer{\thect}}{2cm}{} &
+				\smalltext[centered]{\ZauRitKosten{\thect}}{2cm}{} &
+				\smalltext[centered]{\ZauRitWirkung{\thect}}{8.2cm}{}%
+			}%
+		\end{tabular}
+	\end{dsaSheetBox}
+}
+
+\newcommand{\Ritualkenntnis}[1]{
+	\begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+		\forloop{ct}{0}{\value{ct} < #1}{%
+			\large Ritualkenntnis (\textField[\ui{align={centered}}\textSize{12}]{\ZauRitRitName{\thect}}{3.45cm}{18pt}): \raisebox{0.2ex}{\num[1 1 1]{\ZauRitRitWert{\thect}}}
+
+		}
+	\end{dsaSheetBox}
+}
+
+\newcommand{\MagischeVorNachteile}[1]{
+\begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+    \tiny
+    \begin{tabular}{p{\textwidth-.5\fboxsep}}
+        \centering\raisebox{0.45ex}{\textmansontt{\Large Magische Vor- und Nachteile}} \hspace{5pt}
+        \forloop{ct}{0}{\value{ct} < #1}{%
+            \tabularnewline \hline%
+            \mediumtext{\ZauVorundNachteile{\thect}}{\textwidth}
+        }%
+    \end{tabular}
+\end{dsaSheetBox}
+}
+
+\newcommand{\MagischeSonderfertigkeiten}[1]{
+\begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+    \tiny
+    \begin{tabular}{p{\textwidth-.5\fboxsep}}
+        \centering \raisebox{0.45ex}{\textmansontt{\Large Magische Sonderfertigkeiten}} \hspace{5pt}
+        \forloop{ct}{0}{\value{ct} < #1}{%
+            \tabularnewline \hline%
+            \mediumtext{\ZauSonderfertigkeiten{\thect}}{\textwidth}
+        } \\ \hline
+        \raggedright\normalsize Regeneration: \textField[\ui{align={centered},bgcolor={1 1 1}}\textSize{12}]{\ZauRegeneration}{3cm}{1.5em} pro Phase
+    \end{tabular}
+\end{dsaSheetBox}
+}
+
+\newcommand{\Artefakte}[1]{
+\begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+    \tiny
+    \begin{tabular}{p{\textwidth-.5\fboxsep}}
+        \centering\raisebox{0.45ex}{\textmansontt{\Large Artefakte}} \hspace{5pt}
+        \forloop{ct}{0}{\value{ct} < #1}{%
+            \tabularnewline \hline%
+            \mediumtext{\ZauArtefakte{\thect}}{\textwidth}
+        }%
+    \end{tabular}
+\end{dsaSheetBox}
+}
+
+\newcommand{\MagischeNotizen}[1]{
+\begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+    \tiny
+    \begin{tabular}{p{\textwidth-.5\fboxsep}}
+        \centering\raisebox{0.45ex}{\textmansontt{\Large Notizen}} \hspace{5pt}
+        \forloop{ct}{0}{\value{ct} < #1}{%
+            \tabularnewline \hline%
+            \mediumtext{\ZauNotizen{\thect}}{\textwidth}
+        }%
+    \end{tabular}
+\end{dsaSheetBox}
+}
+
+\input{zauberdokument-konfig.tex}
+
+\end{dsaCharacterSheet}
+
+\end{document}

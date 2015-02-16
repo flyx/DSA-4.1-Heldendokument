@@ -1,0 +1,52 @@
+\input{wallpaper-extern.tex}
+\documentclass[\dsaClassParams]{dsa}
+
+\usepackage{shadowtext}
+\usepackage{forloop}
+
+\input{eingabefelder-extern.tex}
+
+\newcommand{\num}[2][\empty]{
+    \ifthenelse{\equal{#1}{\empty}}{
+        \textField[\ui{align={centered},textsize={12}}]{#2}{1.2cm}{18pt}%
+    }{
+        \textField[\ui{align={centered},textsize={12},bgcolor={#1}}]{#2}{1.2cm}{18pt}%
+    }%
+}
+\newcommand{\smallnum}[1]{
+    \hspace{-6pt}\textField[\ui{align={centered},textsize={12}}\Ff{\FfReadOnly}]{#1}{0.8cm}{18pt}\hspace{-4pt}%
+}
+\newcommand{\smalltext}[4][\empty]{%
+    \ifthenelse{\equal{#1}{\empty}}{%
+        \textField[\textSize{8}\ui{value={\ignorespaces #4}}]{#2}{#3}{11pt}%
+    }{%
+        \textField[\ui{align={#1},value={\ignorespaces #4}}\textSize{8}]{#2}{#3}{11pt}%
+    }%
+}
+\newcommand{\mediumtext}[3][\empty]{%
+    \ifthenelse{\equal{#1}{\empty}}{%
+        \textField[\textSize{9}]{#2}{#3}{13pt}%
+    }{%
+        \textField[\ui{align={#1}}\textSize{9}]{#2}{#3}{13pt}%
+    }%
+}
+
+\newcommand{\dsaTHeading}[2][1]{\ifthenelse{\equal{#1}{1}}{\centering}{}\small #2}
+
+\makeatletter
+\newcommand{\roystreqtest}[2]{%
+  \ifnum\pdfstrcmp{#1}{#2}=\z@
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi}
+\newcommand*{\shifttext}[2]{%
+  \settowidth{\@tempdima}{#2}%
+  \makebox[\@tempdima]{\hspace*{#1}#2}%
+}
+\makeatother
+
+\setlength{\fboxsep}{6pt}
+
+\newcounter{ct}
+\newcounter{cta}

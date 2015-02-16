@@ -1,0 +1,40 @@
+
+Ausrüstung:
+    Zeilen:
+        Kleidung: 6
+        Ausruestung: 30
+        Proviant: 8
+        Vermoegen: 4
+        Sonstiger Besitz: 5
+        Verbindungen: 8
+        Notizen: 5
+        Tiere: 4
+
+Kampfbogen:
+    Zeilen:
+        Nahkampfwaffen: 4
+        Nahkampf SF: 4
+        Fernkampfwaffen: 3
+        Fernkampf SF: 3
+        Waffenlose SF: 4
+        Schilde und Parierwaffen: 2
+        Ruestung: 6
+    Optionen:
+        Astralenergie: 1
+        Karmaenergie: 1
+
+Talentbogen:
+    Zeilen:
+        Sonderfertigkeiten: 6
+        Gaben: 2
+        Kampftechniken: 11
+        Körperliche Talente: 17
+        Gesellschaftliche Talente: 10
+        Naturtalente: 8
+        Wissenstalente: 15
+        Sprachen und Schriften: 10
+        Handwerkliche Talente: 16
+    Optionen:
+        "M-Spalte": 1
+    Text:
+        Gaben-Titel: Gaben

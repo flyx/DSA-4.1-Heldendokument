@@ -1,0 +1,241 @@
+Frontseite:
+    Name: Name
+    Rasse: Rasse
+    Kultur: Kultur
+    Profession: Profession
+    GP-Basis: GP-Basis
+    Geschlecht: Geschlecht
+    Geburtstag: Geburtstag
+    Größe: Groesse
+    Gewicht: Gewicht
+    Haarfarbe: Haarfarbe
+    Augenfarbe: Augenfarbe
+    Stand: Stand
+    Sozialstatus: Sozialstatus
+    Titel: !mehrfach Titel-{n}
+    Aussehen: !mehrfach Aussehen-{n}
+    Vorteile: !mehrfach Vorteile-{n}
+    Nachteile: !mehrfach Nachteile-{n}
+    Eigenschaftsfelder: !liste
+        Zeilen:
+            Mut: MU
+            Klugheit: KL
+            Intuition: IN
+            Charisma: CH
+            Fingerfertigkeit: FF
+            Gewandheit: GE
+            Konstitution: KO
+            Körperkraft: KK
+            Geschwindigkeit: GS
+            Lebenspunkte: LE
+            Ausdauer: AU
+            Astralenergie: AE
+            Karmalenergie: KE
+            Magieresistenz: MR
+            INI-Basiswert: INI-Basis
+            AT-Basiswert: AT-Basis
+            PA-Basiswert: PA-Basis
+            FK-Basiswert: FK-Basis
+        Modifikator: "{z}-mod"
+        Startwert: "{z}-start"
+        Aktuell: "{z}-aktuell"
+        Zugekauft: "{z}-zugekauft"
+        Permanent: "{z}-permanent"
+    Kampfreflexe: Kampfreflexe
+    Kampfgespür: Kampfgespuer
+    Wundschwelle: WS
+    Abenteuerpunkte:
+        Gesamt: AP-gesamt
+        Eingesetzt: AP-eingesetzt
+        Guthaben: AP-Guthaben
+Talentbogen:
+    Sonderfertigkeiten: !mehrfach Sonderfertigkeiten-{n}
+    Talentfelder: !liste
+        Zeilen:
+            Kampftechniken: Kampf
+            Körperliche Talente: Koerper
+            Gesellschaftliche Talente: Gesellschaft
+            Naturtalente: Natur
+            Wissenstalente: Wissen
+            Sprachen & Schriften: Sprache
+            Handwerkliche Talente: Handwerk
+            Gaben: Gaben
+        Spezielle Erfahrung: !mehrfach "{z}-SE-{n}"
+        Name: !mehrfach "{z}-Name-{n}"
+        Steigerungsspalte: !mehrfach "{z}-SteigSpalte-{n}"
+        Behinderung: !mehrfach "{z}-BE-{n}"
+        Attacke: !mehrfach "{z}-AT-{n}"
+        Parade: !mehrfach "{z}-PA-{n}"
+        Eigenschaft 1: !mehrfach "{z}-Eigenschaft1-{n}"
+        Eigenschaft 2: !mehrfach "{z}-Eigenschaft2-{n}"
+        Eigenschaft 3: !mehrfach "{z}-Eigenschaft3-{n}"
+        Komplexität: !mehrfach "{z}-Komplexitaet-{n}"
+        Talentwert: !mehrfach "{z}-TaW-{n}"
+        M-Spalte: !mehrfach "{z}-M-{n}"
+Kampfbogen:
+    Nahkampfwaffen:
+        Name: !mehrfach Nahkampf-Name-{n}
+        Typ / eBE: !mehrfach Nahkampf-Typ-{n}
+        Distanzklasse: !mehrfach Nahkampf-DK-{n}
+        Trefferpunkte Basis: !mehrfach Nahkampf-TP-Basis-{n}
+        TP / KK: !mehrfach Nahkampf-TP-KK-{n}
+        INI-Modifikator: !mehrfach Nahkampf-INI-{n}
+        Waffenmodifikator: !mehrfach Nahkampf-WM-{n}
+        Attacke: !mehrfach Nahkampf-AT-{n}
+        Parade: !mehrfach Nahkampf-PA-{n}
+        Trefferpunkte: !mehrfach Nahkampf-TP-{n}
+        Bruchfaktor 1: !mehrfach Nahkampf-Bruchfaktor1-{n}
+        Bruchfaktor 2: !mehrfach Nahkampf-Bruchfaktor2-{n}
+    Fernkampfwaffen:
+        Name: !mehrfach Fernkampf-Name-{n}
+        Typ / eBE: !mehrfach Fernkampf-Typ-{n}
+        Trefferpunkte: !mehrfach Fernkampf-TP-{n}
+        Entfernungen: !mehrfach Fernkampf-Entfernungen-{n}
+        TP / Entfernung: !mehrfach Fernkampf-TP-Entfernung-{n}
+        Fernkampfwert: !mehrfach Fernkampf-FK-{n}
+        Geschosse 1: !mehrfach Fernkampf-Geschosse1-{n}
+        Geschosse 2: !mehrfach Fernkampf-Geschosse2-{n}
+        Geschosse 3: !mehrfach Fernkampf-Geschosse3-{n}
+        Geschosse 4: !mehrfach Fernkampf-Geschosse4-{n}
+    Waffenloser Kampf: !liste
+        Zeilen:
+            Raufen: Raufen
+            Ringen: Ringen
+        Attacke: "{z}-AT"
+        Parade: "{z}-PA"
+        TP(A): "{z}-TPA"
+    Sonderfertigkeiten:
+        Nahkampf: !mehrfach Sonderfertigkeiten-Nahkampf-{n}
+        Fernkampf: !mehrfach Sonderfertigkeiten-Fernkampf-{n}
+        Waffenloser Kampf: !mehrfach Sonderfertigkeiten-Waffenlos-{n}
+    Schilde und Parierwaffen:
+        Name: !mehrfach Schild-Name-{n}
+        Typ: !mehrfach Schild-Typ-{n}
+        INI-Modifikator: !mehrfach Schild-INI-{n}
+        Waffenmodifikator: !mehrfach Schild-WM-{n}
+        Parade: !mehrfach Schild-PA-{n}
+        Bruchfaktor 1: !mehrfach Schild-Bruchfaktor1-{n}
+        Bruchfaktor 2: !mehrfach Schild-Bruchfaktor2-{n}
+        Linkhand: Linkhand
+        Schildkampf I: SchildkampfI
+        Schildkampf II: SchildkampfII
+        Parierwaffen I: ParierwaffenI
+        Parierwaffen II: ParierwaffenII
+    Rüstung:
+        Name: !mehrfach Ruestung-Name-{n}
+        Rüstungsschutz: !mehrfach Ruestung-RS-{n}
+        Behinderung: !mehrfach Ruestung-BE-{n}
+        Summe RS: Ruestung-RS-Summe
+        Summe BE: Ruestung-BE-Summe
+        Rüstungsgewöhnung I: RuestungsgewoehnungI
+        Rüstungsgewöhnung II: RuestungsgewoehnungII
+        Rüstungsgewöhnung III: RuestungsgewoehnungIII
+        Resultierende Behinderung: BE
+        Zonen:
+            Kopf: RS-Kopf
+            Brust: RS-Brust
+            Rücken: RS-Ruecken
+            Bauch: RS-Bauch
+            Linker Arm: RS-L-Arm
+            Rechter Arm: RS-R-Arm
+            Linkes Bein: RS-L-Bein
+            Rechtes Bein: RS-R-Bein
+    Ausweichen:
+        Ausweichen I: AusweichenI
+        Ausweichen II: AusweichenII
+        Ausweichen III: AusweichenIII
+        Ausweichenwert: Ausweichen
+    Statuswerte: !liste
+        Zeilen:
+            Lebensenergie: LeP
+            Ausdauer: AuP
+            Karmaenergie: KeP
+            Astralenergie: AsP
+        1/2: "{z}-halb"
+        1/3: "{z}-drittel"
+        1/4: "{z}-viertel"
+        aktuell: "{z}-aktuell"
+Inventar:
+    Kleidung: !mehrfach Kleidung-{n}
+    Ausrüstung:
+        Name: !mehrfach Ausruestung-Name-{n}
+        Gewicht: !mehrfach Ausruestung-Gewicht-{n}
+        Wo getragen: !mehrfach Ausruestung-getragen-{n}
+    Proviant:
+        Name: !mehrfach Proviant-Name-{n}
+        Rationen 1: !mehrfach Proviant-Rationen1-{n}
+        Rationen 2: !mehrfach Proviant-Rationen2-{n}
+        Rationen 3: !mehrfach Proviant-Rationen3-{n}
+        Rationen 4: !mehrfach Proviant-Rationen4-{n}
+    Vermögen: !liste
+        Zeilen:
+            Dukaten: Dukaten
+            Silbertaler: Silbertaler
+            Heller: Heller
+            Kreuzer: Kreuzer
+        Wert: !mehrfach Vermoegen-{z}-{n}
+    Sonstiger Besitz: !mehrfach Sonstiger-Besitz-{n}
+    Verbindungen: !mehrfach Verbindungen-{n}
+    Notizen: !mehrfach Notizen-{n}
+    Tiere:
+        Name: !mehrfach Tier-Name-{n}
+        Art: !mehrfach Tier-Art-{n}
+        INI: !mehrfach Tier-INI-{n}
+        Attacke: !mehrfach Tier-AT-{n}
+        Parade: !mehrfach Tier-PA-{n}
+        Trefferpunkte: !mehrfach Tier-TP-{n}
+        Lebensenergie: !mehrfach Tier-LE-{n}
+        Rüstungsschutz: !mehrfach Tier-RS-{n}
+        Konstitution: !mehrfach Tier-KO-{n}
+        Geschwindigkeit: !mehrfach Tier-GS-{n}
+        Ausdauer: !mehrfach Tier-AU-{n}
+        Magieresistenz: !mehrfach Tier-MR-{n}
+        Loyalität: !mehrfach Tier-LO-{n}
+        Tragkraft: !mehrfach Tier-TK-{n}
+        Zugkraft: !mehrfach Tier-ZK-{n}
+Karmal:
+    Liturgiekenntnis:
+        Gottheit: Liturgiekenntnis-Gottheit
+        Wert: Liturgiekenntniswert
+    Liturgien:
+        Name: !mehrfach Liturgie-Name-{n}
+        Grad: !mehrfach Liturgie-Grad-{n}
+        Wirkung: !mehrfach Liturgie-Wirkung-{n}
+Zauberei:
+    Repräsentationen: Repraesentationen
+    Merkmale: Merkmale
+    Begabungen: Begabungen
+    Unfähigkeiten: Unfaehigkeiten
+    Zaubersprüche:
+        Spezielle Erfahrung: !mehrfach Spruch-SE-{n}
+        Name: !mehrfach Spruch-Name-{n}
+        Eigenschaft 1: !mehrfach Spruch-Eigenschaft1-{n}
+        Eigenschaft 2: !mehrfach Spruch-Eigenschaft2-{n}
+        Eigenschaft 3: !mehrfach Spruch-Eigenschaft3-{n}
+        Fertigkeitswert: !mehrfach Spruch-ZfW-{n}
+        Zauberdauer: !mehrfach Spruch-ZD-{n}
+        Kosten: !mehrfach Spruch-Kosten-{n}
+        Reichweite: !mehrfach Spruch-RW-{n}
+        Wirkungsdauer: !mehrfach Spruch-WD-{n}
+        Anmerkungen: !mehrfach Spruch-Anmerkungen-{n}
+        Komplexität: !mehrfach Spruch-Komp-{n}
+        Repräsentation: !mehrfach Spruch-Rep-{n}
+        Merkmale: !mehrfach Spruch-Merkmale-{n}
+        Hauszauber: !mehrfach Spruch-Haus-{n}
+        Lernschwierigkeit: !mehrfach Spruch-Lern-{n}
+    Rituale:
+        Name: !mehrfach Ritual-Name-{n}
+        Eigenschaft 1: !mehrfach Ritual-Eigenschaft1-{n}
+        Eigenschaft 2: !mehrfach Ritual-Eigenschaft2-{n}
+        Eigenschaft 3: !mehrfach Ritual-Eigenschaft3-{n}
+        Zauberdauer: !mehrfach Ritual-ZD-{n}
+        Kosten: !mehrfach Ritual-Kosten-{n}
+        Wirkung: !mehrfach Ritual-Wirkung-{n}
+        Ritualkenntnis:
+            Name: !mehrfach Ritualkenntnis-Name-{n}
+            Wert: !mehrfach Ritualkenntniswert-{n}
+    Vor- und Nachteile: !mehrfach Magische-Vor-und-Nachteile-{n}
+    Sonderfertigkeiten: !mehrfach Magische-Sonderfertigkeiten-{n}
+    Regeneration: Magische-Regeneration
+    Artefakte: !mehrfach Artefakte-{n}
+    Notizen: !mehrfach Magische-Notizen-{n}
