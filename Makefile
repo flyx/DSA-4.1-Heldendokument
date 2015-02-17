@@ -9,34 +9,45 @@
 
 ### Definition der Quelldateien
 
-PRIMARY_SRC_FILES=frontseite.tex \
-                  talentbogen.tex \
-                  kampfbogen.tex \
-                  ausruestung.tex \
-                  liturgien.tex \
-                  zauberliste.tex \
-                  zauberdokument.tex
+PRIMARY_SUB_SRC_FILES=frontseite.tex \
+                      talentbogen.tex \
+                      kampfbogen.tex \
+                      ausruestung.tex \
+                      liturgien.tex \
+                      zauberdokument.tex
+
+ZAUBERLISTE_SRC_FILE=zauberliste.tex
+PRIMARY_SRC_FILES=$(PRIMARY_SUB_SRC_FILES) $(ZAUBERLISTE_SRC_FILE)
+STANDALONE_SRC_FILES=$(PRIMARY_SUB_SRC_FILES:.tex=-standalone.tex)
 
 COMMON_SRC_FILES=common.tex
 ADDITIONAL_SRC_FILES=misc-macros.tex
+TARGET_SRC_FILE=heldendokument.tex
 
 ### Alle Quelldateien liegen im src-Ordner
 
+PRIMARY_SUB_SRCS=$(PRIMARY_SUB_SRC_FILES:%.tex=src/%.tex)
 PRIMARY_SRCS=$(PRIMARY_SRC_FILES:%.tex=src/%.tex)
 COMMON_SRCS=$(COMMON_SRC_FILES:%.tex=src/%.tex)
 ADDITIONAL_SRCS=$(ADDITIONAL_SRC_FILES:%.tex=src/%.tex)
+TARGET_SRCS=$(TARGET_SRC_FILE:%.tex=src/%.tex)
+STANDALONE_SRCS=$(STANDALONE_SRC_FILES:%.tex=src/%.tex)
+ZAUBERLISTE_SRCS=$(ZAUBERLISTE_SRC_FILE:%.tex=src/%.tex)
 
 ### Alle Quelldateien werden in den build-Ordner kopiert.
 
 PRIMARY_BUILD=$(PRIMARY_SRCS:src/%=build/%)
 COMMON_BUILD=$(COMMON_SRCS:src/%=build/%)
 ADDITIONAL_BUILD=$(ADDITIONAL_SRCS:src/%=build/%)
+STANDALONE_BUILD=$(STANDALONE_SRCS:src/%=build/%)
+TARGET_BUILD=$(TARGET_SRCS:src/%=build/%)
+ZAUBERLISTE_BUILD=$(ZAUBERLISTE_SRCS:src/%=build/%)
 
 ### Für jede primär-Quelle gibt es eine Konfigurationsdatei, die aus
 ### einem Template erstellt wird.
 
-CONFIG_TEMPLATES=($PRIMARY_SRCS:src/%.tex=templates%-konfig.mustache)
-CONFIG_BUILD=($PRIMARY_SRCS:src/%.tex=build/%-konfig.tex)
+CONFIG_TEMPLATES=$(PRIMARY_SRCS:src/%.tex=templates%-konfig.mustache)
+CONFIG_BUILD=$(PRIMARY_SRCS:src/%.tex=build/%-konfig.tex)
 
 ### Wallpaper ist optional
 # TODO: Wallpaper soll auch per Konfiguration geändert werden, nicht hier in der Makefile
@@ -44,19 +55,19 @@ WALLPAPER?=original
 WALLPAPER_SRCS=
 WALLPAPER_PY_PARAMS="none" "" 
 ifeq ($(WALLPAPER),original)
-	WALLPAPER_SRCS=build/wallpaper-landscape.png
-	WALLPAPER_PY_PARAMS="" "wallpaper-landscape.png"
+	WALLPAPER_SRCS=build/wallpaper.jpg build/wallpaper-landscape.jpg
+	WALLPAPER_PY_PARAMS="wallpaper.jpg" "wallpaper-landscape.jpg"
 endif
 ifeq ($(WALLPAPER),alternative)
-	WALLPAPER_SRCS=img/wallpaper-alternative.png img/wallpaper-alternative-landscape.png
-	WALLPAPER_PY_PARAMS="../img/wallpaper-alternative.png" "../img/wallpaper-alternative-landscape.png"
+	WALLPAPER_SRCS=build/wallpaper-alternative.jpg build/wallpaper-alternative-landscape.jpg
+	WALLPAPER_PY_PARAMS="wallpaper-alternative.jpg" "wallpaper-alternative-landscape.jpg"
 endif
 
 ### Definition generierter Dateien
 
-INTERMEDIATE_PDFS=$(PRIMARY_BUILD:.tex=.pdf)
-
-TARGET=heldendokument.pdf
+STANDALONE_PDFS=$(STANDALONE_BUILD:build/%-standalone.tex=%.pdf)
+ZAUBERLISTE_PDF=$(ZAUBERLISTE_BUILD:%.tex=%.pdf)
+TARGET=$(TARGET_BUILD:build/%.tex=%.pdf)
 
 ### Targets zum Bauen der Dokumente
 
@@ -68,7 +79,7 @@ build:
 
 
 # Kopieren der Quellen
-$(PRIMARY_BUILD) $(COMMON_BUILD) $(ADDITIONAL_BUILD): build/%.tex: src/%.tex build
+$(PRIMARY_BUILD) $(COMMON_BUILD) $(ADDITIONAL_BUILD) $(STANDALONE_BUILD) $(TARGET_BUILD): build/%.tex: src/%.tex build
 	cp $< $@
 
 # Erstellen von Konfigurationsdateien (static pattern mit $(CONFIG_BUILD) tut hier aus unbekannten Gründen nicht)
@@ -76,8 +87,19 @@ build/%-konfig.tex: templates/%-konfig.default build
 	cp $< $@
 
 # Erstellen der einzelnen PDF-Seiten
-$(INTERMEDIATE_PDFS): build/%.pdf: build/%.tex build/%-konfig.tex $(COMMON_BUILD) build/eingabefelder-extern.tex build/wallpaper-extern.tex
-	cd build && xelatex $(<:build/%=%)
+$(STANDALONE_PDFS): %.pdf: build/%-standalone.tex build/%.tex build/%-konfig.tex $(COMMON_BUILD) build/eingabefelder-extern.tex build/wallpaper-extern.tex
+	cd build && xelatex -jobname=$(@:.pdf=) $(<:build/%=%)
+	mv build/$@ .
+
+$(ZAUBERLISTE_PDF): $(ZAUBERLISTE_BUILD) $(COMMON_BUILD) $(WALLPAPER_SRCS) build/wallpaper-extern.tex build/eingabefelder-extern.tex
+	cd build && xelatex -jobname=$(@:build/%.pdf=%) $(<:build/%=%)
+
+# Zauberliste kann auch einzeln erstellt werden - dann einfach ins Stammverzeichnis kopieren
+zauberliste.pdf: $(ZAUBERLISTE_PDF)
+	cp $< $@
+
+# Erstellen der Zauberliste, die getrennt vom Rest erstellt werden muss, weil Querformat
+$()
 
 # Erstellen von Quellen aus YAML-Daten
 build/talentbogen-extern.tex: build scripts/talente.py data/talente.yaml
@@ -87,27 +109,37 @@ build/eingabefelder-extern.tex: build scripts/eingabefelder.py data/eingabefelde
 	scripts/eingabefelder.py data/eingabefelder.yaml build/eingabefelder-extern.tex
 
 # Erstellen des finalen Dokuments
-$(TARGET): $(INTERMEDIATE_PDFS)
-	pdfunite $^ $(TARGET)
+build/$(TARGET): $(TARGET_BUILD) $(PRIMARY_BUILD) $(COMMON_BUILD) $(ADDITIONAL_BUILD) $(CONFIG_BUILD) $(WALLPAPER_SRCS) build/eingabefelder-extern.tex build/wallpaper-extern.tex build/talentbogen-extern.tex
+	cd build && xelatex -jobname=$(@:build/%.pdf=%) $(<:build/%=%)
+	# erst das zweite Mal sitzt das „Fanprodukt“-Logo auf der Frontseite richtig.
+	cd build && xelatex -jobname=$(@:build/%.pdf=%) $(<:build/%=%)
+
+$(TARGET): build/$(TARGET) $(ZAUBERLISTE_PDF)
+	pdfunite $^ $@
 
 # Erstellen von Wallpaper-Ressourcen
-build/wallpaper-landscape.png: build
-	convert /usr/share/texmf/tex/latex/dsa/fanpaket/wallpaper.png -rotate 90 build/wallpaper-landscape.png
+build/wallpaper.jpg: build
+	convert /usr/share/texmf/tex/latex/dsa/fanpaket/wallpaper.png build/wallpaper.jpg
 
-build/wallpaper-alternative-landscape.png: build
-	convert img/wallpaper-alternative.png -rotate 90 build/wallpaper-alternative-landscape.png
+build/wallpaper-landscape.jpg: build
+	convert /usr/share/texmf/tex/latex/dsa/fanpaket/wallpaper.png -rotate 270 build/wallpaper-landscape.jpg
+
+build/wallpaper-alternative.jpg: build
+	convert img/wallpaper-alternative.png build/wallpaper-alternative.jpg
+
+build/wallpaper-alternative-landscape.jpg: build
+	convert img/wallpaper-alternative.png -rotate 90 build/wallpaper-alternative-landscape.jpg
 
 build/wallpaper-extern.tex: build scripts/wallpaper.py
 	scripts/wallpaper.py $(WALLPAPER_PY_PARAMS)
 
 clean:
-	rm -rf build
+	rm -rf build $(STANDALONE_PDFS) $(TARGET)
 
 
 ### Zusätzliche Abhängigkeiten
 
-build/talentbogen.pdf: build/talentbogen-extern.tex
-build/liturgien.pdf: build/misc-macros.tex
-build/ausruestung.pdf: build/misc-macros.tex
-build/kampfbogen.pdf:  img/silhouette.png
-build/zauberliste.pdf: $(WALLPAPER_SRCS)
+talentbogen.pdf: build/talentbogen-extern.tex
+liturgien.pdf: build/misc-macros.tex
+ausruestung.pdf: build/misc-macros.tex
+kampfbogen.pdf:  img/silhouette.png

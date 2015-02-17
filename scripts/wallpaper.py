@@ -16,5 +16,5 @@ with open('build/wallpaper-extern.tex', 'w') as f:
 		f.write('\\newcommand{\\setwp}{}\n')
 	else:
 		f.write('\\newcommand{\\dsaClassParams}{nowallpaper}\n')
-		f.write('\\newcommand{{\\setwp}}{{\\ThisCenterWallPaper{{1.0275}}{{{}}}}}\n'.format(sys.argv[1]))
+		f.write('\\newcommand{{\\setwp}}{{\\setlength{{\\wpXoffset}}{{-0.3cm}}\\setlength{{\\wpYoffset}}{{-0.1cm}}\\ThisCenterWallPaper{{1.0275}}{{{}}}}}\n'.format(sys.argv[1]))
 	f.write('\\newcommand{{\\landscapewp}}{{{}}}\n'.format(sys.argv[2]))
