@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# ./configure.py <eingabe-mustache> <parameter-yaml> <name of parameter group in yaml> <output-tex>
+# ./configure.py <input-mustache> <parameter-yaml> <name of parameter group in yaml> <output-tex>
 
 import sys, yaml, codecs, pystache
 
@@ -27,8 +27,8 @@ with codecs.open(sys.argv[2], 'r', 'utf-8') as f:
         if params.has_key('Seiten'):
             # mustache kann keinen for-loop => generiere Liste von Indices
             values['Seiten'] = range(1, params['Seiten'] + 1)
-        with codecs.open(sys.argv[1], 'r', encoding='utf-8') as of:
-            template = of.read()
+        with codecs.open(sys.argv[1], 'r', encoding='utf-8') as source:
+            template = source.read()
             rendered = pystache.render(template, values)
             with codecs.open(sys.argv[4], "w", encoding="utf-8") as dest:
                 dest.write(rendered)

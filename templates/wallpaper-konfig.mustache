@@ -1,0 +1,17 @@
+{{! change mustache delimiters}}
+{{=<< >>=}}
+\newcommand{\portraitwp}{%
+    <<# Hochformat >>
+    \setlength{\wpXoffset}{-0.3cm}%
+    \setlength{\wpYoffset}{-0.1cm}%
+    \ThisCenterWallPaper{1.0275}{<<.>>}%
+    <</ Hochformat >>
+}
+
+\newcommand{\landscapewp}{%
+    <<# Querformat >>
+    \setlength{\wpXoffset}{-0.1cm}%
+    \setlength{\wpYoffset}{-0.3cm}%
+    \ThisCenterWallPaper{1.0275}{<<.>>}%
+    <</ Querformat >>
+}

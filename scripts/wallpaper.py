@@ -1,22 +1,32 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# ./wallpaper.py <hochkant-wallpaper> <querformat-wallpaper>
+# ./wallpaper.py <input-mustache> <parameter-yaml> <output-tex>
 
-import sys
+import sys, yaml, codecs, pystache
 
-if len(sys.argv) != 3:
-	print "needs 2 arguments!"
-	sys.exit(2)
+if len(sys.argv) != 4:
+    print "needs 3 arguments!"
+    sys.exit(2)
 
-with open('build/wallpaper-extern.tex', 'w') as f:
-	if len(sys.argv[1]) is 0:
-		f.write('\\newcommand{\\dsaClassParams}{}\n')
-		f.write('\\newcommand{\\setwp}{}\n')
-	elif sys.argv[1] == 'none':
-		f.write('\\newcommand{\\dsaClassParams}{nowallpaper}\n')
-		f.write('\\newcommand{\\setwp}{}\n')
-	else:
-		f.write('\\newcommand{\\dsaClassParams}{nowallpaper}\n')
-		f.write('\\newcommand{{\\setwp}}{{\\setlength{{\\wpXoffset}}{{-0.3cm}}\\setlength{{\\wpYoffset}}{{-0.1cm}}\\ThisCenterWallPaper{{1.0275}}{{{}}}}}\n'.format(sys.argv[1]))
-	f.write('\\newcommand{{\\landscapewp}}{{{}}}\n'.format(sys.argv[2]))
+with codecs.open(sys.argv[2], 'r', 'utf-8') as f:
+    params = yaml.load(f)
+    if not params.has_key('Hintergrund'):
+        print '"Hintergrund" fehlt in Parameter-Datei!'
+        sys.exit(2)
+    hintergrund = params['Hintergrund']
+    values = {}
+    for key, default in [('Hochformat', 'wallpaper.jpg'), ('Querformat', 'wallpaper-landscape.jpg')]:
+        if isinstance(hintergrund[key], bool):
+            if hintergrund[key]:
+                values[key] = default
+            else:
+                values[key] = False
+        else:
+            values[key] = hintergrund[key]
+
+    with codecs.open(sys.argv[1], 'r', encoding='utf-8') as source:
+        template = source.read()
+        rendered = pystache.render(template, values)
+        with codecs.open(sys.argv[3], 'w', encoding='utf-8') as dest:
+            dest.write(rendered)

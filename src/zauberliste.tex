@@ -1,5 +1,4 @@
-\input{wallpaper-extern.tex}
-\documentclass[landscape,\dsaClassParams]{dsa}
+\documentclass[landscape,nowallpaper]{dsa}
 
 \usepackage{shadowtext}
 \usepackage{forloop}
@@ -7,6 +6,7 @@
 \usepackage{array}
 
 \input{eingabefelder-extern.tex}
+\input{wallpaper-konfig.tex}
 
 \setlength{\fboxsep}{6pt}
 
@@ -37,12 +37,7 @@
 \newcounter{zct}\setcounter{zct}{0}
 \newcommand{\Zauberliste}[1][0]{%
 \begin{dsaCharacterSheet}
-\IfFileExists{\landscapewp}{
-    \ClearWallPaper
-    \setlength{\wpXoffset}{-0.1cm}
-    \setlength{\wpYoffset}{-0.3cm}
-    \ThisCenterWallPaper{1.0275}{\landscapewp}
-}{}
+\landscapewp{}
 
 \vspace*{-30pt}
 \begin{center}

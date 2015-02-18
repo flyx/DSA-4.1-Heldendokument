@@ -53,19 +53,14 @@ ZAUBERLISTE_BUILD=$(ZAUBERLISTE_SRCS:src/%=build/%)
 CONFIG_TEMPLATES=$(PRIMARY_SRCS:src/%.tex=templates%-konfig.mustache)
 CONFIG_BUILD=$(PRIMARY_SRCS:src/%.tex=build/%-konfig.tex)
 
-### Wallpaper ist optional
-# TODO: Wallpaper soll auch per Konfiguration geändert werden, nicht hier in der Makefile
-WALLPAPER?=original
-WALLPAPER_SRCS=
-WALLPAPER_PY_PARAMS="none" "" 
-ifeq ($(WALLPAPER),original)
-	WALLPAPER_SRCS=build/wallpaper.jpg build/wallpaper-landscape.jpg
-	WALLPAPER_PY_PARAMS="wallpaper.jpg" "wallpaper-landscape.jpg"
-endif
-ifeq ($(WALLPAPER),alternative)
-	WALLPAPER_SRCS=build/wallpaper-alternative.jpg build/wallpaper-alternative-landscape.jpg
-	WALLPAPER_PY_PARAMS="wallpaper-alternative.jpg" "wallpaper-alternative-landscape.jpg"
-endif
+### Wallpaper
+# Die Makefile kann nicht überprüfen, ob Original, Alternative, ein benutzerdefiniertes oder
+# gar kein Wallpaper verwendet wird. Deshalb generieren wir einfach mal alles.
+WALLPAPER_BUILD=build/wallpaper.jpg \
+				build/wallpaper-landscape.jpg \
+				build/wallpaper-alternative.jpg \
+				build/wallpaper-alternative-landscape.jpg \
+				build/wallpaper-konfig.tex
 
 ### Definition generierter Dateien
 
@@ -103,11 +98,11 @@ build/zauberdokument-konfig.tex: templates/zauberdokument-konfig.mustache script
 	scripts/configure.py $< $(DATA_FILE) Zauberdokument $@	
 
 # Erstellen der einzelnen PDF-Seiten
-$(STANDALONE_PDFS): %.pdf: build/%-standalone.tex build/%.tex build/%-konfig.tex $(COMMON_BUILD) build/eingabefelder-extern.tex build/wallpaper-extern.tex
+$(STANDALONE_PDFS): %.pdf: build/%-standalone.tex build/%.tex build/%-konfig.tex $(COMMON_BUILD) build/eingabefelder-extern.tex $(WALLPAPER_BUILD)
 	cd build && xelatex -jobname=$(@:.pdf=) $(<:build/%=%)
 	mv build/$@ .
 
-$(ZAUBERLISTE_PDF): $(ZAUBERLISTE_BUILD) $(COMMON_BUILD) $(WALLPAPER_SRCS) build/wallpaper-extern.tex build/eingabefelder-extern.tex
+$(ZAUBERLISTE_PDF): $(ZAUBERLISTE_BUILD) $(COMMON_BUILD) $(WALLPAPER_SRCS) $(WALLPAPER_BUILD) build/eingabefelder-extern.tex
 	cd build && xelatex -jobname=$(@:build/%.pdf=%) $(<:build/%=%)
 
 # Zauberliste kann auch einzeln erstellt werden - dann einfach ins Stammverzeichnis kopieren
@@ -125,7 +120,7 @@ build/eingabefelder-extern.tex: build scripts/eingabefelder.py data/eingabefelde
 	scripts/eingabefelder.py data/eingabefelder.yaml build/eingabefelder-extern.tex
 
 # Erstellen des finalen Dokuments
-build/$(TARGET): $(TARGET_BUILD) $(PRIMARY_BUILD) $(COMMON_BUILD) $(ADDITIONAL_BUILD) $(CONFIG_BUILD) $(WALLPAPER_SRCS) build/eingabefelder-extern.tex build/wallpaper-extern.tex build/talentbogen-extern.tex
+build/$(TARGET): $(TARGET_BUILD) $(PRIMARY_BUILD) $(COMMON_BUILD) $(ADDITIONAL_BUILD) $(CONFIG_BUILD) $(WALLPAPER_SRCS) build/eingabefelder-extern.tex $(WALLPAPER_BUILD) build/talentbogen-extern.tex
 	cd build && xelatex -jobname=$(@:build/%.pdf=%) $(<:build/%=%)
 	# erst das zweite Mal sitzt das „Fanprodukt“-Logo auf der Frontseite richtig.
 	cd build && xelatex -jobname=$(@:build/%.pdf=%) $(<:build/%=%)
@@ -136,18 +131,14 @@ $(TARGET): build/$(TARGET) $(ZAUBERLISTE_PDF)
 # Erstellen von Wallpaper-Ressourcen
 build/wallpaper.jpg: build
 	convert /usr/share/texmf/tex/latex/dsa/fanpaket/wallpaper.png build/wallpaper.jpg
-
 build/wallpaper-landscape.jpg: build
 	convert /usr/share/texmf/tex/latex/dsa/fanpaket/wallpaper.png -rotate 270 build/wallpaper-landscape.jpg
-
 build/wallpaper-alternative.jpg: build
 	convert img/wallpaper-alternative.png build/wallpaper-alternative.jpg
-
 build/wallpaper-alternative-landscape.jpg: build
-	convert img/wallpaper-alternative.png -rotate 90 build/wallpaper-alternative-landscape.jpg
-
-build/wallpaper-extern.tex: build scripts/wallpaper.py
-	scripts/wallpaper.py $(WALLPAPER_PY_PARAMS)
+	convert img/wallpaper-alternative.png -rotate 270 build/wallpaper-alternative-landscape.jpg
+build/wallpaper-konfig.tex: templates/wallpaper-konfig.mustache build scripts/wallpaper.py
+	scripts/wallpaper.py $< $(DATA_FILE) $@
 
 clean:
 	rm -rf build $(STANDALONE_PDFS) $(TARGET)
