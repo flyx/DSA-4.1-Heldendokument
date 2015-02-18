@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# ./wallpaper.py <hochkant-wallpaper> <querformat-wallpaper>
+
 import sys
 
 if len(sys.argv) != 3:

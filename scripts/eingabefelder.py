@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# ./eingabefelder.py <input-yaml> <output-tex>
+
 import sys, yaml, yaml.nodes, yaml.constructor, codecs
 from unidecode import unidecode
 from string import maketrans

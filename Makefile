@@ -7,6 +7,10 @@
 #    landscape-Umgebung benutzt, deshalb muss die Zauberliste auf jeden Fall
 #    als extra PDF generiert werden.
 
+### Kann im Voraus gesetzt werden, um andere Parameter zu benutzen
+
+DATA_FILE ?= data/parameter.yaml
+
 ### Definition der Quelldateien
 
 PRIMARY_SUB_SRC_FILES=frontseite.tex \
@@ -83,8 +87,20 @@ $(PRIMARY_BUILD) $(COMMON_BUILD) $(ADDITIONAL_BUILD) $(STANDALONE_BUILD) $(TARGE
 	cp $< $@
 
 # Erstellen von Konfigurationsdateien (static pattern mit $(CONFIG_BUILD) tut hier aus unbekannten Gründen nicht)
-build/%-konfig.tex: templates/%-konfig.default build
-	cp $< $@
+build/ausruestung-konfig.tex: templates/ausruestung-konfig.mustache scripts/configure.py build
+	scripts/configure.py $< $(DATA_FILE) Ausrüstung $@
+build/frontseite-konfig.tex: templates/frontseite-konfig.mustache scripts/configure.py build
+	scripts/configure.py $< $(DATA_FILE) Frontseite $@
+build/kampfbogen-konfig.tex: templates/kampfbogen-konfig.mustache scripts/configure.py build
+	scripts/configure.py $< $(DATA_FILE) Kampfbogen $@
+build/liturgien-konfig.tex: templates/liturgien-konfig.mustache scripts/configure.py build
+	scripts/configure.py $< $(DATA_FILE) Liturgien $@
+build/talentbogen-konfig.tex: templates/talentbogen-konfig.mustache scripts/configure.py build
+	scripts/configure.py $< $(DATA_FILE) Talentbogen $@	
+build/zauberliste-konfig.tex: templates/zauberliste-konfig.mustache scripts/configure.py build
+	scripts/configure.py $< $(DATA_FILE) Zauberliste $@
+build/zauberdokument-konfig.tex: templates/zauberdokument-konfig.mustache scripts/configure.py build
+	scripts/configure.py $< $(DATA_FILE) Zauberdokument $@	
 
 # Erstellen der einzelnen PDF-Seiten
 $(STANDALONE_PDFS): %.pdf: build/%-standalone.tex build/%.tex build/%-konfig.tex $(COMMON_BUILD) build/eingabefelder-extern.tex build/wallpaper-extern.tex

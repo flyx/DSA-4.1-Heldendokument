@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# ./talente.py <input-yaml> <output-tex>
+
 import sys, yaml, yaml.nodes
 
 if len(sys.argv) != 3:

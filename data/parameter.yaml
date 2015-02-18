@@ -1,27 +1,4 @@
-
-Ausrüstung:
-    Zeilen:
-        Kleidung: 6
-        Ausruestung: 30
-        Proviant: 8
-        Vermoegen: 4
-        Sonstiger Besitz: 5
-        Verbindungen: 8
-        Notizen: 5
-        Tiere: 4
-
-Kampfbogen:
-    Zeilen:
-        Nahkampfwaffen: 4
-        Nahkampf SF: 4
-        Fernkampfwaffen: 3
-        Fernkampf SF: 3
-        Waffenlose SF: 4
-        Schilde und Parierwaffen: 2
-        Ruestung: 6
-    Optionen:
-        Astralenergie: 1
-        Karmaenergie: 1
+Frontseite: {}
 
 Talentbogen:
     Zeilen:
@@ -38,3 +15,51 @@ Talentbogen:
         "M-Spalte": 1
     Text:
         Gaben-Titel: Gaben
+
+Kampfbogen:
+    Zeilen:
+        Nahkampfwaffen: 4
+        Nahkampf SF: 4
+        Fernkampfwaffen: 3
+        Fernkampf SF: 3
+        Waffenlose SF: 4
+        Schilde und Parierwaffen: 2
+        Rüstung: 6
+    Optionen:
+        Astralenergie: 1
+        Karmaenergie: 1
+
+Ausrüstung:
+    Zeilen:
+        Kleidung: 6
+        Ausrüstung: 30
+        Proviant: 8
+        Vermögen: 4
+        Sonstiger Besitz: 5
+        Verbindungen: 8
+        Notizen: 5
+        Tiere: 4
+
+Liturgien:
+    Zeilen:
+        Kleidung: 5
+        Liturgien: 20
+        Vermögen: 4
+        Sonstiger Besitz: 4
+        Ausrüstung: 18
+        Proviant: 4
+        Verbindungen: 6
+        Notizen: 4
+        Tiere: 4
+
+Zauberdokument:
+    Zeilen:
+        Rituale: 30
+        Ritualkenntnis: 2
+        "Magische Vor- und Nachteile": 6
+        Magische Sonderfertigkeiten: 6
+        Artefakte: 6
+        Notizen: 11
+
+Zauberliste:
+    Seiten: 2

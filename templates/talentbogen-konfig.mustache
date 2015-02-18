@@ -1,34 +1,69 @@
-% change mustache delimiters
+{{! change mustache delimiters}}
 {{=<< >>=}}
+%==============================================================================
+% Talentbogen: Talente, Gaben, Sonderfertigkeiten (außer Kampf)
+%==============================================================================
 
+% Definiert, ob die "M-Spalte" bei den Talenten vorhanden sein soll.
+% Sie kann für Mirakel+/- oder Meisterhandwerk benutzt werden.
+% Mögliche Werte: "1" (M-Spalte), "0" (keine M-Spalte)
 \newcommand{\MSpalte}{<<M-Spalte>>}
 
+% Definiert, ob die Talentnamen ausklappbare Combo-Boxen sein sollen.
+% Dies funktioniert in verschiedenen PDF-Betrachtern verschieden gut;
+% man kann damit unter allen existierenden Talenten auswählen, aber nur
+% im Adobe Reader auch eigene Talente hinzufügen.
+% Mögliche Werte: "1" (Combo-Boxen für Talentnamen),
+%                 "0" (einfach Eingabewerte für Talentnamen)
 \newcommand{\TalenteInCombo}{0}
 
+% Linke Spalte des Talentbogens. Die Kommandos innerhalb der Spalten können
+% beliebig umsortiert werden.
 \newcommand{\TalenteLinks}{
+	% Sonderfertigkeiten außer Kampf.
+	% Parameter = Anzahl Zeilen
 	\Sonderfertigkeiten{<<Sonderfertigkeiten>>}
 
+	% Gaben oder ähnliches. Hier kann als optionaler Parameter (in [])
+	% angegeben werden, welche Überschrift der Bereich haben soll. Wird
+	% der Parameter nicht angegeben, steht dort "Gaben".
+	% Der nicht optionale Parameter (in {}) gibt die Anzahl der Gaben an.
 	\Gaben[<<Gaben-Titel>>]{<<Gaben>>}
 
+	% Kampftechniken.
+	% Parameter = Anzahl Zeilen
     \Kampftechniken{<<Kampftechniken>>}
 
+    % Körperliche Talente
+    % Parameter = Anzahl Zeilen
 	\KoerperlicheTalente{<<Körperliche Talente>>}
 
+	% Vertikaler leerer Platz. Wird benutzt, damit beide Zeilen gleich
+	% hoch sind. Kann an beliebigen Stellen eingefügt werden.
 	\vspace{1pt}
 
+	% Gesellschaftliche Talente
+	% Parameter = Anzahl Zeilen
 	\GesellschaftlicheTalente{<<Gesellschaftliche Talente>>}
 }
 
 \newcommand{\TalenteRechts}{
 	\vspace{1pt}
 
-	\NaturTalente{8}
+	% Naturtalente.
+	% Parameter = Anzahl Zeilen
+	\NaturTalente{<<Naturtalente>>}
 
-	\WissensTalente{15}
+	% Wissenstalente.
+	% Parameter = Anzahl Zeilen
+	\WissensTalente{<<Wissenstalente>>}
 
-	\SprachenSchriften{10}
+	% Sprachen und Schriften.
+	% Parameter = Anzahl Zeilen
+	\SprachenSchriften{<<Sprachen und Schriften>>}
 
 	\vspace{1pt}
-
-	\HandwerklicheTalente{16}
+	% Handwerkliche Talente.
+	% Parameter = Anzahl Zeilen
+	\HandwerklicheTalente{<<Handwerkliche Talente>>}
 }
