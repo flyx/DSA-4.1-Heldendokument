@@ -20,8 +20,8 @@ PRIMARY_SUB_SRC_FILES=frontseite.tex \
                       liturgien.tex \
                       zauberdokument.tex
 
-ZAUBERLISTE_SRC_FILE=zauberliste.tex
-PRIMARY_SRC_FILES=$(PRIMARY_SUB_SRC_FILES) $(ZAUBERLISTE_SRC_FILE)
+EXTRA_SRC_FILES=zauberliste.tex vertrautendokument.tex
+PRIMARY_SRC_FILES=$(PRIMARY_SUB_SRC_FILES) $(EXTRA_SRC_FILES)
 STANDALONE_SRC_FILES=$(PRIMARY_SUB_SRC_FILES:.tex=-standalone.tex)
 
 COMMON_SRC_FILES=common.tex
@@ -36,7 +36,7 @@ COMMON_SRCS=$(COMMON_SRC_FILES:%.tex=src/%.tex)
 ADDITIONAL_SRCS=$(ADDITIONAL_SRC_FILES:%.tex=src/%.tex)
 TARGET_SRCS=$(TARGET_SRC_FILE:%.tex=src/%.tex)
 STANDALONE_SRCS=$(STANDALONE_SRC_FILES:%.tex=src/%.tex)
-ZAUBERLISTE_SRCS=$(ZAUBERLISTE_SRC_FILE:%.tex=src/%.tex)
+EXTRA_SRCS=$(EXTRA_SRC_FILES:%.tex=src/%.tex)
 
 ### Alle Quelldateien werden in den build-Ordner kopiert.
 
@@ -45,7 +45,7 @@ COMMON_BUILD=$(COMMON_SRCS:src/%=build/%)
 ADDITIONAL_BUILD=$(ADDITIONAL_SRCS:src/%=build/%)
 STANDALONE_BUILD=$(STANDALONE_SRCS:src/%=build/%)
 TARGET_BUILD=$(TARGET_SRCS:src/%=build/%)
-ZAUBERLISTE_BUILD=$(ZAUBERLISTE_SRCS:src/%=build/%)
+EXTRA_BUILD=$(EXTRA_SRCS:src/%=build/%)
 
 ### Für jede primär-Quelle gibt es eine Konfigurationsdatei, die aus
 ### einem Template erstellt wird.
@@ -65,7 +65,7 @@ WALLPAPER_BUILD=build/wallpaper.jpg \
 ### Definition generierter Dateien
 
 STANDALONE_PDFS=$(STANDALONE_BUILD:build/%-standalone.tex=%.pdf)
-ZAUBERLISTE_PDF=$(ZAUBERLISTE_BUILD:%.tex=%.pdf)
+EXTRA_PDFS=$(EXTRA_BUILD:%.tex=%.pdf)
 TARGET=$(TARGET_BUILD:build/%.tex=%.pdf)
 
 ### Targets zum Bauen der Dokumente
@@ -95,18 +95,24 @@ build/talentbogen-konfig.tex: templates/talentbogen-konfig.mustache scripts/conf
 build/zauberliste-konfig.tex: templates/zauberliste-konfig.mustache scripts/configure.py build
 	scripts/configure.py $< $(DATA_FILE) Zauberliste $@
 build/zauberdokument-konfig.tex: templates/zauberdokument-konfig.mustache scripts/configure.py build
-	scripts/configure.py $< $(DATA_FILE) Zauberdokument $@	
+	scripts/configure.py $< $(DATA_FILE) Zauberdokument $@
+build/vertrautendokument-konfig.tex: templates/vertrautendokument-konfig.mustache scripts/configure.py build
+	scripts/configure.py $< $(DATA_FILE) Vertrautendokument $@
 
 # Erstellen der einzelnen PDF-Seiten
 $(STANDALONE_PDFS): %.pdf: build/%-standalone.tex build/%.tex build/%-konfig.tex $(COMMON_BUILD) build/eingabefelder-extern.tex $(WALLPAPER_BUILD)
 	cd build && xelatex -jobname=$(@:.pdf=) $(<:build/%=%)
 	mv build/$@ .
 
-$(ZAUBERLISTE_PDF): $(ZAUBERLISTE_BUILD) $(COMMON_BUILD) $(WALLPAPER_SRCS) $(WALLPAPER_BUILD) build/eingabefelder-extern.tex
+$(EXTRA_PDFS): build/%.pdf: build/%.tex $(COMMON_BUILD) $(WALLPAPER_SRCS) $(WALLPAPER_BUILD) build/eingabefelder-extern.tex
 	cd build && xelatex -jobname=$(@:build/%.pdf=%) $(<:build/%=%)
 
 # Zauberliste kann auch einzeln erstellt werden - dann einfach ins Stammverzeichnis kopieren
-zauberliste.pdf: $(ZAUBERLISTE_PDF)
+zauberliste.pdf: build/zauberliste.pdf
+	cp $< $@
+
+# Vertrautendokument ist immer extra
+vertrautendokument.pdf: build/vertrautendokument.pdf
 	cp $< $@
 
 # Erstellen der Zauberliste, die getrennt vom Rest erstellt werden muss, weil Querformat
@@ -125,7 +131,7 @@ build/$(TARGET): $(TARGET_BUILD) $(PRIMARY_BUILD) $(COMMON_BUILD) $(ADDITIONAL_B
 	# erst das zweite Mal sitzt das „Fanprodukt“-Logo auf der Frontseite richtig.
 	cd build && xelatex -jobname=$(@:build/%.pdf=%) $(<:build/%=%)
 
-$(TARGET): build/$(TARGET) $(ZAUBERLISTE_PDF)
+$(TARGET): build/$(TARGET) build/zauberliste.pdf
 	pdfunite $^ $@
 
 # Erstellen von Wallpaper-Ressourcen

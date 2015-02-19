@@ -239,3 +239,40 @@ Zauberei:
     Regeneration: Magische-Regeneration
     Artefakte: !mehrfach Artefakte-{n}
     Notizen: !mehrfach Magische-Notizen-{n}
+Vertrautendokument:
+    Name: VT-Name
+    Rasse: VT-Rasse
+    Tsatag: VT-Tsatag
+    Größe: VT-Groesse
+    Geschlecht: VT-Geschlecht
+    Rasse: VT-Rasse
+    Eigenschaftsfelder: !liste
+        Zeilen:
+            Mut: VT-MU
+            Klugheit: VT-KL
+            Intuition: VT-IN
+            Charisma: VT-CH
+            Fingerfertigkeit: VT-FF
+            Gewandheit: VT-GE
+            Konstitution: VT-KO
+            Körperkraft: VT-KK
+            Lebenspunkte: VT-LE
+            Ausdauer: VT-AU
+            Astralenergie: VT-AE
+            Magieresistenz: VT-MR
+            Attacke: VT-AT
+            Parade: VT-PA
+            Loyalität: VT-LO
+            Geschwindigkeit: VT-GS
+        Modifikator: "{z}-mod"
+        Startwert: "{z}-start"
+        Aktuell: "{z}-aktuell"
+    Rituale:
+        Name: !mehrfach VT-Ritual-Name-{n}
+        Eigenschaft 1: !mehrfach VT-Ritual-Eigenschaft1-{n}
+        Eigenschaft 2: !mehrfach VT-Ritual-Eigenschaft2-{n}
+        Eigenschaft 3: !mehrfach VT-Ritual-Eigenschaft3-{n}
+        Zauberdauer: !mehrfach VT-Ritual-ZD-{n}
+        Kosten: !mehrfach VT-Ritual-Kosten-{n}
+        Wirkung: !mehrfach VT-Ritual-Wirkung-{n}
+        Ritualkenntnis: VT-Ritualkenntniswert
