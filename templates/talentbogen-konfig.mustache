@@ -20,50 +20,17 @@
 % Linke Spalte des Talentbogens. Die Kommandos innerhalb der Spalten können
 % beliebig umsortiert werden.
 \newcommand{\TalenteLinks}{
-	% Sonderfertigkeiten außer Kampf.
-	% Parameter = Anzahl Zeilen
-	\Sonderfertigkeiten{<<Sonderfertigkeiten>>}
+	<<# Links>>
+		<<.>>
 
-	% Gaben oder ähnliches. Hier kann als optionaler Parameter (in [])
-	% angegeben werden, welche Überschrift der Bereich haben soll. Wird
-	% der Parameter nicht angegeben, steht dort "Gaben".
-	% Der nicht optionale Parameter (in {}) gibt die Anzahl der Gaben an.
-	\Gaben[<<Gaben-Titel>>]{<<Gaben>>}
-
-	% Kampftechniken.
-	% Parameter = Anzahl Zeilen
-    \Kampftechniken{<<Kampftechniken>>}
-
-    % Körperliche Talente
-    % Parameter = Anzahl Zeilen
-	\KoerperlicheTalente{<<Körperliche Talente>>}
-
-	% Vertikaler leerer Platz. Wird benutzt, damit beide Zeilen gleich
-	% hoch sind. Kann an beliebigen Stellen eingefügt werden.
-	\vspace{1pt}
-
-	% Gesellschaftliche Talente
-	% Parameter = Anzahl Zeilen
-	\GesellschaftlicheTalente{<<Gesellschaftliche Talente>>}
+	<</ Links>>
 }
 
 \newcommand{\TalenteRechts}{
 	\vspace{1pt}
 
-	% Naturtalente.
-	% Parameter = Anzahl Zeilen
-	\NaturTalente{<<Naturtalente>>}
+	<<# Rechts>>
+		<<.>>
 
-	% Wissenstalente.
-	% Parameter = Anzahl Zeilen
-	\WissensTalente{<<Wissenstalente>>}
-
-	% Sprachen und Schriften.
-	% Parameter = Anzahl Zeilen
-	\SprachenSchriften{<<Sprachen und Schriften>>}
-
-	\vspace{1pt}
-	% Handwerkliche Talente.
-	% Parameter = Anzahl Zeilen
-	\HandwerklicheTalente{<<Handwerkliche Talente>>}
+	<</ Rechts>>
 }

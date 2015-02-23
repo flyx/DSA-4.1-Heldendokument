@@ -16,14 +16,39 @@ with codecs.open(sys.argv[2], 'r', 'utf-8') as f:
         params = ef[name]
         values = {}
         if params.has_key('Zeilen'):
-            for key, value in params['Zeilen'].iteritems():
+            for key, value in [v.iteritems().next() for v in params['Zeilen']]:
                 values[key] = value
         if params.has_key('Optionen'):
-            for key, value in params['Optionen'].iteritems():
-                values[key] = value
-        if params.has_key('Text'):
-            for key, value in params['Text'].iteritems():
-                values[key] = value
+            for key, value in [v.iteritems().next() for v in params['Optionen']]:
+                values[key] = 1 if value else 0
+        if params.has_key('Layout'):
+            for seite in ['Links', 'Rechts']:
+                values[seite] = []
+                for key, value in [v.iteritems().next() for v in params['Layout'][seite]]:
+                    if key == u'Sonderfertigkeiten':
+                        values[seite].append(u'\\Sonderfertigkeiten{{{}}}'.format(value))
+                    elif key == u'Sonstiges':
+                        values[seite].append(u'\\Sonstiges[{}]{{{}}}'.format(value['Titel'], value['Zeilen']))
+                    elif key == u'Kampftechniken':
+                        values[seite].append(u'\\Kampftechniken{{{}}}'.format(value))
+                    elif key == u'Körperliche Talente':
+                        values[seite].append(u'\\KoerperlicheTalente{{{}}}'.format(value))
+                    elif key == u'Gesellschaftliche Talente':
+                        values[seite].append(u'\\GesellschaftlicheTalente{{{}}}'.format(value))
+                    elif key == u'Naturtalente':
+                        values[seite].append(u'\\NaturTalente{{{}}}'.format(value))
+                    elif key == u'Wissenstalente':
+                        values[seite].append(u'\\WissensTalente{{{}}}'.format(value))
+                    elif key == u'Sprachen und Schriften':
+                        values[seite].append(u'\\SprachenSchriften{{{}}}'.format(value))
+                    elif key == u'Handwerkliche Talente':
+                        values[seite].append(u'\\HandwerklicheTalente{{{}}}'.format(value))
+                    elif key == u'Abstand':
+                        values[seite].append(u'\\vspace{{{}pt}}'.format(value))
+                    else:
+                        print 'Unbekanntes Layoutelement: {}'.format(key)
+                        sys.exit(2)
+
         if params.has_key('Seiten'):
             # mustache kann keinen for-loop => generiere Liste von Indices
             values['Seiten'] = range(1, params['Seiten'] + 1)
