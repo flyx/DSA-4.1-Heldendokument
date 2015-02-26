@@ -16,10 +16,10 @@ with codecs.open(sys.argv[2], 'r', 'utf-8') as f:
         params = ef[name]
         values = {}
         if params.has_key('Zeilen'):
-            for key, value in [v.iteritems().next() for v in params['Zeilen']]:
+            for key, value in params['Zeilen'].iteritems():
                 values[key] = value
         if params.has_key('Optionen'):
-            for key, value in [v.iteritems().next() for v in params['Optionen']]:
+            for key, value in params['Optionen'].iteritems():
                 values[key] = 1 if value else 0
         if params.has_key('Layout'):
             for seite in ['Links', 'Rechts']:
