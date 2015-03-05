@@ -8,7 +8,7 @@ apt-get install -y --no-install-recommends texlive texlive-xetex texlive-latex-e
 apt-get install -y poppler-utils imagemagick
 apt-get install -y curl unzip
 
-# Python für die Skripte
+# Python fuer die Skripte
 apt-get install -y python2.7 python-pystache python-yaml python-markdown python-unidecode
 
 # irgendwas braucht das
@@ -16,7 +16,7 @@ locale-gen de_DE.UTF-8
 
 # Fanpaket
 mkdir -p /tmp/dsa && cd /tmp/dsa
-/dsa/DSA-LaTeX/dev/build-fanpaket-setup.py /dsa/DSA-LaTeX/dev/fanpaket-setup.sh.in /dsa/DSA-LaTeX/dev/fanpaket.yaml fanpaket-setup.sh
+/usr/bin/env python /dsa/DSA-LaTeX/dev/build-fanpaket-setup.py /dsa/DSA-LaTeX/dev/fanpaket-setup.sh.in /dsa/DSA-LaTeX/dev/fanpaket.yaml fanpaket-setup.sh
 sh fanpaket-setup.sh
 mkdir -p /usr/share/texmf/tex/latex/dsa
 cp /dsa/DSA-LaTeX/dsa.cls /usr/share/texmf/tex/latex/dsa

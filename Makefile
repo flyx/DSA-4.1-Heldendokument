@@ -83,21 +83,21 @@ $(PRIMARY_BUILD) $(COMMON_BUILD) $(ADDITIONAL_BUILD) $(STANDALONE_BUILD) $(TARGE
 
 # Erstellen von Konfigurationsdateien (static pattern mit $(CONFIG_BUILD) tut hier aus unbekannten Gründen nicht)
 build/ausruestung-konfig.tex: templates/ausruestung-konfig.mustache scripts/configure.py build
-	scripts/configure.py $< $(DATA_FILE) Ausrüstung $@
+	/usr/bin/env python scripts/configure.py $< $(DATA_FILE) Ausrüstung $@
 build/frontseite-konfig.tex: templates/frontseite-konfig.mustache scripts/configure.py build
-	scripts/configure.py $< $(DATA_FILE) Frontseite $@
+	/usr/bin/env python scripts/configure.py $< $(DATA_FILE) Frontseite $@
 build/kampfbogen-konfig.tex: templates/kampfbogen-konfig.mustache scripts/configure.py build
-	scripts/configure.py $< $(DATA_FILE) Kampfbogen $@
+	/usr/bin/env python scripts/configure.py $< $(DATA_FILE) Kampfbogen $@
 build/liturgien-konfig.tex: templates/liturgien-konfig.mustache scripts/configure.py build
-	scripts/configure.py $< $(DATA_FILE) Liturgien $@
+	/usr/bin/env python scripts/configure.py $< $(DATA_FILE) Liturgien $@
 build/talentbogen-konfig.tex: templates/talentbogen-konfig.mustache scripts/configure.py build
-	scripts/configure.py $< $(DATA_FILE) Talentbogen $@	
+	/usr/bin/env python scripts/configure.py $< $(DATA_FILE) Talentbogen $@
 build/zauberliste-konfig.tex: templates/zauberliste-konfig.mustache scripts/configure.py build
-	scripts/configure.py $< $(DATA_FILE) Zauberliste $@
+	/usr/bin/env python scripts/configure.py $< $(DATA_FILE) Zauberliste $@
 build/zauberdokument-konfig.tex: templates/zauberdokument-konfig.mustache scripts/configure.py build
-	scripts/configure.py $< $(DATA_FILE) Zauberdokument $@
+	/usr/bin/env python scripts/configure.py $< $(DATA_FILE) Zauberdokument $@
 build/vertrautendokument-konfig.tex: templates/vertrautendokument-konfig.mustache scripts/configure.py build
-	scripts/configure.py $< $(DATA_FILE) Vertrautendokument $@
+	/usr/bin/env python scripts/configure.py $< $(DATA_FILE) Vertrautendokument $@
 
 # Erstellen der einzelnen PDF-Seiten
 $(STANDALONE_PDFS): %.pdf: build/%-standalone.tex build/%.tex build/%-konfig.tex $(COMMON_BUILD) build/eingabefelder-extern.tex $(WALLPAPER_BUILD)
@@ -120,10 +120,10 @@ $()
 
 # Erstellen von Quellen aus YAML-Daten
 build/talentbogen-extern.tex: build scripts/talente.py data/talente.yaml
-	scripts/talente.py data/talente.yaml build/talentbogen-extern.tex
+	/usr/bin/env python scripts/talente.py data/talente.yaml build/talentbogen-extern.tex
 
 build/eingabefelder-extern.tex: build scripts/eingabefelder.py data/eingabefelder.yaml
-	scripts/eingabefelder.py data/eingabefelder.yaml build/eingabefelder-extern.tex
+	/usr/bin/env python scripts/eingabefelder.py data/eingabefelder.yaml build/eingabefelder-extern.tex
 
 # Erstellen des finalen Dokuments
 build/$(TARGET): $(TARGET_BUILD) $(PRIMARY_BUILD) $(COMMON_BUILD) $(ADDITIONAL_BUILD) $(CONFIG_BUILD) $(WALLPAPER_SRCS) build/eingabefelder-extern.tex $(WALLPAPER_BUILD) build/talentbogen-extern.tex
@@ -144,7 +144,7 @@ build/wallpaper-alternative.jpg: build
 build/wallpaper-alternative-landscape.jpg: build
 	convert img/wallpaper-alternative.png -rotate 270 build/wallpaper-alternative-landscape.jpg
 build/wallpaper-konfig.tex: templates/wallpaper-konfig.mustache build scripts/wallpaper.py
-	scripts/wallpaper.py $< $(DATA_FILE) $@
+	/usr/bin/env python scripts/wallpaper.py $< $(DATA_FILE) $@
 
 clean:
 	rm -rf build $(STANDALONE_PDFS) $(TARGET)
