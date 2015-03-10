@@ -127,9 +127,9 @@ build/eingabefelder-extern.tex: build scripts/eingabefelder.py data/eingabefelde
 
 # Erstellen des finalen Dokuments
 build/$(TARGET): $(TARGET_BUILD) $(PRIMARY_BUILD) $(COMMON_BUILD) $(ADDITIONAL_BUILD) $(CONFIG_BUILD) $(WALLPAPER_SRCS) build/eingabefelder-extern.tex $(WALLPAPER_BUILD) build/talentbogen-extern.tex
-	cd build && xelatex -jobname=$(@:build/%.pdf=%) $(<:build/%=%)
+	cd build && xelatex -jobname=$(@:build/%.pdf=%) -interaction=batchmode $(<:build/%=%)
 	# erst das zweite Mal sitzt das „Fanprodukt“-Logo auf der Frontseite richtig.
-	cd build && xelatex -jobname=$(@:build/%.pdf=%) $(<:build/%=%)
+	cd build && xelatex -jobname=$(@:build/%.pdf=%) -interaction=batchmode $(<:build/%=%)
 
 $(TARGET): build/$(TARGET) build/zauberliste.pdf
 	pdfunite $^ $@
