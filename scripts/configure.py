@@ -6,7 +6,7 @@
 import sys, yaml, codecs, pystache
 
 if len(sys.argv) != 5:
-    print "needs 4 arguments!"
+    sys.stdout.write("needs 4 arguments!\n")
     sys.exit(2)
 
 with codecs.open(sys.argv[2], 'r', 'utf-8') as f:
