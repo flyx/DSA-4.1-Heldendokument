@@ -102,11 +102,11 @@ build/vertrautendokument-konfig.tex: templates/vertrautendokument-konfig.mustach
 
 # Erstellen der einzelnen PDF-Seiten
 $(STANDALONE_PDFS): %.pdf: build/%-standalone.tex build/%.tex build/%-konfig.tex $(COMMON_BUILD) build/eingabefelder-extern.tex $(WALLPAPER_BUILD)
-	cd build && xelatex -jobname=$(@:.pdf=) $(<:build/%=%)
+	cd build && xelatex -jobname=$(@:.pdf=) -interaction=batchmode $(<:build/%=%)
 	mv build/$@ .
 
 $(EXTRA_PDFS): build/%.pdf: build/%.tex $(COMMON_BUILD) $(WALLPAPER_SRCS) $(WALLPAPER_BUILD) build/eingabefelder-extern.tex
-	cd build && xelatex -jobname=$(@:build/%.pdf=%) $(<:build/%=%)
+	cd build && xelatex -jobname=$(@:build/%.pdf=%) -interaction=batchmode $(<:build/%=%)
 
 # Zauberliste kann auch einzeln erstellt werden - dann einfach ins Stammverzeichnis kopieren
 zauberliste.pdf: build/zauberliste.pdf
