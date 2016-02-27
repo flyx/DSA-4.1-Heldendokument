@@ -10,6 +10,7 @@
 ### Kann im Voraus gesetzt werden, um andere Parameter zu benutzen
 
 DATA_FILE ?= data/parameter.yaml
+WALLPAPER_FILE ?= /usr/share/texmf/tex/latex/dsa/fanpaket/wallpaper.png
 
 ### Definition der Quelldateien
 
@@ -136,9 +137,9 @@ $(TARGET): build/$(TARGET) build/zauberliste.pdf
 
 # Erstellen von Wallpaper-Ressourcen
 build/wallpaper.jpg: build
-	convert /usr/share/texmf/tex/latex/dsa/fanpaket/wallpaper.png build/wallpaper.jpg
+	convert ${WALLPAPER_FILE} build/wallpaper.jpg
 build/wallpaper-landscape.jpg: build
-	convert /usr/share/texmf/tex/latex/dsa/fanpaket/wallpaper.png -rotate 270 build/wallpaper-landscape.jpg
+	convert ${WALLPAPER_FILE} -rotate 270 build/wallpaper-landscape.jpg
 build/wallpaper-alternative.jpg: build
 	convert img/wallpaper-alternative.png build/wallpaper-alternative.jpg
 build/wallpaper-alternative-landscape.jpg: build
