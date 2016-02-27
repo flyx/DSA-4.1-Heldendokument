@@ -46,7 +46,7 @@ with codecs.open(sys.argv[2], 'r', 'utf-8') as f:
                     elif key == u'Abstand':
                         values[seite].append(u'\\vspace{{{}pt}}'.format(value))
                     else:
-                        print 'Unbekanntes Layoutelement: {}'.format(key)
+                        sys.stdout.write('Unbekanntes Layoutelement: {}\n'.format(key))
                         sys.exit(2)
 
         if params.has_key('Seiten'):
