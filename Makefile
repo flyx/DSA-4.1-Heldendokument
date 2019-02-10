@@ -84,21 +84,21 @@ $(PRIMARY_BUILD) $(COMMON_BUILD) $(ADDITIONAL_BUILD) $(STANDALONE_BUILD) $(TARGE
 	cp $< $@
 
 # Erstellen von Konfigurationsdateien (static pattern mit $(CONFIG_BUILD) tut hier aus unbekannten Gründen nicht)
-build/ausruestung-konfig.tex: templates/ausruestung-konfig.mustache scripts/configure.py build
+build/ausruestung-konfig.tex: templates/ausruestung-konfig.mustache scripts/configure.py build $(DATA_FILE)
 	${PYTHON} scripts/configure.py $< $(DATA_FILE) Ausrüstung $@
-build/frontseite-konfig.tex: templates/frontseite-konfig.mustache scripts/configure.py build
+build/frontseite-konfig.tex: templates/frontseite-konfig.mustache scripts/configure.py build $(DATA_FILE)
 	${PYTHON} scripts/configure.py $< $(DATA_FILE) Frontseite $@
-build/kampfbogen-konfig.tex: templates/kampfbogen-konfig.mustache scripts/configure.py build
+build/kampfbogen-konfig.tex: templates/kampfbogen-konfig.mustache scripts/configure.py build $(DATA_FILE)
 	${PYTHON} scripts/configure.py $< $(DATA_FILE) Kampfbogen $@
-build/liturgien-konfig.tex: templates/liturgien-konfig.mustache scripts/configure.py build
+build/liturgien-konfig.tex: templates/liturgien-konfig.mustache scripts/configure.py build $(DATA_FILE)
 	${PYTHON} scripts/configure.py $< $(DATA_FILE) Liturgien $@
-build/talentbogen-konfig.tex: templates/talentbogen-konfig.mustache scripts/configure.py build
+build/talentbogen-konfig.tex: templates/talentbogen-konfig.mustache scripts/configure.py build $(DATA_FILE)
 	${PYTHON} scripts/configure.py $< $(DATA_FILE) Talentbogen $@
-build/zauberliste-konfig.tex: templates/zauberliste-konfig.mustache scripts/configure.py build
+build/zauberliste-konfig.tex: templates/zauberliste-konfig.mustache scripts/configure.py build $(DATA_FILE)
 	${PYTHON} scripts/configure.py $< $(DATA_FILE) Zauberliste $@
-build/zauberdokument-konfig.tex: templates/zauberdokument-konfig.mustache scripts/configure.py build
+build/zauberdokument-konfig.tex: templates/zauberdokument-konfig.mustache scripts/configure.py build $(DATA_FILE)
 	${PYTHON} scripts/configure.py $< $(DATA_FILE) Zauberdokument $@
-build/vertrautendokument-konfig.tex: templates/vertrautendokument-konfig.mustache scripts/configure.py build
+build/vertrautendokument-konfig.tex: templates/vertrautendokument-konfig.mustache scripts/configure.py build $(DATA_FILE)
 	${PYTHON} scripts/configure.py $< $(DATA_FILE) Vertrautendokument $@
 
 # Erstellen der einzelnen PDF-Seiten
@@ -145,7 +145,7 @@ build/wallpaper-alternative.jpg: build
 	convert img/wallpaper-alternative.png build/wallpaper-alternative.jpg
 build/wallpaper-alternative-landscape.jpg: build
 	convert img/wallpaper-alternative.png -rotate 270 build/wallpaper-alternative-landscape.jpg
-build/wallpaper-konfig.tex: templates/wallpaper-konfig.mustache build scripts/wallpaper.py
+build/wallpaper-konfig.tex: templates/wallpaper-konfig.mustache build scripts/wallpaper.py $(DATA_FILE)
 	${PYTHON} scripts/wallpaper.py $< $(DATA_FILE) $@
 
 clean:

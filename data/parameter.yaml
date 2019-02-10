@@ -8,20 +8,17 @@ Talentbogen:
     Layout:
         Links:
             - Sonderfertigkeiten: 6
-            - Sonstiges:
-                Titel: Gaben
-                Zeilen: 2
             - Kampftechniken: 11
-            - Körperliche Talente: 17
+            - Körperliche Talente: 19
             - Abstand: 2
             - Gesellschaftliche Talente: 10
         Rechts:
             - Naturtalente: 8
-            - Wissenstalente: 15
+            - Wissenstalente: 14
             - Sprachen und Schriften: 10
-            - Handwerkliche Talente: 16
+            - Handwerkliche Talente: 15
     Optionen:
-        "M-Spalte": yes
+        "M-Spalte": no
 
 Kampfbogen:
     Zeilen:

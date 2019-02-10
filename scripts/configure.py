@@ -11,20 +11,23 @@ if len(sys.argv) != 5:
 
 with codecs.open(sys.argv[2], 'r', 'utf-8') as f:
     ef = yaml.load(f)
-    name = sys.argv[3].decode('utf-8')
+    try:
+        name = sys.argv[3].decode('utf-8')
+    except:
+        name = sys.argv[3]
     if ef.has_key(name):
         params = ef[name]
         values = {}
         if params.has_key('Zeilen'):
-            for key, value in params['Zeilen'].iteritems():
+            for key, value in params['Zeilen'].items():
                 values[key] = value
         if params.has_key('Optionen'):
-            for key, value in params['Optionen'].iteritems():
+            for key, value in params['Optionen'].items():
                 values[key] = 1 if value else 0
         if params.has_key('Layout'):
             for seite in ['Links', 'Rechts']:
                 values[seite] = []
-                for key, value in [v.iteritems().next() for v in params['Layout'][seite]]:
+                for key, value in [v.items()[0] for v in params['Layout'][seite]]:
                     if key == u'Sonderfertigkeiten':
                         values[seite].append(u'\\Sonderfertigkeiten{{{}}}'.format(value))
                     elif key == u'Sonstiges':
