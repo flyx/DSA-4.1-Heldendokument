@@ -1,0 +1,24 @@
+\documentclass{dsa}
+
+\directlua{
+  v = require("values")
+  r = require("render")
+}
+
+\newcommand{\dsaHeading}[1]{%
+  \begin{center}%
+    \huge\bfseries\mansontt\shadowtext{#1}
+  \end{center}%
+}
+
+\newcommand{\dsaTHeading}[1]{\textmansontt{\bfseries\small #1}}
+
+\newcommand{\dotsep}{\textbullet}
+
+\newcommand{\dsaHeroVal}[2][\normalfont]{%
+    {#1\directlua{tex.sprint(v.#2)}}
+}
+
+\newcommand{\dsaSmallHeader}{\tiny\normalfont\bfseries}
+
+\setlength{\fboxsep}{6pt}

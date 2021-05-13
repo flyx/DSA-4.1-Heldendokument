@@ -1,0 +1,166 @@
+\newcommand{\Kleidung}{
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{1pt}
+    \normalfont\fontsize{8}{12}\selectfont
+
+    \begin{dsaSheetBox}
+        \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
+            \directlua{
+                r.labelled_rows(v.kleidung, "Kleidung", "Large")
+            }
+        \end{tabular}
+    \end{dsaSheetBox}
+}
+
+\newcommand{\Ausruestung}{
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{1pt}
+    \normalfont\fontsize{8}{12}\selectfont
+
+    \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+        \begin{tabular}{p{5.5cm}|x{1cm}|x{2.2cm}}
+            \dsaTHeading{\Large Ausrüstung} & \normalfont\tiny\bfseries Gewicht & \normalfont\tiny\bfseries Wo getragen? \\ \hline
+            \directlua{
+                r.inner_rows(v.ausruestung, 3)
+            }
+        \end{tabular}
+    \end{dsaSheetBox}
+}
+
+\newcommand{\Proviant}{
+\begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{1pt}
+    \normalfont\fontsize{8}{12}\selectfont
+
+    \begin{tabular}{p{5.3cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}}
+        \dsaTHeading{\Large Proviant / Tränke} & \multicolumn{4}{c}{\normalfont\bfseries\scriptsize Rationen / Ladungen} \\ \hline
+        \directlua{
+            r.inner_rows(v.proviant, 5)
+        }
+    \end{tabular}
+\end{dsaSheetBox}
+}
+
+\newcommand{\Vermoegen}{
+\begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{1pt}
+    \normalfont\fontsize{8}{12}\selectfont
+
+    \begin{tabular}{p{2.6cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}}
+        \multicolumn{2}{l}{\dsaTHeading{\Large Vermögen}} & \multicolumn{7}{l}{\normalfont\tiny (1 Dukate = 10 Silbertaler = 100 Heller = 1000 Kreuzer)} \\ \hline
+        \directlua{
+            r.inner_rows(v.vermoegen, 9)
+        } \\ \hline%
+    \end{tabular}
+    \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
+        \directlua{
+            r.labelled_rows(v.vermoegen.sonstiges, "Sonstiges")
+        }
+    \end{tabular}
+\end{dsaSheetBox}
+}
+
+\newcommand{\Verbindungen}{
+    \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+        \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
+            \directlua{
+                r.labelled_rows(v.verbindungen, "Verbindungen", "Large")
+            }
+        \end{tabular}
+    \end{dsaSheetBox}
+}
+
+\newcommand{\Notizen}{
+    \begin{dsaSheetBox}
+        \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
+            \directlua{
+                r.labelled_rows(v.notizen, "Notizen", "Large")
+            }
+        \end{tabular}
+    \end{dsaSheetBox}
+}
+
+\newcommand{\Tiere}{%
+\vspace*{-15pt}
+\begin{center}
+    \LARGE\bfseries\textmansontt{\shadowtext{Tiere}}%
+\end{center}%
+\vspace{-10pt}
+
+\begin{dsaSheetBox}
+    \begin{tabular}{p{3cm}|x{3.9cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}}
+        \scriptsize\textbf{Name} & \scriptsize\textbf{Art} & \scriptsize\textbf{INI} & \scriptsize\textbf{AT} & \scriptsize\textbf{PA} & \scriptsize\textbf{TP} & \scriptsize\textbf{LE} & \scriptsize\textbf{RS} &
+        \scriptsize\textbf{KO} & \scriptsize\textbf{GS} & \scriptsize\textbf{AU} & \scriptsize\textbf{MR} &
+        \scriptsize\textbf{LO} & \scriptsize\textbf{TK} & \scriptsize\textbf{ZK} \\ \hline
+        \directlua{
+            r.inner_rows(v.tiere, 15)
+        }
+    \end{tabular}
+\end{dsaSheetBox}
+}
+
+\newcommand{\Liturgien}{%
+    \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+        \directlua{
+            r.kenntnis("Liturgiekenntnis", {v.liturgien.kenntnis})
+        }
+
+        \vspace{5pt}
+        \renewcommand{\arraystretch}{1}
+        \setlength{\tabcolsep}{2pt}
+        \normalfont\fontsize{8}{12}\selectfont
+        \begin{NiceTabular}{p{3cm}|x{0.8cm}|p{4.7cm}}
+        \CodeBefore
+            \rowcolors{2}{white}{gray!30}
+        \Body
+            \normalfont\bfseries\scriptsize Liturgie & \normalfont\bfseries\scriptsize Grad & \hspace{3pt}\normalfont\bfseries\scriptsize Wirkung \\ \hline
+            \directlua{
+                r.inner_rows(v.liturgien, 3)
+            }
+        \end{NiceTabular}
+    \end{dsaSheetBox}
+}
+
+\newcommand{\Zauberliste}[1]{%
+    \begin{dsaCharacterSheet}
+
+        \vspace*{-30pt}
+        \dsaHeading{Zauberliste – Seite #1}%
+        \vspace{-8pt}
+
+        \begin{dsaSheetBox}
+            \hspace{6pt}\directlua{
+                r.eig_header({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"}, "16pt")
+            }
+            \renewcommand{\arraystretch}{1.25}
+            \bfseries\large\mansontt
+            \begin{tabular}{p{4cm}p{13.7cm}} \hline
+                Repräsentationen: & \normalfont\directlua{r.reprs(v.magie.repraesentationen)} \\ \hline
+                Merkmale: & \normalfont\directlua{tex.sprint(-2, table.concat(v.magie.merkmale, ", "))} \\ \hline
+                Begabungen: & \normalfont\directlua{tex.sprint(-2, table.concat(v.magie.begabungen, ", "))} \\ \hline
+                Unfähigkeiten: & \normalfont\directlua{tex.sprint(-2, table.concat(v.magie.unfaehigkeiten, ", "))}
+            \end{tabular}
+        \end{dsaSheetBox}
+
+        \renewcommand{\arraystretch}{1}
+        \setlength{\tabcolsep}{2pt}
+        \normalfont\fontsize{8}{12}\selectfont
+        \begin{dsaSheetBox}
+            \begin{NiceTabular}{y{0.7cm}|p{6.8cm}|x{0.55cm}@{\dotsep}x{0.55cm}@{\dotsep}x{0.55cm}|y{0.65cm}|x{0.6cm}|p{5.2cm}|x{0.8cm}|p{0.7cm}}
+            \CodeBefore
+                \rowcolors{2}{white}{gray!30}
+            \Body
+                \directlua{
+                    r.header_row("scriptsize", "dsaSmallHeader",
+                        {1, "c", "Seite"}, "Name", {3, "c", "Probe"}, {1, "c", "ZfW"}, "Komp", "Merkmale", "Rep", "Lern")
+                } \Xhline{2\arrayrulewidth}
+                \directlua{
+                    r.zauberseite(#1)
+                }
+            \end{NiceTabular}
+            \vspace{3pt}
+        \end{dsaSheetBox}
+    \end{dsaCharacterSheet}
+}

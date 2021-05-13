@@ -1,0 +1,33 @@
+
+\begin{dsaCharacterSheet}
+
+\vspace*{-13pt}
+\begin{dsaSheetBox}[\textwidth]%
+    \vspace*{-2pt}
+    \directlua{r.eig_header({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "BE"}, "11pt")}
+    \vspace*{-2pt}
+\end{dsaSheetBox}
+
+\vspace{-16pt}
+\dsaHeading{Sonderfertigkeiten \& Talente}
+\vspace{-8pt}
+
+\begin{dsaSheetBox}[\textwidth]
+
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{2pt}
+    \normalfont\fontsize{8}{12}\selectfont
+
+    \newcommand{\Th}[1]{\textbf{\footnotesize #1}}
+
+    \setlength{\columnseprule}{1pt}
+    \setlength{\columnsep}{8pt}
+    \begin{multicols}{2}
+
+        \directlua{
+            r.talentgruppen()
+        }
+    \end{multicols}
+\end{dsaSheetBox}
+
+\end{dsaCharacterSheet}

@@ -1,0 +1,102 @@
+
+\begin{dsaCharacterSheet}
+
+\begin{dsaSheetBox}[\textwidth]%
+    \directlua{r.eig_header({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"}, "16pt")}
+\end{dsaSheetBox}
+
+\vspace{-16pt}
+\dsaHeading{Zauberdokument}%
+\vspace{-8pt}
+
+\setlength{\tabcolsep}{1pt}
+
+\begin{dsaSheetBox}
+    \begin{center}
+        \Large\textmansontt{\textbf{Rituale}}
+    \end{center}
+
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{2pt}
+    \normalfont\fontsize{8}{12}\selectfont
+    \begin{NiceTabular}{p{4cm}|x{0.55cm}@{\dotsep}x{0.55cm}@{\dotsep}x{0.55cm}|x{2cm}|x{2cm}|p{7.9cm}}
+    \CodeBefore
+        \rowcolors{2}{white}{gray!30}
+    \Body
+        \scriptsize\textbf{Ritualname} & \multicolumn{3}{c|}{\scriptsize \textbf{Probe}} & \scriptsize\textbf{Dauer} & \scriptsize\textbf{Kosten} & \scriptsize\textbf{Wirkung / Anmerkung} \\ \hline
+        \directlua{
+            r.inner_rows(v.magie.rituale, 7)
+        }
+    \end{NiceTabular}
+\end{dsaSheetBox}
+
+\begin{multicols}{2}
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{1pt}
+    \normalfont\fontsize{8}{12}\selectfont
+
+    \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+        \directlua{
+            r.kenntnis("Ritualkenntnis", v.magie.rituale.kenntnis)
+        }
+	\end{dsaSheetBox}
+
+    \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+        \begin{center}
+            \textmansontt{\large\bfseries Magische Vor- und Nachteile}
+        \end{center}
+
+        \vspace{-5pt}
+        \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
+            \directlua{
+                r.inner_rows(v.vorteile.magisch, 1)
+            }
+        \end{tabular}
+    \end{dsaSheetBox}
+
+    \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+        \begin{center}
+            \textmansontt{\large\bfseries Magische Sonderfertigkeiten}
+        \end{center}
+
+        \vspace{-5pt}
+        \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
+            \directlua{
+                r.inner_rows(v.sf.magisch, 1)
+            } \\ \hline
+
+            \raggedright\normalsize \textmansontt{\textbf{Regeneration:}} \colorbox{white}{\parbox[c]{3cm}{\normalfont\centering\directlua{r.asp_regeneration()}}} \textmansontt{\textbf{pro Phase}}
+        \end{tabular}
+    \end{dsaSheetBox}
+
+\columnbreak
+    \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+        \begin{center}
+            \textmansontt{\large\bfseries Artefakte}
+        \end{center}
+
+        \vspace{-5pt}
+        \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
+            \directlua{
+                r.inner_rows(v.magie.artefakte, 1)
+            }
+        \end{tabular}
+    \end{dsaSheetBox}
+
+    \vspace{12pt}
+    \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+        \begin{center}
+            \textmansontt{\large\bfseries Notizen}
+        \end{center}
+
+        \vspace{-5pt}
+        \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
+            \directlua{
+                r.inner_rows(v.notizen.magisch, 1)
+            }
+        \end{tabular}
+    \end{dsaSheetBox}
+
+\end{multicols}
+
+\end{dsaCharacterSheet}

@@ -1,7 +1,9 @@
-build
-*.zip
+*.aux
+*.log
 *.pdf
-*.vagrant
-*.ttf
-*.pyc
-*.html
+*.fdb_latexmk
+*.fls
+*.out
+*.otf
+img/logo-fanprodukt.png
+img/wallpaper.jpg
