@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <title>DSA 4.1 Heldendokument-Generator</title>
+    <style>
+      .btn-wrapper {
+        display: flex;
+        justify-content: space-between;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+      }
+      form textarea {
+        flex-grow: 1;
+      }
+      html {
+        margin: 0;
+      }
+      body {
+        min-height: 100vh;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        padding: .5em;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>DSA 4.1 Heldendokument-Generator</h1>
+    </header>
+    <form method="post" action="/process" target="_blank">
+      <div class="btn-wrapper">
+        <button type="submit">Generieren</button>
+        <div>
+          Lade ein Template:
+          <button type="button" id="profan">Profan</button>
+          <button type="button" id="geweiht">Geweiht</button>
+          <button type="button" id="magier">Magier</button>
+        </div>
+      </div>
+
+      <br/>
+      <textarea name="data"></textarea>
+    </form>
+  </body>
+</html>

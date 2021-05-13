@@ -1,48 +1,111 @@
 # DSA 4.1 Heldendokument
 
 LaTeX-Implementierung des DSA 4.1 Heldendokuments.
-Abhängigkeiten:
 
- * TeXLive 2021
- * img/logo-fanprodukt.png => aus dem offiziellen Fanpaket extrahieren
- * img/wallpaper.jpg => aus dem Handout-PDF von WdS extrahieren
- * Im System müssen die Schriftarten [Manson](https://fontsgeek.com/manson-font) und [NewG8](https://github.com/probonopd/font-newg8/releases/tag/continuous) installiert sein
+## Features
 
-Mit `make` können die leeren Charakterbögen `profan.pdf` (Keine Zauberdokumente, keine Liturgien), `geweiht.pdf` (Liturgien im Ausrüstungsbogen) und `magier.pdf` (Zauberliste und Zauberdokument) generiert werden.
+ * Kein editierbares PDF – Werte können beim Bauen des Heldendokuments eingegeben werden, das generierte Dokument ist nicht interaktiv.
+   Der Vorteil davon ist, dass das Dokument in PDF-Readern, die keine interaktiven Element unterstützen, vollständig angezeigt werden kann.
+   Das betrifft viele PDF-Reader auf Tablets.
 
-Um einen ausgefüllten Charakterbogen zu erstellen, muss eines der Templates in `templates` kopiert und mit Werten befüllt werden (siehe die Kommentare dort).
-Die resultierende Datei muss in einer Datei (beispielsweise `src/held.lua`) abgelegt werden.
-Dann muss im Verzeichnis `src` folgendes Kommando ausgeführt werden:
+   Außerdem sieht das Dokument nicht stark unterschiedlich in verschiedenen Readern aus.
+ * Die Werte des Helden können in einer Textdatei gespeichert werden, aus der bei Änderungen immer wieder ein neues Dokument erstellt werden kann.
+   Dadurch kann der Held beispielsweise einfach in einem Versionskontrollsystem abgelegt werden.
+   Warum würde man Versionskontrolle wollen? Naja, um beispielsweise wenn auf einer Convention ein Held mit maximal 5000 AP verlangt wird, man einfach eine frühere Version bauen kann. Alltäglicher Anwendungsfall!
+ * Alternierender Hintergrund bei vielen Tabellen für bessere Lesbarkeit.
+   Das schließt beispielsweise Talente, Liturgien, Rituale und Zauber ein.
+ * Dynamische Größe der meisten Tabellen:
+   Fast alle Tabellen, die nicht auf der Frontseite sind, haben eine variable Anzahl an Zeilen.
+   Man kann beispielsweise mehr Zeilen in gesellschaftlichen Talenten haben und dafür weniger Zeilen bei den Körperlichen – oder die „Gaben“-Tabelle komplett entfernen, wenn man sie nicht braucht.
+   Für all dies muss man nur die Eingabe-Textdatei ändern.
+ * Hochformat-Zaubertabelle mit nur den wesentlichsten Informationen und einer Spalte, in der man die Zeile im Liber angeben kann.
+   Niemand braucht die Querformat-Tabelle.
+   Außerdem wird automatisch eine zweite, dritte, … Seite erzeugt wenn man viele Zauber hat.
+ * Frei und quelloffen: Der Quellcode ist unter einer freien Lizenz verfügbar und das Dokument kann komplett mit Open-Source-Software gebaut werden.
+   Nur die verwendeten Bilder und Schriftarten unterliegen urheberrechtlichen Beschränkungen.
+ * Konservativ in automatischen Berechnungen:
+   Das Dokument will kein Heldengenerator sein und berechnet nur sehr wenige Werte automatisch. Dadurch kann auf Hausregeln Rücksicht genommen werden.
+   Momentan werden nur die BE- und RS-Summe von Rüstungsteilen sowie die Lernschwierigkeit von Zaubern automatisch berechnet.
 
-    latexmk -lualatex='lualatex %O %S held.lua' heldendokument.tex
+## Wie generiere ich das Dokument?
 
-`held.lua` muss der Pfad zur Heldendatei sein (relativ zum Verzeichnis `src`, oder absolut).
-Das Heldendokument liegt nach erfolgreicher Generierung in `src/heldendokument.pdf`.
+Es gibt zwei Möglichkeiten:
 
-## Docker
+ * Mit [Docker](https://www.docker.com): Dies ist ein Werzeug, um alle nötigen Werkzeuge reproduzierbar zusammenzustellen.
+   Installiert man Docker, kann man ein *image* erstellen, in dem die benötigte Software enthalten ist.
+   Mit diesem Image kann dann das Heldendokument generiert werden.
+   Das Image ist portierbar zwischen Betriebssystemen, insbesondere Windows-Nutzern wird zu dieser Alternative geraten.
+   Es liegt auch eine Definition für ein erweitertes Docker-Image bereit, das ein Web-Frontend zur Generierung bereitstellt – für Leute, die die Kommandozeile nicht mögen.
 
-Wem die Installation von TeXLive zu anstrengend ist, kann ein [Docker](https://www.docker.com)-Image erstellen.
-Die Voraussetzung dafür ist, dass Docker auf dem System installiert ist und die beiden Dateien `Manson Regular.otf` und `Manson Bold.otf` (Link siehe oben) im Hauptverzeichnis liegen – die Seite, wo man sie laden kann, lässt es nicht zu, sie automatisch zu laden.
+   Obwohl das Docker-Image portierbar ist, wird aus Urheberrechtsgründen kein fertiges Image bereitgestellt – die Lizenzen der Schriftarten und der benutzten Bilder erlauben dies nicht.
+   Man kann das Image allerdings selbst ohne großen Aufwand erstellen.
+ * Manuell mit [TeX Live](https://www.tug.org/texlive/) (oder einer anderen Tex-Distribution):
+   Dies erfordert ein wenig Umgang mit der Kommandozeile.
+   Windows-Nutzern wird dazu geraten, hierfür das Windows-Subsystem für Linux zu verwenden.
 
-Danach lässt sich das Image hiermit bauen:
+   Diese Alternative wird vor allem Benutzern empfohlen, die TeX ohnehin installiert haben.
+   Muss man es extra dafür installieren, verbraucht man nicht arg viel weniger Speicher als mit der Docker-Variante.
 
-    make docker
+### Docker
 
-Windows-Nutzer ohne Make machen statt dessen:
+Docker muss installiert sein und laufen.
+Die Schriftarten `Manson Regular.otf` und `Manson Bold.otf` müssen [hier](https://fontsgeek.com/manson-font) manuell heruntergeladen werden und direkt ins Hauptverzeichnis gelegt werden (ohne die Unterstruktur in der zip-Datei).
+Alle anderen Abhängigkeiten werden automatisch heruntergeladen beim Bauen des Docker-Images.
 
-    docker build -f docker/Dockerfile -t dsa-4.1-heldendokument .
+Die Kommandozeilenversion lässt sich bauen mit
 
-Ist das Image erstellt, kann ein Charakterbogen folgendermaßen erstellt werden:
+    make docker-bare
 
-    cat held.lua | docker -i  --rm dsa-4.1-heldendokument > held.pdf
+Dies generiert ein Image namens *dsa-4.1-heldendokument*.
+Dieses benutzt man wiefolgt:
 
-Das war ja einfach!
+    cat templates/profan.lua | docker -i  --rm dsa-4.1-heldendokument > held.pdf
 
-Hinweis: Das Docker-Image verbraucht etwa 559MB auf der Platte. TeXLive zu installieren, wenn man es nicht sowieso hat, wäre kaum kleiner.
+In diesem Beispiel wir als Datengrundlage das Template für einen profanen Helden, `templates/profan.lua` benutzt.
+Statt dessen kann natürlich ein eigener Held eingegeben werden.
+
+Das Docker-Image für das Web-Interface setzt voraus, dass *dsa-4.1-heldendokument* existiert.
+Es kann folgendermaßen gebaut werden:
+
+    make docker-server
+
+Dies generiert ein Image namens *dsa-4.1-heldendokument-generator*.
+Es kann folgendermaßen gestartet werden:
+
+    docker run -p 80:80 --rm dsa-4.1-heldendokument-generator
+
+Läuft dieser Befehl, kann das Webinterface im Browser unter http://localhost/ aufgerufen werden.
+Das Webinterface ist minimal und dafür gedacht, den Inhalt der Helden-Datei ins Textfeld einzufügen und dann abzusenden.
+Es eignet sich nicht als Editor und speichert die Eingabe nicht ab.
+Die Generierung kann mehrere Minuten dauern.
+
+### Manuell
+
+Es muss TeX Live 2021 installiert sein.
+Ältere Distributionen funktionieren nicht (ja, ihr seid gemeint, Debian-Nutzer).
+Mac-User können [MacTeX](https://www.tug.org/mactex/) benutzen.
+
+Zusätzlich müssen die Schriftarten [Manson](https://fontsgeek.com/manson-font) und [NewG8](https://github.com/probonopd/font-newg8/releases/tag/continuous) im System installiert sein, so dass sie von LuaTeX gesehen werden.
+Für Mac-Nutzer bedeutet dies, dass sie systemweit, nicht nur für den aktuellen Benutzer, installiert sein müssen – dies lässt sich in den Einstellungen von *Font Book* festlegen.
+
+Das Fanprodukt-Logo und der Hintergrund müssen von Ulisses heruntergeladen und an die korrekte Stelle gelegt werden.
+Die folgenden Befehle nutzen curl, ImageMagick und poppler-utils, um dies zu tun – diese Werkzeuge sollten auf jedem vernünftigen System verfügbar sein:
+
+
+## Eine Helden-Datei erstellen
+
+Die Dateneingabe für den Helden ist eine simple Lua-Datei.
+Als Ausgangspunkt sollten die Templates im Ordner `templates` verwendet werden.
+Sie sind ausführlich kommentiert und erläutern, wie man Werte einfügt und verändert.
+
+Die Templates selbst können als Eingabe benutzt werden, um leere Heldendokumente zu erstellen – falls man sie einfach ausdrucken und mit Bleistift befüllen will *wie die Barbaren*.
+In den Templates sind ausschließlich die Basis-Talente vorausgefüllt.
+Es können auch in leeren Dokumenten die Anzahl Zeilen in verschiedenen Tabellen geändert werden, indem man ausgehend vom Template die entsprechenden Änderungen ausführt.
 
 ## Lizenz
+
+Der in diesem Repository enthaltene Code ist lizensiert unter der [LaTeX Project Public License](https://www.latex-project.org/lppl/).
 
 **Wichtig:** Die verwendeten Schriftarten und Grafiken, die nicht Teil des Repositories sind, haben keine Lizenz, die die Weiterverbreitung erlaubt!
 Deshalb wird weder ein fertiges Docker-Image noch ein fertiges Heldendokument zur Verfügung gestellt und dem Benutzer wird ebenfalls davon abgeraten, dies zu tun.
 
-Der in diesem Repository enthaltene Code ist lizensiert unter der [LaTeX Project Public License](https://www.latex-project.org/lppl/).

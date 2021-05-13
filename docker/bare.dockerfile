@@ -6,7 +6,7 @@ RUN apt update && apt upgrade && apt install -y --no-install-recommends \
       texlive-pictures \
       texlive-latex-extra \
       texlive-lang-german && \
-    apt install -y curl unzip && \
+    apt install -y curl unzip poppler-utils imagemagick && \
     mkdir /heldendokument
 
 RUN mkdir -p /tmp /fonts
@@ -38,8 +38,8 @@ RUN curl -L https://github.com/probonopd/font-newg8/releases/download/continuous
     mv nicematrix/nicematrix.sty /usr/share/texmf/tex/latex/nicematrix && \
     texhash && updmap-sys --enable Map=fontawesome.map && \
     luaotfload-tool -u && \
-    apt remove --purge -y curl unzip && apt autoremove -y && \
+    apt remove --purge -y curl unzip poppler-utils imagemagick && apt autoremove -y && \
     rm -rf /tmp/*
 
 WORKDIR /heldendokument
-CMD /heldendokument/held.sh
+CMD /heldendokument/held.sh -

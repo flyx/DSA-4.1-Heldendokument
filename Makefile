@@ -10,9 +10,12 @@ SOURCES = src/ausruestung.tex src/common.tex src/dsa.cls \
 	cd src && latexmk -lualatex='lualatex %O %S ../$<' heldendokument.tex
 	mv src/heldendokument.pdf $@
 
-docker: ${SOURCES}
+docker-bare: ${SOURCES} docker/bare.dockerfile docker/held.sh
 	@test -f "Manson Bold.otf" || (echo "'Manson Bold.otf' missing, download from https://fontsgeek.com/manson-font and extract here" && exit 1)
 	@test -f "Manson Regular.otf" || (echo "'Manson Regular.otf' missing, download from https://fontsgeek.com/manson-font and extract here" && exit 1)
-	docker build -f docker/Dockerfile -t dsa-4.1-heldendokument .
+	docker build -f docker/bare.dockerfile -t dsa-4.1-heldendokument .
 
-.PHONY: docker
+docker-server: docker/server.dockerfile docker/index.html docker/serve.go
+	docker build -f docker/server.dockerfile -t dsa-4.1-heldendokument-generator .
+
+.PHONY: docker-bare docker-server
