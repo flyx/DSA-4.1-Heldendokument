@@ -136,6 +136,7 @@ end
 local eig_front_label = {
   MU = "Mut", KL = "Klugheit", IN = "Intuition", CH = "Charisma",
   FF = "Fingerfertigkeit", GE = "Gewandtheit", KO = "Konstitution", KK = "Körperkraft",
+  GS = "Geschwindigkeit",
   LE = {"Lebensenergie", "(KO+KO+KK)/2"}, AU = {"Ausdauer", "(MU+KO+GE)/2"},
   AE = {"Astralenergie", "(MU+IN+CH)/2"}, KE = {"Karmaenergie", ""},
   MR = {"Magieresistenz", "(MU+KL+KO)/5"}, INI = {"Ini-Basiswert", "(MU+MU+IN+GE)/5"},
@@ -144,7 +145,7 @@ local eig_front_label = {
 }
 
 function render.eig_links()
-  for i, e in ipairs({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "GE"}) do
+  for i, e in ipairs({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "GS"}) do
     if i ~= 1 then
       tex.sprint([[\\]])
     end
