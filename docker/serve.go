@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"os/exec"
@@ -13,6 +14,16 @@ import (
 )
 
 func index(w http.ResponseWriter, req *http.Request) {
+	if req.Method != "GET" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+	if req.URL.Path != "/" && req.URL.Path != "/index.html" {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("404 File not found: " + req.URL.Path))
+		return
+	}
+
 	file, err := ioutil.ReadFile("index.html")
 	if err != nil {
 		panic(err)
@@ -73,8 +84,7 @@ func process(w http.ResponseWriter, req *http.Request) {
 }
 
 func template(w http.ResponseWriter, req *http.Request) {
-	name := req.URL.Path[2:]
-	file, err := ioutil.ReadFile("templates/" + name + ".lua")
+	file, err := ioutil.ReadFile("templates/" + req.URL.Path[1:] + ".lua")
 	if err != nil {
 		panic(err)
 	}
@@ -85,17 +95,36 @@ func template(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	setupRAMdisk()
 	requests = make(chan request, 10)
 	srv := &http.Server{Addr: ":80"}
-	os.Stdout.WriteString("Starting server at port 80\n")
+	log.Println("Starting server")
 	go worker(srv)
 	http.HandleFunc("/", index)
 	http.HandleFunc("/index.html", index)
 	http.HandleFunc("/process", process)
 	http.HandleFunc("/profan", template)
 	http.HandleFunc("/geweiht", template)
-	http.HandleFunc("/magisch", template)
+	http.HandleFunc("/magier", template)
 	srv.ListenAndServe()
+}
+
+func setupRAMdisk() {
+	log.Println("Setting up RAM disk…")
+	create := exec.Command("mount", "-t", "tmpfs", "-o", "size=64M", "tmpfs", "/ramdisk")
+	if err := create.Run(); err != nil {
+		log.Println("Cannot initialize RAM disk, running from normal storage")
+		log.Println("  to run on a RAM disk, call docker run with --privileged.")
+		return
+	}
+	cp := exec.Command("cp", "-a", "/heldendokument/.", "/ramdisk/")
+	if err := cp.Run(); err != nil {
+		panic("while copying to ramdisk: " + err.Error())
+	}
+	if err := os.Chdir("/ramdisk"); err != nil {
+		panic("while chdir to ramdisk: " + err.Error())
+	}
+	log.Println("Running on RAM disk.")
 }
 
 func worker(srv *http.Server) {
@@ -122,6 +151,8 @@ func worker(srv *http.Server) {
 			}
 		case <-done:
 			srv.Shutdown(context.Background())
+			umount := exec.Command("umount", "/ramdisk")
+			umount.Run()
 			return
 		}
 	}

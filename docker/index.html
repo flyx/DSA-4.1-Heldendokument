@@ -44,7 +44,23 @@
       </div>
 
       <br/>
-      <textarea name="data"></textarea>
+      <textarea name="data" id="data"></textarea>
     </form>
+
+    <script type="text/javascript">
+      function fillFrom() {
+        fetch(new Request("/" + this.id)).then(resp => {
+          if (resp.ok) {
+            resp.text().then(content => {
+              document.getElementById("data").value = content;
+            });
+          }
+        });
+      }
+
+      document.getElementById("profan").onclick = fillFrom;
+      document.getElementById("geweiht").onclick = fillFrom;
+      document.getElementById("magier").onclick = fillFrom;
+    </script>
   </body>
 </html>

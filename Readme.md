@@ -59,7 +59,7 @@ Die Kommandozeilenversion lässt sich bauen mit
 Dies generiert ein Image namens *dsa-4.1-heldendokument*.
 Dieses benutzt man wiefolgt:
 
-    cat templates/profan.lua | docker -i  --rm dsa-4.1-heldendokument > held.pdf
+    cat templates/profan.lua | docker run -i --rm dsa-4.1-heldendokument > held.pdf
 
 In diesem Beispiel wir als Datengrundlage das Template für einen profanen Helden, `templates/profan.lua` benutzt.
 Statt dessen kann natürlich ein eigener Held eingegeben werden.
@@ -81,16 +81,34 @@ Die Generierung kann mehrere Minuten dauern.
 
 ### Manuell
 
-Es muss TeX Live 2021 installiert sein.
-Ältere Distributionen funktionieren nicht (ja, ihr seid gemeint, Debian-Nutzer).
+Es muss TeX Live 2021 oder installiert sein.
+Ältere Distributionen funktionieren nicht (betrifft aktuelles Debian).
 Mac-User können [MacTeX](https://www.tug.org/mactex/) benutzen.
 
 Zusätzlich müssen die Schriftarten [Manson](https://fontsgeek.com/manson-font) und [NewG8](https://github.com/probonopd/font-newg8/releases/tag/continuous) im System installiert sein, so dass sie von LuaTeX gesehen werden.
 Für Mac-Nutzer bedeutet dies, dass sie systemweit, nicht nur für den aktuellen Benutzer, installiert sein müssen – dies lässt sich in den Einstellungen von *Font Book* festlegen.
 
 Das Fanprodukt-Logo und der Hintergrund müssen von Ulisses heruntergeladen und an die korrekte Stelle gelegt werden.
-Die folgenden Befehle nutzen curl, ImageMagick und poppler-utils, um dies zu tun – diese Werkzeuge sollten auf jedem vernünftigen System verfügbar sein:
+Die folgenden Befehle nutzen unzip, curl, ImageMagick und poppler-utils, um dies zu tun – diese Werkzeuge sollten auf jedem vernünftigen System verfügbar sein:
 
+    # WdS-Handout herunterladen
+    curl -L -s -o wds.pdf http://www.ulisses-spiele.de/download/468/
+    # Hintergrundbild extrahieren
+    pdfimages -f 2 -l 2 wds.pdf wds
+    # Hintergrundbild in JPG umwandeln
+    convert wds-000.ppm img/wallpaper.jpg
+
+    # Fanpaket herunterladen
+    curl -L http://www.ulisses-spiele.de/download/889/ -o fanpaket.zip
+    # Die eine Datei aus dem Fanpaket entpacken
+    unzip -p fanpaket.zip "Das Schwarze Auge - Fanpaket - 2013.07.29/Logo - Fanprodukt.png" >img/logo-fanprodukt.png
+
+Danach kann das Heldendokument generiert werden, indem im `src`-Verzeichnis folgender Befehl ausgeführt wird:
+
+    latexmk -lualatex='lualatex %O %S ../templates/profan.lua' heldendokument.tex
+
+Dieser Befehl erzeugt die Datei `heldendokument.pdf`.
+Der Pfad `../templates/profan.lua` kann durch den Pfad zu einer beliebigen Heldendatei ersetzt werden.
 
 ## Eine Helden-Datei erstellen
 

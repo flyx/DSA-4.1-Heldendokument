@@ -6,12 +6,10 @@ RUN apt update && apt upgrade && apt install -y --no-install-recommends \
       texlive-pictures \
       texlive-latex-extra \
       texlive-lang-german && \
-    apt install -y curl unzip poppler-utils imagemagick && \
-    mkdir /heldendokument
+    mkdir -p /heldendokument/img /tmp /fonts
 
-RUN mkdir -p /tmp /fonts
 COPY src/ /heldendokument/src
-COPY img/ /heldendokument/img
+COPY img/silhouette.png /heldendokument/img/silhouette.png
 COPY docker/held.sh /heldendokument
 COPY *.otf /fonts
 
@@ -20,26 +18,46 @@ ENV TERM xterm
 
 WORKDIR /tmp
 
-RUN curl -L https://github.com/probonopd/font-newg8/releases/download/continuous/newg8-otf.zip -O && \
-    unzip newg8-otf.zip && \
-    mv *.otf /fonts && \
+# installs curl build dependency, downloads everything it needs, then uninstalls
+# again to avoid having it in the image.
+RUN apt install -y curl && \
+    curl -L https://github.com/probonopd/font-newg8/releases/download/continuous/newg8-otf.zip -O && \
     curl -L https://mirrors.ctan.org/fonts/fontawesome.zip -O && \
+    curl -L https://mirrors.ctan.org/macros/latex/contrib/nicematrix.zip -O && \
+    curl -L -s -o wds.pdf http://www.ulisses-spiele.de/download/468/ && \
+    curl -L http://www.ulisses-spiele.de/download/889/ -o fanpaket.zip && \
+    apt remove -y --purge curl && \
+# same with unzip…
+    apt install -y unzip && \
+    unzip newg8-otf.zip && \
     unzip fontawesome.zip && \
+    unzip nicematrix.zip && \
+    unzip -p fanpaket.zip "Das Schwarze Auge - Fanpaket - 2013.07.29/Logo - Fanprodukt.png" >/heldendokument/img/logo-fanprodukt.png && \
+    apt remove -y --purge unzip && \
+# … poppler and imagemagic
+    apt install -y poppler-utils imagemagick && \
+    pdfimages -f 2 -l 2 wds.pdf wds && \
+    convert wds-000.ppm /heldendokument/img/wallpaper.jpg && \
+    apt remove -y --purge poppler-utils imagemagick && \
+    apt autoremove -y && \
+# move things into place
+    mv *.otf /fonts && \
+# install fontawesome
     mv fontawesome/tex /usr/share/texmf/tex/latex/fontawesome && \
     mv fontawesome/type1 /usr/share/texmf/fonts/type1/public/fontawesome && \
     mv fontawesome/tfm /usr/share/texmf/fonts/tfm/public/fontawesome && \
     mv fontawesome/enc/*.enc /usr/share/texmf/fonts/enc && \
     mv fontawesome/map/*.map /usr/share/texmf/fonts/map && \
     mv fontawesome/opentype /usr/share/texmf/fonts/opentype/public/fontawesome && \
-    curl -L https://mirrors.ctan.org/macros/latex/contrib/nicematrix.zip -O && \
-    unzip nicematrix.zip && \
+# install nicematrix
     cd nicematrix && latex nicematrix.ins && cd .. && \
     mkdir /usr/share/texmf/tex/latex/nicematrix && \
     mv nicematrix/nicematrix.sty /usr/share/texmf/tex/latex/nicematrix && \
+# re-hash tex stuff
     texhash && updmap-sys --enable Map=fontawesome.map && \
     luaotfload-tool -u && \
-    apt remove --purge -y curl unzip poppler-utils imagemagick && apt autoremove -y && \
+# and remove tmp stuff
     rm -rf /tmp/*
 
 WORKDIR /heldendokument
-CMD /heldendokument/held.sh -
+ENTRYPOINT ["/heldendokument/held.sh", "-"]
