@@ -34,8 +34,8 @@ local function tgroup_spec(name)
         [[|x{0.55cm}@{\dotsep}x{0.55cm}@{\dotsep}x{0.55cm}|x{1.0cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{BE} & \multicolumn{1}{c}{\Th{TaW}}]]
   elseif name == "sprachen" then
-    return "Sprachen & Schriften", 2, 6.85, 4,
-        [[|x{0.85cm}|y{0.55cm}@{\hskip 0.1cm}]],
+    return "Sprachen & Schriften", 2, 6.8, 4,
+        [[|x{0.9cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{Komp} & \multicolumn{1}{c}{\Th{TaW}}]]
   else
     return labels[name], 5, 5.92, 6,
