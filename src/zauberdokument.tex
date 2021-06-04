@@ -2,7 +2,7 @@
 \begin{dsaCharacterSheet}
 
 \begin{dsaSheetBox}[\textwidth]%
-    \directlua{r.eig_header({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"}, "16pt")}
+    \directlua{common.value_line:render({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"}, "16pt")}
 \end{dsaSheetBox}
 
 \vspace{-16pt}
@@ -25,7 +25,7 @@
     \Body
         \scriptsize\textbf{Ritualname} & \multicolumn{3}{c|}{\scriptsize \textbf{Probe}} & \scriptsize\textbf{Dauer} & \scriptsize\textbf{Kosten} & \scriptsize\textbf{Wirkung / Anmerkung} \\ \hline
         \directlua{
-            r.inner_rows(v.magie.rituale, 7)
+            common.inner_rows(data.magie.rituale, 7)
         }
     \end{NiceTabular}
     \vspace{2pt}
@@ -38,7 +38,7 @@
 
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \directlua{
-            r.kenntnis("Ritualkenntnis", v.magie.rituale.kenntnis)
+            common.kenntnis("Ritualkenntnis", data.magie.rituale.kenntnis)
         }
 	\end{dsaSheetBox}
 
@@ -50,7 +50,7 @@
         \vspace{-5pt}
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
-                r.inner_rows(v.vorteile.magisch, 1)
+                common.inner_rows(data.vorteile.magisch, 1)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -63,10 +63,10 @@
         \vspace{-5pt}
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
-                r.inner_rows(v.sf.magisch, 1)
+                common.inner_rows(data.sf.magisch, 1)
             } \\ \hline
 
-            \raggedright\normalsize \textmansontt{\textbf{Regeneration:}} \colorbox{white}{\parbox[c]{3cm}{\normalfont\centering\directlua{r.asp_regeneration()}}} \textmansontt{\textbf{pro Phase}}
+            \raggedright\normalsize \textmansontt{\textbf{Regeneration:}} \colorbox{white}{\parbox[c]{3cm}{\normalfont\centering\directlua{zauberdokument.asp_regeneration()}}} \textmansontt{\textbf{pro Phase}}
         \end{tabular}
     \end{dsaSheetBox}
 
@@ -79,7 +79,7 @@
         \vspace{-5pt}
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
-                r.inner_rows(v.magie.artefakte, 1)
+                common.inner_rows(data.magie.artefakte, 1)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -93,7 +93,7 @@
         \vspace{-5pt}
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
-                r.inner_rows(v.notizen.magisch, 1)
+                common.inner_rows(data.notizen.magisch, 1)
             }
         \end{tabular}
     \end{dsaSheetBox}

@@ -8,7 +8,7 @@
         \Huge\mansontt\shadowtext{\textbf{Heldendokument}}
     \end{center}
     \begin{tabular}{p{2.1cm}p{\dimexpr.5\textwidth-4\tabcolsep-2.1cm}p{2.1cm}p{\dimexpr.5\textwidth-4\tabcolsep-2.1cm}}
-        \directlua{r.held_top()}
+        \directlua{frontseite.held:top()}
     \end{tabular}
 \end{dsaSheetBox}
 
@@ -16,7 +16,7 @@
 \begin{multicols}{2}
 \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
     \begin{tabular}{p{2.3cm}p{\dimexpr\textwidth-4\tabcolsep-2.3cm}}
-        \directlua{r.held_links()}
+        \directlua{frontseite.held:links()}
     \end{tabular}
 \end{dsaSheetBox}%
 
@@ -24,7 +24,7 @@
 \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
 
     \begin{tabular}{p{2.5cm}p{\dimexpr\textwidth-4\tabcolsep-2.5cm}}
-        \directlua{r.held_rechts()}
+        \directlua{frontseite.held:rechts()}
     \end{tabular}
 \end{dsaSheetBox}%
 \end{multicols}
@@ -32,7 +32,7 @@
 
 \begin{dsaSheetBox}[\textwidth]
     \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
-        \directlua{r.labelled_rows(v.held.aussehen, "Aussehen", "normalsize")}
+        \directlua{common.labelled_rows(data.held.aussehen, "Aussehen", "normalsize")}
     \end{tabular}
 \end{dsaSheetBox}%
 
@@ -43,7 +43,7 @@
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
             \directlua{
-                r.inner_rows(v.vorteile, 1, 7, "magisch")
+                common.inner_rows(data.vorteile, 1, 7, "magisch")
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -55,7 +55,7 @@
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
             \directlua{
-                r.inner_rows(v.nachteile, 1, 7, "magisch")
+                common.inner_rows(data.nachteile, 1, 7, "magisch")
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -72,21 +72,21 @@
     \renewcommand{\arraystretch}{1.325}
     \begin{tabular}{p{3.1cm}|x{1.2cm}|x{1.2cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}}
         \directlua{
-            r.header_row("tiny", "dsaSmallHeader",
+            common.header_row("tiny", "dsaSmallHeader",
                "", "Modifikator", "Start", "Aktuell")
-            r.eig_links()
+            frontseite.eigenschaften:links()
         }
    \end{tabular}%
 \end{dsaSheetBox}
 \begin{dsaSheetBox}[2\fboxsep + 11.2cm]
     \setlength{\tabcolsep}{0pt}
     \renewcommand{\arraystretch}{1.325}
-    \begin{tabular}{p{5.1cm}|x{1.2cm}|x{1.2cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}|x{1.2cm}}
+    \begin{tabular}{p{5.3cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}|x{1.2cm}@{/}x{0.8cm}|x{1.2cm}}
         \directlua{
-            r.header_row("tiny", "dsaSmallHeader",
-                "", "Modifikator", "Start", "Aktuell", "Zugekauft", "Permanent")
-            r.eig_rechts()
-        }
+            common.header_row("tiny", "dsaSmallHeader",
+                "", "Aktuell", "Modifikator", {1, "c@{\noexpand\\tiny/}", "Zugekauft"}, {1, "c", "Max"}, "Permanent")
+        }%
+        \directlua{frontseite.eigenschaften:rechts()}
     \end{tabular}
     \vspace{0.2pt}
 \end{dsaSheetBox}
@@ -97,7 +97,7 @@
 
 \begin{dsaSheetBox}[\textwidth]
     \large
-    \directlua{r.eig_header({"AP_Gesamt", "AP_Eingesetzt", "AP_Guthaben"}, "40pt", "2.5cm")}
+    \directlua{common.value_line:render({"AP_Gesamt", "AP_Eingesetzt", "AP_Guthaben"}, "40pt", "2.5cm")}
 \end{dsaSheetBox}%
 \begin{tikzpicture}[remember picture, overlay]
     \node[inner sep=0pt] at ([xshift=0cm,yshift=-1.35cm]current page.north) {%

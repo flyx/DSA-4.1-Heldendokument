@@ -92,6 +92,7 @@ return {
   --  einfach oft genug "" in die allgemeinen Voretile schreiben.
   vorteile = {
     "", "", "",
+    eisern = false,
     magisch = {
       "", "", ""
     }
@@ -100,35 +101,44 @@ return {
   nachteile = {
     "", "",
     "", "",
+    glasknochen = false,
     magisch = {
       "", ""
     }
   },
-  --  Eigenschaften. Der erste Wert ist der Modifikator, der zweite Wert der
-  --  Startwert, und der dritte Wert ist der aktuelle Wert.
-  --  LE, AU, AE, KE und MR besitzen noch einen vierten Wert (zugekauft) und
-  --  einen fünften Wert (permanent).
+  --  Eigenschaften. Der erste Wert ist der Modifikator.
+  --  Bei Basis-Eigenschaften ist der zweite Wert der Startwert, der dritte Wert
+  --  der aktuelle Wert.
+  --  Bei abgeleiteten Eigenschaften ist der zweite Wert der zugekauft-Wert, der
+  --  dritte Wert die permanent verlorenen Punkte.
+  --  Werte die 0 sind, werden nicht ausgegeben; abgeleitete Werte, die von
+  --  Basiseigenschaften abhängen, die 0 sind, werden ebenfalls nicht ausgegeben.
   eig = {
-    MU  = {"", "", ""},
-    KL  = {"", "", ""},
-    IN  = {"", "", ""},
-    CH  = {"", "", ""},
-    FF  = {"", "", ""},
-    GE  = {"", "", ""},
-    KO  = {"", "", ""},
-    KK  = {"", "", ""},
-    GS  = {"", "", ""},
-    LE  = {"", "", "", "", ""},
-    AU  = {"", "", "", "", ""},
-    AE  = {"", "", "", "", ""},
-    KE  = {"", "", "", "", ""},
-    MR  = {"", "", "", "", ""},
-    INI = {"", "", ""},
-    AT  = {"", "", ""},
-    PA  = {"", "", ""},
-    FK  = {"", "", ""},
-    --  Die Wundschwelle ist ein einzelner Wert.
-    WS  = "",
+    MU  = {0, 0, 0},
+    KL  = {0, 0, 0},
+    IN  = {0, 0, 0},
+    CH  = {0, 0, 0},
+    FF  = {0, 0, 0},
+    GE  = {0, 0, 0},
+    KO  = {0, 0, 0},
+    KK  = {0, 0, 0},
+    GS  = {0, 0, 0},
+    LE  = {0, 0, 0},
+    AU  = {0, 0, 0},
+    AE  = {0, 0, 0},
+    MR  = {0, 0, 0},
+    --  Die zugekauften und permanenten Werte von Karmaenergie werden nicht in
+    --  den Bogen eingetragen, da sie regeltechnisch ebenso in den Modifikator
+    --  eingerechnet werden können und keine zusätzlichen Auswirkungen haben.
+    --  Werden hier Werte ungleich 0 eingegeben, fließen sie dennoch in den
+    --  aktuellen Wert mit ein.
+    KE  = {0, 0, 0},
+    --  INI hat ausschließlich den Modifikator, der von der Rasse kommen kann.
+    --  Der Modifikator von Kampfgespür und Kampfreflexe sollte hier nicht
+    --  eingetragen werden, dieser wird bereits mit eingerechnet, wenn die
+    --  Sonderfertigkeiten angekreuzt sind.
+    INI = {0},
+    --  Die restlichen Werte werden komplett automatisch berechnet.
   },
   --  Abenteuerpunkte.
   ap = {
@@ -244,7 +254,8 @@ return {
     --  Magische Sonderfertigkeiten. Jeder Wert erzeugt eine Zeile.
     --  Dieser SFs werden ausschließlich auf dem Zauberdokument ausgegeben!
     magisch = {
-      "", "", "", "", ""
+      "", "", "", "", "",
+      gefaess_der_sterne = false
     },
     --  Kampfgespür und Kampfreflexe sind Boolean-Werte (true oder false).
     --  Sind sie true, wird die entsprechende Box auf der Frontseite angekreuzt.

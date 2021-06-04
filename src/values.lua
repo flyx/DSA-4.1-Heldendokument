@@ -31,12 +31,130 @@ end
 
 local values = require(arg[i])
 
-function values:grs()
-  return sum_and_round(self.ruestung, 2)
+local getter_map = {
+  calc = {
+    LE = function() return {"KO", "KO", "KK", div=2} end,
+    AU = function() return {"MU", "KO", "GE", div=2} end,
+    AE = function()
+      if data.sf.magisch.gefaess_der_sterne then
+        return {"MU", "IN", "CH", "CH", div=2}
+      else
+        return {"MU", "IN", "CH", div=2}
+      end
+    end,
+    MR = function() return {"MU", "KL", "KO", div=5} end,
+    KE = function() return {"KE", hide_formula = true} end,
+    INI = function() return {"MU", "MU", "IN", "GE", div=5, add_sf=true} end,
+    AT = function() return {"MU", "GE", "KK", div=5} end,
+    PA = function() return {"IN", "GE", "KK", div=5} end,
+    FK = function() return {"IN", "FF", "KK", div=5} end,
+  },
+}
+
+function getter_map:reg(kind, ...)
+  for i,v in ipairs({...}) do
+    self[v] = kind
+  end
 end
 
-function values:gbe()
-  return sum_and_round(self.ruestung, 3)
+function getter_map:formula(name)
+  local vals = self.calc[name]()
+  if vals.hide_formula then
+    return ""
+  end
+  local res = "("
+  for i,v in ipairs(vals) do
+    if i ~= 1 then
+      res = res .. "+"
+    end
+    res = res .. v
+  end
+  return res .. ")/" .. vals.div
+end
+
+getter_map:reg("basic", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "GS")
+getter_map:reg("calculated", "LE", "AU", "AE", "MR", "KE", "INI", "AT", "PA", "FK")
+getter_map:reg("rs", "RS")
+getter_map:reg("be", "BE")
+
+function getter_map.sparse(val, div)
+  div = div or 1
+  if val == 0 then
+    return ""
+  end
+  return string.format("%.0f", val/div + 0.0001) -- round up at 0.5
+end
+
+values.sparse = getter_map.sparse
+
+setmetatable(getter_map.calc, {
+  __call = function(self, data, name)
+    local vals = self[name]()
+    local div = vals.div and vals.div or 1
+    local val = 0
+    for i,v in ipairs(vals) do
+      local x = 0
+      if v == "KE" then
+        x = data.eig.KE[1]
+      else
+        x = data.eig[v][3]
+      end
+      if x == 0 then
+        return ""
+      end
+      val = val + x
+    end
+    val = val / div
+    if val == 0 then
+      return ""
+    end
+    local others = data.eig[name]
+    if others and #others >= 1 then
+      -- Modifikator
+      val = val + others[1]
+      if #others >= 2 then
+        -- Zugekauft
+        val = val + others[2]
+        if #others >= 3 then
+          -- Permanent
+          val = val - others[3]
+        end
+      end
+    end
+    if vals.add_sf then
+      if data.sf.kampfreflexe then
+        val = val + 4
+      end
+      if data.sf.kampfgespuer then
+        val = val + 2
+      end
+    end
+    return getter_map.sparse(val)
+  end
+})
+
+function values:cur(name, div)
+  div = div or 1
+  local kind = getter_map[name]
+  if kind == "basic" then
+    return getter_map.sparse(self.eig[name][3], div)
+  elseif kind == "calculated" then
+    return getter_map.calc(self, name)
+  elseif kind == "rs" then
+    return sum_and_round(self.ruestung, 2)
+  elseif kind == "be" then
+    return sum_and_round(self.ruestung, 3)
+  else
+    tex.error("queried unknown value: " .. name)
+  end
+end
+
+function values:formula(name)
+  local kind = getter_map[name]
+  if kind ~= "calculated" then
+    tex.error("requested formula of something not calculated: " .. name)
+  end
+  return getter_map:formula(name)
 end
 
 return values

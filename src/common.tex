@@ -1,8 +1,13 @@
 \documentclass{dsa}
 
 \directlua{
-  v = require("values")
-  r = require("render")
+  data = require("values")
+  common = require("common")
+  frontseite = require("frontseite")
+  talentbogen = require("talentbogen")
+  kampfbogen = require("kampfbogen")
+  zauberliste = require("zauberliste")
+  zauberdokument = require("zauberdokument")
 }
 
 \newcommand{\dsaHeading}[1]{%
@@ -16,7 +21,7 @@
 \newcommand{\dotsep}{\textbullet}
 
 \newcommand{\dsaHeroVal}[2][\normalfont]{%
-    {#1\directlua{tex.sprint(v.#2)}}
+    {#1\directlua{tex.sprint(data.#2)}}
 }
 
 \newcommand{\dsaSmallHeader}{\tiny\normalfont\bfseries}

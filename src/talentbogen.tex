@@ -4,7 +4,7 @@
 \vspace*{-13pt}
 \begin{dsaSheetBox}[\textwidth]%
     \vspace*{-2pt}
-    \directlua{r.eig_header({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "BE"}, "11pt")}
+    \directlua{common.value_line:render({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "BE"}, "11pt")}
     \vspace*{-2pt}
 \end{dsaSheetBox}
 
@@ -25,7 +25,7 @@
     \begin{multicols}{2}
 
         \directlua{
-            r.talentgruppen()
+            talentbogen.gruppen()
         }
     \end{multicols}
 \end{dsaSheetBox}

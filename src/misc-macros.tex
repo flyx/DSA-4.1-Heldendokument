@@ -6,7 +6,7 @@
     \begin{dsaSheetBox}
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
             \directlua{
-                r.labelled_rows(v.kleidung, "Kleidung", "Large")
+                common.labelled_rows(data.kleidung, "Kleidung", "Large")
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -21,7 +21,7 @@
         \begin{tabular}{p{5.5cm}|x{1cm}|x{2.2cm}}
             \dsaTHeading{\Large Ausrüstung} & \normalfont\tiny\bfseries Gewicht & \normalfont\tiny\bfseries Wo getragen? \\ \hline
             \directlua{
-                r.inner_rows(v.ausruestung, 3)
+                common.inner_rows(data.ausruestung, 3)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -36,7 +36,7 @@
     \begin{tabular}{p{5.3cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}}
         \dsaTHeading{\Large Proviant / Tränke} & \multicolumn{4}{c}{\normalfont\bfseries\scriptsize Rationen / Ladungen} \\ \hline
         \directlua{
-            r.inner_rows(v.proviant, 5)
+            common.inner_rows(data.proviant, 5)
         }
     \end{tabular}
 \end{dsaSheetBox}
@@ -51,12 +51,12 @@
     \begin{tabular}{p{2.6cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}}
         \multicolumn{2}{l}{\dsaTHeading{\Large Vermögen}} & \multicolumn{7}{l}{\normalfont\tiny (1 Dukate = 10 Silbertaler = 100 Heller = 1000 Kreuzer)} \\ \hline
         \directlua{
-            r.inner_rows(v.vermoegen, 9)
+            common.inner_rows(data.vermoegen, 9)
         } \\ \hline%
     \end{tabular}
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
         \directlua{
-            r.labelled_rows(v.vermoegen.sonstiges, "Sonstiges")
+            common.labelled_rows(data.vermoegen.sonstiges, "Sonstiges")
         }
     \end{tabular}
 \end{dsaSheetBox}
@@ -66,7 +66,7 @@
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
             \directlua{
-                r.labelled_rows(v.verbindungen, "Verbindungen", "Large")
+                common.labelled_rows(data.verbindungen, "Verbindungen", "Large")
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -76,7 +76,7 @@
     \begin{dsaSheetBox}
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
             \directlua{
-                r.labelled_rows(v.notizen, "Notizen", "Large")
+                common.labelled_rows(data.notizen, "Notizen", "Large")
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -95,7 +95,7 @@
         \scriptsize\textbf{KO} & \scriptsize\textbf{GS} & \scriptsize\textbf{AU} & \scriptsize\textbf{MR} &
         \scriptsize\textbf{LO} & \scriptsize\textbf{TK} & \scriptsize\textbf{ZK} \\ \hline
         \directlua{
-            r.inner_rows(v.tiere, 15)
+            common.inner_rows(data.tiere, 15)
         }
     \end{tabular}
 \end{dsaSheetBox}
@@ -104,7 +104,7 @@
 \newcommand{\Liturgien}{%
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \directlua{
-            r.kenntnis("Liturgiekenntnis", {v.liturgien.kenntnis})
+            common.kenntnis("Liturgiekenntnis", {data.liturgien.kenntnis})
         }
 
         \vspace{5pt}
@@ -117,7 +117,7 @@
         \Body
             \normalfont\bfseries\scriptsize Liturgie & \normalfont\bfseries\scriptsize Grad & \hspace{3pt}\normalfont\bfseries\scriptsize Wirkung \\ \hline
             \directlua{
-                r.inner_rows(v.liturgien, 3)
+                common.inner_rows(data.liturgien, 3)
             }
         \end{NiceTabular}
     \end{dsaSheetBox}
@@ -132,15 +132,15 @@
 
         \begin{dsaSheetBox}
             \hspace{6pt}\directlua{
-                r.eig_header({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"}, "16pt")
+                common.value_line:render({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"}, "16pt")
             }
             \renewcommand{\arraystretch}{1.25}
             \bfseries\large\mansontt
             \begin{tabular}{p{4cm}p{13.7cm}} \hline
-                Repräsentationen: & \normalfont\directlua{r.reprs(v.magie.repraesentationen)} \\ \hline
-                Merkmale: & \normalfont\directlua{tex.sprint(-2, table.concat(v.magie.merkmale, ", "))} \\ \hline
-                Begabungen: & \normalfont\directlua{tex.sprint(-2, table.concat(v.magie.begabungen, ", "))} \\ \hline
-                Unfähigkeiten: & \normalfont\directlua{tex.sprint(-2, table.concat(v.magie.unfaehigkeiten, ", "))}
+                Repräsentationen: & \normalfont\directlua{zauberliste.repraesentationen:render(data.magie.repraesentationen)} \\ \hline
+                Merkmale: & \normalfont\directlua{tex.sprint(-2, table.concat(data.magie.merkmale, ", "))} \\ \hline
+                Begabungen: & \normalfont\directlua{tex.sprint(-2, table.concat(data.magie.begabungen, ", "))} \\ \hline
+                Unfähigkeiten: & \normalfont\directlua{tex.sprint(-2, table.concat(data.magie.unfaehigkeiten, ", "))}
             \end{tabular}
         \end{dsaSheetBox}
 
@@ -153,11 +153,11 @@
                 \rowcolors{2}{white}{gray!30}
             \Body
                 \directlua{
-                    r.header_row("scriptsize", "dsaSmallHeader",
-                        {1, "c", "Seite"}, "Name", {3, "c", "Probe"}, {1, "c", "ZfW"}, "Komp", "Merkmale", "Rep", "Lern")
+                    common.header_row("scriptsize", "dsaSmallHeader",
+                        {1, "c|", "Seite"}, "Name", {3, "c|", "Probe"}, {1, "c|", "ZfW"}, "Komp", "Merkmale", "Rep", "Lern")
                 } \Xhline{2\arrayrulewidth}
                 \directlua{
-                    r.zauberseite(#1)
+                    zauberliste.seite((#1 - 1) * 49 + 1)
                 }
             \end{NiceTabular}
             \vspace{3pt}
