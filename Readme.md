@@ -103,10 +103,12 @@ Die folgenden Befehle nutzen unzip, curl, ImageMagick und poppler-utils, um dies
     # Die eine Datei aus dem Fanpaket entpacken
     unzip -p fanpaket.zip "Das Schwarze Auge - Fanpaket - 2013.07.29/Logo - Fanprodukt.png" >img/logo-fanprodukt.png
 
-Danach kann das Heldendokument generiert werden, indem im `src`-Verzeichnis folgender Befehl ausgeführt wird:
+Danach kann das Heldendokument generiert werden, indem im `src`-Verzeichnis folgende Befehle ausgeführt wird:
 
+    latexmk -c
     latexmk -lualatex='lualatex %O %S ../templates/profan.lua' heldendokument.tex
 
+Der erste Befehl löscht vorherige Ausgaben und ist nötig, wenn im selben Verzeichnis bereits ein anderer Held generiert wurde.
 Dieser Befehl erzeugt die Datei `heldendokument.pdf`.
 Der Pfad `../templates/profan.lua` kann durch den Pfad zu einer beliebigen Heldendatei ersetzt werden.
 
@@ -118,7 +120,7 @@ Sie sind ausführlich kommentiert und erläutern, wie man Werte einfügt und ver
 
 Die Templates selbst können als Eingabe benutzt werden, um leere Heldendokumente zu erstellen – falls man sie einfach ausdrucken und mit Bleistift befüllen will *wie die Barbaren*.
 In den Templates sind ausschließlich die Basis-Talente vorausgefüllt.
-Es können auch in leeren Dokumenten die Anzahl Zeilen in verschiedenen Tabellen geändert werden, indem man ausgehend vom Template die entsprechenden Änderungen ausführt.
+Unabhängig davon, ob Zeilen in Tabellen ausgefüllt sind oder nicht, lässt sich die Anzahl Zeilen immer dadurch beeinflussen, dass man zusätzliche, möglicherweise leere, Zeilenwerte (meistens `{}`, siehe Templates) einfügt oder löscht.
 
 ## Lizenz
 

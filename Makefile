@@ -1,10 +1,12 @@
 all: profan.pdf geweiht.pdf magier.pdf
 
-SOURCES = src/ausruestung.tex src/common.tex src/dsa.cls \
-          src/frontseite.tex src/heldendokument.tex src/kampfbogen.tex \
-					src/liturgien.tex src/misc-macros.tex src/render.lua \
-					src/talentbogen.tex src/values.lua src/zauberdokument.tex \
-					src/zauberliste.tex
+SOURCES = src/ausruestung.tex src/common.lua src/common.tex src/dsa.cls \
+          src/frontseite.lua src/frontseite.tex src/heldendokument.tex \
+					src/kampfbogen.lua src/kampfbogen.tex \
+					src/liturgien.tex src/misc-macros.tex \
+					src/talentbogen.lua src/talentbogen.tex src/values.lua \
+					src/zauberdokument.lua src/zauberdokument.tex \
+					src/zauberliste.lua src/zauberliste.tex
 
 *.pdf: templates/profan.lua ${SOURCES}
 	cd src && latexmk -lualatex='lualatex %O %S ../$<' heldendokument.tex

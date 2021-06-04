@@ -1,6 +1,6 @@
 FROM debian:bullseye-slim
 
-RUN apt update && apt upgrade && apt install -y --no-install-recommends \
+RUN apt update --fix-missing -y && apt upgrade -y && apt install -f -y --no-install-recommends \
       texlive-luatex \
       latexmk \
       texlive-pictures \
@@ -8,7 +8,7 @@ RUN apt update && apt upgrade && apt install -y --no-install-recommends \
       texlive-lang-german && \
     mkdir -p /heldendokument/img /tmp /fonts
 
-COPY src/ /heldendokument/src
+COPY src/*.lua src/*.tex src/.latexmkrc src/dsa.cls /heldendokument/src/
 COPY img/silhouette.png /heldendokument/img/silhouette.png
 COPY docker/held.sh /heldendokument
 COPY *.otf /fonts
