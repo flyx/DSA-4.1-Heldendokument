@@ -14,19 +14,47 @@
 --  Zeileninhalt, der auf zwei Minusse -- folgt, ist ein Kommentar und für die
 --  Programmiersprache nicht relevant.
 --
---  Textuelle Werte müssen von Hochkommas umschlossen werden: "Beispiel".
---  Zahlenwerte können auch ohne Hochkommas eingegeben werden: 42.
+--  Textuelle Werte müssen von Hochkommas oder doppelten eckigen Klammern
+--  umschlossen werden: "Beispiel", [[Beispiel2]]
+--  Zahlenwerte müssen ohne Hochkommas eingegeben werden: 42.
 --  Tabellenwerte werden von {} umschlossen und enthalten kommagetrennte,
 --  möglicherweise benannte Werte. Beim Editieren muss die bestehende
 --  Tabellenstruktur beibehalten werden, es dürfen beispielsweise keine
 --  Tabellen durch textuelle oder Zahlenwerte ersetzt werden. Auch dürfen die
 --  Namen von benamten Werten nicht geändert werden.
 --
---  Standardmäßig stehen an vielen Stellen leere textuelle Werte: "".
---  Diese können durch Zahlenwerte ersetzt werden, wenn sinnvoll.
---  In Listen stehen oftmals leere Tabellen: {}.
---  Diese sorgen dafür, dass eine leere Zeile produziert wird. Sie können mit
---  Werten gefüllt werden, die in der Zeile eingezeigt werden sollen.
+--  Textuelle Werte, die mehrere Zeilen umfassen können, können als einzelner
+--  Wert oder als Tabelle eingegeben werden. Folgende beiden Werte fürs Aussehen
+--  sind etwa identisch:
+--
+--    "kurzes Haar, dunkler Teint"
+--    {"kurzes Haar", "dunkler Teint"}
+--
+--  In Tabellenform kann man eine neue Zeile forcieren, indem man eine leere
+--  Tabelle vor den Wert, der in einer neuen Zeile stehen soll, schreibt:
+--
+--    {"kurzes Haar", {}, "dunkler Teint"}
+--
+--  Ausgabe:
+--
+--    kurzes Haar
+--    dunkler Teint
+--
+--  Es wird in diesem Fall kein Komma zwischen die Werte gesetzt, so wie es
+--  sonst passieren würde.
+--
+--  In Listen (Talentliste, Ausrüstungsliste etc) stehen oftmals leere Tabellen:
+--
+--    natur = {
+--      {"Fährtensuchen", "KL", "IN", "IN", ""},
+--      {"Orientierung",  "KL", "IN", "IN", ""},
+--      {"Wildnisleben",  "IN", "GE", "KO", ""},
+--      {}, {}, {}, {}
+--    },
+--
+--  Jede leere Tabelle {} erzeugt eine leere Zeile. Auf diese Weise kann die
+--  Anzahl Zeilen in einer Tabelle bestimmt werden. Mehrzeilige Textwerte
+--  (Aussehen, Vorteile, Kleidung etc) haben dagegen eine feste Anzahl Zeilen.
 
 return {
   dokument = {
@@ -78,33 +106,34 @@ return {
     augenfarbe   = "",
     stand        = "",
     sozialstatus = "",
-    --  Der Titel hat vier Zeilen, jeder Wert wird in eine Zeile geschrieben.
-    titel        = {"", "", "", ""},
-    --  Das Aussehen hat drei Zeilen, jeder Wert in eine Zeile geschrieben.
-    aussehen     = {"", "", ""},
+    --  Wird automatisch auf 4 Zeilen umgebrochen wenn nötig
+    titel        = "",
+    --  Wird automatisch auf 3 Zeilen umgebrochen wenn nötig
+    aussehen     = "",
   },
-  --  Die Vorteile sind in allgemeine und magische Vorteile getrennt.
-  --  Jeder Wert ist eine Zeile. Wenn noch genug Zeilen übrig sind, werden auch
-  --  alle die magischen Vorteile auf die Frontseite geschrieben. Dies geschieht
-  --  nicht, wenn nur ein Teil der magischen Vorteile hineinpassen würde.
-  --  In jedem Fall finden sich die magischen Vorteile auf dem Zauberdokument.
-  --  Um zu verhindern, dass magische Vorteile auf der Frontseite stehen,
-  --  einfach oft genug "" in die allgemeinen Voretile schreiben.
+  --  Vorteile wie Nachteile haben eine allgemeine und eine magische Liste.
+  --  Die allgemeinen Vorteile stehen vornan und generieren einen mehrzeiligen
+  --  textuellen Wert.
+  --
+  --  Bestimmte Vor- und Nachteile (Eisern, Glasknochen etc)
+  --  werden als benamte Werte gesetzt, weil sie die Berechnung bestimmter Werte
+  --  verändern (etwa die Wundschwelle). Das Setzen des benamten Werts auf
+  --  `true` bedingt, dass der korrekte Name in den textuellen Wert geschrieben
+  --  wird und die referenzierte Berechnung korrekt modifiziert wird.
+  --
+  --  Ist der benamte Tabellenwert `magisch` in den Vorteilen vorhanden, wird
+  --  die Astralenergie des Charakters berechnet. Der Tabellenwert kann eine
+  --  weitere Liste von Vor- bzw. Nachteilen enthalten, die hinter die
+  --  allgemeinen Vor-/Nachteile geschrieben werden; außerdem wird diese Liste
+  --  in die magischen Vor-/Nachteile auf dem Zauberdokument geschrieben.
   vorteile = {
-    "", "", "",
+    "",
     eisern = false,
-    magisch = {
-      "", "", ""
-    }
+    -- magisch = {}   -- Aktivieren für magisch begabte Charaktere
   },
-  --  Nachteile werden analog zu Vorteilen behandelt.
   nachteile = {
-    "", "",
-    "", "",
+    "",
     glasknochen = false,
-    magisch = {
-      "", ""
-    }
   },
   --  Eigenschaften. Der erste Wert ist der Modifikator.
   --  Bei Basis-Eigenschaften ist der zweite Wert der Startwert, der dritte Wert

@@ -36,10 +36,14 @@ local getter_map = {
     LE = function() return {"KO", "KO", "KK", div=2} end,
     AU = function() return {"MU", "KO", "GE", div=2} end,
     AE = function()
-      if data.sf.magisch.gefaess_der_sterne then
-        return {"MU", "IN", "CH", "CH", div=2}
+      if data.vorteile.magisch then
+        if data.sf.magisch.gefaess_der_sterne then
+          return {"MU", "IN", "CH", "CH", div=2}
+        else
+          return {"MU", "IN", "CH", div=2}
+        end
       else
-        return {"MU", "IN", "CH", div=2}
+        return {"MU", "IN", "CH", div=2, disabled=true}
       end
     end,
     MR = function() return {"MU", "KL", "KO", div=5} end,
@@ -90,6 +94,9 @@ values.sparse = getter_map.sparse
 setmetatable(getter_map.calc, {
   __call = function(self, data, name)
     local vals = self[name]()
+    if vals.disabled then
+      return ""
+    end
     local div = vals.div and vals.div or 1
     local val = 0
     for i,v in ipairs(vals) do

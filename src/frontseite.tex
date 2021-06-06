@@ -32,7 +32,14 @@
 
 \begin{dsaSheetBox}[\textwidth]
     \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
-        \directlua{common.labelled_rows(data.held.aussehen, "Aussehen", "normalsize")}
+        \multirow[t]{3}{=}{\renewcommand{\baselinestretch}{1.35}\normalsize
+            \textmansontt{\textbf{Aussehen}}\hspace{10pt}
+            \directlua{
+                common.multiline_content("Aussehen", data.held.aussehen)
+            }
+        }\\ \hline
+        \\ \hline
+        \\
     \end{tabular}
 \end{dsaSheetBox}%
 
@@ -42,9 +49,19 @@
     \vspace{-12pt}
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
-            \directlua{
-                common.inner_rows(data.vorteile, 1, 7, "magisch")
-            }
+            \multirow[t]{7}{=}{\renewcommand{\baselinestretch}{1.35}\normalsize
+                \directlua{
+                    local eisern = data.vorteile.eisern and {"Eisern"} or {}
+                    common.multiline_content("Vorteile",
+                        data.vorteile, eisern, data.vorteile.magisch)
+                }
+            }\\ \hline
+            \\ \hline
+            \\ \hline
+            \\ \hline
+            \\ \hline
+            \\ \hline
+            \\
         \end{tabular}
     \end{dsaSheetBox}
 
@@ -54,9 +71,19 @@
     \vspace{-12pt}
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
-            \directlua{
-                common.inner_rows(data.nachteile, 1, 7, "magisch")
-            }
+            \multirow[t]{7}{=}{\renewcommand{\baselinestretch}{1.35}\normalsize
+                \directlua{
+                    local glasknochen = data.nachteile.glasknochen and {"Glasknochen"} or {}
+                    common.multiline_content("Nachteile",
+                        data.nachteile, glasknochen, data.nachteile.magisch)
+                }
+            }\\ \hline
+            \\ \hline
+            \\ \hline
+            \\ \hline
+            \\ \hline
+            \\ \hline
+            \\
         \end{tabular}
     \end{dsaSheetBox}
 \end{multicols}

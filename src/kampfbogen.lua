@@ -3,6 +3,44 @@ local common = require("common")
 
 local kampfbogen = {}
 
+local nahkampf_render = {
+  [2]= {false, nil},
+  [3]= {true, function(v)
+    -- TODO
+    tex.sprint(-2, 3)
+  end}
+}
+
+function kampfbogen.nahkampf()
+  for i,v in ipairs(data.nahkampf) do
+    if i ~= 1 then
+      tex.sprint([[\\\hline]])
+    end
+    local input_index = 1
+    for j = 1,15 do
+      if j ~= 1 then
+        tex.sprint([[&]])
+      end
+      local spec = nahkampf_render[j]
+      local advance, render = true, nil
+      if spec ~= nil then
+        advance, render = unpack(spec)
+      end
+      local val = v[input_index]
+      if val ~= nil then
+        if render == nil then
+          tex.sprint(-2, val)
+        else
+          render(val)
+        end
+      end
+      if advance then
+        input_index = input_index + 1
+      end
+    end
+  end
+end
+
 function kampfbogen.waffenlos(v)
   common.inner_rows({
     {"Raufen", "10", "3", "+0", unpack(v.raufen)},

@@ -50,31 +50,19 @@ function held_basis.links(self)
 end
 
 function held_basis.rechts(self)
-  for i,n in ipairs({"stand", "sozialstatus", "titel"}) do
+  for i,n in ipairs({"stand", "sozialstatus"}) do
     if i ~= 1 then
       tex.sprint([[\\ \hline]])
     end
     local_heading(self.labels[n])
     tex.sprint("&")
-    local v = data.held[n]
-    if type(v) == "table" then
-      local vals = {unpack(v, 1, 4)}
-      while #vals < 4 do
-        table.insert(vals, "")
-      end
-      for j=1,4 do
-        if j > 1 then
-          tex.sprint([[\\ \hline\multicolumn{2}{l}{]])
-        end
-        tex.sprint(-2, vals[j])
-        if j > 1 then
-          tex.sprint("}")
-        end
-      end
-    else
-      tex.sprint(-2, v)
-    end
+    tex.sprint(-2, data.held[n])
   end
+  tex.sprint([[\\ \hline\multicolumn{2}{p{.9\textwidth}}{\multirow[t]{4}{=}{\renewcommand{\baselinestretch}{1.35}\normalfont]])
+  local_heading(self.labels["titel"])
+  tex.sprint([[\hspace{54.92pt}]])
+  common.multiline_content("Titel", data.held.titel)
+  tex.sprint([[}}\\ \hline \\ \hline \\ \hline \\]])
 end
 
 frontseite.held = held_basis
@@ -206,7 +194,7 @@ function eigenschaften.rechts(self)
                 if data.nachteile.glasknochen then
                   base = base - 2
                 end
-                tex.sprint(-2, base)
+                tex.sprint(-2, common.round(base))
               end
             end
             tex.sprint([[\\\hline\end{tabular}}\egroup\par]])

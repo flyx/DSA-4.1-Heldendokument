@@ -49,9 +49,15 @@
 
         \vspace{-5pt}
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
-            \directlua{
-                common.inner_rows(data.vorteile.magisch, 1)
-            }
+            \multirow[t]{5}{=}{\renewcommand{\baselinestretch}{1.033}\normalfont\fontsize{8}{12}\selectfont
+                \directlua{
+                    common.multiline_content("Magische Vor- und Nachteile", data.vorteile.magisch, data.nachteile.magisch)
+                }
+            }\\ \hline
+            \\ \hline
+            \\ \hline
+            \\ \hline
+            \\
         \end{tabular}
     \end{dsaSheetBox}
 

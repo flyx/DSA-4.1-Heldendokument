@@ -120,6 +120,45 @@ function common.labelled_rows(v, label, size)
   end
 end
 
+function common.multiline_content(name, ...)
+  local first = true
+  local seen_empty = false
+  for _, values in ipairs {...} do
+    if type(values) == "table" then
+      for i=1,#values do
+        local v = values[i]
+        if type(v) == "table" then
+          if #v ~= 0 then
+            tex.error("nested table in '" .. name .. "' is not empty!")
+          end
+          if seen_empty or first then
+            tex.sprint([[\newline]])
+          else
+            seen_empty = true
+          end
+        else
+          if not first then
+            if seen_empty then
+              tex.sprint([[\newline]])
+            else
+              tex.sprint(", ")
+            end
+          end
+          first = (v == "")
+          seen_empty = false
+          tex.sprint(-2, v)
+        end
+      end
+    elseif values ~= nil then
+      if not first then
+        tex.sprint(", ")
+      end
+      first = (values == "")
+      tex.sprint(-2, values)
+    end
+  end
+end
+
 function common.checkbox(checked)
   tex.sprint(checked and [[$\boxtimes$]] or [[$\square$]])
 end
