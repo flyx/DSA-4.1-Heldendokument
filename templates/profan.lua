@@ -268,46 +268,43 @@ return {
   --  Sonderfertigkeiten. Diese werden an verschiedene Stellen im Dokument
   --  verteilt.
   sf = {
-    --  Nahkampf-Sonderfertigkeiten. Jeder Wert erzeugt eine Zeile.
-    nahkampf = {
-      "", "", ""
-    },
-    --  Fernkampf-Sonderfertigkeiten. Jeder Wert erzeugt eine Zeile.
-    fernkampf = {
-      "", "", ""
-    },
-    --  Waffenlose Sonderfertigkeiten. Jeder Wert erzeugt eine Zeile.
-    waffenlos = {
-      "", ""
-    },
-    --  Magische Sonderfertigkeiten. Jeder Wert erzeugt eine Zeile.
+    --  Nahkampf-Sonderfertigkeiten (3 Zeilen)
+    nahkampf = "",
+    --  Fernkampf-Sonderfertigkeiten (3 Zeilen)
+    fernkampf = "",
+    --  Waffenlose Sonderfertigkeiten (3 Zeilen)
+    waffenlos = "",
+    --  Magische Sonderfertigkeiten (5 Zeilen)
     --  Dieser SFs werden ausschließlich auf dem Zauberdokument ausgegeben!
     magisch = {
-      "", "", "", "", ""
+      "",
     },
     --  Kampfgespür und Kampfreflexe sind Boolean-Werte (true oder false).
     --  Sind sie true, wird die entsprechende Box auf der Frontseite angekreuzt.
     kampfreflexe = false,
     kampfgespuer = false
   },
-  --  Nahkampfwaffen.
+  --  Nahkampfwaffen. Beispiel:
+  --
+  --    {"Dolch", "Dolche", "H", "1W+1", 12, 5,  0,    0, -1, 0, 0}
+  --     <Name>   <Art>     <DK> <TP>    <TP/KK> <INI> <WM>   <BF>
+  --
+  --  <Art> muss der Name eines Kampftalents sein. Die restlichen Werte werden
+  --  auf Basis der Art berechnet (insbesondere die eBE wird über den BE-Wert
+  --  des referenzierten Talents gesetzt und fließt dann auch in AT und PA ein).
+  --  Kommt eine Waffenspezialisierung zum Tragen, kann in der Zeile zusätzlich
+  --  `spez=true` gesetzt werden, um AT und PA um je 1 zu erhöhen.
   nahkampf = {
-  -- Name, [Typ/eBE], DK, TP, [TP/KK], INI, WM:[AT/PA], AT, PA, TP, [ BF ]
-    {"",    "", "",   "", "",  "","",  "",      "","",  "", "", "", "", ""},
-    {}, {}, {}, {}
+    {}, {}, {}, {}, {}
   },
-  --  Fernkampfwaffen
+  --  Fernkampfwaffen. Beispiel: TODO
+  --
+  --    <Name> <Art> <TP> <Entfernungen> <TP/Entfernung> <Geschosse>
   fernkampf = {
-  -- Name, [Typ/eBE], TP, [  Entfernungen  ], [  TP/Entfernung ], FK, [ Geschosse  ]
-    {"",    "", "",   "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""},
-    {}, {},
+    {}, {}, {},
   },
-  --  Waffenloser Kampf
-  waffenlos = {
-    --        AT, PA, TP
-    raufen = {"", "", ""},
-    ringen = {"", "", ""},
-  },
+  --  Hinweis: Waffenloser Kampf wird komplett automatisch berechnet.
+
   --  Schilde und Parierwaffen
   schilde = {
   -- Name, Typ, INI, WM:[AT/PA], PA, [  BF  ]

@@ -86,7 +86,7 @@ function getter_map.sparse(val, div)
   if val == 0 then
     return ""
   end
-  return string.format("%.0f", val/div + 0.0001) -- round up at 0.5
+  return tonumber(string.format("%.0f", val/div + 0.0001)) -- round up at 0.5
 end
 
 values.sparse = getter_map.sparse

@@ -183,8 +183,9 @@ function common.checkboxlist(items)
   end
 end
 
-function common.round(v)
-  return string.format("%.0f", v + 0.0001) -- round up at 0.5
+function common.round(v, down)
+  local delta = down and -0.0001 or 0.0001 -- round up at 0.5 unless down given
+  return tonumber(string.format("%.0f", v + delta))
 end
 
 function common.kenntnis(name, items)

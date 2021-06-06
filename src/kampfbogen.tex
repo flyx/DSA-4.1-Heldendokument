@@ -39,15 +39,19 @@
         \multicolumn{2}{c}{\dsaTHeading{BF}} \\ \Xhline{2\arrayrulewidth}
         \directlua{
             kampfbogen.nahkampf()
-            --common.inner_rows(data.nahkampf, 15)
         } \\ \Xhline{3\arrayrulewidth}
     \end{NiceTabular}
 
     \vspace{2pt}
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
-        \directlua{
-            common.labelled_rows(data.sf.nahkampf, "Sonderfertigkeiten")
-        }
+        \multirow[t]{3}{=}{\renewcommand{\baselinestretch}{1.04}\normalfont\fontsize{8}{12}\selectfont
+            \textmansontt{\footnotesize\bfseries Sonderfertigkeiten}\hspace{5pt}
+            \directlua{
+                common.multiline_content("Nahkampf-SF", data.sf.nahkampf)
+            }
+        }\\ \hline
+        \\ \hline
+        \\
     \end{tabular}
 \end{dsaSheetBox}
 
@@ -62,15 +66,20 @@
         \dsaTHeading{FK} &
         \multicolumn{4}{c}{\dsaTHeading{Geschosse}} \\ \Xhline{2\arrayrulewidth}
         \directlua{
-            common.inner_rows(data.fernkampf, 19)
+            kampfbogen.fernkampf()
         } \\ \Xhline{3\arrayrulewidth}
     \end{NiceTabular}
 
     \vspace{2pt}
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
-        \directlua{
-            common.labelled_rows(data.sf.fernkampf, "Sonderfertigkeiten")
-        }
+        \multirow[t]{3}{=}{\renewcommand{\baselinestretch}{1.04}\normalfont\fontsize{8}{12}\selectfont
+            \textmansontt{\footnotesize\bfseries Sonderfertigkeiten}\hspace{5pt}
+            \directlua{
+                common.multiline_content("Fernkampf-SF", data.sf.fernkampf)
+            }
+        }\\ \hline
+        \\ \hline
+        \\
     \end{tabular}
 \end{dsaSheetBox}
 
@@ -85,15 +94,19 @@
             \dsaTHeading{PA} &
             \dsaTHeading{TP(A)} \\ \Xhline{2\arrayrulewidth}
             \directlua{
-                kampfbogen.waffenlos(data.waffenlos)
+                kampfbogen.waffenlos()
             } \\ \Xhline{3\arrayrulewidth}
         \end{NiceTabular}
 
         \vspace{2pt}
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
-            \directlua{
-                common.labelled_rows(data.sf.waffenlos, "Sonderfertigkeiten")
-            }
+            \multirow[t]{3}{=}{\renewcommand{\baselinestretch}{1.04}\normalfont\fontsize{8}{12}\selectfont
+                \textmansontt{\footnotesize\bfseries Sonderfertigkeiten}\hspace{5pt}
+                \directlua{
+                    common.multiline_content("Waffenlos-SF", data.sf.waffenlos)
+                }
+            }\\ \hline
+            \\
         \end{tabular}
     \end{dsaSheetBox}
 	\vspace{-28pt}
@@ -153,7 +166,7 @@
                         })
                     }
 
-                } & \directlua{tex.sprint(-2, data.ruestung.be)}
+                } & \directlua{tex.sprint(-2, data:cur("BE"))}
             \end{NiceTabular}
         \end{dsaSheetBox}
 	\end{minipage}

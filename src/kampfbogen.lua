@@ -3,49 +3,273 @@ local common = require("common")
 
 local kampfbogen = {}
 
-local nahkampf_render = {
-  [2]= {false, nil},
-  [3]= {true, function(v)
-    -- TODO
-    tex.sprint(-2, 3)
-  end}
-}
+local function calc_be(input)
+  local be = data:cur("BE")
+  if be == "" then
+    be = 0
+  end
+  if string.find(input, "^BEx") then
+    return be * input:sub(4)
+  elseif string.find(input, "^BE%-") then
+    return common.round(math.max(0, be - tonumber(input:sub(4))))
+  elseif string.find(input, "^BE") then
+    return be
+  else
+    return 0
+  end
+end
 
-function kampfbogen.nahkampf()
-  for i,v in ipairs(data.nahkampf) do
+local function parse_tp(input)
+  local orig = input
+  local n_start, n_end = string.find(input, "^[0-9]+")
+  local num = n_start == nil and nil or string.sub(input, n_start, n_end)
+  if n_start ~= nil then
+    input = string.sub(input, n_end + 1)
+  end
+  if string.len(input) == 0 then
+    return {num = num}
+  end
+  local ret = {dice = num}
+  local first = string.sub(input, 1, 1)
+  if first == "W" or first == "w" then
+    input = string.sub(input, 2)
+    n_start, n_end = string.find(input, "^[0-9]+")
+    if n_start == nil then
+      ret.die = 6
+    else
+      ret.die = tonumber(string.sub(input, n_start, n_end))
+      input = string.sub(input, n_end + 1)
+    end
+  else
+    tex.error("ungültige TP: '" .. orig .. "' (W/w erwartet bei '" .. first .. "')")
+  end
+  if #input == 0 then
+    ret.num = 0
+    return ret
+  end
+  first = string.sub(input, 1, 1)
+  if first ~= "+" and first ~= "-" then
+    tex.error("ungültige TP: '" .. orig .. "' (+/- erwartet bei '" .. first .. "')")
+  end
+  ret.num = tonumber(input)
+  if ret.num == nil then
+    tex.error("ungültige TP: '" .. orig .. "' (ungültiger Summand: '" .. input .. "')")
+  end
+  return ret
+end
+
+local function render_tp(tp)
+  if tp.dice ~= nil then
+    tex.sprint(-2, tp.dice)
+  end
+  if tp.die ~= nil then
+    if tp.die == 6 then
+      tex.sprint([[\faDiceD6]])
+    elseif tp.die == 20 then
+      tex.sprint([[\faDiceD20]])
+    else
+      tex.sprint(-2, "W" .. tp.die)
+    end
+  end
+  if tp.num ~= 0 then
+    if tp.num < 0 then
+      tex.sprint(-2, "−")
+    elseif tp.die ~= nil then
+      tex.sprint(-2, "+")
+    end
+    tex.sprint(-2, common.round(math.abs(tp.num)))
+  end
+end
+
+local function mod_tp(tp, schwelle, schritt)
+  local cur_kk = data:cur("KK")
+  if cur_kk == "" then
+    return nil
+  end
+  while cur_kk < schwelle do
+    tp.num = tp.num - 1
+    cur_kk = cur_kk + schritt
+  end
+  while cur_kk > schwelle + schritt do
+    tp.num = tp.num + 1
+    cur_kk = cur_kk - schritt
+  end
+  return tp
+end
+
+local function render_delta(input)
+  if input < 0 then
+    tex.sprint(-2, "−")
+  elseif input > 0 then
+    tex.sprint(-2, "+")
+  end
+  tex.sprint(common.round(math.abs(input)))
+end
+
+local function atpa_mod(basis, talent, schwelle, schritt, wm, spez)
+  local val = basis
+  local cur_kk = data:cur("KK")
+  if cur_kk ~= "" then
+    while cur_kk < schwelle do
+      val = val - 1
+      cur_kk = cur_kk + schritt
+    end
+  end
+  if spez then
+    val = val + 1
+  end
+  return val + talent + wm
+end
+
+local function kampfwerte(rows, render, typ_index, num_values)
+  typ_index = typ_index or 1
+  for i,v in ipairs(rows) do
     if i ~= 1 then
       tex.sprint([[\\\hline]])
     end
     local input_index = 1
-    for j = 1,15 do
+    local talent = nil
+    local ebe = 0
+    if #v >= 1 then
+      for i,t in ipairs(data.talente.kampf) do
+        if t[1] == v[typ_index] then
+          talent = t
+          if #talent >= 3 then
+            ebe = calc_be(talent[3])
+          end
+          break
+        end
+      end
+    else
+      talent = false
+    end
+
+    for j = 1,num_values do
       if j ~= 1 then
         tex.sprint([[&]])
       end
-      local spec = nahkampf_render[j]
-      local advance, render = true, nil
+      local spec = render[j]
+      local single_value, render = true, nil
       if spec ~= nil then
-        advance, render = unpack(spec)
+        single_value, render = unpack(spec)
       end
-      local val = v[input_index]
-      if val ~= nil then
-        if render == nil then
-          tex.sprint(-2, val)
-        else
-          render(val)
+      if single_value then
+        local val = v[input_index]
+        if val ~= nil then
+          if render == nil then
+            tex.sprint(-2, val)
+          else
+            render(val)
+          end
         end
-      end
-      if advance then
         input_index = input_index + 1
+      elseif talent ~= false then
+        render(v, talent, ebe)
       end
     end
   end
 end
 
-function kampfbogen.waffenlos(v)
-  common.inner_rows({
-    {"Raufen", "10", "3", "+0", unpack(v.raufen)},
-    {"Ringen", "10", "3", "+0", unpack(v.ringen)}
-  }, 7)
+local nahkampf_render = {
+  --  false => aufgerufen mit Talentzeile, Waffenzeile und eBE,
+  --  true  => aufgerufen mit iteriertem Wert aus der Waffenzeile
+  [3]= {false, function(v, talent, ebe)
+    if talent ~= nil and #talent >= 3 then
+      tex.sprint(-2, ebe)
+    end
+  end},
+  [5]= {true, function(v)
+    local tp = parse_tp(v)
+    render_tp(tp)
+  end},
+  [8]= {true, render_delta},
+  [9]= {true, render_delta},
+  [10]= {true, render_delta},
+  [11]= {false, function(v, talent, ebe)
+    local atb = data:cur("AT")
+    if talent == nil or #talent < 4 or atb == "" or #v < 8 then
+      return
+    end
+    tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4], v[5], v[6], v[8], v.spez))
+  end},
+  [12]= {false, function(v, talent, ebe)
+    local pab = data:cur("PA")
+    if talent == nil or #talent < 5 or pab == "" or #v < 9 then
+      return
+    end
+    tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[5], v[5], v[6], v[9], v.spez))
+  end},
+  [13]= {false, function(v, talent, ebe)
+    if #v < 6 then
+      return
+    end
+    local tp = parse_tp(v[4])
+    tp = mod_tp(tp, v[5], v[6])
+    if tp ~= nil then
+      render_tp(tp)
+    end
+  end}
+}
+
+function kampfbogen.nahkampf()
+  kampfwerte(data.nahkampf, nahkampf_render, 2, 15)
+end
+
+local fernkampf_render = {
+  [3]= {false, function(v, talent, ebe)
+    if talent ~= nil and #talent >= 3 then
+      tex.sprint(-2, ebe)
+    end
+  end},
+  [4]= {true, function(v)
+    local tp = parse_tp(v)
+    render_tp(tp)
+  end},
+  [15]= {false, function(v, talent, ebe)
+    local fk = data:cur("FK")
+    if talent == nil or #talent < 6 or fk == "" then
+      return
+    end
+    tex.sprint(-2, fk + talent[6] - ebe)
+  end}
+}
+
+for i=5,9 do
+  fernkampf_render[i] = {true, render_delta}
+end
+
+function kampfbogen.fernkampf()
+  kampfwerte(data.fernkampf, fernkampf_render, 2, 19)
+end
+
+local waffenlos_render = {
+  [5]= {false, function(v, talent, ebe)
+    local atb = data:cur("AT")
+    if talent == nil or #talent < 4 or atb == "" or #v < 3 then
+      return
+    end
+    tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4], v[2], v[3], 0, false))
+  end},
+  [6]= {false, function(v, talent, ebe)
+    local pab = data:cur("PA")
+    if talent == nil or #talent < 4 or pab == "" or #v < 3 then
+      return
+    end
+    tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[4], v[2], v[3], 0, false))
+  end},
+  [7]= {false, function(v, talent, ebe)
+    tp = mod_tp({dice=1, die=6, num=0}, v[2], v[3])
+    if tp ~= nil then
+      render_tp(tp)
+    end
+  end}
+}
+
+function kampfbogen.waffenlos()
+  kampfwerte({
+    {"Raufen", 10, 3, 0},
+    {"Ringen", 10, 3, 0}
+  }, waffenlos_render, 1, 7)
 end
 
 function kampfbogen.energieleiste(label, val)

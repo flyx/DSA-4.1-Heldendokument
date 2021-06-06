@@ -22,7 +22,7 @@ WORKDIR /tmp
 # again to avoid having it in the image.
 RUN apt install -y curl && \
     curl -L https://github.com/probonopd/font-newg8/releases/download/continuous/newg8-otf.zip -O && \
-    curl -L https://mirrors.ctan.org/fonts/fontawesome.zip -O && \
+    curl -L https://mirrors.ctan.org/fonts/fontawesome5.zip -O && \
     curl -L https://mirrors.ctan.org/macros/latex/contrib/nicematrix.zip -O && \
     curl -L -s -o wds.pdf http://www.ulisses-spiele.de/download/468/ && \
     curl -L http://www.ulisses-spiele.de/download/889/ -o fanpaket.zip && \
@@ -30,7 +30,7 @@ RUN apt install -y curl && \
 # same with unzip…
     apt install -y unzip && \
     unzip newg8-otf.zip && \
-    unzip fontawesome.zip && \
+    unzip fontawesome5.zip && \
     unzip nicematrix.zip && \
     unzip -p fanpaket.zip "Das Schwarze Auge - Fanpaket - 2013.07.29/Logo - Fanprodukt.png" >/heldendokument/img/logo-fanprodukt.png && \
     apt remove -y --purge unzip && \
@@ -43,18 +43,18 @@ RUN apt install -y curl && \
 # move things into place
     mv *.otf /fonts && \
 # install fontawesome
-    mv fontawesome/tex /usr/share/texmf/tex/latex/fontawesome && \
-    mv fontawesome/type1 /usr/share/texmf/fonts/type1/public/fontawesome && \
-    mv fontawesome/tfm /usr/share/texmf/fonts/tfm/public/fontawesome && \
-    mv fontawesome/enc/*.enc /usr/share/texmf/fonts/enc && \
-    mv fontawesome/map/*.map /usr/share/texmf/fonts/map && \
-    mv fontawesome/opentype /usr/share/texmf/fonts/opentype/public/fontawesome && \
+    mv fontawesome5/tex /usr/share/texmf/tex/latex/fontawesome5 && \
+    mv fontawesome5/type1 /usr/share/texmf/fonts/type1/public/fontawesome5 && \
+    mv fontawesome5/tfm /usr/share/texmf/fonts/tfm/public/fontawesome5 && \
+    mv fontawesome5/enc/*.enc /usr/share/texmf/fonts/enc && \
+    mv fontawesome5/map/*.map /usr/share/texmf/fonts/map && \
+    mv fontawesome5/opentype /usr/share/texmf/fonts/opentype/public/fontawesome5 && \
 # install nicematrix
     cd nicematrix && latex nicematrix.ins && cd .. && \
     mkdir /usr/share/texmf/tex/latex/nicematrix && \
     mv nicematrix/nicematrix.sty /usr/share/texmf/tex/latex/nicematrix && \
 # re-hash tex stuff
-    texhash && updmap-sys --enable Map=fontawesome.map && \
+    texhash && updmap-sys --enable Map=fontawesome5.map && \
     luaotfload-tool -u && \
 # and remove tmp stuff
     rm -rf /tmp/*

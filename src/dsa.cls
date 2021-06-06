@@ -49,7 +49,7 @@
 %       be loaded after them in order to load fonts correctly.
 \usepackage{amssymb}
 \usepackage{fontspec}
-\usepackage{fontawesome}
+\usepackage{fontawesome5}
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{7pt}
