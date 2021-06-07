@@ -130,9 +130,11 @@ local function kampfwerte(rows, render, typ_index, num_values)
     local input_index = 1
     local talent = nil
     local ebe = 0
-    if #v >= 1 then
+    if #v >= 1 and typ_index > 0 then
+      local pattern = "^" .. v[typ_index]
       for i,t in ipairs(data.talente.kampf) do
-        if t[1] == v[typ_index] then
+        found, _ = string.find(t[1], pattern)
+        if found ~= nil then
           talent = t
           if #talent >= 3 then
             ebe = calc_be(talent[3])
@@ -163,7 +165,7 @@ local function kampfwerte(rows, render, typ_index, num_values)
           end
         end
         input_index = input_index + 1
-      elseif talent ~= false then
+      elseif talent ~= false or typ_index <= 0 then
         render(v, talent, ebe)
       end
     end
@@ -270,6 +272,101 @@ function kampfbogen.waffenlos()
     {"Raufen", 10, 3, 0},
     {"Ringen", 10, 3, 0}
   }, waffenlos_render, 1, 7)
+end
+
+local schilde_render = {
+  [3]= {true, render_delta},
+  [4]= {true, render_delta},
+  [5]= {true, render_delta},
+  [6]= {false, function(v, talent, ebe)
+    if #v < 5 then
+      return
+    end
+    if v[2] == "Schild" then
+      local val = data:cur("PA")
+      if val == "" then
+        return
+      end
+      if data.sf.linkhand then
+        val = val + 1
+      end
+      for i=1,2 do
+        if data.sf.schildkampf[i] then
+          val = val + 2
+        end
+      end
+      tex.sprint(-2, val + v[5])
+    elseif v[2] == "Parierwaffe" then
+      local val = v[5]
+      if data.sf.parierwaffen[2] then
+        val = val + 2
+      elseif data.sf.parierwaffen[1] then
+        val = val - 1
+      else
+        val = val - 4
+      end
+      render_delta(val)
+    else
+      tex.error("Typ muss 'Schild' oder 'Parierwaffe' sein: " .. v[2])
+    end
+  end}
+}
+
+function kampfbogen.schilde()
+  kampfwerte(data.schilde, schilde_render, 0, 8)
+end
+
+function kampfbogen.ruestung(name)
+  local value = nil
+  for i,v in ipairs(data.ruestung) do
+    local item = v[name]
+    if item ~= nil then
+      if value == nil then
+        value = item
+      else
+        value = value + item
+      end
+    end
+  end
+  if value ~= nil then
+    tex.sprint(-2, value)
+  end
+end
+
+function kampfbogen.ausweichen()
+  local val = data:cur("PA")
+  if val == "" then
+    return
+  end
+  local be = data:cur("BE")
+  if be ~= "" then
+    val = val - be
+  end
+  for i=1,3 do
+    if data.sf.ausweichen[i] then
+      val = val + 3
+    end
+  end
+  if data.vorteile.flink then
+    val = val + 1
+  end
+  if data.nachteile.behaebig then
+    val = val - 1
+  end
+  for i,v in ipairs(data.talente.koerper) do
+    if #v >= 6 then
+      found, _ = string.find(v[1], "^Akrobatik")
+      if found ~= nil then
+        local x = v[6] - 11
+        while x > 0 do
+          val = val + 1
+          x = x - 3
+        end
+        break
+      end
+    end
+  end
+  tex.sprint(-2, val)
 end
 
 function kampfbogen.energieleiste(label, val)

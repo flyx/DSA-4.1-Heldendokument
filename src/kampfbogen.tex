@@ -20,7 +20,7 @@
 \newcommand{\dsaTSHeading}[1]{\normalfont\bfseries\scriptsize #1}
 
 \newcommand{\RS}[1]{%
-    \makebox(.7cm,.8em)[c]{\dsaHeroVal{ruestung.#1}\hspace{-2.5pt}}
+    \makebox(.7cm,.8em)[c]{\normalfont\directlua{kampfbogen.ruestung("#1")}  \hspace{-2.5pt}}
 }
 
 \begin{dsaSheetBox}[\textwidth]
@@ -125,7 +125,7 @@
             \dsaTHeading{PA} &
             \multicolumn{2}{c}{\dsaTHeading{BF}} \\ \Xhline{2\arrayrulewidth}
             \directlua{
-                common.inner_rows(data.schilde, 8)
+                kampfbogen.schilde()
             } \\ \Xhline{3\arrayrulewidth}%
         \end{NiceTabular}
 
@@ -133,9 +133,9 @@
         \footnotesize\normalfont\bfseries\centering
         \directlua{
             common.checkboxlist({
-                {"Linkhand (PA+1)", data.schilde.linkhand},
-                {{"Schildkampf I (PA+2)", "II (PA+2)"}, data.schilde.schildkampf},
-                {{"Parierwaffen I", "II"}, data.schilde.parierwaffen}
+                {"Linkhand (PA+1)", data.sf.linkhand},
+                {{"Schildkampf I (PA+2)", "II (PA+2)"}, data.sf.schildkampf},
+                {{"Parierwaffen I", "II"}, data.sf.parierwaffen}
             })
         }
     \end{dsaSheetBox}
@@ -157,12 +157,12 @@
                     common.inner_rows(data.ruestung, 3)
                 } \\ \Xhline{2\arrayrulewidth}
                 \normalfont\bfseries\scriptsize Summe &
-                \directlua{tex.sprint(data:cur("RS"))} & \directlua{tex.sprint(data:cur("BE"))} \\ \Xhline{2\arrayrulewidth}
+                \directlua{tex.sprint(data:cur("RS"))} & \directlua{tex.sprint(data:cur("BE_voll"))} \\ \Xhline{2\arrayrulewidth}
                 \multicolumn{2}{l|}{
                     \normalfont\scriptsize\bfseries Rüstungsgewöhnung
                     \directlua{
                         common.checkboxlist({
-                            {{"I", "II", "III"}, data.ruestung.gewoehnung}
+                            {{"I", "II", "III"}, data.sf.ruestungsgewoehnung}
                         })
                     }
 
@@ -183,16 +183,16 @@
                 \multicolumn{2}{l}{\scriptsize PA-Basis} & \scriptsize BE & & \scriptsize SF Ausweichen & & \scriptsize Summe \\
                 \normalsize \directlua{tex.sprint(-2, data:cur("PA"))} &
                 \normalsize $-$ &
-                \normalsize \directlua{tex.sprint(-2, data.ruestung.be)} &
+                \normalsize \directlua{tex.sprint(-2, data:cur("BE"))} &
                 \normalsize $+$ &
                 \begin{minipage}{2.5cm}
                     \centering
-                    \directlua{common.checkboxlist({{{"I", "II", "III"}, data.ausweichen.sf}})} \\
+                    \directlua{common.checkboxlist({{{"I", "II", "III"}, data.sf.ausweichen}})} \\
                     jeweils +3 \\
                     Flink (+1) / Behäbig (-1)?
                 \end{minipage}
                 & \normalsize $=$ &
-                \normalsize \directlua{tex.sprint(-2, data.ausweichen[1])}
+                \normalsize \directlua{kampfbogen.ausweichen()}
                 \\ \Xcline{1-1}{3\arrayrulewidth} \Xcline{3-3}{3\arrayrulewidth} \Xcline{7-7}{3\arrayrulewidth}
                  & & & \multicolumn{3}{c}{Akrobatik (+$\lfloor(\mathrm{TaW}-9) / 3 \rfloor $)?} &
             \end{tabular}
@@ -253,7 +253,7 @@
         \filldraw[fill=white, draw=black] ([yshift=0.4cm, xshift=0.5cm]$(brust.north)!0.5!(rucken.north)$) circle (0.2cm);
         \filldraw[fill=white, draw=black] ([yshift=0.4cm, xshift=-0.5cm]$(brust.north)!0.5!(rucken.north)$) circle (0.2cm);
 
-        \node(larm) at (5.6, 6.4) {\RS{linker_arm}};
+        \node(larm) at (5.6, 6.4) {\RS{l_arm}};
         \begin{scope}[on background layer]
             \path[fill=white, draw=black] ([yshift=0.1cm, xshift=0.2cm]larm.north west) -- ([xshift=0.2cm]larm.west) to[out=270, in=155] ([yshift=-0.1cm]larm.south) to[out=25, in=270] ([xshift=-0.2cm]larm.east) -- ([yshift=0.1cm, xshift=-0.2cm]larm.north east) -- cycle;
         \end{scope}
@@ -263,7 +263,7 @@
         \filldraw[fill=white, draw=black] ([yshift=1cm, xshift=-0.15cm]larm.north west) circle (0.2cm);
         \filldraw[fill=white, draw=black] ([yshift=1.5cm, xshift=-0.4cm]larm.north west) circle (0.2cm);
 
-        \node(rarm) at (0.5, 6.7) {\RS{rechter_arm}};
+        \node(rarm) at (0.5, 6.7) {\RS{r_arm}};
         \begin{scope}[on background layer]
             \path[fill=white, draw=black] ([yshift=0.1cm, xshift=0.2cm]rarm.north west) -- ([xshift=0.2cm]rarm.west) to[out=270, in=155] ([yshift=-0.1cm]rarm.south) to[out=25, in=270] ([xshift=-0.2cm]rarm.east) -- ([yshift=0.1cm, xshift=-0.2cm]rarm.north east) -- cycle;
         \end{scope}
@@ -283,7 +283,7 @@
         \filldraw[fill=white, draw=black] ([yshift=0.4cm, xshift=0.5cm]bauch.north) circle (0.2cm);
         \filldraw[fill=white, draw=black] ([yshift=0.4cm, xshift=-0.5cm]bauch.north) circle (0.2cm);
 
-        \node(rbein) at (1.9, 1.5) {\RS{rechtes_bein}};
+        \node(rbein) at (1.9, 1.5) {\RS{r_bein}};
         \begin{scope}[on background layer]
             \path[fill=white, draw=black] ([yshift=0.1cm, xshift=0.2cm]rbein.north west) -- ([xshift=0.2cm]rbein.west) to[out=270, in=155] ([yshift=-0.1cm]rbein.south) to[out=25, in=270] ([xshift=-0.2cm]rbein.east) -- ([yshift=0.1cm, xshift=-0.2cm]rbein.north east) -- cycle;
         \end{scope}
@@ -293,7 +293,7 @@
         \filldraw[fill=white, draw=black] ([yshift=1.6cm, xshift=0.3cm]rbein.north) circle (0.2cm);
         \filldraw[fill=white, draw=black] ([yshift=2.4cm, xshift=0.4cm]rbein.north) circle (0.2cm);
 
-        \node(lbein) at (5.1, 1.3) {\RS{linkes_bein}};
+        \node(lbein) at (5.1, 1.3) {\RS{l_bein}};
         \begin{scope}[on background layer]
             \path[fill=white, draw=black] ([yshift=0.1cm, xshift=0.2cm]lbein.north west) -- ([xshift=0.2cm]lbein.west) to[out=270, in=155] ([yshift=-0.1cm]lbein.south) to[out=25, in=270] ([xshift=-0.2cm]lbein.east) -- ([yshift=0.1cm, xshift=-0.2cm]lbein.north east) -- cycle;
         \end{scope}

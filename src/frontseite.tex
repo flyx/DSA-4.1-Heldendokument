@@ -51,9 +51,11 @@
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
             \multirow[t]{7}{=}{\renewcommand{\baselinestretch}{1.35}\normalsize
                 \directlua{
-                    local eisern = data.vorteile.eisern and {"Eisern"} or {}
+                    local fixed = {}
+                    if data.vorteile.eisern then fixed:insert("Eisern") end
+                    if data.vorteile.flink then fixed:insert("Flink") end
                     common.multiline_content("Vorteile",
-                        data.vorteile, eisern, data.vorteile.magisch)
+                        data.vorteile, fixed, data.vorteile.magisch)
                 }
             }\\ \hline
             \\ \hline
@@ -73,9 +75,11 @@
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
             \multirow[t]{7}{=}{\renewcommand{\baselinestretch}{1.35}\normalsize
                 \directlua{
-                    local glasknochen = data.nachteile.glasknochen and {"Glasknochen"} or {}
+                    local fixed = {}
+                    if data.nachteile.glasknochen then fixed:insert("Glasknochen") end
+                    if data.nachteile.behaebig then fixed:insert("Behäbig") end
                     common.multiline_content("Nachteile",
-                        data.nachteile, glasknochen, data.nachteile.magisch)
+                        data.nachteile, fixed, data.nachteile.magisch)
                 }
             }\\ \hline
             \\ \hline

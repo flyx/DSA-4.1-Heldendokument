@@ -26,7 +26,7 @@ local function sum_and_round(items, pos)
       end
     end
   end
-  return cur == nil and "" or string.format("%.0f", cur + 0.0001) -- round up at 0.5
+  return cur == nil and "" or tonumber(string.format("%.0f", cur + 0.0001)) -- round up at 0.5
 end
 
 local values = require(arg[i])
@@ -80,6 +80,7 @@ getter_map:reg("basic", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "GS")
 getter_map:reg("calculated", "LE", "AU", "AE", "MR", "KE", "INI", "AT", "PA", "FK")
 getter_map:reg("rs", "RS")
 getter_map:reg("be", "BE")
+getter_map:reg("be_voll", "BE_voll")
 
 function getter_map.sparse(val, div)
   div = div or 1
@@ -149,8 +150,22 @@ function values:cur(name, div)
     return getter_map.calc(self, name)
   elseif kind == "rs" then
     return sum_and_round(self.ruestung, 2)
-  elseif kind == "be" then
-    return sum_and_round(self.ruestung, 3)
+  elseif kind == "be" or kind == "be_voll" then
+    local val = sum_and_round(self.ruestung, 3)
+    if val == "" then
+      return val
+    end
+    if kind == "be" then
+      if self.sf.ruestungsgewoehnung[3] then
+        val = val - 2
+      elseif self.sf.ruestungsgewoehnung[1] then
+        val = val - 1
+      end
+      if val < 0 then
+        val = 0
+      end
+    end
+    return val
   else
     tex.error("queried unknown value: " .. name)
   end

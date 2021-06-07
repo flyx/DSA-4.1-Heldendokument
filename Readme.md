@@ -1,6 +1,7 @@
 # DSA 4.1 Heldendokument
 
-LaTeX-Implementierung des DSA 4.1 Heldendokuments.
+Ein DSA 4.1 Heldendokument, das sich am original Heldendokument orientiert.
+Es kann über Lua-Quellcode mit Werten befüllt werden und berechnet abgeleitete Werte automatisch.
 
 ## Features
 
@@ -12,10 +13,10 @@ LaTeX-Implementierung des DSA 4.1 Heldendokuments.
  * Die Werte des Helden können in einer Textdatei gespeichert werden, aus der bei Änderungen immer wieder ein neues Dokument erstellt werden kann.
    Dadurch kann der Held beispielsweise einfach in einem Versionskontrollsystem abgelegt werden.
    Warum würde man Versionskontrolle wollen? Naja, um beispielsweise wenn auf einer Convention ein Held mit maximal 5000 AP verlangt wird, man einfach eine frühere Version bauen kann. Alltäglicher Anwendungsfall!
- * Alternierender Hintergrund bei vielen Tabellen für bessere Lesbarkeit.
+ * Alternierender Hintergrund pro Zeile bei vielen Tabellen für bessere Lesbarkeit.
    Das schließt beispielsweise Talente, Liturgien, Rituale und Zauber ein.
  * Dynamische Größe der meisten Tabellen:
-   Fast alle Tabellen, die nicht auf der Frontseite sind, haben eine variable Anzahl an Zeilen.
+   Die meisten Tabellen, haben eine variable Anzahl an Zeilen.
    Man kann beispielsweise mehr Zeilen in gesellschaftlichen Talenten haben und dafür weniger Zeilen bei den Körperlichen – oder die „Gaben“-Tabelle komplett entfernen, wenn man sie nicht braucht.
    Für all dies muss man nur die Eingabe-Textdatei ändern.
  * Hochformat-Zaubertabelle mit nur den wesentlichsten Informationen und einer Spalte, in der man die Zeile im Liber angeben kann.
@@ -23,9 +24,12 @@ LaTeX-Implementierung des DSA 4.1 Heldendokuments.
    Außerdem wird automatisch eine zweite, dritte, … Seite erzeugt wenn man viele Zauber hat.
  * Frei und quelloffen: Der Quellcode ist unter einer freien Lizenz verfügbar und das Dokument kann komplett mit Open-Source-Software gebaut werden.
    Nur die verwendeten Bilder und Schriftarten unterliegen urheberrechtlichen Beschränkungen.
- * Konservativ in automatischen Berechnungen:
-   Das Dokument will kein Heldengenerator sein und berechnet nur sehr wenige Werte automatisch. Dadurch kann auf Hausregeln Rücksicht genommen werden.
-   Momentan werden nur die BE- und RS-Summe von Rüstungsteilen sowie die Lernschwierigkeit von Zaubern automatisch berechnet.
+ * Berechnung abgeleiteter Werte:
+   Abgeleitete Eigenschaften und berechenbare Werte auf dem Kampfbogen werden automatisch ausgefüllt, wenn die zugrundeliegenden Werte verfügbar sind.
+   Ebenfalls automatisch berechnet wird die Lernschwierigkeit von Zaubern.
+ * Blanko-Generierung:
+   Für Spieler, die den Bogen lieber von Hand ausfüllen, kann ein leerer Bogen generiert werden.
+   Die abgeleiteten Werte werden leer gelassen, wenn die zugrundeliegenden Werte leer sind.
 
 ## Wie generiere ich das Dokument?
 
@@ -89,7 +93,7 @@ Zusätzlich müssen die Schriftarten [Manson](https://fontsgeek.com/manson-font)
 Für Mac-Nutzer bedeutet dies, dass sie systemweit, nicht nur für den aktuellen Benutzer, installiert sein müssen – dies lässt sich in den Einstellungen von *Font Book* festlegen.
 
 Das Fanprodukt-Logo und der Hintergrund müssen von Ulisses heruntergeladen und an die korrekte Stelle gelegt werden.
-Die folgenden Befehle nutzen unzip, curl, ImageMagick und poppler-utils, um dies zu tun – diese Werkzeuge sollten auf jedem vernünftigen System verfügbar sein:
+Die folgenden Befehle nutzen unzip, curl, ImageMagick und poppler-utils, um dies zu tun – diese Werkzeuge sollten über jeden vernünftigen Paketmanager installierbar sein:
 
     # WdS-Handout herunterladen
     curl -L -s -o wds.pdf http://www.ulisses-spiele.de/download/468/

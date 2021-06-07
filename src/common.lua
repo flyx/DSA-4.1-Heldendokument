@@ -206,7 +206,7 @@ end
 local value_line = {
   labels = {
     AT = "AT-Basiswert", PA = "PA-Basiswert", FK = "FK-Basiswert",
-    INI = "Initiative-Basiswert", BE = {"BE", data.ruestung.be},
+    INI = "Initiative-Basiswert", BE = {"BE", data:cur("BE")},
     AP_Gesamt = {"Gesamt", data.ap.gesamt},
     AP_Eingesetzt = {"Eingesetzt", data.ap.eingesetzt},
     AP_Guthaben = {"Guthaben", data.ap.guthaben}

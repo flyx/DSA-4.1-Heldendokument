@@ -118,7 +118,7 @@ return {
   --  Bestimmte Vor- und Nachteile (Eisern, Glasknochen etc)
   --  werden als benamte Werte gesetzt, weil sie die Berechnung bestimmter Werte
   --  verändern (etwa die Wundschwelle). Das Setzen des benamten Werts auf
-  --  `true` bedingt, dass der korrekte Name in den textuellen Wert geschrieben
+  --  `true` bedingt, dass der korrekte Name in den Text geschrieben
   --  wird und die referenzierte Berechnung korrekt modifiziert wird.
   --
   --  Ist der benamte Tabellenwert `magisch` in den Vorteilen vorhanden, wird
@@ -129,11 +129,13 @@ return {
   vorteile = {
     "",
     eisern = false,
+    flink = false,
     -- magisch = {}    -- Aktivieren für magisch begabte Charaktere
   },
   nachteile = {
     "",
     glasknochen = false,
+    behaebig = false,
   },
   --  Eigenschaften. Der erste Wert ist der Modifikator.
   --  Bei Basis-Eigenschaften ist der zweite Wert der Startwert, der dritte Wert
@@ -279,10 +281,19 @@ return {
     magisch = {
       "",
     },
-    --  Kampfgespür und Kampfreflexe sind Boolean-Werte (true oder false).
-    --  Sind sie true, wird die entsprechende Box auf der Frontseite angekreuzt.
+    --  Die folgenden SF haben Auswirkungen auf berechnete Werte.
+    --  Werden sie auf true gesetzt, wird das entsprechende Kästchen angekreuzt.
     kampfreflexe = false,
-    kampfgespuer = false
+    kampfgespuer = false,
+    linkhand = false,
+    --  Zwei Werte für Schildkampf I und II.
+    schildkampf = {false, false},
+    --  Zwei Werte für Parierwaffen I und II.
+    parierwaffen = {false, false},
+    --  Drei Werte für Ausweichen I, II und III.
+    ausweichen = {false, false, false},
+    --  Drei Werte für Rüstungsgewöhnung I, II und III.
+    ruestungsgewoehnung = {false, false, false},
   },
   --  Nahkampfwaffen. Beispiel:
   --
@@ -305,18 +316,14 @@ return {
   },
   --  Hinweis: Waffenloser Kampf wird komplett automatisch berechnet.
 
-  --  Schilde und Parierwaffen
+  --  Schilde und Parierwaffen.
+  --  Der Typ muss entweder "Schild" oder "Parierwaffe" sein. Beispiel:
+  --
+  --    {"Lederschild", "Schild",  -1,  3, 2, "", ""}
+  --     <Name>         <Typ>     <INI> <WM>  <BF>
   schilde = {
-  -- Name, Typ, INI, WM:[AT/PA], PA, [  BF  ]
-    {"",   "",  "",      "","",  "",  "", ""},
     {},
-    --  Die folgenden SF sind Boolean-Werte (true oder false). Bei true wird die
-    --  entsprechende Box angekreuzt.
-    linkhand = false,
-    --  Zwei Werte für Schildkampf I und II.
-    schildkampf = {false, false},
-    --  Zwei Werte für Parierwaffen I und II.
-    parierwaffen = {false, false}
+    {},
   },
   --  Rüstung
   --  Der RS und die BE der Rüstungsteile werden automatisch aufsummiert und in
@@ -325,33 +332,16 @@ return {
   --  oder wenn mindestens ein Rüstungsteil einen Wert hat, der keine Zahl ist.
   --  In diesen Fällen bleiben die Felder leer.
   --
-  --  Jedes Rüstungsstück hat Namen, gRS und gBE.
+  --  Jedes Rüstungsstück hat die namenlosen Werte Name, gRS und gBE.
   --  Kommazahlen benutzen den Punkt statt das Komma für die Dezimalziffern.
+  --  Dahinter können noch benamte Werte für die einzelnen Zonen stehen.
+  --  Zonennamen: kopf, brust, ruecken, l_arm, r_arm, bauch, r_bein, l_bein.
+  --
   --  Beispiel:
-  --    {"Garether Platte", 4.7, 3.7}
+  --    {"Garether Platte", 4.7, 3.7, brust=6, ruecken=5, bauch=6,
+  --     l_arm=5, r_arm=5, l_bein=4, r_bein=4}
   ruestung = {
     {}, {}, {}, {}, {}, {},
-    --  Rüstungsgewöhnung I, II und III
-    gewoehnung = {false, false, false},
-    --  Resultierende Behinderung. Wird nicht automatisch berechnet, ergibt sich
-    --  üblicherweise aus gBE - Rüstungsgewöhnung, aber kann auch zusätzliche
-    --  Werte wie natürliche Rüstung beinhalten.
-    be = "",
-    --  Es folgen die Rüstungswerte an den einzelnen Körperteilen.
-    kopf = "",
-    brust = "",
-    ruecken = "",
-    bauch = "",
-    linker_arm = "",
-    rechter_arm = "",
-    linkes_bein = "",
-    rechtes_bein = ""
-  },
-  ausweichen = {
-    --  Der berechnete Ausweichenwert
-    "",
-    --  Die Sonderfertigkeiten Ausweichen I, II und III
-    sf = {false, false, false}
   },
 
   --  Jeder Wert generiert eine Zeile.
