@@ -33,7 +33,8 @@
 \begin{dsaSheetBox}[\textwidth]
     \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
         \directlua{common.multiline_content({
-            name="Aussehen", rows=3, baselinestretch=1.35, preamble="Aussehen",
+            name="Aussehen", rows=data.held.aussehen.zeilen or 3,
+            baselinestretch=1.35, preamble="Aussehen",
             hspace="10pt"}, data.held.aussehen)
         }
     \end{tabular}
@@ -49,7 +50,7 @@
                 local fixed = common.list_known(data.vorteile,
                     {eisern = "Eisern", flink = "Flink"})
                 common.multiline_content({
-                    name="Vorteile", rows=7, baselinestretch=1.35
+                    name="Vorteile", rows=data.vorteile.zeilen or 7, baselinestretch=1.35
                 }, data.vorteile, fixed, data.vorteile.magisch)
             }
         \end{tabular}
@@ -66,7 +67,8 @@
                     {glasknochen = "Glasknochen", behaebig = "Behäbig",
                         kleinwuechsig = "Kleinwüchsig", zwergenwuchs = "Zwergenwuchs"})
                 common.multiline_content({
-                    name="Nachteile", rows=7, baselinestretch=1.35
+                    name="Nachteile", rows=data.nachteile.zeilen or 7,
+                    baselinestretch=1.35
                 }, data.nachteile, fixed, data.nachteile.magisch)
             }
         \end{tabular}

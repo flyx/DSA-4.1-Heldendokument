@@ -51,7 +51,8 @@
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
                 common.multiline_content({
-                    name="Magische Vor- und Nachteile", rows=5,
+                    name="Magische Vor- und Nachteile",
+                    rows=data.vorteile.magisch.zeilen or 5,
                     baselinestretch=1.033, fontsize={8,12}
                 }, data.vorteile.magisch, data.nachteile.magisch)
             }
@@ -66,8 +67,11 @@
         \vspace{-5pt}
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
-                common.inner_rows(data.sf.magisch, 1)
-            } \\ \hline
+                common.multiline_content({
+                    name="Magische SF", rows=data.sf.magisch.zeilen or 5,
+                    baselinestretch=1.033, fontsize={8,12}
+                }, data.sf.magisch)
+            } \hline
 
             \raggedright\normalsize \textmansontt{\textbf{Regeneration:}} \colorbox{white}{\parbox[c]{3cm}{\normalfont\centering\directlua{zauberdokument.asp_regeneration()}}} \textmansontt{\textbf{pro Phase}}
         \end{tabular}
@@ -82,7 +86,10 @@
         \vspace{-5pt}
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
-                common.inner_rows(data.magie.artefakte, 1)
+                common.multiline_content({
+                    name="Artefakte", rows=data.magie.artefakte.zeilen or 9,
+                    baselinestretch=1.033, fontsize={8,12}
+                }, data.magie.artefakte)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -96,7 +103,10 @@
         \vspace{-5pt}
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
-                common.inner_rows(data.notizen.magisch, 1)
+                common.multiline_content({
+                    name="Notizen", rows=data.magie.notizen.zeilen or 6,
+                    baselinestretch=1.033, fontsize={8,12}
+                }, data.magie.notizen)
             }
         \end{tabular}
     \end{dsaSheetBox}

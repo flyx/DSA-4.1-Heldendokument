@@ -41,7 +41,14 @@
 --    dunkler Teint
 --
 --  Es wird in diesem Fall kein Komma zwischen die Werte gesetzt, so wie es
---  sonst passieren würde.
+--  sonst passieren würde. In einer Tabelle kann man außerdem den benamten Wert
+--  `zeilen` setzen, um zu beeinflussen, wie viele Zeilen im Dokument erzeugt
+--  werden:
+--
+--    {"kurzes Haar", {}, "dunkler Teint", zeilen=5}
+--
+--  Dies funktioniert für alle mehrzeiligen Werte außer den Titel des Helden,
+--  der immer 4 Zeilen lang ist.
 --
 --  In Listen (Talentliste, Ausrüstungsliste etc) stehen oftmals leere Tabellen:
 --
@@ -106,14 +113,15 @@ return {
     augenfarbe   = "",
     stand        = "",
     sozialstatus = "",
-    --  Wird automatisch auf 4 Zeilen umgebrochen wenn nötig
+    --  Mehrzeilig, immer 4 Zeilen.
     titel        = "",
-    --  Wird automatisch auf 3 Zeilen umgebrochen wenn nötig
+    --  Mehrzeilig standardmäßig 3 Zeilen.
     aussehen     = "",
   },
   --  Vorteile wie Nachteile haben eine allgemeine und eine magische Liste.
   --  Die allgemeinen Vorteile stehen vornan und generieren einen mehrzeiligen
-  --  textuellen Wert.
+  --  textuellen Wert. Hier kann auch `zeilen` gesetzt werden, um die
+  --  insgesamt verwendeten Zeilen auf der Frontseite anzugeben (Standard: 7).
   --
   --  Bestimmte Vor- und Nachteile (Eisern, Glasknochen etc)
   --  werden als benamte Werte gesetzt, weil sie die Berechnung bestimmter Werte
@@ -131,6 +139,8 @@ return {
     eisern = false,
     flink = false,
     magisch = {
+      --  hier kann `zeilen` angegeben werden, um zu definieren, wie viele
+      --  Zeilen die magischen Vor- und Nachteile auf dem Zauberdokument haben.
       "",
     }
   },
@@ -277,14 +287,13 @@ return {
   --  Sonderfertigkeiten. Diese werden an verschiedene Stellen im Dokument
   --  verteilt.
   sf = {
-    --  Nahkampf-Sonderfertigkeiten (3 Zeilen)
+    --  Mehrzeilig, standardmäßig 3 Zeilen.
     nahkampf = "",
-    --  Fernkampf-Sonderfertigkeiten (3 Zeilen)
+    --  Mehrzeilig, standardmäßig 3 Zeilen.
     fernkampf = "",
-    --  Waffenlose Sonderfertigkeiten (3 Zeilen)
+    --  Mehrzeilig, standardmäßig 2 Zeilen.
     waffenlos = "",
-    --  Magische Sonderfertigkeiten (5 Zeilen)
-    --  Dieser SFs werden ausschließlich auf dem Zauberdokument ausgegeben!
+    --  Mehrzeilig, standardmäßig 5 Zeilen.
     magisch = {
       "",
       gefaess_der_sterne = false
@@ -351,12 +360,10 @@ return {
     {}, {}, {}, {}, {}, {},
   },
 
+  --  Mehrzeilig, standardmäßig 5 Zeilen.
+  kleidung = "",
   --  Jeder Wert generiert eine Zeile.
-  kleidung = {
-    "", "", "", "", ""
-  },
-  --  Jeder Wert generiert eine Zeile.
-  --  Die Menge der hier definierten Werde ist für die Verwendung des
+  --  Die Menge der hier definierten Werte ist für die Verwendung des
   --  profanen Ausrüstungsbogens ausgelegt.
   --  Wird statt dessen der Liturgienbogen verwendet, sollte die Liste kürzer
   --  sein, weil dort weniger Platz verfügbar ist.
@@ -379,21 +386,13 @@ return {
     {"Silbertaler"},
     {"Heller"},
     {"Kreuzer"},
-    --  Jeder Wert generiert eine Zeile.
-    sonstiges = {
-      "", "", "", ""
-    }
+    --  Mehrzeilig, standardmäßig 4 Zeilen.
+    sonstiges = ""
   },
-  --  Verbindungen. Jeder Wert generiert eine Zeile.
-  verbindungen = {
-    "", "", "", "", "", ""
-  },
-  --  Notizen. Jeder Wert generiert eine Zeile.
-  notizen = {
-    "", "", "", "", "", "", "",
-    --  Magische Notizen werden in das Zauberdokument geschrieben.
-    magisch = {"", "", "", "", "", "", ""}
-  },
+  --  Mehrzeilig, standardmäßig 6 Zeilen.
+  verbindungen = "",
+  --  Mehrzeilig, standardmäßig 7 Zeilen.
+  notizen = "",
   --  Tiere. Jeder Wert generiert eine Zeile.
   tiere = {
   -- Name, Art, INI, AT, PA, TP, LE, RS, KO, GS, AU, MR, LO, TK, ZK
@@ -431,10 +430,10 @@ return {
     --  AsP-Regeneration. Kann ein einzelner Wert sein (bei meisterlicher Reg.)
     --  oder beispielsweise "1W+2"
     asp_regeneration = "",
-    --  Artefakte. Jeder Wert generiert eine Zeile.
-    artefakte = {
-      "", "", "", "", "", ""
-    },
+    --  Mehrzeilig, standardmäßig 9 Zeilen.
+    artefakte = "",
+    --  Mehrzeilig, standardmäßig 6 Zeilen.
+    notizen = "",
     --  Bekannte Repräsentationen.
     --  Es sollte die Kurzform der Repräsentation eingegeben werden, im Dokument
     --  wird dann trotzdem die Langform stehen.

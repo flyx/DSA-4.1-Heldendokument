@@ -6,7 +6,11 @@
     \begin{dsaSheetBox}
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
             \directlua{
-                common.labelled_rows(data.kleidung, "Kleidung", "Large")
+                common.multiline_content({
+                    name="Kleidung", rows=data.kleidung.zeilen or 6,
+                    preamble="\noexpand\\footnotesize Kleidung", hspace="5pt",
+                    baselinestretch=1.033, fontsize={8,12}
+                }, data.kleidung)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -18,12 +22,15 @@
     \normalfont\fontsize{8}{12}\selectfont
 
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
-        \begin{tabular}{p{5.5cm}|x{1cm}|x{2.2cm}}
+        \begin{NiceTabular}{p{5.5cm}|x{1cm}|x{2.2cm}}
+        \CodeBefore
+            \rowcolors{2}{white}{gray!30}
+        \Body
             \dsaTHeading{\Large Ausrüstung} & \normalfont\tiny\bfseries Gewicht & \normalfont\tiny\bfseries Wo getragen? \\ \hline
             \directlua{
                 common.inner_rows(data.ausruestung, 3)
             }
-        \end{tabular}
+        \end{NiceTabular}
     \end{dsaSheetBox}
 }
 
@@ -56,7 +63,11 @@
     \end{tabular}
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
         \directlua{
-            common.labelled_rows(data.vermoegen.sonstiges, "Sonstiges")
+            common.multiline_content({
+                name="Vermögen", rows=data.vermoegen.sonstiges.zeilen or 4,
+                preamble="\noexpand\\footnotesize Sonstiges", hspace="5pt",
+                baselinestretch=1.033, fontsize={8,12}
+            }, data.vermoegen.sonstiges)
         }
     \end{tabular}
 \end{dsaSheetBox}
@@ -66,7 +77,11 @@
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
             \directlua{
-                common.labelled_rows(data.verbindungen, "Verbindungen", "Large")
+                common.multiline_content({
+                    name="Verbindungen", rows=data.verbindungen.zeilen or 6,
+                    preamble="\noexpand\\Large Verbindungen", hspace="5pt",
+                    baselinestretch=1.033, fontsize={8,12}
+                }, data.verbindungen)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -76,7 +91,11 @@
     \begin{dsaSheetBox}
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
             \directlua{
-                common.labelled_rows(data.notizen, "Notizen", "Large")
+                common.multiline_content({
+                    name="Notizen", rows=data.notizen.zeilen or 4,
+                    preamble="\noexpand\\Large Notizen", hspace="5pt",
+                    baselinestretch=1.033, fontsize={8,12}
+                }, data.notizen)
             }
         \end{tabular}
     \end{dsaSheetBox}
