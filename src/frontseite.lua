@@ -97,11 +97,11 @@ local eigenschaften = {
 }
 
 function eigenschaften.links(self)
-  for i, e in ipairs({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "GS"}) do
+  for i, e in ipairs({"MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK"}) do
     if i ~= 1 then
       tex.sprint([[\\]])
     end
-    tex.sprint((i == 1 or i == 9) and [[\Xhline{2\arrayrulewidth}]] or [[\hline]])
+    tex.sprint(i == 1 and [[\Xhline{2\arrayrulewidth}]] or [[\hline]])
     tex.sprint([[\small\mansontt\bfseries]])
     tex.sprint(-2, self.label[e])
     for j=1,3 do
@@ -126,6 +126,17 @@ function eigenschaften.links(self)
         tex.sprint(-2, val)
       end
     end
+  end
+  tex.sprint([[\\\Xhline{2\arrayrulewidth}\small\mansontt\bfseries]])
+  tex.sprint(-2, self.label["GS"])
+  tex.sprint("&")
+  local gsmod = data:cur("GS_mod")
+  if gsmod ~= "" then
+    common.render_delta(gsmod)
+  end
+  tex.sprint([[&&\cellcolor{white}]])
+  if gsmod ~= "" then
+    tex.sprint(-2, 8 + gsmod)
   end
 end
 

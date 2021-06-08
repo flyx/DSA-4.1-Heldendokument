@@ -129,6 +129,7 @@ return {
   vorteile = {
     "",
     eisern = false,
+    flink = false,
     magisch = {
       "",
     }
@@ -136,6 +137,9 @@ return {
   nachteile = {
     "",
     glasknochen = false,
+    behaebig = false,
+    kleinwuechsig = false,
+    zwergenwuchs = false,
     magisch = {
       "",
     }
@@ -156,7 +160,7 @@ return {
     GE  = {0, 0, 0},
     KO  = {0, 0, 0},
     KK  = {0, 0, 0},
-    GS  = {0, 0, 0},
+    --  GS hängt komplett von den entsprechenden Vor- und Nachteilen sowie GE ab
     LE  = {0, 0, 0},
     AU  = {0, 0, 0},
     AE  = {0, 0, 0},

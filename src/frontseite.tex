@@ -51,9 +51,8 @@
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
             \multirow[t]{7}{=}{\renewcommand{\baselinestretch}{1.35}\normalsize
                 \directlua{
-                    local fixed = {}
-                    if data.vorteile.eisern then fixed:insert("Eisern") end
-                    if data.vorteile.flink then fixed:insert("Flink") end
+                    local fixed = common.list_known(data.vorteile,
+                        {eisern = "Eisern", flink = "Flink"})
                     common.multiline_content("Vorteile",
                         data.vorteile, fixed, data.vorteile.magisch)
                 }
@@ -75,9 +74,9 @@
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
             \multirow[t]{7}{=}{\renewcommand{\baselinestretch}{1.35}\normalsize
                 \directlua{
-                    local fixed = {}
-                    if data.nachteile.glasknochen then fixed:insert("Glasknochen") end
-                    if data.nachteile.behaebig then fixed:insert("Behäbig") end
+                    local fixed = common.list_known(data.nachteile,
+                        {glasknochen = "Glasknochen", behaebig = "Behäbig",
+                         kleinwuechsig = "Kleinwüchsig", zwergenwuchs = "Zwergenwuchs"})
                     common.multiline_content("Nachteile",
                         data.nachteile, fixed, data.nachteile.magisch)
                 }
@@ -112,13 +111,13 @@
 \begin{dsaSheetBox}[2\fboxsep + 11.2cm]
     \setlength{\tabcolsep}{0pt}
     \renewcommand{\arraystretch}{1.325}
-    \begin{tabular}{p{5.3cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}|x{1.2cm}@{/}x{0.8cm}|x{1.2cm}}
+    \begin{NiceTabular}{p{5.3cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}|x{1.2cm}@{/}x{0.8cm}|x{1.2cm}}
         \directlua{
             common.header_row("tiny", "dsaSmallHeader",
-                "", "Aktuell", "Modifikator", {1, "c@{\noexpand\\tiny/}", "Zugekauft"}, {1, "c", "Max"}, "Permanent")
-        }%
+                "", "Aktuell", "Modifikator", {1, "c", "Zugekauft"}, {1, "c", "Max"}, "Permanent")
+        }% removed: @{\noexpand\\tiny/}
         \directlua{frontseite.eigenschaften:rechts()}
-    \end{tabular}
+    \end{NiceTabular}
     \vspace{0.2pt}
 \end{dsaSheetBox}
 

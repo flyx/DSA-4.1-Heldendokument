@@ -97,15 +97,6 @@ local function mod_tp(tp, schwelle, schritt)
   return tp
 end
 
-local function render_delta(input)
-  if input < 0 then
-    tex.sprint(-2, "−")
-  elseif input > 0 then
-    tex.sprint(-2, "+")
-  end
-  tex.sprint(common.round(math.abs(input)))
-end
-
 local function atpa_mod(basis, talent, schwelle, schritt, wm, spez)
   local val = basis
   local cur_kk = data:cur("KK")
@@ -184,9 +175,9 @@ local nahkampf_render = {
     local tp = parse_tp(v)
     render_tp(tp)
   end},
-  [8]= {true, render_delta},
-  [9]= {true, render_delta},
-  [10]= {true, render_delta},
+  [8]= {true, common.render_delta},
+  [9]= {true, common.render_delta},
+  [10]= {true, common.render_delta},
   [11]= {false, function(v, talent, ebe)
     local atb = data:cur("AT")
     if talent == nil or #talent < 4 or atb == "" or #v < 8 then
@@ -237,7 +228,7 @@ local fernkampf_render = {
 }
 
 for i=5,9 do
-  fernkampf_render[i] = {true, render_delta}
+  fernkampf_render[i] = {true, common.render_delta}
 end
 
 function kampfbogen.fernkampf()
@@ -275,9 +266,9 @@ function kampfbogen.waffenlos()
 end
 
 local schilde_render = {
-  [3]= {true, render_delta},
-  [4]= {true, render_delta},
-  [5]= {true, render_delta},
+  [3]= {true, common.render_delta},
+  [4]= {true, common.render_delta},
+  [5]= {true, common.render_delta},
   [6]= {false, function(v, talent, ebe)
     if #v < 5 then
       return
@@ -305,7 +296,7 @@ local schilde_render = {
       else
         val = val - 4
       end
-      render_delta(val)
+      common.render_delta(val)
     else
       tex.error("Typ muss 'Schild' oder 'Parierwaffe' sein: " .. v[2])
     end

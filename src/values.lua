@@ -12,6 +12,8 @@ if i > #arg then
   tex.error("missing argument for hero data!")
 end
 
+local values = require(arg[i])
+
 local function sum_and_round(items, pos)
   local cur = nil
   for i,v in ipairs(items) do
@@ -28,8 +30,6 @@ local function sum_and_round(items, pos)
   end
   return cur == nil and "" or tonumber(string.format("%.0f", cur + 0.0001)) -- round up at 0.5
 end
-
-local values = require(arg[i])
 
 local getter_map = {
   calc = {
@@ -76,8 +76,10 @@ function getter_map:formula(name)
   return res .. ")/" .. vals.div
 end
 
-getter_map:reg("basic", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "GS")
+getter_map:reg("basic", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK")
 getter_map:reg("calculated", "LE", "AU", "AE", "MR", "KE", "INI", "AT", "PA", "FK")
+getter_map:reg("gs_mod", "GS_mod")
+getter_map:reg("gs", "GS")
 getter_map:reg("rs", "RS")
 getter_map:reg("be", "BE")
 getter_map:reg("be_voll", "BE_voll")
@@ -148,6 +150,33 @@ function values:cur(name, div)
     return getter_map.sparse(self.eig[name][3], div)
   elseif kind == "calculated" then
     return getter_map.calc(self, name)
+  elseif kind == "gs_mod" then
+    local ge = self:cur("GE")
+    if ge ~= "" then
+      local gsmod = 0
+      for i,v in ipairs({{"kleinwuechsig", -1}, {"zwergenwuchs", -2}, {"behaebig", -1}}) do
+        if self.nachteile[v[1]] then
+          gsmod = gsmod + v[2]
+        end
+      end
+      if self.vorteile.flink then
+        gsmod = gsmod + 1
+      end
+      if ge < 10 then
+        gsmod = gsmod - 1
+      elseif ge > 15 then
+        gsmod = gsmod + 1
+      end
+      return gsmod
+    else
+      return ""
+    end
+  elseif kind == "gs" then
+    local gsmod = self:cur("GS_mod")
+    if gsmod == "" then
+      return ""
+    end
+    return 8 + gsmod
   elseif kind == "rs" then
     return sum_and_round(self.ruestung, 2)
   elseif kind == "be" or kind == "be_voll" then

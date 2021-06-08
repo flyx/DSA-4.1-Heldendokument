@@ -266,4 +266,23 @@ function common.pages()
   end
 end
 
+function common.render_delta(input)
+  if input < 0 then
+    tex.sprint(-2, "−")
+  elseif input > 0 then
+    tex.sprint(-2, "+")
+  end
+  tex.sprint(common.round(math.abs(input)))
+end
+
+function common.list_known(input, known)
+  local ret = {}
+  for k,v in pairs(known) do
+    if input[k] then
+      table.insert(ret, v)
+    end
+  end
+  return ret
+end
+
 return common
