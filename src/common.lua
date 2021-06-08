@@ -120,7 +120,40 @@ function common.labelled_rows(v, label, size)
   end
 end
 
-function common.multiline_content(name, ...)
+-- spec = {
+--   name="whatev", rows = 23, cols = 42, col="", baselinestretch=1.35,
+--   preamble="", hspace="10pt", fontsize={8,12}
+-- }
+function common.multiline_content(spec, ...)
+  if spec.cols ~= nil and spec.cols > 1 then
+    tex.sprint([[\multicolumn{]])
+    tex.sprint(spec.cols)
+    tex.sprint("}{")
+    tex.sprint(spec.col)
+    tex.sprint("}{")
+  end
+  if spec.rows > 1 then
+    tex.sprint([[\multirow[t]{]])
+    tex.sprint(spec.rows)
+    tex.sprint([[}{=}{\renewcommand{\baselinestretch}{]])
+    tex.sprint(spec.baselinestretch)
+    tex.sprint([[}\normalfont]])
+  end
+  if spec.fontsize ~= nil then
+    tex.sprint([[\normalfont\fontsize{]])
+    tex.sprint(spec.fontsize[1])
+    tex.sprint([[}{]])
+    tex.sprint(spec.fontsize[2])
+    tex.sprint([[}\selectfont]])
+  end
+  if spec.preamble ~= nil and spec.preamble ~= "" then
+    tex.sprint([[\textmansontt{\textbf{]])
+    tex.sprint(spec.preamble)
+    tex.sprint([[}}\hspace{]])
+    tex.sprint(spec.hspace)
+    tex.sprint("}")
+  end
+
   local first = true
   local seen_empty = false
   for _, values in ipairs {...} do
@@ -129,7 +162,7 @@ function common.multiline_content(name, ...)
         local v = values[i]
         if type(v) == "table" then
           if #v ~= 0 then
-            tex.error("nested table in '" .. name .. "' is not empty!")
+            tex.error("nested table in '" .. spec.name .. "' is not empty!")
           end
           if seen_empty or first then
             tex.sprint([[\newline]])
@@ -157,6 +190,13 @@ function common.multiline_content(name, ...)
       tex.sprint(-2, values)
     end
   end
+  if spec.rows > 1 then tex.sprint("}") end
+  if spec.cols ~= nil and spec.cols > 1 then tex.sprint("}") end
+  for i=2,spec.rows do
+    tex.sprint([[\\\hline ]])
+    tex.sprint(empty_line)
+  end
+  tex.sprint([[\\]])
 end
 
 function common.checkbox(checked)

@@ -32,14 +32,10 @@
 
 \begin{dsaSheetBox}[\textwidth]
     \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
-        \multirow[t]{3}{=}{\renewcommand{\baselinestretch}{1.35}\normalsize
-            \textmansontt{\textbf{Aussehen}}\hspace{10pt}
-            \directlua{
-                common.multiline_content("Aussehen", data.held.aussehen)
-            }
-        }\\ \hline
-        \\ \hline
-        \\
+        \directlua{common.multiline_content({
+            name="Aussehen", rows=3, baselinestretch=1.35, preamble="Aussehen",
+            hspace="10pt"}, data.held.aussehen)
+        }
     \end{tabular}
 \end{dsaSheetBox}%
 
@@ -49,20 +45,13 @@
     \vspace{-12pt}
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
-            \multirow[t]{7}{=}{\renewcommand{\baselinestretch}{1.35}\normalsize
-                \directlua{
-                    local fixed = common.list_known(data.vorteile,
-                        {eisern = "Eisern", flink = "Flink"})
-                    common.multiline_content("Vorteile",
-                        data.vorteile, fixed, data.vorteile.magisch)
-                }
-            }\\ \hline
-            \\ \hline
-            \\ \hline
-            \\ \hline
-            \\ \hline
-            \\ \hline
-            \\
+            \directlua{
+                local fixed = common.list_known(data.vorteile,
+                    {eisern = "Eisern", flink = "Flink"})
+                common.multiline_content({
+                    name="Vorteile", rows=7, baselinestretch=1.35
+                }, data.vorteile, fixed, data.vorteile.magisch)
+            }
         \end{tabular}
     \end{dsaSheetBox}
 
@@ -72,21 +61,14 @@
     \vspace{-12pt}
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
-            \multirow[t]{7}{=}{\renewcommand{\baselinestretch}{1.35}\normalsize
-                \directlua{
-                    local fixed = common.list_known(data.nachteile,
-                        {glasknochen = "Glasknochen", behaebig = "Behäbig",
-                         kleinwuechsig = "Kleinwüchsig", zwergenwuchs = "Zwergenwuchs"})
-                    common.multiline_content("Nachteile",
-                        data.nachteile, fixed, data.nachteile.magisch)
-                }
-            }\\ \hline
-            \\ \hline
-            \\ \hline
-            \\ \hline
-            \\ \hline
-            \\ \hline
-            \\
+            \directlua{
+                local fixed = common.list_known(data.nachteile,
+                    {glasknochen = "Glasknochen", behaebig = "Behäbig",
+                        kleinwuechsig = "Kleinwüchsig", zwergenwuchs = "Zwergenwuchs"})
+                common.multiline_content({
+                    name="Nachteile", rows=7, baselinestretch=1.35
+                }, data.nachteile, fixed, data.nachteile.magisch)
+            }
         \end{tabular}
     \end{dsaSheetBox}
 \end{multicols}

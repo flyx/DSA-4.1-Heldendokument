@@ -44,14 +44,13 @@
 
     \vspace{2pt}
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
-        \multirow[t]{3}{=}{\renewcommand{\baselinestretch}{1.04}\normalfont\fontsize{8}{12}\selectfont
-            \textmansontt{\footnotesize\bfseries Sonderfertigkeiten}\hspace{5pt}
-            \directlua{
-                common.multiline_content("Nahkampf-SF", data.sf.nahkampf)
-            }
-        }\\ \hline
-        \\ \hline
-        \\
+        \directlua{
+            common.multiline_content({
+                name="Nahkampf-SF", rows=3,
+                preamble="\noexpand\\footnotesize Sonderfertigkeiten",
+                baselinestretch=1.04, hspace="5pt", fontsize={8,12}
+            }, data.sf.nahkampf)
+        }
     \end{tabular}
 \end{dsaSheetBox}
 
@@ -72,14 +71,13 @@
 
     \vspace{2pt}
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
-        \multirow[t]{3}{=}{\renewcommand{\baselinestretch}{1.04}\normalfont\fontsize{8}{12}\selectfont
-            \textmansontt{\footnotesize\bfseries Sonderfertigkeiten}\hspace{5pt}
-            \directlua{
-                common.multiline_content("Fernkampf-SF", data.sf.fernkampf)
-            }
-        }\\ \hline
-        \\ \hline
-        \\
+        \directlua{
+            common.multiline_content({
+                name="Fernkampf-SF", rows=3,
+                preamble="\noexpand\\footnotesize Sonderfertigkeiten",
+                baselinestretch=1.04, hspace="5pt", fontsize={8,12}
+            }, data.sf.fernkampf)
+        }
     \end{tabular}
 \end{dsaSheetBox}
 
@@ -100,13 +98,13 @@
 
         \vspace{2pt}
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
-            \multirow[t]{3}{=}{\renewcommand{\baselinestretch}{1.04}\normalfont\fontsize{8}{12}\selectfont
-                \textmansontt{\footnotesize\bfseries Sonderfertigkeiten}\hspace{5pt}
-                \directlua{
-                    common.multiline_content("Waffenlos-SF", data.sf.waffenlos)
-                }
-            }\\ \hline
-            \\
+            \directlua{
+                common.multiline_content({
+                    name="Waffenlos-SF", rows=2,
+                    preamble="\noexpand\\footnotesize Sonderfertigkeiten",
+                    baselinestretch=1.04, hspace="5pt", fontsize={8,12}
+                }, data.sf.waffenlos)
+            }
         \end{tabular}
     \end{dsaSheetBox}
 	\vspace{-28pt}

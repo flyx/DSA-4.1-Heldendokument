@@ -58,11 +58,10 @@ function held_basis.rechts(self)
     tex.sprint("&")
     tex.sprint(-2, data.held[n])
   end
-  tex.sprint([[\\ \hline\multicolumn{2}{p{.9\textwidth}}{\multirow[t]{4}{=}{\renewcommand{\baselinestretch}{1.35}\normalfont]])
-  local_heading(self.labels["titel"])
-  tex.sprint([[\hspace{54.92pt}]])
-  common.multiline_content("Titel", data.held.titel)
-  tex.sprint([[}}\\ \hline \\ \hline \\ \hline \\]])
+  tex.sprint([[\\ \hline]])
+  common.multiline_content({
+    name="Titel", rows=4, cols=2, col=[[p{.9\textwidth}]], baselinestretch=1.35,
+    preamble=self.labels["titel"], hspace="54.92pt"}, data.held.titel)
 end
 
 frontseite.held = held_basis
