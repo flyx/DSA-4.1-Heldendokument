@@ -138,9 +138,15 @@
             \bfseries\large\mansontt
             \begin{tabular}{p{4cm}p{13.7cm}} \hline
                 Repräsentationen: & \normalfont\directlua{zauberliste.repraesentationen:render(data.magie.repraesentationen)} \\ \hline
-                Merkmale: & \normalfont\directlua{tex.sprint(-2, table.concat(data.magie.merkmale, ", "))} \\ \hline
-                Begabungen: & \normalfont\directlua{tex.sprint(-2, table.concat(data.magie.begabungen, ", "))} \\ \hline
-                Unfähigkeiten: & \normalfont\directlua{tex.sprint(-2, table.concat(data.magie.unfaehigkeiten, ", "))}
+                Merkmale: & \normalfont\directlua{
+                    zauberliste.merkmalliste(data.magie.merkmale)
+                } \\ \hline
+                Begabungen: & \normalfont\directlua{
+                    zauberliste.merkmalliste(data.magie.begabungen)
+                } \\ \hline
+                Unfähigkeiten: & \normalfont\directlua{
+                    zauberliste.merkmalliste(data.magie.unfaehigkeiten)
+                }
             \end{tabular}
         \end{dsaSheetBox}
 

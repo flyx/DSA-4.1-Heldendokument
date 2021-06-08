@@ -208,4 +208,20 @@ function values:formula(name)
   return getter_map:formula(name)
 end
 
+if values.magie ~= nil then
+  for _, name in ipairs({"merkmale", "begabungen", "unfaehigkeiten"}) do
+    local subject = values.magie[name]
+    if subject ~= nil then
+      for _, kind in ipairs({"Daemonisch", "Elementar"}) do
+        local set = subject[kind]
+        if type(set) == "table" then
+          for _, item in ipairs(set) do
+            set[item] = true
+          end
+        end
+      end
+    end
+  end
+end
+
 return values

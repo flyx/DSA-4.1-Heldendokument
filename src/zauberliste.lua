@@ -41,9 +41,20 @@ end
 local merkmale = {
   kurz = {
     Antimagie         = "Anti",
-    ["Dämonisch"]     = "Dämon",
     Geisterwesen      = "Geist",
     Metamagie         = "Meta",
+    Blakharaz         = "BLK",
+    Belhalhar         = "BLH",
+    Charyptoroth      = "CPT",
+    Lolgramoth        = "LGM",
+    Thargunitoth      = "TGT",
+    Amazeroth         = "AMZ",
+    Belshirash        = "BLS",
+    Asfaloth          = "ASF",
+    Tasfarelel        = "TSF",
+    Belzhorash        = "BLZ",
+    Agrimoth          = "AGM",
+    Belkelel          = "BLL",
   }
 }
 
@@ -87,6 +98,19 @@ function schwierigkeit:mod_from(merkmal, merkmale, delta)
   return 0
 end
 
+function schwierigkeit:submod_from(name, sub, merkmale, delta)
+  local ret = 0
+  if sub ~= nil and merkmale ~= nil then
+    if merkmale.gesamt ~= nil then
+      ret = ret + delta
+    end
+    if type(sub) == "string" and merkmale[sub] ~= nil then
+      ret = ret + delta
+    end
+  end
+  return ret
+end
+
 function schwierigkeit:malus_from(repr1, repr2)
   if repr2 == "Srl" or repr2 == "Sch" then
     return self:malus_from(repr2, repr1)
@@ -120,6 +144,11 @@ function schwierigkeit:mod(input, merkmale, repr, lernmod, haus)
     index = index + self:mod_from(merkmal, data.magie.begabungen, -1)
     index = index + self:mod_from(merkmal, data.magie.unfaehigkeiten, 1)
   end
+  for _, name in ipairs({"Elementar", "Daemonisch"}) do
+    index = index + self:submod_from(name, merkmale[name], data.magie.merkmale[name], -1)
+    index = index + self:submod_from(name, merkmale[name], data.magie.begabungen[name], -1)
+    index = index + self:submod_from(name, merkmale[name], data.magie.unfaehigkeiten[name], 1)
+  end
   index = index + (haus and -1 or 0)
   index = index + (lernmod == nil and 0 or lernmod)
   index = index + self:malus_repr(repr, data.magie.repraesentationen)
@@ -129,6 +158,33 @@ end
 local zauberliste = {
   repraesentationen = repraesentationen
 }
+
+function zauberliste.merkmalliste(input)
+  local first = true
+  for _, v in ipairs(input) do
+    if first then
+      first = false
+    else
+      tex.sprint(-2, ", ")
+    end
+    tex.sprint(-2, v)
+  end
+  for k, label in pairs({Daemonisch="Dämonisch", Elementar="Elementar"}) do
+    local vals = input[k]
+    if vals ~= nil then
+      for _, item in ipairs(vals) do
+        if first then
+          first = false
+        else
+          tex.sprint(-2, ", ")
+        end
+        tex.sprint(-2, label .. " (")
+        tex.sprint(-2, item)
+        tex.sprint(-2, ")")
+      end
+    end
+  end
+end
 
 function zauberliste.seite(start)
   for i=start,start+48 do
@@ -157,6 +213,24 @@ function zauberliste.seite(start)
         tex.sprint(-2, ", ")
       end
       tex.sprint(-2, merkmale.kurz(m))
+    end
+    local first = #z[8] == 0
+    for k, label in pairs({Daemonisch="Dämon", Elementar="Element"}) do
+      local sub = z[8][k]
+      if sub ~= nil then
+        if first then
+          first = false
+        else
+          tex.sprint(-2, ", ")
+        end
+        if type(sub) == "string" then
+          tex.sprint(-2, label .. " (")
+          tex.sprint(-2, merkmale.kurz(sub))
+          tex.sprint(-2, ")")
+        else
+          tex.sprint(-2, label)
+        end
+      end
     end
     tex.sprint("&")
     tex.sprint(-2, z[9])

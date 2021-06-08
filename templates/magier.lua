@@ -439,14 +439,26 @@ return {
     --  Es sollte die Kurzform der Repräsentation eingegeben werden, im Dokument
     --  wird dann trotzdem die Langform stehen.
     --  Die Liste der bekannten Repräsentation wird verwendet, um die
-    --  Lernschwierigkeit von Zaubern automatisch zu berechnen.
-    repraesentationen = {"Mag"},
+    --  Lernschwierigkeit von Zaubern automatisch zu berechnen. Beispiel:
+    --
+    --      {"Mag", "Dru"}
+    repraesentationen = {},
     --  Bekannte Merkmale. Diese müssen korrekt geschrieben sein; die Liste
     --  wird verwendet, um die Lernschwierigkeit von Zaubern automatisch zu
-    --  berechnen
-    merkmale = {"Antimagie", "Hellsicht", "Herrschaft"},
+    --  berechnen.
+    --
+    --  Die Merkmale Dämonisch und Elementar müssen speziell angegeben werden:
+    --
+    --      {"Antimagie", Daemonisch={"gesamt"}, Elementar={"Erz", "Humus"}}
+    --
+    --  "gesamt" wird für Dämonisch (gesamt) / Elementar (gesamt) angegeben,
+    --  für die spezifischen Merkmale muss der Name des entsprechenden Elements
+    --  oder der Domäne in die Tabelle geschrieben werden.
+    --  Die Domänennamen werden in Zelemja/Urtulamidya erwartet – diese Namen
+    --  werden in der Zauberliste durch ihr Kürzel ersetzt aus Platzgründen.
+    merkmale = {},
     --  Begabungen für Merkmale, für sie gilt dasselbe wie für Merkmalskenntnis.
-    begabungen = {"Antimagie"},
+    begabungen = {},
     --  Unfähigkeiten für Merkmale, dito.
     unfaehigkeiten = {}
   },
@@ -455,20 +467,26 @@ return {
   --  den gegebenen Merkmalen und der Repräsentation, in der der Spruch bekannt
   --  ist.
   --
-  --  Bei der Berechnung der Lernschwierigkeit werden die Regeln aus WdS
-  --  beachtet, nicht aber die aus WdZ (z.B. für elementare Hexalogien).
-  --  Auch wird Elementar (gesamt) und Dämonisch (gesamt) nicht auf spezielle
-  --  Merkmale angerechnet.
-  --  Diese Effekte lassen sich korrigieren, indem in einer Zeile der benamte
-  --  Wert lernmod gesetzt wird. `lernmod=-1` bewirkt etwa, dass die
-  --  Lernschwierigkeit eine Spalte leichter ist.
+  --  Bei der Berechnung der Lernschwierigkeit werden die Regeln für elementare
+  --  Hexalogien und den ADLERSCHWINGE ignoriert. Dies lässt sich korrigieren,
+  --  indem in einer Zeile der benamte Wert lernmod gesetzt wird. `lernmod=-1`
+  --  bewirkt etwa, dass die Lernschwierigkeit eine Spalte leichter ist.
   --
   --  Beispiel für einen Zauber als Zeile:
   --    {92,  "Gardianum", "KL", "IN", "KO", 12, "D", {"Antimagie", "Kraft", "Metamagie"}, "Mag", haus=true},
   --  Zuvorderst steht die Seitenzahl im Liber, danach der Name, die Probe, und
   --  der Talentwert. Dahinter folgt die Komplexität des Zaubers, eine Liste von
   --  Merkmalen und die Repräsentation.
-  --  Die Merkmale müssen immer als Liste in {} angegeben werden!
+  --
+  --  Die Merkmale müssen immer als Tabelle (in {}) angegeben werden.
+  --  Hat der Zauber ein elementares oder dämonisches Merkmal, so muss dies
+  --  speziell angegeben werden, Beispiel:
+  --    {"Kraft", Daemonisch="Thargunitoth", Elementar={}}
+  --  Für ein spezielles dämonisches oder elementares Merkmal muss der
+  --  Name der Domäne bzw. des Elements als Wert gegeben werden. Für das
+  --  allgemeine Merkmal Dämonisch bzw. Elementar muss der Wert {} angegeben
+  --  werden. Dies ermöglicht die korrekte Berechnung der Lernschwierigkeit.
+
   --  Hinter der Repräsentation können noch benamte Werte stehen:
   --    `haus` kann auf true gesetzt werden, damit der Zauber ein Hauszauber ist.
   --           dies beeinflusst die berechnete Lernschwierigkeit.
