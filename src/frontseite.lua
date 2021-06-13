@@ -113,13 +113,13 @@ function eigenschaften.links(self)
         tex.sprint(-2, eigenschaften.render_mod(val))
       elseif j == 2 and i ~= 9 then
         if val ~= 0 then
-          tex.sprint([[\begin{minipage}[t][0.5em][b]{0.8cm}\centering\small]])
+          tex.sprint([[\begin{minipage}[t][0.49em][b]{0.8cm}\centering\small]])
           tex.sprint(-2, val)
           tex.sprint([[\\\tiny\textbf{Max: }]])
           tex.sprint(data.sparse(val, 2/3))
           tex.sprint([[\\]])
           tex.print()
-          tex.print([[\vspace{1pt}\end{minipage}]])
+          tex.print([[\vspace{0.9pt}\end{minipage}]])
         end
       elseif val ~= 0 then
         tex.sprint(-2, val)
@@ -226,7 +226,7 @@ function eigenschaften.rechts(self)
         if j == 1 then
           tex.sprint(-2, eigenschaften.render_mod(data.eig[e][1]))
         elseif j == 3 then
-          tex.sprint([[\begin{minipage}[t][0.5em][b]{0.8cm}\centering\small]])
+          tex.sprint([[\begin{minipage}[t][0.49em][b]{0.8cm}\centering\small]])
           val, label = self.max[e]()
           if val == "" then
             tex.sprint([[\ ]])

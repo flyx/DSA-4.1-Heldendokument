@@ -84,25 +84,26 @@
 \begin{dsaSheetBox}[2\fboxsep + 6.72cm]
     \setlength{\tabcolsep}{0pt}
     \renewcommand{\arraystretch}{1.325}
-    \begin{tabular}{p{3.1cm}|x{1.2cm}|x{1.2cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}}
+    \begin{NiceTabular}{p{3.1cm}|x{1.2cm}|x{1.2cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}}
+        \setarstrut{\tiny} & \dsaSH Modifikator & \dsaSH Start & \dsaSH Aktuell \\ \restorearstrut
         \directlua{
-            common.header_row("tiny", "dsaSmallHeader",
-               "", "Modifikator", "Start", "Aktuell")
             frontseite.eigenschaften:links()
         }
-   \end{tabular}%
+   \end{NiceTabular}%
 \end{dsaSheetBox}
 \begin{dsaSheetBox}[2\fboxsep + 11.2cm]
     \setlength{\tabcolsep}{0pt}
     \renewcommand{\arraystretch}{1.325}
+    \vspace{-0.375pt}
     \begin{NiceTabular}{p{5.3cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}|x{1.2cm}@{/}x{0.8cm}|x{1.2cm}}
-        \directlua{
-            common.header_row("tiny", "dsaSmallHeader",
-                "", "Aktuell", "Modifikator", {1, "c", "Zugekauft"}, {1, "c", "Max"}, "Permanent")
-        }% removed: @{\noexpand\\tiny/}
+        \setarstrut{\tiny} & \dsaSH Aktuell & \dsaSH Modifikator & \multicolumn{2}{l}{
+            \dsaSH \begin{tabular}{x{1.25cm}@{\tiny/}x{0.85cm}}
+                Zugekauft & Max
+            \end{tabular}
+        } & \dsaSH Permanent \\ \restorearstrut
         \directlua{frontseite.eigenschaften:rechts()}
     \end{NiceTabular}
-    \vspace{0.2pt}
+    \vspace{-0.5875pt}
 \end{dsaSheetBox}
 
 \vspace{-25pt}

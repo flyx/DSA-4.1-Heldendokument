@@ -101,25 +101,6 @@ function common.inner_rows(v, num_items, num_rows, optional_addition)
   end
 end
 
-function common.labelled_rows(v, label, size)
-  if not size then
-    size = "footnotesize"
-  end
-  for i, item in ipairs(v) do
-    if i == 1 then
-      tex.sprint(string.format([[\textmansontt{\%s\bfseries ]], size))
-      tex.sprint(-2, label)
-      tex.sprint([[}\hspace{5pt}]])
-    else
-      tex.sprint([[\relax]])
-    end
-    tex.sprint(-2, item)
-    if i ~= #v then
-      tex.sprint([[\\ \hline]])
-    end
-  end
-end
-
 -- spec = {
 --   name="whatev", rows = 23, cols = 42, col="", baselinestretch=1.35,
 --   preamble="", hspace="10pt", fontsize={8,12}
