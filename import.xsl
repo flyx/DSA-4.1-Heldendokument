@@ -252,6 +252,146 @@
 
   <xsl:variable name="naturTalente" select="exslt:node-set($natur_raw)"/>
 
+  <xsl:variable name="sf_raw">
+    <sf name="Astrale Meditation" art="magisch"/>
+    <sf name="Aufmerksamkeit" art="nahkampf"/>
+    <sf name="Aura verhüllen" art="magisch"/>
+    <sf name="Ausfall" art="nahkampf"/>
+    <sf name="Auspendeln" art="waffenlos"/>
+    <sf name="Ausweichen" art="nahkampf" id="ausweichen" roman="3"/>
+    <sf name="Befreiungsschlag" art="nahkampf"/>
+    <sf name="Beidhändiger Kampf" art="nahkampf" roman="2"/>
+    <sf name="Beinarbeit" art="waffenlos"/>
+    <sf name="Berittener Schütze" art="fernkampf"/>
+    <sf name="Betäubungsschlag" art="nahkampf"/>
+    <sf name="Binden" art="nahkampf"/>
+    <sf name="Biss" art="waffenlos"/>
+    <sf name="Blindkampf" art="nahkampf"/>
+    <sf name="Blutmagie" art="magisch"/>
+    <sf name="Block" art="waffenlos"/>
+    <sf name="Defensiver Kampfstil" art="nahkampf"/>
+    <sf name="Doppelangriff" art="nahkampf"/>
+    <sf name="Doppelschlag" art="waffenlos"/>
+    <sf name="Eisenarm" art="waffenlos"/>
+    <sf name="Eisenhagel" art="fernkampf"/>
+    <sf name="Entwaffnen" art="nahkampf"/>
+    <sf name="Festnageln" art="nahkampf"/>
+    <sf name="Finte" art="nahkampf"/>
+    <sf name="Formation" art="nahkampf"/>
+    <sf name="Fußfeger" art="waffenlos"/>
+    <sf name="Gefäß der Sterne" art="magisch" id="gefaess_der_sterne"/>
+    <sf name="Gegenhalten" art="nahkampf"/>
+    <sf name="Gerade" art="waffenlos"/>
+    <sf name="Gezielter Stich" art="nahkampf"/>
+    <sf name="Griff" art="waffenlos"/>
+    <sf name="Große Meditation" art="magisch"/>
+    <sf name="Halbschwert" art="nahkampf"/>
+    <sf name="Halten" art="waffenlos"/>
+    <sf name="Hammerschlag" art="nahkampf"/>
+    <sf name="Handkante" art="waffenlos"/>
+    <sf name="Hexenritual" art="ignore" named="1"/>
+    <sf name="Hoher Tritt" art="waffenlos"/>
+    <sf name="Hypervehemenz" art="magisch"/>
+    <sf name="Improvisierte Waffen" art="nahkampf"/>
+    <sf name="Kampf im Wasser" art="nahkampf"/>
+    <sf name="Kampfgespür" art="nahkampf" id="kampfgespuer"/>
+    <sf name="Kampfreflexe" art="nahkampf" id="kampfreflexe"/>
+    <sf name="Klammer" art="waffenlos"/>
+    <sf name="Klingensturm" art="nahkampf"/>
+    <sf name="Klingentänzer" art="nahkampf"/>
+    <sf name="Klingenwand" art="nahkampf"/>
+    <sf name="Knaufschlag" art="waffenlos"/>
+    <sf name="Knie" art="waffenlos"/>
+    <sf name="Konzentrationsstärke" art="magisch"/>
+    <sf name="Kopfstoß" art="waffenlos"/>
+    <sf name="Kraftkontrolle" art="magisch"/>
+    <sf name="Kraftlinienmagie" art="magisch" roman="2"/>
+    <sf name="Kraftspeicher" art="magisch"/>
+    <sf name="Kreuzblock" art="waffenlos"/>
+    <sf name="Kriegsreiterei" art="nahkampf"/>
+    <sf name="Linkhand" art="nahkampf" id="linkhand"/>
+    <sf name="Lockeres Zaubern" art="magisch"/>
+    <sf name="Matrixgeber" art="magisch"/>
+    <sf name="Matrixkontrolle" art="magisch"/>
+    <sf name="Matrixregeneration" art="magisch" roman="2"/>
+    <sf name="Meisterliche Regeneration" art="magisch"/>
+    <sf name="Meisterliche Zauberkontrolle" art="magisch" roman="2"/>
+    <sf name="Meisterliches Entwaffnen" art="nahkampf"/>
+    <sf name="Meisterparade" art="nahkampf"/>
+    <sf name="Meisterschütze" art="fernkampf"/>
+    <sf name="Merkmalskenntnis" art="magisch" id="merkmalskenntnis" named="1"/>
+    <sf name="Niederringen" art="waffenlos"/>
+    <sf name="Niederwerfen" art="nahkampf"/>
+    <sf name="Ottagaldr" art="magisch"/>
+    <sf name="Parierwaffen" art="nahkampf" id="parierwaffen" roman="2"/>
+    <sf name="Regeneration" art="magisch" roman="2"/>
+    <sf name="Reiterkampf" art="nahkampf"/>
+    <sf name="Repräsentation" art="ignore" named="1"/>
+    <sf name="Ritualkenntnis" art="ignore" named="1"/>
+    <sf name="Runenkunde" art="magisch"/>
+    <sf name="Rüstungsgewöhnung" art="nahkampf" id="ruestungsgewoehnung" roman="3"/>
+    <sf name="Scharfschütze" art="fernkampf" sub="talent"/>
+    <sf name="Schildkampf" art="nahkampf" id="schildkampf" roman="2"/>
+    <sf name="Schildspalter" art="nahkampf"/>
+    <sf name="Schmetterschlag" art="waffenlos"/>
+    <sf name="Schmutzige Tricks" art="waffenlos"/>
+    <sf name="Schnellladen" art="fernkampf" sub="talent"/>
+    <sf name="Schnellziehen" art="nahkampf"/>
+    <sf name="Schwanzfeger" art="waffenlos"/>
+    <sf name="Schwanzschlag" art="waffenlos"/>
+    <sf name="Schwinger" art="waffenlos"/>
+    <sf name="Schwitzkasten" art="waffenlos"/>
+    <sf name="Semiperminanz" art="magisch" roman="2"/>
+    <sf name="Signaturkenntnis" art="magisch"/>
+    <sf name="Simultanzaubern" art="magisch"/>
+    <sf name="Spießgespann" art="nahkampf"/>
+    <sf name="Sprung" art="waffenlos"/>
+    <sf name="Sprungtritt" art="waffenlos"/>
+    <sf name="Stapeleffekt" art="magisch"/>
+    <sf name="Sturmangriff" art="nahkampf"/>
+    <sf name="Tanz der Mada" art="magisch"/>
+    <sf name="Tierischer Begleiter" art="magisch"/>
+    <sf name="Tod von Links" art="nahkampf"/>
+    <sf name="Todesstoß" art="nahkampf"/>
+    <sf name="Traumgänger" art="magisch"/>
+    <sf name="Tritt" art="waffenlos"/>
+    <sf name="Turnierreiterei" art="nahkampf"/>
+    <sf name="Umreißen" art="nahkampf"/>
+    <sf name="Unterwasserkampf" art="nahkampf"/>
+    <sf name="Verbotene Pforten" art="magisch"/>
+    <sf name="Versteckte Klinge" art="waffenlos"/>
+    <sf name="Vertrautenbindung" art="magisch"/>
+    <sf name="Vielfache Ladungen" art="magisch"/>
+    <sf name="Würgegriff" art="waffenlos"/>
+    <sf name="Waffe zerbrechen" art="nahkampf"/>
+    <sf name="Waffenloser Kampfstil" art="waffenlos" named="1" id="kampfstil" boni="1"/>
+    <sf name="Waffenmeister" art="nahkampf"/>
+    <sf name="Waffenspezialisierung" art="nahkampf" id="waffenspezialisierung" sub="talent" subsub="spezialisierung"/>
+    <sf name="Windmühle" art="nahkampf"/>
+    <sf name="Wuchtschlag" art="nahkampf"/>
+    <sf name="Wurf" art="waffenlos"/>
+    <sf name="Zauber bereithalten" art="magisch"/>
+    <sf name="Zauber unterbrechen" art="magisch"/>
+    <sf name="Zauber vereinigen" art="magisch"/>
+    <sf name="Zauberkontrolle" art="magisch"/>
+    <sf name="Zauberroutine" art="magisch"/>
+    <sf name="Zauberspezialisierung" art="magisch" id="zauberspezialisierung" sub="zauber" subsub="spezialisierung"/>
+    <sf name="Zauberzeichen" art="magisch"/>
+  </xsl:variable>
+
+  <xsl:variable name="sonderfertigkeiten" select="exslt:node-set($sf_raw)"/>
+
+  <xsl:variable name="kstil_raw">
+    <stil name="Bornländisch" talent="Ringen"/>
+    <stil name="Gladiatorenstil"/>
+    <stil name="Hammerfaust" talent="Raufen"/>
+    <stil name="Hruruzat" talent="Raufen"/>
+    <stil name="Mercenario" talent="Raufen"/>
+    <stil name="Unauer Schule" talent="Ringen"/>
+  </xsl:variable>
+
+  <xsl:variable name="kampfstile" select="exslt:node-set($kstil_raw)"/>
+
   <xsl:template match="/">
     <xsl:apply-templates select="helden/held[1]"/>
   </xsl:template>
@@ -273,6 +413,7 @@
     <xsl:text>
   m_spalte = false,</xsl:text>
     <xsl:apply-templates select="talentliste"/>
+    <xsl:apply-templates select="sf"/>
     <xsl:text>
 }
 </xsl:text>
@@ -528,7 +669,7 @@
     <xsl:variable name="gesellschaft" select="$koerper[last()]/following-sibling::talent[following-sibling::talent[@name=$natur[1]/@name]]"/>
     <xsl:variable name="sprachenSchriften" select="talent[@k]"/>
     <xsl:variable name="wissen" select="$natur[last()]/following-sibling::talent[following-sibling::talent[@name=$sprachenSchriften[1]/@name]]"/>
-    <xsl:variable name="handwerk" select="$sprachenSchriften[last()]/following-sibling::talent[not(contains(@name, '('))]"/>
+    <xsl:variable name="handwerk" select="$sprachenSchriften[last()]/following-sibling::talent[not(starts-with(@name, 'Ritualkenntnis') or starts-with(@name, 'Liturgiekenntnis'))]"/>
     <xsl:text>
     kampf = {</xsl:text><xsl:apply-templates select="$kampf" mode="kampf"/><xsl:text>
     },
@@ -649,4 +790,243 @@
     <xsl:text>},</xsl:text>
   </xsl:template>
 
+  <xsl:template match="sf">
+    <xsl:text>
+  sf = {
+    allgemein = {
+      </xsl:text>
+      <xsl:apply-templates select="sonderfertigkeit"/>
+      <xsl:text>
+    },
+    nahkampf = {
+      </xsl:text>
+      <xsl:apply-templates select="sonderfertigkeit">
+        <xsl:with-param name="art" select="'nahkampf'"/>
+      </xsl:apply-templates>
+      <xsl:apply-templates select="$sonderfertigkeiten/sf[@art='nahkampf' and @id]" mode="id">
+        <xsl:with-param name="items" select="sonderfertigkeit"/>
+      </xsl:apply-templates>
+      <xsl:text>
+    },
+    fernkampf = {
+      </xsl:text>
+      <xsl:apply-templates select="sonderfertigkeit">
+        <xsl:with-param name="art" select="'fernkampf'"/>
+      </xsl:apply-templates>
+      <xsl:apply-templates select="$sonderfertigkeiten/sf[@art='fernkampf' and @id]" mode="id">
+        <xsl:with-param name="items" select="sonderfertigkeit"/>
+      </xsl:apply-templates>
+      <xsl:text>
+    },
+    waffenlos = {
+      </xsl:text>
+      <xsl:apply-templates select="sonderfertigkeit">
+        <xsl:with-param name="art" select="'waffenlos'"/>
+      </xsl:apply-templates>
+      <xsl:apply-templates select="$sonderfertigkeiten/sf[@art='waffenlos' and @id]" mode="id">
+        <xsl:with-param name="items" select="sonderfertigkeit"/>
+      </xsl:apply-templates>
+      <xsl:text>
+    },
+    magisch = {
+      </xsl:text>
+      <xsl:apply-templates select="sonderfertigkeit">
+        <xsl:with-param name="art" select="'magisch'"/>
+      </xsl:apply-templates>
+      <xsl:apply-templates select="$sonderfertigkeiten/sf[@art='magisch' and @id]" mode="id">
+        <xsl:with-param name="items" select="sonderfertigkeit"/>
+      </xsl:apply-templates>
+      <xsl:text>
+    },
+  },</xsl:text>
+  </xsl:template>
+
+  <func:function name="dsa:endsWith">
+    <xsl:param name="haystack" as="xs:string"/>
+    <xsl:param name="needle" as="xs:string"/>
+    <func:result select="substring($haystack, string-length($haystack) - string-length($needle) + 1) = $needle"/>
+  </func:function>
+
+  <func:function name="dsa:sfKind">
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="dsa:endsWith(@name, ' I') or dsa:endsWith(@name, ' II') or dsa:endsWith(@name, ' III')">
+          <xsl:text>roman</xsl:text>
+        </xsl:when>
+        <xsl:when test="contains(@name, ': ')">
+          <xsl:text>named</xsl:text>
+        </xsl:when>
+        <xsl:when test="./* and contains(@name, '(')">
+          <xsl:text>subsub</xsl:text>
+        </xsl:when>
+        <xsl:when test="./*">
+          <xsl:text>sub</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>simple</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+
+  <func:function name="dsa:sfName">
+    <xsl:param name="kind"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$kind = 'roman'">
+          <xsl:value-of select="substring(@name, 1, string-length(@name) - 2)"/>
+        </xsl:when>
+        <xsl:when test="$kind = 'named'">
+          <xsl:value-of select="substring-before(@name, ': ')"/>
+        </xsl:when>
+        <xsl:when test="$kind = 'subsub'">
+          <xsl:value-of select="substring-before(@name, *[1]/@name)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@name"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+
+  <xsl:template match="sonderfertigkeit">
+    <xsl:param name="art" select="''"/>
+    <xsl:variable name="kind" select="dsa:sfKind()"/>
+    <xsl:variable name="name" select="dsa:sfName($kind)"/>
+    <xsl:variable name="def" select="$sonderfertigkeiten/sf[@name=$name]"/>
+    <xsl:if test="$def">
+      <xsl:choose>
+        <xsl:when test="($kind = 'roman' or $kind = 'ignored') and not($def/@roman)">
+          <xsl:message terminate="yes">
+            <xsl:text>Fehler bei Sonderfertigkeit im XML: '</xsl:text>
+            <xsl:value-of select="@name"/>
+            <xsl:text>'
+            Endet mit römischer Ziffer, was nicht erwartet wurde.</xsl:text>
+          </xsl:message>
+        </xsl:when>
+        <xsl:when test="$kind = 'named' and $def/@named != '1'">
+          <xsl:message terminate="yes">
+            <xsl:text>Fehler bei Sonderfertigkeit im XML: '</xsl:text>
+            <xsl:value-of select="@name"/>
+            <xsl:text>'
+            Enthält Doppelpunkt-Trenner, was nicht erwartet wurde.</xsl:text>
+          </xsl:message>
+        </xsl:when>
+        <xsl:when test="$kind = 'sub' and not($def/@sub)">
+          <xsl:message terminate="yes">
+            <xsl:text>Fehler bei Sonderfertigkeit im XML: '</xsl:text>
+            <xsl:value-of select="@name"/>
+            <xsl:text>'
+            Enthält Unterelement &lt;</xsl:text>
+            <xsl:value-of select="local-name(*[1])"/>
+            <xsl:text>&gt;, was nicht erwartet wurde.</xsl:text>
+          </xsl:message>
+        </xsl:when>
+        <xsl:when test="$kind = 'subsub' and not($def/@subsub)">
+          <xsl:message terminate="yes">
+            <xsl:text>Fehler bei Sonderfertigkeit im XML: '</xsl:text>
+            <xsl:value-of select="@name"/>
+            <xsl:text>'
+            Name enthält zwei verschiedene Unterelemente, was nicht erwartet wurde.</xsl:text>
+          </xsl:message>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:if>
+    <xsl:if test="not($def/@id) and not(./preceding-sibling::sonderfertigkeit[starts-with(@name, $name)]) and ((not($def/@art) and $art = '') or ($art = $def/@art))">
+      <xsl:choose>
+        <xsl:when test="$kind = 'roman'">
+          <xsl:text>[[</xsl:text>
+          <xsl:value-of select="@name"/>
+          <xsl:if test="./following-sibling::sonderfertigkeit[@name=concat($name, ' II')]">
+            <xsl:text>, II</xsl:text>
+          </xsl:if>
+          <xsl:if test="./following-sibling::sonderfertigkeit[@name=concat($name, ' III')]">
+            <xsl:text>, III</xsl:text>
+          </xsl:if>
+          <xsl:text>]],</xsl:text>
+        </xsl:when>
+        <xsl:when test="$kind = 'named'">
+          <xsl:for-each select=".|./following-sibling::sonderfertigkeit[starts-with(@name, $name)]">
+            <xsl:value-of select="concat('[[', $name, ' (', substring-after(@name, ': '), ')]], ')"/>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:when test="$kind = 'sub'">
+          <xsl:for-each select="(.|./following-sibling::sonderfertigkeit[starts-with(@name, $name)])/*[local-name() = $def/@sub]">
+            <xsl:value-of select="concat('[[', $name, ' (', @name, ')]], ')"/>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:when test="$kind = 'simple'">
+          <xsl:value-of select="concat('[[', $name, ']], ')"/>
+        </xsl:when>
+        <xsl:when test="$kind = 'subsub'"/>
+        <xsl:otherwise>
+          <xsl:message terminate="yes">
+            <xsl:text>Unerwarteter Zustand bei Sonderfertigkeit '</xsl:text>
+            <xsl:value-of select="@name"/>
+            <xsl:text>'.</xsl:text>
+          </xsl:message>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="sf" mode="id">
+    <xsl:param name="items"/>
+    <xsl:variable name="name" select="@name"/>
+    <xsl:text>
+      </xsl:text>
+    <xsl:value-of select="concat(@id, ' = ')"/>
+    <xsl:choose>
+      <xsl:when test="@roman">
+        <xsl:text>{</xsl:text>
+        <xsl:value-of select="string(count($items[@name=concat($name, ' I')]) &gt; 0)"/>
+        <xsl:text>, </xsl:text>
+        <xsl:value-of select="string(count($items[@name=concat($name, ' II')]) &gt; 0)"/>
+        <xsl:if test="@roman = '3'">
+          <xsl:text>, </xsl:text>
+          <xsl:value-of select="string(count($items[@name=concat($name, ' III')]) &gt; 0)"/>
+        </xsl:if>
+        <xsl:text>},</xsl:text>
+      </xsl:when>
+      <xsl:when test="@named and @boni">
+        <xsl:text>{</xsl:text>
+          <xsl:for-each select="$items[starts-with(@name, $name)]">
+            <xsl:variable name="stilName" select="substring-after(@name, ': ')"/>
+            <xsl:value-of select="concat('[&quot;', $stilName, '&quot;]: ')"/>
+            <xsl:variable name="nameKomplett" select="@name"/>
+            <xsl:variable name="boniDef" select="../../BoniWaffenlos/boniSF[@sf=$nameKomplett]"/>
+            <xsl:choose>
+              <xsl:when test="$boniDef">
+                <xsl:value-of select="concat('&quot;', $boniDef/@talent, '&quot;,')"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:value-of select="concat('&quot;', $kampfstile/stil[@name=$stilName]/@talent, '&quot;,')"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:for-each>
+          <xsl:text>},</xsl:text>
+      </xsl:when>
+      <xsl:when test="@named">
+        <xsl:text>{</xsl:text>
+        <xsl:for-each select="$items[starts-with(@name, $name)]">
+          <xsl:value-of select="concat('[[', substring-after(@name, ': '), ']], ')"/>
+        </xsl:for-each>
+        <xsl:text>},</xsl:text>
+      </xsl:when>
+      <xsl:when test="@sub">
+        <xsl:text>{</xsl:text>
+        <xsl:variable name="sub" select="@sub"/>
+        <xsl:for-each select="$items[starts-with(@name, $name)]/*[local-name() = $sub]">
+          <xsl:value-of select="concat('[[', @value, ']], ')"/>
+        </xsl:for-each>
+        <xsl:text>},</xsl:text>
+      </xsl:when>
+      <xsl:when test="@subsub">
+        <xsl:text>"tODO",</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="concat(string(count($items[starts-with(@name, $name)]) &gt; 0), ',')"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
 </xsl:stylesheet>
