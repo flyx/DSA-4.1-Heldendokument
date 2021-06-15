@@ -241,12 +241,22 @@ local waffenlos_render = {
     if talent == nil or #talent < 4 or atb == "" or #v < 3 then
       return
     end
+    for _, t in pairs(data.sf.kampfstil) do
+      if v[1] == t then
+        atb = atb + 1
+      end
+    end
     tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4], v[2], v[3], 0, false))
   end},
   [6]= {false, function(v, talent, ebe)
     local pab = data:cur("PA")
     if talent == nil or #talent < 4 or pab == "" or #v < 3 then
       return
+    end
+    for _, t in pairs(data.sf.kampfstil) do
+      if v[1] == t then
+        pab = pab + 1
+      end
     end
     tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[4], v[2], v[3], 0, false))
   end},

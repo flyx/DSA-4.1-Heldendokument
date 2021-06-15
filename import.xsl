@@ -4,6 +4,17 @@
     xmlns:func="http://exslt.org/functions"
     xmlns:dsa="https://flyx.org/dsa-4.1-heldendokument"
     extension-element-prefixes="exslt func">
+  <xsl:param name="sf_zeilen" as="xs:integer" select="6"/>
+  <xsl:param name="min_gaben" as="xs:integer" select="2"/>
+  <xsl:param name="min_begabungen" as="xs:integer" select="0"/>
+  <xsl:param name="min_kampf" as="xs:integer" select="12"/>
+  <xsl:param name="min_koerper" as="xs:integer" select="17"/>
+  <xsl:param name="min_gesellschaft" as="xs:integer" select="10"/>
+  <xsl:param name="min_natur" as="xs:integer" select="7"/>
+  <xsl:param name="min_wissen" as="xs:integer" select="17"/>
+  <xsl:param name="min_sprachen" as="xs:integer" select="10"/>
+  <xsl:param name="min_handwerk" as="xs:integer" select="15"/>
+
   <xsl:output method="text"/>
 
   <xsl:variable name="kulturen_raw">
@@ -400,7 +411,22 @@
   <xsl:template match="held">
     <xsl:text>return {
   dokument = {
-    seiten = {"front", "talente", "kampf", "ausruestung"},
+    seiten = {"front", "talente", "kampf", </xsl:text>
+    <xsl:choose>
+      <xsl:when test="vt/vorteil[starts-with(@name, 'Geweiht')] or sf/sonderfertigkeit[starts-with(@name, 'Spätweihe')]">
+        <xsl:text>"liturgien"</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>"ausruestung"</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:if test="zauberliste/zauber[@repraesentation != 'Magiedilletant']">
+      <xsl:text>, "zauber"</xsl:text>
+    </xsl:if>
+    <xsl:if test="talentliste/talent[starts-with(@name, 'Ritualkenntnis')]">
+      <xsl:text>, "zauberdok"</xsl:text>
+    </xsl:if>
+    <xsl:text>},
     talentreihenfolge = {
       "sonderfertigkeiten", "gaben", "begabungen", "kampf", "koerper",
       "gesellschaft", "natur", "wissen", "sprachen", "handwerk"
@@ -453,7 +479,7 @@
     {}, {}, {}
   },
   </xsl:text>
-    <xsl:if test="vt/vorteil[@name = 'Vollzauberer' or @name = 'Halbzauberer']">
+    <xsl:if test="talentliste/talent[starts-with(@name, 'Ritualkenntnis')] or zauberliste/zauber[@repraesentation != 'Magiedilletant']">
       <xsl:text>magie = {</xsl:text>
       <xsl:apply-templates select="sf" mode="rituale"/>
       <xsl:apply-templates select="sf" mode="repraesentationen"/>
@@ -480,7 +506,7 @@
   },
   </xsl:text>
     </xsl:if>
-    <xsl:if test="vt/vorteil[@name = 'Vollzauberer']">
+    <xsl:if test="zauberliste/zauber[@repraesentation != 'Magiedilletant']">
       <xsl:apply-templates select="zauberliste"/>
     </xsl:if>
     <xsl:text>
@@ -677,7 +703,7 @@
     <xsl:value-of select="dsa:abglEig('Magieresistenz', 'MR')"/>
     <xsl:value-of select="dsa:abglEig('Karmaenergie', 'KE')"/>
     <xsl:text>
-    INI = {</xsl:text><xsl:value-of select="eigenschaft[@name='ini']/@value"/><xsl:text>}
+    INI = {</xsl:text><xsl:value-of select="eigenschaft[@name='ini']/@mod"/><xsl:text>}
   },</xsl:text>
   </xsl:template>
 
@@ -729,7 +755,14 @@
     </func:result>
   </func:function>
 
+  <func:function name="dsa:isGabe">
+    <xsl:param name="vorteile"/>
+    <xsl:param name="name"/>
+    <func:result select="count($vorteile/vorteil[@name = $name]) &gt; 0"/>
+  </func:function>
+
   <xsl:template match="talentliste">
+    <xsl:variable name="vorteile" select="../vt"/>
     <xsl:text>
   talente = {</xsl:text>
     <xsl:variable name="koerper" select="talent[@be]"/>
@@ -738,17 +771,58 @@
     <xsl:variable name="gesellschaft" select="$koerper[last()]/following-sibling::talent[following-sibling::talent[@name=$natur[1]/@name]]"/>
     <xsl:variable name="sprachenSchriften" select="talent[@k]"/>
     <xsl:variable name="wissen" select="$natur[last()]/following-sibling::talent[following-sibling::talent[@name=$sprachenSchriften[1]/@name]]"/>
-    <xsl:variable name="handwerk" select="$sprachenSchriften[last()]/following-sibling::talent[not(starts-with(@name, 'Ritualkenntnis') or starts-with(@name, 'Liturgiekenntnis'))]"/>
+    <xsl:variable name="handwerk" select="$sprachenSchriften[last()]/following-sibling::talent[not(dsa:isGabe($vorteile, @name))][not(starts-with(@name, 'Ritualkenntnis') or starts-with(@name, 'Liturgiekenntnis'))]"/>
+    <xsl:variable name="gaben" select="$wissen/following-sibling::talent[dsa:isGabe($vorteile, @name)]"/>
+    <xsl:variable name="begabungen" select="../zauberliste/zauber[@repraesentation='Magiedilletant']"/>
     <xsl:text>
-    kampf = {</xsl:text><xsl:apply-templates select="$kampf" mode="kampf"/><xsl:text>
+    gaben = {</xsl:text><xsl:apply-templates select="$gaben"/>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count($gaben) + 1"/>
+      <xsl:with-param name="max" select="$min_gaben"/>
+    </xsl:call-template>
+    <xsl:text>
     },
-    koerper = {</xsl:text><xsl:apply-templates select="$koerper" mode="koerper"/><xsl:text>
+    begabungen = {</xsl:text><xsl:apply-templates select="$begabungen" mode="begabungen"/>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count($begabungen) + 1"/>
+      <xsl:with-param name="max" select="$min_begabungen"/>
+    </xsl:call-template>
+    <xsl:text>
     },
-    gesellschaft = {</xsl:text><xsl:apply-templates select="$gesellschaft"/><xsl:text>
+    kampf = {</xsl:text><xsl:apply-templates select="$kampf" mode="kampf"/>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count($kampf) + 1"/>
+      <xsl:with-param name="max" select="$min_kampf"/>
+    </xsl:call-template>
+    <xsl:text>
     },
-    natur = {</xsl:text><xsl:apply-templates select="$natur"/><xsl:text>
+    koerper = {</xsl:text><xsl:apply-templates select="$koerper" mode="koerper"/>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count($koerper) + 1"/>
+      <xsl:with-param name="max" select="$min_koerper"/>
+    </xsl:call-template>
+    <xsl:text>
     },
-    wissen = {</xsl:text><xsl:apply-templates select="$wissen"/><xsl:text>
+    gesellschaft = {</xsl:text><xsl:apply-templates select="$gesellschaft"/>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count($gesellschaft) + 1"/>
+      <xsl:with-param name="max" select="$min_gesellschaft"/>
+    </xsl:call-template>
+    <xsl:text>
+    },
+    natur = {</xsl:text><xsl:apply-templates select="$natur"/>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count($natur) + 1"/>
+      <xsl:with-param name="max" select="$min_natur"/>
+    </xsl:call-template>
+    <xsl:text>
+    },
+    wissen = {</xsl:text><xsl:apply-templates select="$wissen"/>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count($wissen) + 1"/>
+      <xsl:with-param name="max" select="$min_wissen"/>
+    </xsl:call-template>
+    <xsl:text>
     },
     sprachen = {</xsl:text>
       <xsl:variable name="kultur" select="../basis/kultur"/>
@@ -760,9 +834,19 @@
           <xsl:with-param name="praefix" select="'Zweitsprache'"/>
         </xsl:apply-templates>
       </xsl:if>
-      <xsl:apply-templates select="$sprachenSchriften[@name != dsa:muttersprache($kultur) and @name != dsa:zweitsprache($kultur)]" mode="sprachen-schriften"/><xsl:text>
+      <xsl:apply-templates select="$sprachenSchriften[@name != dsa:muttersprache($kultur) and @name != dsa:zweitsprache($kultur)]" mode="sprachen-schriften"/>
+      <xsl:call-template name="fill">
+        <xsl:with-param name="cur" select="count($sprachenSchriften) + 1"/>
+        <xsl:with-param name="max" select="$min_sprachen"/>
+      </xsl:call-template>
+      <xsl:text>
     },
-    handwerk = {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
+    handwerk = {</xsl:text><xsl:apply-templates select="$handwerk"/>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count($handwerk) + 1"/>
+      <xsl:with-param name="max" select="$min_handwerk"/>
+    </xsl:call-template>
+    <xsl:text>
     },
   },</xsl:text>
   </xsl:template>
@@ -782,9 +866,9 @@
     <xsl:text>", </xsl:text>
     <xsl:choose>
       <xsl:when test="$kampfwerte">
-        <xsl:value-of select="$kampfwerte/attacke/@value"/>
+        <xsl:value-of select="number($kampfwerte/attacke/@value) - number(//eigenschaft[@name='at']/@value)"/>
         <xsl:text>, </xsl:text>
-        <xsl:value-of select="$kampfwerte/parade/@value"/>
+        <xsl:value-of select="number($kampfwerte/parade/@value) - number(//eigenschaft[@name='pa']/@value)"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>"", ""</xsl:text>
@@ -859,9 +943,24 @@
     <xsl:text>},</xsl:text>
   </xsl:template>
 
+  <xsl:template match="zauber" mode="begabungen">
+    <xsl:text>
+      {[[</xsl:text>
+    <xsl:value-of select="@name"/>
+    <xsl:if test="@variante != ''">
+      <xsl:value-of select="concat(' (', @variante, ')')"/>
+    </xsl:if>
+    <xsl:value-of select="concat(']], ', dsa:probe(@probe), ', ', @value)"/>
+    <xsl:text>},</xsl:text>
+  </xsl:template>
+
   <xsl:template match="sf">
     <xsl:text>
-  sf = {
+  sf = {</xsl:text>
+    <xsl:apply-templates select="$sonderfertigkeiten/sf[@id]" mode="id">
+      <xsl:with-param name="items" select="sonderfertigkeit"/>
+    </xsl:apply-templates>
+    <xsl:text>
     allgemein = {
       </xsl:text>
       <xsl:apply-templates select="sonderfertigkeit"/>
@@ -872,18 +971,12 @@
       <xsl:apply-templates select="sonderfertigkeit">
         <xsl:with-param name="art" select="'nahkampf'"/>
       </xsl:apply-templates>
-      <xsl:apply-templates select="$sonderfertigkeiten/sf[@art='nahkampf' and @id]" mode="id">
-        <xsl:with-param name="items" select="sonderfertigkeit"/>
-      </xsl:apply-templates>
       <xsl:text>
     },
     fernkampf = {
       </xsl:text>
       <xsl:apply-templates select="sonderfertigkeit">
         <xsl:with-param name="art" select="'fernkampf'"/>
-      </xsl:apply-templates>
-      <xsl:apply-templates select="$sonderfertigkeiten/sf[@art='fernkampf' and @id]" mode="id">
-        <xsl:with-param name="items" select="sonderfertigkeit"/>
       </xsl:apply-templates>
       <xsl:text>
     },
@@ -892,18 +985,12 @@
       <xsl:apply-templates select="sonderfertigkeit">
         <xsl:with-param name="art" select="'waffenlos'"/>
       </xsl:apply-templates>
-      <xsl:apply-templates select="$sonderfertigkeiten/sf[@art='waffenlos' and @id]" mode="id">
-        <xsl:with-param name="items" select="sonderfertigkeit"/>
-      </xsl:apply-templates>
       <xsl:text>
     },
     magisch = {
       </xsl:text>
       <xsl:apply-templates select="sonderfertigkeit">
         <xsl:with-param name="art" select="'magisch'"/>
-      </xsl:apply-templates>
-      <xsl:apply-templates select="$sonderfertigkeiten/sf[@art='magisch' and @id]" mode="id">
-        <xsl:with-param name="items" select="sonderfertigkeit"/>
       </xsl:apply-templates>
       <xsl:text>
     },
@@ -1043,7 +1130,7 @@
     <xsl:param name="items"/>
     <xsl:variable name="name" select="@name"/>
     <xsl:text>
-      </xsl:text>
+    </xsl:text>
     <xsl:value-of select="concat(@id, ' = ')"/>
     <xsl:choose>
       <xsl:when test="@roman">
@@ -1138,7 +1225,7 @@
   <xsl:template name="fill">
     <xsl:param name="cur" as="xs:integer"/>
     <xsl:param name="max" as="xs:integer"/>
-    <xsl:if test="$cur &lt; $max">
+    <xsl:if test="not($cur &gt; $max)">
       <xsl:text>{}, </xsl:text>
       <xsl:call-template name="fill">
         <xsl:with-param name="cur" select="$cur + 1"/>

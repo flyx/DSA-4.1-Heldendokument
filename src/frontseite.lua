@@ -168,7 +168,7 @@ function eigenschaften.rechts(self)
             common.p([[\multicolumn{3}{l}{
               \hspace{0.1cm}\tiny\normalfont\raisebox{2pt}{
               \begin{minipage}{3cm}
-                \directlua{common.checkbox(data.sf.magisch.gefaess_der_sterne)} Gefäß der Sterne (AE: CH×2) \\[1.5pt]
+                \directlua{common.checkbox(data.sf.gefaess_der_sterne)} Gefäß der Sterne (AE: CH×2) \\[1.5pt]
               \end{minipage}
             }}]])
           else

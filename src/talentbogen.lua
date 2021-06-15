@@ -46,15 +46,13 @@ function gruppe.render(self, name, start_white)
     headers = headers .. [[ & \multicolumn{1}{|c}{\Th{M}}]]
     num_items = num_items + 1
   end
-  if item_name_len == 0 then
-    tex.print([[\begin{NiceTabular}{p{.5\textwidth-.5\columnsep-.5\fboxsep-1pt}}]])
-  else
-    tex.sprint([[\begin{NiceTabular}{p{0.2cm}|p{]])
-    tex.sprint(item_name_len .. "cm")
-    tex.sprint("}")
-    tex.sprint(col_spec)
-    tex.print("}")
-  end
+
+  tex.sprint([[\begin{NiceTabular}{p{0.2cm}|p{]])
+  tex.sprint(item_name_len .. "cm")
+  tex.sprint("}")
+  tex.sprint(col_spec)
+  tex.print("}")
+
   if start_white then
     tex.print([[\CodeBefore\rowcolors{3}{white}{gray!30}\Body]])
   else
@@ -66,12 +64,12 @@ function gruppe.render(self, name, start_white)
   tex.sprint([[}{l}{\multirow{2}{*}{\Large \textmansontt{\bfseries ]])
   tex.sprint(-2, label)
   tex.sprint([[}}} \\ \restorearstrut]])
-  if item_name_len > 0 then
-    tex.sprint([[\multicolumn{]])
-    tex.sprint(title_col_len)
-    tex.sprint("}{l|}{}")
-    tex.sprint(headers)
-  end
+
+  tex.sprint([[\multicolumn{]])
+  tex.sprint(title_col_len)
+  tex.sprint("}{l|}{}")
+  tex.sprint(headers)
+
   tex.sprint([[\\ \hline]])
   for i, v in ipairs(data.talente[name]) do
     local vals = v
@@ -94,12 +92,24 @@ function gruppe.render(self, name, start_white)
   tex.print([[\vspace{1.9pt}]])
 end
 
+function talentbogen.num_rows(name)
+  local ret = 6
+  if name == "sonderfertigkeiten" then
+    if data.sf.allgemein.zeilen ~= nil then
+      ret = data.sf.allgemein.zeilen
+    end
+  else
+    ret = #data.talente[name]
+  end
+  return ret
+end
+
 function talentbogen.gruppen()
   local total_rows = 0
   for i, talent in ipairs(data.dokument.talentreihenfolge) do
-    local v = data.talente[talent]
-    if #v > 0 then
-      total_rows = total_rows + #v + 2
+    local v = talentbogen.num_rows(talent)
+    if v > 0 then
+      total_rows = total_rows + v + 2
     end
   end
   local col_rows = total_rows / 2
@@ -107,7 +117,8 @@ function talentbogen.gruppen()
   local start_white = true
   local swapped = false
   for i, talent in ipairs(data.dokument.talentreihenfolge) do
-    local rows_to_print = #data.talente[talent]
+    local rows_to_print = talentbogen.num_rows(talent)
+    --  size of heading
     if rows_to_print > 0 then
       rows_to_print = rows_to_print + 2
     end
@@ -118,7 +129,23 @@ function talentbogen.gruppen()
       swapped = true
     end
 
-    gruppe:render(talent, start_white)
+    if talent == "sonderfertigkeiten" then
+      tex.print([[\begin{NiceTabular}{p{.5\textwidth-.5\columnsep-.5\fboxsep-1pt}}]])
+      if start_white then
+        tex.print([[\CodeBefore\rowcolors{3}{white}{gray!30}\Body]])
+      else
+        tex.print([[\CodeBefore\rowcolors{3}{gray!30}{white}\Body]])
+      end
+      tex.sprint([[\setarstrut{\scriptsize}\multicolumn{1}{l}{\multirow{2}{*}{\Large \textmansontt{\bfseries Sonderfertigkeiten}}} \\ \restorearstrut]])
+      tex.sprint([[\\ \hline]])
+      common.multiline_content({
+        name="Sonderfertigkeiten", rows=rows_to_print - 2, baselinestretch=1.033}, data.sf.allgemein)
+      tex.print([[\hline\end{NiceTabular}]])
+      tex.print("")
+      tex.print([[\vspace{1.9pt}]])
+    else
+      gruppe:render(talent, start_white)
+    end
     if rows_to_print % 2 == 1 then
       start_white = not start_white
     end
