@@ -1,6 +1,6 @@
 FROM debian:bullseye-slim
 
-RUN apt update --fix-missing -y && apt upgrade -y && apt install -f -y --no-install-recommends \
+RUN apt update -y && apt upgrade -y && apt install -f -y --no-install-recommends \
       texlive-luatex \
       latexmk \
       texlive-pictures \

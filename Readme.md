@@ -2,6 +2,7 @@
 
 Ein DSA 4.1 Heldendokument, das sich am original Heldendokument orientiert.
 Es kann über Lua-Quellcode mit Werten befüllt werden und berechnet abgeleitete Werte automatisch.
+Helden aus der Heldensoftware können importiert werden.
 
 ## Features
 
@@ -125,6 +126,22 @@ Sie sind ausführlich kommentiert und erläutern, wie man Werte einfügt und ver
 Die Templates selbst können als Eingabe benutzt werden, um leere Heldendokumente zu erstellen – falls man sie einfach ausdrucken und mit Bleistift befüllen will *wie die Barbaren*.
 In den Templates sind ausschließlich die Basis-Talente vorausgefüllt.
 Unabhängig davon, ob Zeilen in Tabellen ausgefüllt sind oder nicht, lässt sich die Anzahl Zeilen immer dadurch beeinflussen, dass man zusätzliche, möglicherweise leere, Zeilenwerte (meistens `{}`, siehe Templates) einfügt oder löscht.
+
+### Import aus der Heldensoftware
+
+Der Held muss über `Datei > Exportieren > Held exportieren` exportiert werden.
+Die erstellte XML-Datei (hier als Beispiel `held.xml`) kann dann folgendermaßen in Daten für den Heldenbogen (hier `held.lua`) transformiert werden:
+
+    xsltproc import.xsl held.xml > held.lua
+
+Windows-Nutzer können das wohl auch [irgendwie über PowerShell machen](https://gist.github.com/wschwarz/5073004).
+
+Der Docker-Server bietet diese Funktion auf seinem Webinterface ebenfalls an.
+
+Der Import umfasst derzeit im Wesentlichen Frontseite, Rituale, Zauber und Sonderfertigkeiten.
+Bei den Zaubern fehlen derzeit die Merkmale, die nachgetragen werden sollten, damit die Lernschwierigkeit korrekt berechnet wird.
+Die Ausrüstung auf dem Kampfbogen wird derzeit nicht übertragen und muss manuell nachgetragen werden.
+Generell ist der Import wenig getestet und Fehler im resultierenden Dokument oder Fehlermeldungen können gerne als Issues hier im Repository berichtet werden.
 
 ## Lizenz
 

@@ -283,13 +283,17 @@
     <sf name="Defensiver Kampfstil" art="nahkampf"/>
     <sf name="Doppelangriff" art="nahkampf"/>
     <sf name="Doppelschlag" art="waffenlos"/>
+    <sf name="Druidisches Dolchritual" art="ritual" named="1"/>
+    <sf name="Druidisches Herrschaftsritual" art="ritual" named="1"/>
     <sf name="Eisenarm" art="waffenlos"/>
     <sf name="Eisenhagel" art="fernkampf"/>
+    <sf name="Elfenlied" art="ritual" named="1"/>
     <sf name="Entwaffnen" art="nahkampf"/>
     <sf name="Festnageln" art="nahkampf"/>
     <sf name="Finte" art="nahkampf"/>
     <sf name="Formation" art="nahkampf"/>
     <sf name="Fußfeger" art="waffenlos"/>
+    <sf name="Gabe des Odûn" art="ritual" named="1"/>
     <sf name="Gefäß der Sterne" art="magisch" id="gefaess_der_sterne"/>
     <sf name="Gegenhalten" art="nahkampf"/>
     <sf name="Gerade" art="waffenlos"/>
@@ -305,9 +309,11 @@
     <sf name="Hoher Tritt" art="waffenlos"/>
     <sf name="Hypervehemenz" art="magisch"/>
     <sf name="Improvisierte Waffen" art="nahkampf"/>
+    <sf name="Invocatio Integra" art="ritual"/>
     <sf name="Kampf im Wasser" art="nahkampf"/>
     <sf name="Kampfgespür" art="nahkampf" id="kampfgespuer"/>
     <sf name="Kampfreflexe" art="nahkampf" id="kampfreflexe"/>
+    <sf name="Keulenritual" art="ritual" named="1"/>
     <sf name="Klammer" art="waffenlos"/>
     <sf name="Klingensturm" art="nahkampf"/>
     <sf name="Klingentänzer" art="nahkampf"/>
@@ -321,6 +327,8 @@
     <sf name="Kraftspeicher" art="magisch"/>
     <sf name="Kreuzblock" art="waffenlos"/>
     <sf name="Kriegsreiterei" art="nahkampf"/>
+    <sf name="Kristallomantisches Ritual" art="ritual" named="1"/>
+    <sf name="Kugelzauber" art="ritual" named="1"/>
     <sf name="Linkhand" art="nahkampf" id="linkhand"/>
     <sf name="Lockeres Zaubern" art="magisch"/>
     <sf name="Matrixgeber" art="magisch"/>
@@ -339,12 +347,14 @@
     <sf name="Regeneration" art="magisch" roman="2"/>
     <sf name="Reiterkampf" art="nahkampf"/>
     <sf name="Repräsentation" art="ignore" named="1"/>
+    <sf name="Ritual" art="ritual" named="1"/>
     <sf name="Ritualkenntnis" art="ignore" named="1"/>
     <sf name="Runenkunde" art="magisch"/>
     <sf name="Rüstungsgewöhnung" art="nahkampf" id="ruestungsgewoehnung" roman="3"/>
     <sf name="Scharfschütze" art="fernkampf" sub="talent"/>
     <sf name="Schildkampf" art="nahkampf" id="schildkampf" roman="2"/>
     <sf name="Schildspalter" art="nahkampf"/>
+    <sf name="Schlangenring-Zauber" art="ritual" named="1"/>
     <sf name="Schmetterschlag" art="waffenlos"/>
     <sf name="Schmutzige Tricks" art="waffenlos"/>
     <sf name="Schnellladen" art="fernkampf" sub="talent"/>
@@ -359,6 +369,7 @@
     <sf name="Spießgespann" art="nahkampf"/>
     <sf name="Sprung" art="waffenlos"/>
     <sf name="Sprungtritt" art="waffenlos"/>
+    <sf name="Stabzauber" art="ritual" named="1"/>
     <sf name="Stapeleffekt" art="magisch"/>
     <sf name="Sturmangriff" art="nahkampf"/>
     <sf name="Tanz der Mada" art="magisch"/>
@@ -367,6 +378,7 @@
     <sf name="Todesstoß" art="nahkampf"/>
     <sf name="Traumgänger" art="magisch"/>
     <sf name="Tritt" art="waffenlos"/>
+    <sf name="Trommelzauber" art="ritual" named="1"/>
     <sf name="Turnierreiterei" art="nahkampf"/>
     <sf name="Umreißen" art="nahkampf"/>
     <sf name="Unterwasserkampf" art="nahkampf"/>
@@ -388,7 +400,9 @@
     <sf name="Zauberkontrolle" art="magisch"/>
     <sf name="Zauberroutine" art="magisch"/>
     <sf name="Zauberspezialisierung" art="magisch" id="zauberspezialisierung" sub="zauber" subsub="spezialisierung"/>
-    <sf name="Zauberzeichen" art="magisch"/>
+    <sf name="Zaubertanz" art="ritual" named="1"/>
+    <sf name="Zauberzeichen" art="magisch" named="1"/>
+    <sf name="Zibilja-Ritual" art="ritual" named="1"/>
   </xsl:variable>
 
   <xsl:variable name="sonderfertigkeiten" select="exslt:node-set($sf_raw)"/>

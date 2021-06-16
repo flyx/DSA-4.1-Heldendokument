@@ -18,6 +18,7 @@ func index(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
+
 	if req.URL.Path != "/" && req.URL.Path != "/index.html" {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("404 File not found: " + req.URL.Path))
@@ -94,6 +95,52 @@ func template(w http.ResponseWriter, req *http.Request) {
 	w.Write(file)
 }
 
+func importHeld(w http.ResponseWriter, req *http.Request) {
+	if req.Method != "POST" {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
+	if err := req.ParseMultipartForm(32 << 20); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	file, _, err := req.FormFile("data")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	input, err := ioutil.ReadAll(file)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	xsltproc := exec.Command("/usr/bin/xsltproc", "import.xsl", "-")
+	xsltproc.Stdin = bytes.NewReader(input)
+	var stdout, stderr bytes.Buffer
+	xsltproc.Stdout = &stdout
+	xsltproc.Stderr = &stderr
+	if err := xsltproc.Start(); err != nil {
+		panic(err)
+	}
+	if err := xsltproc.Wait(); err != nil {
+		res := stderr.Bytes()
+		w.Header().Add("Content-Type", "text/plain")
+		w.Header().Add("Content-Length", strconv.Itoa(len(res)))
+		w.WriteHeader(400)
+		w.Write(res)
+	} else {
+		res := stdout.Bytes()
+		w.Header().Add("Content-Type", "text/x-lua")
+		w.Header().Add("Content-Length", strconv.Itoa(len(res)))
+		w.WriteHeader(200)
+		w.Write(res)
+	}
+}
+
 func main() {
 	setupRAMdisk()
 	requests = make(chan request, 10)
@@ -103,6 +150,7 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/index.html", index)
 	http.HandleFunc("/process", process)
+	http.HandleFunc("/import", importHeld)
 	http.HandleFunc("/profan", template)
 	http.HandleFunc("/geweiht", template)
 	http.HandleFunc("/magier", template)
