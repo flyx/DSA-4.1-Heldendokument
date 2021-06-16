@@ -1,6 +1,6 @@
 FROM dsa-4.1-heldendokument
 
-COPY docker/index.html docker/serve.go import.xsl /heldendokument/
+COPY docker/index.html docker/serve.go import.xsl heldensoftware-meta.xml /heldendokument/
 COPY templates /heldendokument/templates
 
 RUN apt install -y --no-install-recommends golang-1.15-go xsltproc && \
