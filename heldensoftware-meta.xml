@@ -483,4 +483,107 @@
     <stil name="Mercenario" talent="Raufen"/>
     <stil name="Unauer Schule" talent="Ringen"/>
   </kampfstile>
+
+  <ausruestung>
+    <!-- Hier sind die diversen Stats zu den einzelnen Waffen, Rüstungen etc.
+         aufgeführt. -->
+    <nahkampf typ="Anderthalbhänder">
+      <w name="Anderthalbhänder" tp="1W+5" tpkk="11/4" bf="1" ini="1" wm="0/0" dk="NS"/>
+      <w name="Bastardschwert" tp="1W+5" tpkk="11/3" bf="2" ini="0" wm="0/-1" dk="N"/>
+      <w name="Nachtwind" tp="1W+4" tpkk="11/5" bf="0" ini="2" wm="0/0" dk="N"/>
+      <w name="Rondrakamm" tp="2W+2" tpkk="12/3" bf="1" ini="0" wm="0/0" dk="NS"/>
+      <w name="Tuzakmesser" tp="1W+6" tpkk="12/4" bf="1" ini="1" wm="0/0" dk="NS"/>
+    </nahkampf>
+    <nahkampf typ="Dolche">
+      <w name="Basiliskenzunge" tp="1W+2" tpkk="12/4" bf="4" ini="-1" wm="0/-1" dk="H"/>
+      <w name="Borndorn" tp="1W+2" tpkk="12/5" bf="1" ini="0" wm="0/-1" dk="H"/>
+      <w name="Dolch" tp="1W+1" tpkk="12/5" bf="2" ini="0" wm="0/-1" dk="H"/>
+      <w name="Drachenzahn" tp="1W+2" tpkk="11/4" bf="0" ini="0" wm="0/0" dk="H"/>
+      <w name="Eberfänger" tp="1W+2" tpkk="12/4" bf="1" ini="0" wm="0/-1" dk="H"/>
+      <w name="Hakendolch" tp="1W+1" tpkk="12/4" bf="-2" ini="0" wm="0/+1" dk="HN"/>
+      <w name="Jagdmesser" tp="1W+2" tpkk="12/5" bf="3" ini="-1" wm="0/-2" dk="H"/>
+      <w name="Kurzschwert" tp="1W+2" tpkk="11/4" bf="1" ini="0" wm="0/-1" dk="HN"/>
+      <w name="Langdolch" tp="1W+2" tpkk="12/4" bf="1" ini="0" wm="0/0" dk="H" alt="Fechtwaffen"/>
+      <w name="Linkhand" tp="1W+1" tpkk="12/5" bf="0" ini="0" wm="0/+1" dk="H"/>
+      <w name="Mengbilar" tp="1W+1" tpkk="12/5" bf="7" ini="-2" wm="0/-3" dk="H"/>
+      <w name="Messer" tp="1W" tpkk="12/6" bf="4" ini="-2" wm="-2/-3" dk="H"/>
+      <w name="Ogerfänger" tp="1W+2" tpkk="12/4" bf="4" ini="0" wm="0/-2" dk="H"/>
+      <w name="Scheibendolch" tp="1W+2" tpkk="11/4" bf="0" ini="0" wm="0/-3" dk="H"/>
+      <w name="Schwerer Dolch" tp="1W+2" tpkk="12/4" bf="1" ini="0" wm="0/-1" dk="H"/>
+      <w name="Vulkanglasdolch" tp="1W-1" tpkk="12/5" bf="6" ini="-2" wm="-2/-3" dk="H"/>
+      <w name="Waqqif" tp="1W+2" tpkk="12/5" bf="2" ini="-2" wm="-1/-3" dk="H"/>
+      <w name="Wurfdolch" tp="1W+1" tpkk="12/5" bf="2" ini="-1" wm="-1/-2" dk="H"/>
+      <w name="Wurfmesser" tp="1W-1" tpkk="12/6" bf="2" ini="-1" wm="-2/-3" dk="H"/>
+    </nahkampf>
+    <nahkampf typ="Fechtwaffen">
+      <w name="Degen" tp="1W+3" tpkk="12/5" bf="3" ini="+2" wm="0/-1" dk="N"/>
+      <w name="Florett" tp="1W+3" tpkk="13/5" bf="4" ini="+3" wm="+1/-1" dk="N"/>
+      <w name="Magierdegen" tp="1W+2" tpkk="13/5" bf="4" ini="+1" wm="0/-2" dk="N"/>
+      <w name="Panzerstecher" tp="1W+4" tpkk="13/3" bf="0" ini="0" wm="-1/-1" dk="N"/>
+      <w name="Rapier" tp="1W+3" tpkk="12/4" bf="2" ini="+1" wm="0/0" dk="N"/>
+      <w name="Robbentöter" tp="1W+3" tpkk="12/4" bf="2" ini="0" wm="0/0" dk="N"/>
+      <w name="Stockdegen" tp="1W+3" tpkk="12/5" bf="4" ini="0" wm="-1/-3" dk="N"/>
+      <w name="Wolfsmesser" tp="1W+3" tpkk="12/4" bf="1" ini="+1" wm="0/0" dk="N"/>
+    </nahkampf>
+    <nahkampf typ="Hiebwaffen">
+      <w name="Baccanaq" tp="1W+4" tpkk="12/4" bf="5" ini="-1" wm="0/-2" dk="N"/>
+      <w name="Bakka" tp="1W+4" tpkk="12/4" bf="4" ini="-1" wm="0/-2" dk="N"/>
+      <w name="Beil" tp="1W+3" tpkk="11/4" bf="5" ini="-1" wm="-1/-2" dk="N"/>
+      <w name="Brabakbengel" tp="1W+5" tpkk="13/3" bf="1" ini="0" wm="0/-1" dk="N"/>
+      <w name="Byakka" tp="1W+5" tpkk="14/2" bf="3" ini="-1" wm="0/-2" dk="N"/>
+      <w name="Fackel" tp="1W" tpkk="11/5" bf="8" ini="-2" wm="-2/-3" dk="HN"/>
+      <w name="Fleischerbeil" tp="1W+2" tpkk="11/4" bf="2" ini="-1" wm="-2/-3" dk="N"/>
+      <w name="Haumesser" tp="1W+3" tpkk="13/3" bf="3" ini="-1" wm="0/-2" dk="HN"/>
+      <w name="Keule" tp="1W+2" tpkk="11/3" bf="3" ini="0" wm="0/-2" dk="N"/>
+      <w name="Knochenkeule" tp="1W+3" tpkk="11/3" bf="3" ini="0" wm="0/-1" dk="N"/>
+      <w name="Knüppel" tp="1W+1" tpkk="11/4" bf="6" ini="0" wm="0/-2" dk="N"/>
+      <w name="Kriegsfächer" tp="1W+2" tpkk="12/5" bf="3" ini="0" wm="0/+1" dk="H"/>
+      <w name="Lindwurmschläger" tp="1W+4" tpkk="11/3" bf="1" ini="-1" wm="0/-1" dk="HN"/>
+      <w name="Molokdeschnaja" tp="1W+4" tpkk="11/3" bf="3" ini="0" wm="0/0" dk="N"/>
+      <w name="Orknase" tp="1W+5" tpkk="13/3" bf="4" ini="-1" wm="0/-1" dk="N"/>
+      <w name="Rabenschnabel" tp="1W+4" tpkk="10/4" bf="3" ini="0" wm="0/0" dk="N"/>
+      <w name="Schmiedehammer" tp="1W+4" tpkk="14/2" bf="1" ini="-1" wm="-1/-1" dk="N"/>
+      <w name="Sichel" tp="1W+2" tpkk="12/5" bf="6" ini="-2" wm="-2/-2" dk="H"/>
+      <w name="Skraja" tp="1W+3" tpkk="11/3" bf="4" ini="0" wm="0/0" dk="N"/>
+      <w name="Sonnenszepter" tp="1W+3" tpkk="12/3" bf="1" ini="0" wm="-1/-1" dk="N"/>
+      <w name="Streitaxt" tp="1W+4" tpkk="13/2" bf="2" ini="0" wm="0/-1" dk="N"/>
+      <w name="Streitkolben" tp="1W+4" tpkk="11/3" bf="1" ini="0" wm="0/-1" dk="N"/>
+      <w name="Stuhlbein" tp="1W" tpkk="11/5" bf="8" ini="-1" wm="-1/-1" dk="HN"/>
+      <w name="Wurfbeil" tp="1W+3" tpkk="10/4" bf="2" ini="-1" wm="0/-2" dk="H"/>
+      <w name="Wurfkeule" tp="1W+2" tpkk="12/5" bf="3" ini="-1" wm="-1/-1" dk="H"/>
+      <w name="Zwergenskraja" tp="1W+3" tpkk="11/3" bf="1" ini="0" wm="0/0" dk="HN"/>
+    </nahkampf>
+    <nahkampf typ="Infanteriewaffen">
+      <w name="Glefe" tp="1W+4" tpkk="13/3" bf="5" ini="-1" wm="0/-2" dk="S"/>
+      <w name="Hakenspieß" tp="1W+3" tpkk="13/4" bf="5" ini="0" wm="-1/-1" dk="S"/>
+      <w name="Hellebarde" tp="1W+5" tpkk="12/3" bf="5" ini="0" wm="0/-1" dk="S"/>
+      <w name="Korspieß" tp="2W+2" tpkk="12/3" bf="3" ini="0" wm="0/-1" dk="S"/>
+      <w name="Neethaner Langaxt" tp="2W+2" tpkk="13/4" bf="5" ini="-2" wm="-1/-3" dk="S"/>
+      <w name="Pailos" tp="2W+4" tpkk="14/2" bf="3" ini="-2" wm="-1/-3" dk="S"/>
+      <w name="Partisane" tp="1W+5" tpkk="13/3" bf="4" ini="0" wm="0/-2" dk="S"/>
+      <w name="Schnitter" tp="1W+5" tpkk="14/4" bf="4" ini="0" wm="0/0" dk="NS"/>
+      <w name="Sense" tp="1W+3" tpkk="13/3" bf="7" ini="-2" wm="-2/-4" dk="S"/>
+      <w name="Sturmsense" tp="1W+4" tpkk="13/3" bf="5" ini="-1" wm="-1/-2" dk="S"/>
+      <w name="Warunker Hammer" tp="1W+6" tpkk="14/3" bf="2" ini="-1" wm="0/-1" dk="NS"/>
+      <w name="Wurmspieß" tp="1W+5" tpkk="13/4" bf="2" ini="0" wm="0/-2" dk="S"/>
+     </nahkampf>
+     <nahkampf typ="Kettenstäbe">
+      <w name="Dreigliederstab" tp="1W+2" tpkk="13/4" bf="3" ini="+2" wm="+1/+1" dk="HN"/>
+      <w name="Kettenstab" tp="1W+2" tpkk="13/4" bf="2" ini="+2" wm="+1/0" dk="HN"/>
+     </nahkampf>
+     <nahkampf typ="Kettenwaffen">
+      <w name="Geißel" tp="1W-1" tpkk="14/5" bf="5" ini="-1" wm="0/-4" dk="N"/>
+      <w name="Kettenkugel" tp="3W6" tpkk="16/2" bf="2" ini="-3" wm="-2/-4" dk="S"/>
+      <w name="Morgenstern" tp="1W+5" tpkk="14/2" bf="2" ini="-1" wm="-1/-2" dk="N"/>
+      <w name="Neunschwänzige" tp="1W+1" tpkk="14/4" bf="5" ini="-1" wm="-1/-4" dk="N"/>
+      <w name="Ochsenherde" tp="3W+3" tpkk="17/1" bf="3" ini="-3" wm="-2/-4" dk="N"/>
+      <w name="Ogerschelle" tp="2W+2" tpkk="15/1" bf="3" ini="-2" wm="-1/-3" dk="N"/>
+     </nahkampf>
+     <nahkampf typ="Peitsche">
+      <w name="Peitsche" tp="1W" tpkk="14/5" bf="4" ini="0" wm="0/0" dk="S"/>
+     </nahkampf>
+     <nahkampf typ="Säbel">
+      <w name=""
+     </nahkampf>
+  </ausruestung>
 </meta>
