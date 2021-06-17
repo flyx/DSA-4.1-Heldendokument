@@ -256,7 +256,7 @@
       <t name="Wurfmesser" steigern="C" be="BE-3"/>
       <t name="Wurfspeere" steigern="C" be="BE-2"/>
       <t name="Zweihandflegel" steigern="D" be="BE-3"/>
-      <t name="Zweihand-Hiebwaffen" steigern="D" be="BE-3"/>
+      <t name="Zweihandhiebwaffen" steigern="D" be="BE-3"/>
       <t name="Zweihandschwerter/-säbel" steigern="E" be="BE-2"/>
     </kampf>
     <natur>
@@ -503,7 +503,7 @@
       <w name="Hakendolch" tp="1W+1" tpkk="12/4" bf="-2" ini="0" wm="0/+1" dk="HN"/>
       <w name="Jagdmesser" tp="1W+2" tpkk="12/5" bf="3" ini="-1" wm="0/-2" dk="H"/>
       <w name="Kurzschwert" tp="1W+2" tpkk="11/4" bf="1" ini="0" wm="0/-1" dk="HN"/>
-      <w name="Langdolch" tp="1W+2" tpkk="12/4" bf="1" ini="0" wm="0/0" dk="H" alt="Fechtwaffen"/>
+      <w name="Langdolch" tp="1W+2" tpkk="12/4" bf="1" ini="0" wm="0/0" dk="H"/>
       <w name="Linkhand" tp="1W+1" tpkk="12/5" bf="0" ini="0" wm="0/+1" dk="H"/>
       <w name="Mengbilar" tp="1W+1" tpkk="12/5" bf="7" ini="-2" wm="0/-3" dk="H"/>
       <w name="Messer" tp="1W" tpkk="12/6" bf="4" ini="-2" wm="-2/-3" dk="H"/>
@@ -518,6 +518,7 @@
     <nahkampf typ="Fechtwaffen">
       <w name="Degen" tp="1W+3" tpkk="12/5" bf="3" ini="+2" wm="0/-1" dk="N"/>
       <w name="Florett" tp="1W+3" tpkk="13/5" bf="4" ini="+3" wm="+1/-1" dk="N"/>
+      <w name="Langdolch" tp="1W+2" tpkk="12/4" bf="1" ini="0" wm="0/0" dk="H"/>
       <w name="Magierdegen" tp="1W+2" tpkk="13/5" bf="4" ini="+1" wm="0/-2" dk="N"/>
       <w name="Panzerstecher" tp="1W+4" tpkk="13/3" bf="0" ini="0" wm="-1/-1" dk="N"/>
       <w name="Rapier" tp="1W+3" tpkk="12/4" bf="2" ini="+1" wm="0/0" dk="N"/>
@@ -566,24 +567,103 @@
       <w name="Sturmsense" tp="1W+4" tpkk="13/3" bf="5" ini="-1" wm="-1/-2" dk="S"/>
       <w name="Warunker Hammer" tp="1W+6" tpkk="14/3" bf="2" ini="-1" wm="0/-1" dk="NS"/>
       <w name="Wurmspieß" tp="1W+5" tpkk="13/4" bf="2" ini="0" wm="0/-2" dk="S"/>
-     </nahkampf>
-     <nahkampf typ="Kettenstäbe">
+    </nahkampf>
+    <nahkampf typ="Kettenstäbe">
       <w name="Dreigliederstab" tp="1W+2" tpkk="13/4" bf="3" ini="+2" wm="+1/+1" dk="HN"/>
       <w name="Kettenstab" tp="1W+2" tpkk="13/4" bf="2" ini="+2" wm="+1/0" dk="HN"/>
-     </nahkampf>
-     <nahkampf typ="Kettenwaffen">
+    </nahkampf>
+    <nahkampf typ="Kettenwaffen">
       <w name="Geißel" tp="1W-1" tpkk="14/5" bf="5" ini="-1" wm="0/-4" dk="N"/>
       <w name="Kettenkugel" tp="3W6" tpkk="16/2" bf="2" ini="-3" wm="-2/-4" dk="S"/>
       <w name="Morgenstern" tp="1W+5" tpkk="14/2" bf="2" ini="-1" wm="-1/-2" dk="N"/>
       <w name="Neunschwänzige" tp="1W+1" tpkk="14/4" bf="5" ini="-1" wm="-1/-4" dk="N"/>
       <w name="Ochsenherde" tp="3W+3" tpkk="17/1" bf="3" ini="-3" wm="-2/-4" dk="N"/>
       <w name="Ogerschelle" tp="2W+2" tpkk="15/1" bf="3" ini="-2" wm="-1/-3" dk="N"/>
-     </nahkampf>
-     <nahkampf typ="Peitsche">
+    </nahkampf>
+    <nahkampf typ="Peitsche">
       <w name="Peitsche" tp="1W" tpkk="14/5" bf="4" ini="0" wm="0/0" dk="S"/>
-     </nahkampf>
-     <nahkampf typ="Säbel">
-      <w name=""
-     </nahkampf>
+    </nahkampf>
+    <nahkampf typ="Säbel">
+      <w name="Amazonensäbel" tp="1W+4" tpkk="11/4" bf="2" ini="+1" wm="0/0" dk="N"/>
+      <w name="Arbach" tp="1W+4" tpkk="12/3" bf="2" ini="0" wm="0/-1" dk="N"/>
+      <w name="Entermesser" tp="1W+3" tpkk="12/4" bf="2" ini="0" wm="0/0" dk="N"/>
+      <w name="Haumesser" tp="1W+3" tpkk="13/3" bf="3" ini="-1" wm="0/-2" dk="HN"/>
+      <w name="Khunchomer" tp="1W+4" tpkk="12/3" bf="2" ini="0" wm="0/0" dk="N"/>
+      <w name="Kurzschwert" tp="1W+2" tpkk="11/4" bf="1" ini="0" wm="0/-1" dk="HN"/>
+      <w name="Kusliker Säbel" tp="1W+3" tpkk="12/4" bf="1" ini="+1" wm="0/0" dk="N"/>
+      <w name="Robbentöter" tp="1W+3" tpkk="12/4" bf="2" ini="0" wm="0/0" dk="N"/>
+      <w name="Säbel" tp="1W+3" tpkk="12/4" bf="2" ini="+1" wm="0/0" dk="N"/>
+      <w name="Sklaventod" tp="1W+4" tpkk="12/5" bf="3" ini="0" wm="0/0" dk="N"/>
+      <w name="Waqqif" tp="1W+2" tpkk="12/5" bf="2" ini="-2" wm="-1/-3" dk="H"/>
+      <w name="Wolfsmesser" tp="1W+3" tpkk="12/4" bf="1" ini="+1" wm="0/0" dk="N"/>
+    </nahkampf>
+    <nahkampf typ="Schwerter">
+      <w name="Amazonensäbel" tp="1W+4" tpkk="11/4" bf="2" ini="+1" wm="0/0" dk="N"/>
+      <w name="Barbarenschwert" tp="1W+5" tpkk="13/2" bf="4" ini="-1" wm="0/-1" dk="N"/>
+      <w name="Bastardschwert" tp="1W+5" tpkk="12/4" bf="2" ini="-1" wm="0/-1" dk="N"/>
+      <w name="Breitschwert" tp="1W+4" tpkk="12/3" bf="1" ini="0" wm="0/-1"/>
+      <w name="Kurzschwert" tp="1W+2" tpkk="11/4" bf="1" ini="0" wm="0/-1" dk="HN"/>
+      <w name="Kusliker Säbel" tp="1W+3" tpkk="12/4" bf="1" ini="+1" wm="0/0" dk="N"/>
+      <w name="Nachtwind" tp="1W+4" tpkk="11/5" bf="0" ini="2" wm="0/0" dk="N"/>
+      <w name="Rapier" tp="1W+3" tpkk="12/4" bf="2" ini="+1" wm="0/0" dk="N"/>
+      <w name="Robbentöter" tp="1W+3" tpkk="12/4" bf="2" ini="0" wm="0/0" dk="N"/>
+      <w name="Säbel" tp="1W+3" tpkk="12/4" bf="2" ini="+1" wm="0/0" dk="N"/>
+      <w name="Turnierschwert" tp="1W+3(A)" bf="1" ini="+1" wm="0/0" dk="N"/>
+      <w name="Wolfsmesser" tp="1W+3" bf="1" ini="+1" wm="0/0" dk="N"/>
+    </nahkampf>
+    <nahkampf typ="Speere">
+      <w name="Drachentöter" tp="3W+5" tpkk="20/1" bf="3" ini="-3" wm="-2/-4" dk="P"/>
+      <w name="Dreizack" tp="1W+4" tpkk="13/3" bf="5" ini="0" wm="0/-1" dk="S"/>
+      <w name="Dschadra" tp="1W+5" tpkk="12/4" bf="6" ini="-1" wm="0/-3" dk="S"/>
+      <w name="Efferdbart" tp="1W+4" tpkk="13/3" bf="3" ini="0" wm="0/-1" dk="NS"/>
+      <w name="Holzspeer" tp="1W+3" tpkk="12/5" bf="5" ini="0" wm="-1/-3" dk="S"/>
+      <w name="Jagdspieß" tp="1W+6" tpkk="12/4" bf="3" ini="-1" wm="0/-1" dk="S"/>
+      <w name="Korspieß" tp="2W+2" tpkk="12/3" bf="3" ini="0" wm="0/-1" dk="S"/>
+      <w name="Kriegslanze" tp="1W+3" tpkk="12/5" bf="5" ini="-2" wm="-2/-4" dk="P"/>
+      <w name="Partisane" tp="1W+5" tpkk="13/3" bf="4" ini="0" wm="0/-2" dk="S"/>
+      <w name="Pike" tp="1W+5" tpkk="14/4" bf="6" ini="-2" wm="-1/-2" dk="P"/>
+      <w name="Schnitter" tp="1W+5" tpkk="14/4" bf="4" ini="0" wm="0/0" dk="NS"/>
+      <w name="Speer" tp="1W+5" tpkk="12/4" bf="5" ini="-1" wm="0/-2" dk="S"/>
+      <w name="Stoßspeer" tp="2W+2" tpkk="11/4" bf="3" ini="-1" wm="0/-1" dk="S"/>
+      <w name="Turnierlanze" tp="1W+2(A)" tpkk="12/5" bf="8" ini="-2" wm="-2/-4" dk="P"/>
+      <w name="Wurfspeer" tp="1W+3" tpkk="11/5" bf="4" ini="-2" wm="-1/-3" dk="N"/>
+      <w name="Wurmspieß" tp="1W+5" tpkk="13/4" bf="2" ini="0" wm="0/-2" dk="S"/>
+    </nahkampf>
+    <nahkampf typ="Stäbe">
+      <w name="Kampfstab" tp="1W+1" tpkk="12/4" bf="5" ini="+1" wm="0/0" dk="NS"/>
+      <w name="Magierstab" tp="1W+1" tpkk="11/5" bf="-" ini="0" wm="-1/-1" dk="NS"/>
+      <w name="Zweililien" tp="1W+3" tpkk="12/4" bf="4" ini="+1" wm="+1/-1" dk="N"/>
+    </nahkampf>
+    <nahkampf typ="Zweihandflegel">
+      <w name="Dreschflegel" tp="1W+3" tpkk="12/3" bf="6" ini="-2" wm="-2/-3" dk="S"/>
+      <w name="Kriegsflegel" tp="1W+6" tpkk="12/2" bf="5" ini="-1" wm="-1/-2" dk="S"/>
+    </nahkampf>
+    <nahkampf typ="Zweihandhiebwaffen">
+      <w name="Barbarenstreitaxt" tp="3W+2" tpkk="15/1" bf="3" ini="-2" wm="-1/-4" dk="N"/>
+      <w name="Echsische Axt" tp="1W+5" tpkk="12/4" bf="3" ini="0" wm="0/-1" dk="NS"/>
+      <w name="Felsspalter" tp="2W+2" tpkk="12/4" bf="2" ini="-1" wm="0/-2" dk="N"/>
+      <w name="Gruufhai" tp="1W+6" tpkk="14/2" bf="3" ini="-2" wm="-1/-3" dk="N"/>
+      <w name="Holzfälleraxt" tp="2W" tpkk="12/2" bf="5" ini="-2" wm="-1/-4" dk="N"/>
+      <w name="Kriegshammer" tp="2W+3" tpkk="14/2" bf="2" ini="-2" wm="-1/-3" dk="N"/>
+      <w name="Neethaner Langaxt" tp="2W+2" tpkk="13/4" bf="5" ini="-2" wm="-1/-3" dk="S"/>
+      <w name="Orknase" tp="1W+5" tpkk="12/2" bf="4" ini="-1" wm="0/-1" dk="N"/>
+      <w name="Pailos" tp="2W+4" tpkk="14/2" bf="4" ini="-1" wm="-1/-3" dk="S"/>
+      <w name="Schnitter" tp="1W+5" tpkk="14/4" bf="4" ini="0" wm="0/0" dk="NS"/>
+      <w name="Spitzhacke" tp="1W+6" tpkk="13/2" bf="5" ini="-3" wm="-2/-4" dk="N"/>
+      <w name="Vorschlaghammer" tp="1W+5" tpkk="13/2" bf="5" ini="-3" wm="-2/-4" dk="N"/>
+      <w name="Warunker Hammer" tp="1W+6" tpkk="14/3" bf="2" ini="-1" wm="0/-1" dk="NS"/>
+      <w name="Zwergenschlägel" tp="1W+5" tpkk="13/3" bf="1" ini="-1" wm="0/-1" dk="N"/>
+    </nahkampf>
+    <nahkampf typ="Zweihandschwerter/-säbel">
+      <w name="Andergaster" tp="3W+2" tpkk="14/2" bf="3" ini="-3" wm="0/-2" dk="S"/>
+      <w name="Anderthalbhänder" tp="1W+5" tpkk="11/4" bf="1" ini="+1" wm="0/0" dk="NS"/>
+      <w name="Boronssichel" tp="2W+6" tpkk="13/3" bf="3" ini="-2" wm="0/-3" dk="S"/>
+      <w name="Doppelkhunchomer" tp="1W+6" tpkk="12/2" bf="2" ini="-1" wm="0/-1" dk="NS"/>
+      <w name="Großer Sklaventod" tp="2W+4" tpkk="13/2" bf="3" ini="-2" wm="0/-2" dk="NS"/>
+      <w name="Richtschwert" tp="3W+4" tpkk="13/2" bf="5" ini="-3" wm="-2/-4" dk="N"/>
+      <w name="Rondrakamm" tp="2W+2" tpkk="12/3" bf="1" ini="0" wm="0/0" dk="NS"/>
+      <w name="Tuzakmesser" tp="1W+6" tpkk="12/4" bf="1" ini="+1" wm="0/0" dk="NS"/>
+      <w name="Zweihänder" tp="2W+4" tpkk="12/3" bf="2" ini="-1" wm="0/-1" dk="NS"/>
+    </nahkampf>
   </ausruestung>
 </meta>

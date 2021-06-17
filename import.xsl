@@ -14,6 +14,7 @@
   <xsl:param name="min_wissen" as="xs:integer" select="17"/>
   <xsl:param name="min_sprachen" as="xs:integer" select="10"/>
   <xsl:param name="min_handwerk" as="xs:integer" select="15"/>
+  <xsl:param name="min_waffen_nk" as="xs:integer" select="5"/>
 
   <xsl:output method="text"/>
 
@@ -24,6 +25,7 @@
   <xsl:variable name="naturTalente" select="$meta/talente/natur"/>
   <xsl:variable name="sonderfertigkeiten" select="$meta/sonderfertigkeiten"/>
   <xsl:variable name="kampfstile" select="$meta/kampfstile"/>
+  <xsl:variable name="ausruestung" select="$meta/ausruestung"/>
 
   <xsl:template match="/">
     <xsl:apply-templates select="helden/held[1]"/>
@@ -63,8 +65,14 @@
     <xsl:apply-templates select="talentliste"/>
     <xsl:apply-templates select="sf"/>
     <xsl:text>
-  nahkampf = {
-    {}, {}, {}, {}, {}
+  nahkampf = {</xsl:text>
+    <xsl:variable name="nk_waffen" select="ausrüstungen/heldenausruestung[@set = 0 and starts-with(@name, 'nkwaffe')]"/>
+    <xsl:apply-templates select="$nk_waffen" mode="nahkampf"/><xsl:text>
+    </xsl:text>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count($nk_waffen) + 1"/>
+      <xsl:with-param name="max" select="$min_waffen_nk"/>
+    </xsl:call-template><xsl:text>
   },
   fernkampf = {
     {}, {}, {},
@@ -805,6 +813,24 @@
         <xsl:value-of select="concat(string(count($items[starts-with(@name, $name)]) &gt; 0), ',')"/>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <func:function name="dsa:doubleval">
+    <xsl:param name="input" />
+    <func:result select="concat(substring-before($input, '/'), ', ', substring-after($input, '/'))"/>
+  </func:function>
+
+  <xsl:template match="heldenausruestung" mode="nahkampf">
+    <xsl:variable name="name" select="@waffenname"/>
+    <xsl:variable name="talent" select="@talent"/>
+    <xsl:text>
+    {[[</xsl:text>
+    <xsl:value-of select="concat($name, ']], [[', $talent, ']], ')"/>
+    <xsl:variable name="def" select="$ausruestung/nahkampf[@typ=$talent]/w[@name=$name]"/>
+    <xsl:if test="$def">
+      <xsl:value-of select="concat('&quot;', $def/@dk, '&quot;, &quot;', $def/@tp, '&quot;, ', dsa:doubleval($def/@tpkk), ', ', $def/@ini, ', ', dsa:doubleval($def/@wm), ', ', @bfmin)"/>
+    </xsl:if>
+    <xsl:text>},</xsl:text>
   </xsl:template>
 
   <func:function name="dsa:isRitual">
