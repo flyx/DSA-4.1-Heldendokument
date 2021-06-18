@@ -55,7 +55,7 @@
 \end{dsaSheetBox}
 
 \begin{dsaSheetBox}[\textwidth]
-    \begin{NiceTabular}{p{4.5cm}|x{1.4cm}@{/}x{0.5cm}|x{1.4cm}|x{0.6cm}@{/}x{0.6cm}@{/}x{0.6cm}@{/}x{0.6cm}@{/}x{0.6cm}|x{0.6cm}@{/}x{0.6cm}@{/}x{0.6cm}@{/}x{0.6cm}@{/}x{0.6cm}|x{0.8cm}|x{0.5cm}|x{0.5cm}|x{0.5cm}|x{0.5cm}}
+    \begin{NiceTabular}{p{4.5cm}|x{1.65cm}@{/}x{0.5cm}|x{1.4cm}|x{0.6cm}@{/}x{0.6cm}@{/}x{0.6cm}@{/}x{0.6cm}@{/}x{0.6cm}|x{0.6cm}@{/}x{0.6cm}@{/}x{0.6cm}@{/}x{0.6cm}@{/}x{0.6cm}|x{0.8cm}|x{0.6cm}|x{0.6cm}|x{0.6cm}}
     \CodeBefore\rowcolors{2}{white}{gray!30}\Body
         \dsaTHeading{Fernkampfwaffe} &
         \multicolumn{2}{c|}{\dsaTHeading{Typ/eBE}} &
@@ -63,7 +63,7 @@
         \multicolumn{5}{c|}{\dsaTHeading{Entfernungen}} &
         \multicolumn{5}{c|}{\dsaTHeading{TP/Entfernung}} &
         \dsaTHeading{FK} &
-        \multicolumn{4}{c}{\dsaTHeading{Geschosse}} \\ \Xhline{2\arrayrulewidth}
+        \multicolumn{3}{c}{\dsaTHeading{Geschosse}} \\ \Xhline{2\arrayrulewidth}
         \directlua{
             kampfbogen.fernkampf()
         } \\ \Xhline{3\arrayrulewidth}
@@ -104,7 +104,7 @@
                     table.insert(stile, "Kampfstil " .. k)
                 end
                 common.multiline_content({
-                    name="Waffenlos-SF", rows=data.sf.waffenlos.zeilen or 2,
+                    name="Waffenlos-SF", rows=data.sf.waffenlos.zeilen or 3,
                     preamble="\noexpand\\footnotesize Sonderfertigkeiten",
                     baselinestretch=1.04, hspace="5pt", fontsize={8,12}
                 }, stile, data.sf.waffenlos)

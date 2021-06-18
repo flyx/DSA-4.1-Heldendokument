@@ -15,6 +15,7 @@
   <xsl:param name="min_sprachen" as="xs:integer" select="10"/>
   <xsl:param name="min_handwerk" as="xs:integer" select="15"/>
   <xsl:param name="min_waffen_nk" as="xs:integer" select="5"/>
+  <xsl:param name="min_waffen_fk" as="xs:integer" select="3"/>
 
   <xsl:output method="text"/>
 
@@ -74,8 +75,14 @@
       <xsl:with-param name="max" select="$min_waffen_nk"/>
     </xsl:call-template><xsl:text>
   },
-  fernkampf = {
-    {}, {}, {},
+  fernkampf = {</xsl:text>
+    <xsl:variable name="fk_waffen" select="ausrüstungen/heldenausruestung[@set= 0 and starts-with(@name, 'fkwaffe')]"/>
+    <xsl:apply-templates select="$fk_waffen" mode="fernkampf"/><xsl:text>
+    </xsl:text>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count($fk_waffen) + 1"/>
+      <xsl:with-param name="max" select="$min_waffen_fk"/>
+    </xsl:call-template><xsl:text>
   },
   schilde = {
     {},
@@ -777,7 +784,7 @@
         <xsl:text>{</xsl:text>
           <xsl:for-each select="$items[starts-with(@name, $name)]">
             <xsl:variable name="stilName" select="substring-after(@name, ': ')"/>
-            <xsl:value-of select="concat('[&quot;', $stilName, '&quot;]: ')"/>
+            <xsl:value-of select="concat('[&quot;', $stilName, '&quot;]= ')"/>
             <xsl:variable name="nameKomplett" select="@name"/>
             <xsl:variable name="boniDef" select="../../BoniWaffenlos/boniSF[@sf=$nameKomplett]"/>
             <xsl:choose>
@@ -815,9 +822,33 @@
     </xsl:choose>
   </xsl:template>
 
+  <func:function name="dsa:singleval">
+    <xsl:param name="input"/>
+    <xsl:variable name="num">
+      <xsl:choose>
+        <xsl:when test="contains($input, '+')">
+          <xsl:value-of select="number(substring-after($input, '+'))"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="number($input)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="string($num) = 'NaN'">
+          <xsl:value-of select="concat('&quot;', $input, '&quot;')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$num"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+
   <func:function name="dsa:doubleval">
     <xsl:param name="input" />
-    <func:result select="concat(substring-before($input, '/'), ', ', substring-after($input, '/'))"/>
+    <func:result select="concat(dsa:singleval(substring-before($input, '/')), ', ', dsa:singleval(substring-after($input, '/')))"/>
   </func:function>
 
   <xsl:template match="heldenausruestung" mode="nahkampf">
@@ -828,7 +859,40 @@
     <xsl:value-of select="concat($name, ']], [[', $talent, ']], ')"/>
     <xsl:variable name="def" select="$ausruestung/nahkampf[@typ=$talent]/w[@name=$name]"/>
     <xsl:if test="$def">
-      <xsl:value-of select="concat('&quot;', $def/@dk, '&quot;, &quot;', $def/@tp, '&quot;, ', dsa:doubleval($def/@tpkk), ', ', $def/@ini, ', ', dsa:doubleval($def/@wm), ', ', @bfmin)"/>
+      <xsl:value-of select="concat('&quot;', $def/@dk, '&quot;, &quot;', $def/@tp, '&quot;, ', dsa:doubleval($def/@tpkk), ', ', dsa:singleval($def/@ini), ', ', dsa:doubleval($def/@wm), ', ', @bfmin)"/>
+    </xsl:if>
+    <xsl:text>},</xsl:text>
+  </xsl:template>
+
+  <func:function name="dsa:partition">
+    <xsl:param name="input"/>
+    <xsl:variable name="cur">
+      <xsl:choose>
+        <xsl:when test="contains($input, '/')">
+          <xsl:value-of select="substring-before($input, '/')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$input"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <func:result>
+      <xsl:value-of select="dsa:singleval($cur)"/>
+      <xsl:if test="contains($input, '/')">
+        <xsl:value-of select="concat(', ', dsa:partition(substring-after($input, '/')))"/>
+      </xsl:if>
+    </func:result>
+  </func:function>
+
+  <xsl:template match="heldenausruestung" mode="fernkampf">
+    <xsl:variable name="name" select="@waffenname" />
+    <xsl:variable name="talent" select="@talent" />
+    <xsl:text>
+    {[[</xsl:text>
+    <xsl:value-of select="concat($name, ']], [[', $talent, ']], ')"/>
+    <xsl:variable name="def" select="$ausruestung/fernkampf[@typ=$talent]/w[@name=$name]"/>
+    <xsl:if test="$def">
+      <xsl:value-of select="concat('&quot;', $def/@tp, '&quot;, ', dsa:partition($def/@rw), ', ', dsa:partition($def/@tprw))"/>
     </xsl:if>
     <xsl:text>},</xsl:text>
   </xsl:template>

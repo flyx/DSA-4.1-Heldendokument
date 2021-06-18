@@ -288,12 +288,16 @@ function common.pages()
 end
 
 function common.render_delta(input)
-  if input < 0 then
-    tex.sprint(-2, "−")
-  elseif input > 0 then
-    tex.sprint(-2, "+")
+  if type(input) == "number" then
+    if input < 0 then
+      tex.sprint(-2, "−")
+    elseif input > 0 then
+      tex.sprint(-2, "+")
+    end
+    tex.sprint(common.round(math.abs(input)))
+  else
+    tex.sprint(-2, input)
   end
-  tex.sprint(common.round(math.abs(input)))
 end
 
 function common.list_known(input, known)

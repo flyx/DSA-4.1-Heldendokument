@@ -64,9 +64,9 @@ local function render_tp(tp)
   end
   if tp.die ~= nil then
     if tp.die == 6 then
-      tex.sprint([[\faDiceD6]])
+      tex.sprint([[\hspace{1pt}\faDiceD6\hspace{1pt}]])
     elseif tp.die == 20 then
-      tex.sprint([[\faDiceD20]])
+      tex.sprint([[\hspace{1pt}\faDiceD20\hspace{1pt}]])
     else
       tex.sprint(-2, "W" .. tp.die)
     end
@@ -112,6 +112,9 @@ local function atpa_mod(basis, talent, schwelle, schritt, wm, spez)
   return val + talent + wm
 end
 
+--  render => table: index => {bool, function}
+--      false => function aufgerufen mit Talentzeile, Waffenzeile und eBE,
+--      true  => function aufgerufen mit iteriertem Wert aus der Waffenzeile
 local function kampfwerte(rows, render, typ_index, num_values)
   typ_index = typ_index or 1
   for i,v in ipairs(rows) do
@@ -124,13 +127,15 @@ local function kampfwerte(rows, render, typ_index, num_values)
     if #v >= 1 and typ_index > 0 then
       local pattern = "^" .. v[typ_index]
       for i,t in ipairs(data.talente.kampf) do
-        found, _ = string.find(t[1], pattern)
-        if found ~= nil then
-          talent = t
-          if #talent >= 3 then
-            ebe = calc_be(talent[3])
+        if #t >= 1 then
+          found, _ = string.find(t[1], pattern)
+          if found ~= nil then
+            talent = t
+            if #talent >= 3 then
+              ebe = calc_be(talent[3])
+            end
+            break
           end
-          break
         end
       end
     else
@@ -164,45 +169,61 @@ local function kampfwerte(rows, render, typ_index, num_values)
 end
 
 local nahkampf_render = {
-  --  false => aufgerufen mit Talentzeile, Waffenzeile und eBE,
-  --  true  => aufgerufen mit iteriertem Wert aus der Waffenzeile
-  [3]= {false, function(v, talent, ebe)
-    if talent ~= nil and #talent >= 3 then
-      tex.sprint(-2, ebe)
-    end
-  end},
-  [5]= {true, function(v)
-    local tp = parse_tp(v)
-    render_tp(tp)
-  end},
-  [8]= {true, common.render_delta},
-  [9]= {true, common.render_delta},
-  [10]= {true, common.render_delta},
-  [11]= {false, function(v, talent, ebe)
-    local atb = data:cur("AT")
-    if talent == nil or #talent < 4 or atb == "" or #v < 8 then
-      return
-    end
-    tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4], v[5], v[6], v[8], v.spez))
-  end},
-  [12]= {false, function(v, talent, ebe)
-    local pab = data:cur("PA")
-    if talent == nil or #talent < 5 or pab == "" or #v < 9 then
-      return
-    end
-    tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[5], v[5], v[6], v[9], v.spez))
-  end},
-  [13]= {false, function(v, talent, ebe)
-    if #v < 6 then
-      return
-    end
-    local tp = parse_tp(v[4])
-    tp = mod_tp(tp, v[5], v[6])
-    if tp ~= nil then
-      render_tp(tp)
-    end
-  end}
+  short = {
+    ["Anderthalbhänder"] = "Anderthalb",
+    ["Fechtwaffen"] = "Fecht",
+    ["Hiebwaffen"] = "Hieb",
+    ["Infanteriewaffen"] = "Infanterie",
+    ["Zweihandflegel"] = "ZH-Flegel",
+    ["Zweihandhiebwaffen"] = "ZH-Hieb",
+    ["Zweihandschwerter/-säbel"] = "ZH-Schw/Säb",
+  },
 }
+
+nahkampf_render[2]= {true, function(v)
+  local s = nahkampf_render.short[v]
+  if s ~= nil then
+    tex.sprint(-2, s)
+  else
+    tex.sprint(-2, v)
+  end
+end}
+nahkampf_render[3]= {false, function(v, talent, ebe)
+  if talent ~= nil and #talent >= 3 then
+    tex.sprint(-2, ebe)
+  end
+end}
+nahkampf_render[5]= {true, function(v)
+  local tp = parse_tp(v)
+  render_tp(tp)
+end}
+for i=8,10 do
+  nahkampf_render[i] = {true, common.render_delta}
+end
+nahkampf_render[11]= {false, function(v, talent, ebe)
+  local atb = data:cur("AT")
+  if talent == nil or #talent < 4 or atb == "" or #v < 8 then
+    return
+  end
+  tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4], v[5], v[6], v[8], v.spez))
+end}
+nahkampf_render[12]= {false, function(v, talent, ebe)
+  local pab = data:cur("PA")
+  if talent == nil or #talent < 5 or pab == "" or #v < 9 then
+    return
+  end
+  tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[5], v[5], v[6], v[9], v.spez))
+end}
+nahkampf_render[13]= {false, function(v, talent, ebe)
+  if #v < 6 then
+    return
+  end
+  local tp = parse_tp(v[4])
+  tp = mod_tp(tp, v[5], v[6])
+  if tp ~= nil then
+    render_tp(tp)
+  end
+end}
 
 function kampfbogen.nahkampf()
   kampfwerte(data.nahkampf, nahkampf_render, 2, 15)
@@ -227,12 +248,12 @@ local fernkampf_render = {
   end}
 }
 
-for i=5,9 do
+for i=10,14 do
   fernkampf_render[i] = {true, common.render_delta}
 end
 
 function kampfbogen.fernkampf()
-  kampfwerte(data.fernkampf, fernkampf_render, 2, 19)
+  kampfwerte(data.fernkampf, fernkampf_render, 2, 18)
 end
 
 local waffenlos_render = {
