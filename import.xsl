@@ -1030,7 +1030,7 @@
     <xsl:param name="input"/>
     <func:result>
       <xsl:choose>
-        <xsl:when test="$input = 'Kristallomant'"><xsl:text>"Ach"</xsl:text></xsl:when>
+        <xsl:when test="$input = 'Achaz'"><xsl:text>"Ach"</xsl:text></xsl:when>
         <xsl:when test="$input = 'Alhanier'"><xsl:text>"Alh"</xsl:text></xsl:when>
         <xsl:when test="$input = 'Borbaradianer'"><xsl:text>"Bor"</xsl:text></xsl:when>
         <xsl:when test="$input = 'Druide'"><xsl:text>"Dru"</xsl:text></xsl:when>

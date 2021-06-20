@@ -119,6 +119,7 @@
     <vn name="Feste Matrix" magisch="1"/>
     <vn name="Festgefügtes Denken" nachteil="1" magisch="1"/>
     <vn name="Fettleibig" nachteil="1"/>
+    <vn name="Flink" id="flink"/>
     <vn name="Fluch der Finsternis" nachteil="1" magisch="1"/>
     <vn name="Geiz" nachteil="1"/>
     <vn name="Gerechtigkeitswahn" nachteil="1"/>
