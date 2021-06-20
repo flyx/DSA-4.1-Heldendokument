@@ -398,6 +398,8 @@
     <sf name="Kristallomantisches Ritual" art="ritual" named="1"/>
     <sf name="Kugelzauber" art="ritual" named="1"/>
     <sf name="Linkhand" art="nahkampf" id="linkhand"/>
+    <sf name="Liturgie" art="ignore" named="1" />
+    <sf name="Liturgiekenntnis" art="ignore" />
     <sf name="Lockeres Zaubern" art="magisch"/>
     <sf name="Matrixgeber" art="magisch"/>
     <sf name="Matrixkontrolle" art="magisch"/>
@@ -1123,4 +1125,269 @@
     <z n="Zunge lähmen" m="Eigenschaften"/>
     <z n="Zwingtanz" m="Herrschaft"/>
   </zauber>
+  <liturgien>
+    <l n="Aller Welt Freund" g="IV" s="260"/>
+    <l n="Allmacht der Lohe" g="II" s="89"/>
+    <l n="Alte Schuppen" g="III" s="90"/>
+    <l n="Anathema" g="V" s="91"/>
+    <l n="Angroschs Opfergabe" g="II" s="92"/>
+    <l n="Anrufung der Erdkraft" g="II" s="93"/>
+    <l n="Anrufung der Winde" g="II" s="94"/>
+    <l n="Anrufung Nuiannas" g="III" s="95"/>
+    <l n="Arcanum Interdictum" g="VI" s="96"/>
+    <l n="Argelions bannende Hand" g="V" s="97"/>
+    <l n="Argelions Mantel" g="III" s="98"/>
+    <l n="Argelions Spiegel" g="IV" s="99"/>
+    <l n="Ascandears Hindgabe" g="III" s="100"/>
+    <l n="Auge des Händlers" g="II" s="101"/>
+    <l n="Auge des Mondes" g="II" s="102"/>
+    <l n="Auge Xeledons - Xeledons Helles Licht" g="V" s="103"/>
+    <l n="Aura der Form" g="III" s="104"/>
+    <l n="Aura des Regenbogens" g="III" s="105"/>
+    <l n="Azilas Quellgesang" g="III" s="106"/>
+    <l n="Bannfluch des Heiligen Khalid" g="III" s="107"/>
+    <l n="Begehen der heiligen Wasser" g="III" s="108"/>
+    <l n="Belemans Hochzeit" g="IV" s="109"/>
+    <l n="Bindung der Schlange" g="II" s="110"/>
+    <l n="Bishdariels Auge" g="II" s="112"/>
+    <l n="Blendstrahl aus Alveran" g="I" s="114"/>
+    <l n="Blick der Weberin" g="II" s="115"/>
+    <l n="Blick für das Handwerk" g="II" s="117"/>
+    <l n="Blick in die Flammen" g="III" s="118"/>
+    <l n="Bootssegen" g="III" s="119"/>
+    <l n="Borons süße Gnade" g="IV" s="120"/>
+    <l n="Buchprüfung" g="III" s="121"/>
+    <l n="Canyzeths Weisheit" g="IV" s="122"/>
+    <l n="Conagas Ruf" g="III" s="123"/>
+    <l n="Daradors Bann der Schatten" g="IV" s="124"/>
+    <l n="Das schwarze Fell durch das rote Blut" g="II" s="125"/>
+    <l n="Der über das Schlachtfeld schreitet" g="I" s="126"/>
+    <l n="Des Einen bezaubernder Sphärenklang" g="III" s="127"/>
+    <l n="Die goldene Hand" g="I" s="128"/>
+    <l n="Dorlens Verbrüderung" g="VI" s="129"/>
+    <l n="Dreifacher Saatsege" g="III" s="130"/>
+    <l n="Efferdsegen" g="III" s="131"/>
+    <l n="Eherne Kraft - Lodernder Zorn" g="IV" s="132"/>
+    <l n="Ehrenhafter Zweikampf" g="II" s="133"/>
+    <l n="Eidechsenhaut" g="III" s="134"/>
+    <l n="Eidsegen" zw="Praios" g="I" s="74"/>
+    <l n="Ein Bild für die Ewigkeit" g="II" s="135"/>
+    <l n="Ein Freund in Zeiten der Not" g="IV" s="136"/>
+    <l n="Elementwandlung" g="II" s="137"/>
+    <l n="Entzug von Nandus' Gaben" g="II" s="138"/>
+    <l n="Erneuerung des Geborstenen" g="I" s="139"/>
+    <l n="Erzieherische Maßnahme der Heiligen Yalsicena" g="III" s="140"/>
+    <l n="Etilias Gnade" g="III" s="141"/>
+    <l n="Ewige Jugend" g="V" s="142"/>
+    <l n="Ewiger Wächter" g="V" s="143"/>
+    <l n="Ewiges Wissen" g="V" s="144"/>
+    <l n="Exkommunikation" g="III" s="145"/>
+    <l n="Exorzismus" g="III" s="146"/>
+    <l n="Feuersegen" zw="Ingerimm" g="I" s="76"/>
+    <l n="Firuns Einsicht" g="IV" s="147"/>
+    <l n="Firuns Zorn" g="III" s="148"/>
+    <l n="Flagge des Regenbogens" g="III" s="149"/>
+    <l n="Fluch wider die Ungläubigen" g="V" s="150"/>
+    <l n="Freundliche Aufnahme" g="III" s="151"/>
+    <l n="Frieden der Melodie" g="I" s="152"/>
+    <l n="Fünfte Lobpreisung des Frühlings" g="V" s="153"/>
+    <l n="Fürbitten des Heiligen Therbûn" g="III" s="154"/>
+    <l n="Garafans gleißende Schwingen" g="V" s="155"/>
+    <l n="Gebet des kristallklaren Blicks" g="III" s="156"/>
+    <l n="Gebieter der Lava" g="V" s="157"/>
+    <l n="Geburtssegen" zw="Tsa" g="I" s="77"/>
+    <l n="Geläutert sei Erz und Goldgestein" g="III" s="158"/>
+    <l n="Gemeinschaft der treuen Gefährten" g="II" s="159"/>
+    <l n="Gesang der Delphine" g="II" s="160"/>
+    <l n="Gesegneter Fang" g="II" s="161"/>
+    <l n="Geteiltes Leid" g="II" s="162"/>
+    <l n="Gift der Erkenntnis" g="II" s="163"/>
+    <l n="Gleichklang des Geistes" g="I" s="164"/>
+    <l n="Glückssegen" zw="Phex" g="I" s="78"/>
+    <l n="Göttliche Strafe" g="IV" s="165"/>
+    <l n="Göttliche Verständigung" g="I" s="166"/>
+    <l n="Göttliches Zeichen" g="I" s="167"/>
+    <l n="Goldene Rüstung" g="II" s="168"/>
+    <l n="Goldener Blick" g="III" s="169"/>
+    <l n="Golgaris Zwielicht" g="II" s="170"/>
+    <l n="Gott der Götter" g="II" s="171"/>
+    <l n="Grabsegen" zw="Boron" g="I" s="79"/>
+    <l n="Graues Siegel" g="III" s="172"/>
+    <l n="Große Weihe des Heimsteins" g="VI" s="173"/>
+    <l n="Großer Eidsegen" g="III" s="174"/>
+    <l n="Großer Speisesegen" g="III" s="175"/>
+    <l n="Großer Weihesegen der Waffe" g="VI" s="176"/>
+    <l n="Gruß der Versunkenen" g="IV" s="177"/>
+    <l n="Handwerkssegen" g="II" s="178"/>
+    <l n="Harmoniesegen" g="I" s="80"/>
+    <l n="Hashnabiths Flehen" g="II" s="179"/>
+    <l n="Hauch Borons" g="III" s="180"/>
+    <l n="Hausfrieden" g="III" s="181"/>
+    <l n="Heilige Schmiedeglut" g="I" s="182"/>
+    <l n="Heiliger Befehl" g="II" s="183"/>
+    <l n="Heiliges Liebesspiel" g="II" s="184"/>
+    <l n="Heilungssegen" zw="Peraine" g="I" s="81"/>
+    <l n="Herbeirufung der Diener des Herren" g="II" s="185"/>
+    <l n="Herbeirufung der Heerscharen des Rattenkindes" g="III" s="186"/>
+    <l n="Herr über Feuer und Glut" g="IV" s="187"/>
+    <l n="Hilfe in der Not" g="II" s="188"/>
+    <l n="Hoftag der Sprachen" g="IV" s="189"/>
+    <l n="Indoktrination" g="IV" s="190"/>
+    <l n="Ingalfs Alchimie" g="IV" s="191"/>
+    <l n="Ingerimms Zorn verschone uns" g="VI" s="192"/>
+    <l n="Initiation" g="II" s="193"/>
+    <l n="Innere Ruhe" g="I" s="194"/>
+    <l n="Jagdglück" g="III" s="195"/>
+    <l n="Kälbchensegen" g="I" s="196"/>
+    <l n="Khablas Jugend" g="III" s="197"/>
+    <l n="Khablas makelloser Leib" g="V" s="198"/>
+    <l n="Kirschblütenregen" g="II" s="199"/>
+    <l n="Kleine Liturgie des Heiligen Nemekath" g="IV" s="200"/>
+    <l n="Kleine Segnung des Heimsteins" g="II" s="201"/>
+    <l n="Kleiner Giftbann" g="II" s="202"/>
+    <l n="Konsekration" g="V" s="203"/>
+    <l n="Kräftigung der Schwachen und Versehrten" g="V" s="204"/>
+    <l n="Largorax' Hammer rufen" g="V" s="205"/>
+    <l n="Levthans Fesseln" g="III" s="206"/>
+    <l n="Licht des Herrn" g="III" s="207"/>
+    <l n="Licht des verborgenen Pfades" g="II" s="208"/>
+    <l n="Lidaris Herz" g="III" s="209"/>
+    <l n="Lohn der Unverzagten" g="II" s="210"/>
+    <l n="Mannschaftssegen" g="III" s="211"/>
+    <l n="Marbos Geleit" g="V" s="212"/>
+    <l n="Märtyrersegen" zw="Firun" g="I" s="82"/>
+    <l n="Mikailspfeil" g="III" s="213"/>
+    <l n="Mondsilberzunge" g="III" s="214"/>
+    <l n="Namenlose Kälte" g="II" s="215"/>
+    <l n="Namenlose Raserei" g="II" s="216"/>
+    <l n="Namenloser Zweifel - Namenlose Erleuchtung" g="II" s="216"/>
+    <l n="Namenloses Vergessen" g="I" s="218"/>
+    <l n="Nemekaths Geisterblick" g="II" s="219"/>
+    <l n="Nemekaths Zwiesprache" g="IV" s="220"/>
+    <l n="Neun Streiche in Einem" g="I" s="221"/>
+    <l n="Nimmermüde Wanderschaft" g="II" s="222"/>
+    <l n="Objektsegen" g="I" s="223"/>
+    <l n="Objektweihe" g="II" s="224"/>
+    <l n="Ordination" g="IV" s="225"/>
+    <l n="Parinors Vermächtnis" g="III" s="226"/>
+    <l n="Pech und Schwefel" g="II" s="227"/>
+    <l n="Peraines Pflanzengespür" g="II" s="228"/>
+    <l n="Phexens Augenzwinkern" g="III" s="229"/>
+    <l n="Phexens Elsterflug" g="III" s="230"/>
+    <l n="Phexens Meisterschlüssel" g="V" s="231"/>
+    <l n="Phexens Nebelleib" g="IV" s="232"/>
+    <l n="Phexens Schatten" g="V" s="233"/>
+    <l n="Phexens Sternenwurf" g="IV" s="234"/>
+    <l n="Phexens Verteidigung" g="II" s="235"/>
+    <l n="Phexens wunderbare Verständigung" g="II" s="236"/>
+    <l n="Praios' Magiebann" g="IV" s="237"/>
+    <l n="Praios' Mahnung" g="III" s="238"/>
+    <l n="Prophezeiung" g="I" s="239"/>
+    <l n="Purgation" g="III" s="240"/>
+    <l n="Quellsegen" g="III" s="241"/>
+    <l n="Rahjalinas Farbenspiel" g="I" s="242"/>
+    <l n="Rahjalinas Kuss" g="IV" s="243"/>
+    <l n="Rahjas Begehren" g="III" s="244"/>
+    <l n="Rahjas Fest der Freude" g="III" s="245"/>
+    <l n="Rahjas Freiheit" g="IV" s="246"/>
+    <l n="Rahjas geheiligter Wein" g="IV" s="247"/>
+    <l n="Rahjas Rauschsegen" g="II" s="248"/>
+    <l n="Rahjas Schoß" g="IV" s="249"/>
+    <l n="Rahjas Sinnlichkeit" g="VI" s="250"/>
+    <l n="Reiches Land" g="IV" s="251"/>
+    <l n="Reichung des Amethyst" g="I" s="252"/>
+    <l n="Reisesegen" g="II" s="253"/>
+    <l n="Revolution der Gedanken" g="III" s="254"/>
+    <l n="Ritus der Schlachthilfe" g="V" s="255"/>
+    <l n="Rondras wundersame Rüstung" g="V" s="256"/>
+    <l n="Ruf der Ferne" g="II" s="257"/>
+    <l n="Ruf der Gefährten" g="II" s="258"/>
+    <l n="Ruf in Borons Arme" g="II" s="259"/>
+    <l n="Ruf zum Bund wider die Mächte der Finsternis" g="VI" s="260"/>
+    <l n="Ruf zur Ruhe" g="I" s="261"/>
+    <l n="Runjensweisung" g="II" s="262"/>
+    <l n="Schattenlarve" g="VI" s="263"/>
+    <l n="Schlaf der Gesegneten" g="I" s="264"/>
+    <l n="Schlangenstab" g="II" s="265"/>
+    <l n="Schleichende Fäulnis" g="IV" s="266"/>
+    <l n="Schneesturm" g="V" s="267"/>
+    <l n="Schnell wie eine Eidechse" g="II" s="268"/>
+    <l n="Schrifttum ferner Lande" g="III" s="269"/>
+    <l n="Schutz des Geleges" g="II" s="270"/>
+    <l n="Schutzsegen" zw="Rondra" g="I" s="83"/>
+    <l n="Schwindende Zauberkraft" g="IV" s="271"/>
+    <l n="Sechs Leben des Mungos" g="II" s="272"/>
+    <l n="Seelenbannung" g="IV" s="273"/>
+    <l n="Seelengefährte" g="II" s="274"/>
+    <l n="Seelenprüfung" g="III" s="275"/>
+    <l n="Seelenschatten" g="IV" s="276"/>
+    <l n="Segen der Heiligen Ardare" g="IV" s="277"/>
+    <l n="Segen der Heiligen Noiona" g="III" s="278"/>
+    <l n="Segen der Heiligen Theria" g="VI" s="279"/>
+    <l n="Segen der Heiligen Velvenya" g="III" s="280"/>
+    <l n="Segen des Heiligen Hlûthar" g="IV" s="281"/>
+    <l n="Segen des Plättlings" g="II" s="282"/>
+    <l n="Segensreiches Wasser" g="IV" s="283"/>
+    <l n="Segnung der Schlacht" g="V" s="284"/>
+    <l n="Segnung der stählernen Stirn" g="I" s="285"/>
+    <l n="Segnung des Heims" g="III" s="286"/>
+    <l n="Sichere Wanderung im Schnee" g="II" s="287"/>
+    <l n="Sicherer Weg durch Fels" g="IV" s="288"/>
+    <l n="Sicht auf Madas Welt" g="II" s="289"/>
+    <l n="Siegel Borons" g="III" s="290"/>
+    <l n="Speisesegen" zw="Travia" g="I" s="84"/>
+    <l n="Sippenfluch" g="IV" s="291"/>
+    <l n="Speisung der Bedürftigen" g="I" s="293"/>
+    <l n="Speisung der hungernden Seelen" g="II" s="294"/>
+    <l n="Sprechende Symbole" g="I" s="295"/>
+    <l n="Sterne funkeln immerfort" g="I" s="296"/>
+    <l n="Sternenglanz" g="II" s="297"/>
+    <l n="Sternenspur" g="II" s="298"/>
+    <l n="Sternenstaub" g="II" s="299"/>
+    <l n="Sulvas Gnade" g="II" s="300"/>
+    <l n="Swafnirs Fluke" g="V" s="301"/>
+    <l n="Swafnirs Ruhelied" g="I" s="302"/>
+    <l n="Teilung der Wasser" g="II" s="303"/>
+    <l n="Thalionmels Schlachtgesang" g="III" s="304"/>
+    <l n="Therbûns Erkenntnis" g="I" s="305"/>
+    <l n="Tierempathie" g="II" s="306"/>
+    <l n="Tiergestalt" g="III" s="307"/>
+    <l n="Tranksegen" zw="Efferd" g="I" s="85"/>
+    <l n="Travias Gebet der sicheren Zuflucht" g="V" s="308"/>
+    <l n="Travinians Segen der Schwelle" g="III" s="309"/>
+    <l n="Trophäe erhalten" g="II" s="310"/>
+    <l n="Tsas ewige Jugend" g="VI" s="311"/>
+    <l n="Tsas heiliges Lebensgeschenk" g="V" s="312"/>
+    <l n="Tsas Lebensschutz" g="IV" s="313"/>
+    <l n="Tsas segensreicher Neuanfang" g="II" s="314"/>
+    <l n="Tsas wunderbare Erneuerung" g="V" s="315"/>
+    <l n="Tsas wundersame Fruchtbarkeit" g="IV" s="316"/>
+    <l n="Ucuris Geleit" g="II" s="317"/>
+    <l n="Über den Wolken" g="V" s="318"/>
+    <l n="Unterpfand des Heiligen Rhÿs" g="IV" s="319"/>
+    <l n="Unverstellter Blick" g="III" s="320"/>
+    <l n="Urischars ordnender Blick" g="III" s="321"/>
+    <l n="Vaês Tränen" g="IV" s="322"/>
+    <l n="Verborgen wie der Neumond" g="III" s="323"/>
+    <l n="Vertrauter der Flamme" g="II" s="324"/>
+    <l n="Vertreibung des Dunkelsinns" g="IV" s="326"/>
+    <l n="Visionssuche" g="III" s="327"/>
+    <l n="Wachsamkeit der Gänse" g="II" s="328"/>
+    <l n="Waffenfluch" g="III" s="329"/>
+    <l n="Wandeln in Hesindes Hain" g="V" s="331"/>
+    <l n="Weg des Fuchses" g="I" s="332"/>
+    <l n="Wegzehrung der Heiligen Salma" g="I" s="333"/>
+    <l n="Weihe der ewigen Flamme" g="IV" s="334"/>
+    <l n="Weihe der letzten Ruhestatt" g="II" s="335"/>
+    <l n="Weisheitssegen" zw="Hesinde" g="I" s="86"/>
+    <l n="Weisung des Himmels" g="I" s="336"/>
+    <l n="Wille zur Wahrheit" g="IV" s="337"/>
+    <l n="Winterschlaf" g="IV" s="338"/>
+    <l n="Wunderbarer Geschlechterwandel" g="III" s="339"/>
+    <l n="Wundersame Blütenpracht" g="I" s="340"/>
+    <l n="Wundersames Teilen des Martyriums" g="IV" s="341"/>
+    <l n="Wundsegen" g="II" s="342"/>
+    <l n="Zerschmetternder Bannstrahl" g="V" s="343"/>
+    <l n="Zuflucht finden" g="II" s="344"/>
+  </liturgien>
 </meta>

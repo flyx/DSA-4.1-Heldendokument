@@ -30,6 +30,7 @@
   <xsl:variable name="kampfstile" select="$meta/kampfstile"/>
   <xsl:variable name="ausruestung" select="$meta/ausruestung"/>
   <xsl:variable name="zauber" select="$meta/zauber"/>
+  <xsl:variable name="liturgien" select="$meta/liturgien"/>
 
   <xsl:template match="/">
     <xsl:apply-templates select="helden/held[1]"/>
@@ -109,7 +110,10 @@
   kleidung = "",
   ausruestung = {
     {"",   "",      ""},
-    {},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}
+    {},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}</xsl:text>
+    <xsl:if test="vt/vorteil[starts-with(@name, 'Geweiht')] or sf/sonderfertigkeit[starts-with(@name, 'Spätweihe')]">
+      <xsl:text>,{}</xsl:text>
+    </xsl:if><xsl:text>
   },
   proviant = {
     {"", "", "", "", ""},
@@ -128,13 +132,24 @@
   tiere = {
     {"",   "",  "",  "", "", "", "", "", "", "", "", "", "", "", ""},
     {}, {}, {}
-  },
-  </xsl:text>
-    <xsl:if test="talentliste/talent[starts-with(@name, 'Ritualkenntnis')] or zauberliste/zauber[@repraesentation != 'Magiedilletant']">
-      <xsl:text>magie = {</xsl:text>
-      <xsl:apply-templates select="sf" mode="rituale"/>
-      <xsl:apply-templates select="sf" mode="repraesentationen"/>
-      <xsl:text>
+  },</xsl:text>
+  <xsl:if test="vt/vorteil[starts-with(@name, 'Geweiht')] or sf/sonderfertigkeit[starts-with(@name, 'Spätweihe')]"><xsl:text>
+  liturgien = {</xsl:text>
+    <xsl:apply-templates select="sf/sonderfertigkeit[starts-with(@name, 'Liturgie: ')]" mode="liturgien-klseg"/>
+    <xsl:apply-templates select="sf/sonderfertigkeit[starts-with(@name, 'Liturgie: ')]" mode="liturgien-sonst"/>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count(sf/sonderfertigkeit[starts-with(@name, 'Liturgie: ')]) + 1"/>
+      <xsl:with-param name="max" select="26"/>
+    </xsl:call-template>
+    <xsl:apply-templates select="talentliste/talent[starts-with(@name, 'Liturgiekenntnis')]" mode="liturgiekenntnis"/>
+    <xsl:text>
+  },</xsl:text>
+  </xsl:if>
+  <xsl:if test="talentliste/talent[starts-with(@name, 'Ritualkenntnis')] or zauberliste/zauber[@repraesentation != 'Magiedilletant']"><xsl:text>
+  magie = {</xsl:text>
+    <xsl:apply-templates select="sf" mode="rituale"/>
+    <xsl:apply-templates select="sf" mode="repraesentationen"/>
+    <xsl:text>
     asp_regeneration = "",
     artefakte = "",
     notizen = "",</xsl:text>
@@ -265,7 +280,7 @@
 
   <xsl:template match="vorteil">
     <xsl:text>[[</xsl:text>
-      <xsl:value-of select="@name"/>
+      <xsl:value-of select="translate(@name, '[]', '()')"/>
       <xsl:if test="@value != ''">
         <xsl:text> </xsl:text>
         <xsl:value-of select="@value"/>
@@ -663,6 +678,9 @@
         <xsl:when test="contains(@name, ': ')">
           <xsl:text>named</xsl:text>
         </xsl:when>
+        <xsl:when test="starts-with(@name, 'Liturgiekenntnis')">
+          <xsl:text>liturgiekenntnis</xsl:text>
+        </xsl:when>
         <xsl:when test="./* and contains(@name, '(')">
           <xsl:text>subsub</xsl:text>
         </xsl:when>
@@ -685,6 +703,9 @@
         </xsl:when>
         <xsl:when test="$kind = 'named'">
           <xsl:value-of select="substring-before(@name, ': ')"/>
+        </xsl:when>
+        <xsl:when test="$kind = 'liturgiekenntnis'">
+          <xsl:text>Liturgiekenntnis</xsl:text>
         </xsl:when>
         <xsl:when test="$kind = 'subsub'">
           <xsl:value-of select="substring-before(@name, *[1]/@name)"/>
@@ -1199,16 +1220,22 @@
     <xsl:if test="$def">
       <xsl:if test="$def/@m">
         <xsl:value-of select="dsa:commasep($def/@m)"/>
+        <xsl:if test="$def/@d or $def/@e">
+          <xsl:text>, </xsl:text>
+        </xsl:if>
       </xsl:if>
       <xsl:if test="$def/@d">
-        <xsl:text>, Daemonisch={</xsl:text>
+        <xsl:text>Daemonisch={</xsl:text>
         <xsl:if test="$def/@d != ''">
           <xsl:value-of select="dsa:commasep($def/@d)"/>
         </xsl:if>
         <xsl:text>}</xsl:text>
+        <xsl:if test="$def/@e">
+          <xsl:text>,</xsl:text>
+        </xsl:if>
       </xsl:if>
       <xsl:if test="$def/@e">
-        <xsl:text>, Elementar={</xsl:text>
+        <xsl:text>Elementar={</xsl:text>
         <xsl:if test="$def/@e != ''">
           <xsl:value-of select="dsa:commasep($def/@e)"/>
         </xsl:if>
@@ -1222,4 +1249,76 @@
     <xsl:text>},</xsl:text>
   </xsl:template>
 
+  <func:function name="dsa:litname">
+    <xsl:param name="base"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="contains($base, '(')">
+          <xsl:value-of select="substring-before($base, ' (')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$base"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+
+  <xsl:template match="sonderfertigkeit" mode="liturgien-klseg">
+    <xsl:variable name="base" select="substring(@name, string-length('Liturgie: ') + 1)"/>
+    <xsl:variable name="name" select="dsa:litname($base)"/>
+    <xsl:variable name="def" select="$liturgien/l[@n=$name]"/>
+    <xsl:if test="$def/@zw">
+      <xsl:apply-templates select="." mode="liturgien">
+        <xsl:with-param name="base" select="$base"/>
+        <xsl:with-param name="name" select="$name"/>
+        <xsl:with-param name="def" select="$def"/>
+      </xsl:apply-templates>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="sonderfertigkeit" mode="liturgien-sonst">
+    <xsl:variable name="base" select="substring(@name, string-length('Liturgie: ') + 1)"/>
+    <xsl:variable name="name" select="dsa:litname($base)"/>
+    <xsl:variable name="def" select="$liturgien/l[@n=$name]"/>
+    <xsl:if test="not($def/@zw)">
+      <xsl:apply-templates select="." mode="liturgien">
+        <xsl:with-param name="base" select="$base"/>
+        <xsl:with-param name="name" select="$name"/>
+        <xsl:with-param name="def" select="$def"/>
+      </xsl:apply-templates>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="sonderfertigkeit" mode="liturgien">
+    <xsl:param name="base"/>
+    <xsl:param name="name"/>
+    <xsl:param name="def"/>
+    <xsl:text>
+    {</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$def">
+        <xsl:value-of select="$def/@s"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>""</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:value-of select="concat(', &quot;', $name, '&quot;, &quot;')"/>
+    <xsl:choose>
+      <xsl:when test="contains($base, '(')">
+        <xsl:value-of select="substring-before(substring-after($base, '('), ')')"/>
+      </xsl:when>
+      <xsl:when test="$def">
+        <xsl:value-of select="$def/@g"/>
+      </xsl:when>
+    </xsl:choose>
+    <xsl:text>", ""},</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="talent" mode="liturgiekenntnis">
+    <xsl:text>
+    kenntnis = {"</xsl:text>
+    <xsl:value-of select="substring-before(substring-after(@name, '('), ')')"/>
+    <xsl:value-of select="concat('&quot;, ', @value, '}')"/>
+  </xsl:template>
 </xsl:stylesheet>

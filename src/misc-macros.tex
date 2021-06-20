@@ -73,6 +73,31 @@
 \end{dsaSheetBox}
 }
 
+\newcommand{\ProvVermoeg}{
+\begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+    \renewcommand{\arraystretch}{1}
+    \setlength{\tabcolsep}{1pt}
+    \normalfont\fontsize{8}{12}\selectfont
+    \begin{tabular}{p{4.5cm}|x{0.8cm}!{\vrule width 1pt}p{2.6cm}|x{0.7cm}}
+        \multicolumn{2}{l}{\dsaTHeading{\Large Proviant / Tränke}} & \multicolumn{2}{l}{\dsaTHeading{\Large Vermögen}} \\ \hline
+        \directlua{
+            common.proviant_vermoegen()
+        } \\\hline
+    \end{tabular}
+
+    \vspace{-1pt}
+    \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
+        \directlua{
+            common.multiline_content({
+                name="Vermögen", rows=data.vermoegen.sonstiges.zeilen or 4,
+                preamble="\noexpand\\footnotesize Sonstiges", hspace="5pt",
+                baselinestretch=1.033, fontsize={8,12}
+            }, data.vermoegen.sonstiges)
+        }
+    \end{tabular}
+\end{dsaSheetBox}
+}
+
 \newcommand{\Verbindungen}{
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
@@ -96,6 +121,32 @@
                     preamble="\noexpand\\Large Notizen", hspace="5pt",
                     baselinestretch=1.033, fontsize={8,12}
                 }, data.notizen)
+            }
+        \end{tabular}
+    \end{dsaSheetBox}
+}
+
+\newcommand{\VerbindNotiz}{
+    \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+        \renewcommand{\arraystretch}{1}
+        \setlength{\tabcolsep}{1pt}
+        \normalfont\fontsize{8}{12}\selectfont
+        \vspace{2.41pt}
+        \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
+            \dsaTHeading{\Large Verbindungen \& Notizen} \\ \hline
+            \directlua{
+                local merged = {}
+                for _, v in ipairs(data.verbindungen) do
+                    table.insert(merged, v)
+                end
+                table.insert(merged, {})
+                for _, v in ipairs(data.notizen) do
+                    table.insert(merged, v)
+                end
+                common.multiline_content({
+                    name="Verbindungen und Notizen", rows=data.notizen.zeilen or 8,
+                    baselinestretch=1.033, fontsize={8,12}
+                }, merged)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -126,15 +177,18 @@
             common.kenntnis("Liturgiekenntnis", {data.liturgien.kenntnis})
         }
 
-        \vspace{5pt}
+        \vspace{13.5pt}
         \renewcommand{\arraystretch}{1}
         \setlength{\tabcolsep}{2pt}
         \normalfont\fontsize{8}{12}\selectfont
-        \begin{NiceTabular}{p{3cm}|x{0.8cm}|p{4.7cm}}
+        \begin{NiceTabular}{y{0.7cm}|p{7cm}|x{0.8cm}}
         \CodeBefore
             \rowcolors{2}{white}{gray!30}
         \Body
-            \normalfont\bfseries\scriptsize Liturgie & \normalfont\bfseries\scriptsize Grad & \hspace{3pt}\normalfont\bfseries\scriptsize Wirkung \\ \hline
+            \directlua{
+                common.header_row("scriptsize", "dsaSH",
+                    {1, "c|", "Seite"}, "Liturgie", "Grad")
+            } \Xhline{2\arrayrulewidth}
             \directlua{
                 common.inner_rows(data.liturgien, 3)
             }

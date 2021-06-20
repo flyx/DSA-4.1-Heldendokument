@@ -380,7 +380,7 @@ return {
   ausruestung = {
   -- Name, Gewicht, wo getragen
     {"",   "",      ""},
-    {},{},{},{},{},{},{},{},{},{},{},{},{},
+    {},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}
   },
   --  Proviant und Tränke
   --  Jeder Wert generiert eine Zeile:
@@ -411,8 +411,8 @@ return {
   },
   --  Liturgien. Jeder  Wert generiert eine Zeile.
   liturgien = {
-  -- Name, Grad, Wirkung
-    {"",   "",   ""}, {}, {}, {}, {}, {}, {},{},{},{},{},{},{},{},{},{},{},{},{},{},
+  -- Seite, Name, Grad
+    {"",    "",   ""}, {}, {}, {}, {}, {}, {},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},
     --  Liturgiekenntnis:
     --          Gottheit, Wert
     kenntnis = {"",       ""}

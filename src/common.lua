@@ -310,4 +310,26 @@ function common.list_known(input, known)
   return ret
 end
 
+local function merge(l, d)
+  for i=1,2 do
+    if d ~= nil and #d >= i then
+        table.insert(l, d[i])
+    else
+        table.insert(l, "")
+    end
+  end
+end
+
+function common.proviant_vermoegen()
+  local content = {}
+  for i=1,4 do
+      local l = {}
+      merge(l, data.proviant[i])
+      merge(l, data.vermoegen[i])
+      table.insert(content, l)
+  end
+
+  common.inner_rows(content, 4)
+end
+
 return common
