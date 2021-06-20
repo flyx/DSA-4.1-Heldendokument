@@ -109,6 +109,7 @@
     <vn name="Eingeschränkter Sinn" nachteil="1"/>
     <vn name="Einhändig" nachteil="1"/>
     <vn name="Eisenaffine Aura" magisch="1"/>
+    <vn name="Eisern" id="eisern"/>
     <vn name="Eitelkeit" nachteil="1"/>
     <vn name="Elfische Weltsicht" nachteil="1"/>
     <vn name="Ererbte Knochenkeule" magisch="1"/>
@@ -724,5 +725,24 @@
       <w name="Jagddiskus" tp="2W+4(A)" rw="5/10/20/30/60" tprw="+1/0/0/0/-1" />
       <w name="Kampfdiskus" tp="1W+5" rw="10/20/30/45/60" tprw="+1/0/0/0/0" />
     </fernkampf>
+    <schildeParier>
+      <s name="Einfacher Holzschild" typ="S" wm="-1/+3" ini="-1" bf="3" />
+      <s name="Verstärkter Holzschild" typ="S" wm="-2/+3" ini="-1" bf="0" />
+      <s name="Lederschild" typ="S" wm="-1/+3" ini="0" bf="5" />
+      <s name="Mattenschild" typ="S" wm="-1/+4" ini="0" bf="6" />
+      <s name="Großer Lederschild" typ="S" wm="-1/+4" ini="-1" bf="6" />
+      <s name="Thorwalerschild" typ="S" wm="-2/+4" ini="-1" bf="3" />
+      <s name="Großschild" typ="S" wm="-2/+5" ini="-2" bf="2" />
+      <s name="Turmschild" typ="S" wm="-5/+7" ini="-3" bf="1" />
+      <s name="Buckler" typ="SP" wm="0/+1" ini="0" bf="0" />
+      <s name="Buckler (Vollmetall)" typ="SP" wm="0/+2" ini="0" bf="-2" />
+      <s name="Panzerarm" typ="SP" wm="-2/+1" ini="0" bf="-2" />
+      <s name="Drachenklaue" typ="SP" wm="-2/+1" ini="0" bf="0" />
+      <s name="Bock" typ="SP" wm="-1/+1" ini="0" bf="0" />
+      <s name="Hakendolch" typ="P" wm="-1/+3" ini="0" bf="-2" />
+      <s name="Kriegsfächer" typ="P" wm="0/+2" ini="+1" bf="3" />
+      <s name="Linkhand" typ="P" wm="0/+2" ini="+1" bf="0" />
+      <s name="Langdolch" typ="P" wm="0/+1" ini="0" bf="1" />
+    </schildeParier>
   </ausruestung>
 </meta>

@@ -16,6 +16,7 @@
   <xsl:param name="min_handwerk" as="xs:integer" select="15"/>
   <xsl:param name="min_waffen_nk" as="xs:integer" select="5"/>
   <xsl:param name="min_waffen_fk" as="xs:integer" select="3"/>
+  <xsl:param name="min_schilde" as="xs:integer" select="2"/>
 
   <xsl:output method="text"/>
 
@@ -84,9 +85,15 @@
       <xsl:with-param name="max" select="$min_waffen_fk"/>
     </xsl:call-template><xsl:text>
   },
-  schilde = {
-    {},
-    {},
+  schilde = {</xsl:text>
+    <xsl:variable name="schilde" select="ausrüstungen/heldenausruestung[@set = 0 and starts-with(@name, 'schild')]"/>
+    <xsl:apply-templates select="$schilde" mode="schilde"/><xsl:text>
+    </xsl:text>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count($schilde) + 1"/>
+      <xsl:with-param name="max" select="$min_schilde"/>
+    </xsl:call-template>
+    <xsl:text>
   },
   ruestung = {
     {}, {}, {}, {}, {}, {},
@@ -893,6 +900,26 @@
     <xsl:variable name="def" select="$ausruestung/fernkampf[@typ=$talent]/w[@name=$name]"/>
     <xsl:if test="$def">
       <xsl:value-of select="concat('&quot;', $def/@tp, '&quot;, ', dsa:partition($def/@rw), ', ', dsa:partition($def/@tprw))"/>
+    </xsl:if>
+    <xsl:text>},</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="heldenausruestung" mode="schilde">
+    <xsl:variable name="name" select="@schildname" />
+    <xsl:text>
+    {[[</xsl:text>
+    <xsl:value-of select="concat($name, ']], ')"/>
+    <xsl:choose>
+      <xsl:when test="@verwendungsArt = 'Schild'">
+        <xsl:text>"Schild", </xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>"Parierwaffe", </xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:variable name="def" select="$ausruestung/schildeParier/s[@name=$name]"/>
+    <xsl:if test="$def">
+      <xsl:value-of select="concat(dsa:singleval($def/@ini), ', ', dsa:doubleval($def/@wm), ', ', $def/@bf)"/>
     </xsl:if>
     <xsl:text>},</xsl:text>
   </xsl:template>
