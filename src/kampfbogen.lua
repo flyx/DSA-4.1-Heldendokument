@@ -112,6 +112,17 @@ local function atpa_mod(basis, talent, schwelle, schritt, wm, spez)
   return val + talent + wm
 end
 
+local function render_num(input)
+  if type(input) == "number" then
+    if input < 0 then
+      tex.sprint("−")
+    end
+    tex.sprint(math.abs(input))
+  else
+    tex.sprint(-2, input)
+  end
+end
+
 --  render => table: index => {bool, function}
 --      false => function aufgerufen mit Talentzeile, Waffenzeile und eBE,
 --      true  => function aufgerufen mit iteriertem Wert aus der Waffenzeile
@@ -224,6 +235,9 @@ nahkampf_render[13]= {false, function(v, talent, ebe)
     render_tp(tp)
   end
 end}
+for i=14,17 do
+  nahkampf_render[i] = {true, render_num}
+end
 
 function kampfbogen.nahkampf()
   kampfwerte(data.nahkampf, nahkampf_render, 2, 15)
@@ -331,7 +345,9 @@ local schilde_render = {
     else
       tex.error("Typ muss 'Schild' oder 'Parierwaffe' sein: " .. v[2])
     end
-  end}
+  end},
+  [7] = {true, render_num},
+  [8] = {true, render_num}
 }
 
 function kampfbogen.schilde()

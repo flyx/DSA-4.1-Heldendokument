@@ -17,6 +17,7 @@
   <xsl:param name="min_waffen_nk" as="xs:integer" select="5"/>
   <xsl:param name="min_waffen_fk" as="xs:integer" select="3"/>
   <xsl:param name="min_schilde" as="xs:integer" select="2"/>
+  <xsl:param name="min_ruestungen" as="xs:integer" select="6"/>
 
   <xsl:output method="text"/>
 
@@ -95,8 +96,14 @@
     </xsl:call-template>
     <xsl:text>
   },
-  ruestung = {
-    {}, {}, {}, {}, {}, {},
+  ruestung = {</xsl:text>
+    <xsl:variable name="ruestungen" select="ausrüstungen/heldenausruestung[@set = 0 and starts-with(@name, 'ruestung')]"/>
+    <xsl:apply-templates select="$ruestungen" mode="ruestungen"/><xsl:text>
+    </xsl:text>
+    <xsl:call-template name="fill">
+      <xsl:with-param name="cur" select="count($ruestungen) + 1"/>
+      <xsl:with-param name="max" select="$min_ruestungen"/>
+    </xsl:call-template><xsl:text>
   },
   kleidung = "",
   ausruestung = {
@@ -920,6 +927,37 @@
     <xsl:variable name="def" select="$ausruestung/schildeParier/s[@name=$name]"/>
     <xsl:if test="$def">
       <xsl:value-of select="concat(dsa:singleval($def/@ini), ', ', dsa:doubleval($def/@wm), ', ', $def/@bf)"/>
+    </xsl:if>
+    <xsl:text>},</xsl:text>
+  </xsl:template>
+
+  <func:function name="dsa:zrs">
+    <xsl:param name="def"/>
+    <xsl:param name="dn"/>
+    <xsl:param name="tn"/>
+    <xsl:variable name="attr" select="$def/@*[local-name() = $dn]"/>
+    <func:result>
+      <xsl:if test="$attr">
+        <xsl:value-of select="concat($tn, '=', $attr, ', ')"/>
+      </xsl:if>
+    </func:result>
+  </func:function>
+
+  <xsl:template match="heldenausruestung" mode="ruestungen">
+    <xsl:variable name="name" select="@ruestungsname"/>
+    <xsl:text>
+    {[[</xsl:text>
+    <xsl:value-of select="concat($name, ']], ')"/>
+    <xsl:variable name="def" select="$ausruestung/ruestung/r[@name=$name]"/>
+    <xsl:if test="$def">
+      <xsl:value-of select="concat($def/@grs, ', ', $def/@gbe, ', ')"/>
+      <xsl:value-of select="dsa:zrs($def, 'ko', 'kopf')"/>
+      <xsl:value-of select="dsa:zrs($def, 'br', 'brust')"/>
+      <xsl:value-of select="dsa:zrs($def, 'ru', 'ruecken')"/>
+      <xsl:value-of select="dsa:zrs($def, 'la', 'l_arm')"/>
+      <xsl:value-of select="dsa:zrs($def, 'ra', 'r_arm')"/>
+      <xsl:value-of select="dsa:zrs($def, 'lb', 'l_bein')"/>
+      <xsl:value-of select="dsa:zrs($def, 'rb', 'r_bein')"/>
     </xsl:if>
     <xsl:text>},</xsl:text>
   </xsl:template>
