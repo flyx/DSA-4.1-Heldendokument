@@ -29,6 +29,7 @@
   <xsl:variable name="sonderfertigkeiten" select="$meta/sonderfertigkeiten"/>
   <xsl:variable name="kampfstile" select="$meta/kampfstile"/>
   <xsl:variable name="ausruestung" select="$meta/ausruestung"/>
+  <xsl:variable name="zauber" select="$meta/zauber"/>
 
   <xsl:template match="/">
     <xsl:apply-templates select="helden/held[1]"/>
@@ -1042,7 +1043,7 @@
         <xsl:when test="$input = 'Kobold'"><xsl:text>"Kob"</xsl:text></xsl:when>
         <xsl:when test="$input = 'Kophtan'"><xsl:text>"Kop"</xsl:text></xsl:when>
         <xsl:when test="$input = 'Hexe'"><xsl:text>"Hex"</xsl:text></xsl:when>
-        <xsl:when test="$input = 'Gildenmagier'"><xsl:text>"Mag"</xsl:text></xsl:when>
+        <xsl:when test="$input = 'Magier'"><xsl:text>"Mag"</xsl:text></xsl:when>
         <xsl:when test="$input = 'Mudramul'"><xsl:text>"Mud"</xsl:text></xsl:when>
         <xsl:when test="$input = 'Nachtalb'"><xsl:text>"Nac"</xsl:text></xsl:when>
         <xsl:when test="$input = 'Scharlatan'"><xsl:text>"Srl"</xsl:text></xsl:when>
@@ -1148,16 +1149,73 @@
   },</xsl:text>
   </xsl:template>
 
+  <func:function name="dsa:commasep">
+    <xsl:param name="input"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="contains($input, ',')">
+          <xsl:value-of select="concat('&quot;', substring-before($input, ','), '&quot;, ', dsa:commasep(substring-after($input, ',')))"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="concat('&quot;', $input, '&quot;')"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+
   <xsl:template match="zauber">
+    <xsl:variable name="name" select="@name"/>
+    <xsl:variable name="def" select="$zauber/z[starts-with($name, @n)]"/>
     <xsl:text>
-    {"", [[</xsl:text>
-    <xsl:value-of select="@name"/>
+    {</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$def and $def/@s">
+        <xsl:value-of select="$def/@s"/>
+      </xsl:when>
+      <xsl:when test="$def">
+        <xsl:variable name="last" select="($def/preceding-sibling::z[@s])[last()]"/>
+        <xsl:variable name="between" select="$last/following-sibling::z[following-sibling::z[@n=$def/@n]]"/>
+        <xsl:value-of select="number($last/@s) + count($between) + 1"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>""</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:text>, [[</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$def">
+        <xsl:value-of select="$def/@n"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$name"/>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:if test="@variante != ''">
       <xsl:value-of select="concat(' (', @variante, ')')"/>
     </xsl:if>
     <xsl:text>]], </xsl:text>
-    <xsl:value-of select="concat(dsa:probe(@probe), ', ', @value, ', &quot;', @k, '&quot;, {}, ')"/>
-    <xsl:value-of select="dsa:repraesentation(@repraesentation)"/>
+    <xsl:value-of select="concat(dsa:probe(@probe), ', ', @value, ', &quot;', @k, '&quot;, {')"/>
+
+    <xsl:if test="$def">
+      <xsl:if test="$def/@m">
+        <xsl:value-of select="dsa:commasep($def/@m)"/>
+      </xsl:if>
+      <xsl:if test="$def/@d">
+        <xsl:text>, Daemonisch={</xsl:text>
+        <xsl:if test="$def/@d != ''">
+          <xsl:value-of select="dsa:commasep($def/@d)"/>
+        </xsl:if>
+        <xsl:text>}</xsl:text>
+      </xsl:if>
+      <xsl:if test="$def/@e">
+        <xsl:text>, Elementar={</xsl:text>
+        <xsl:if test="$def/@e != ''">
+          <xsl:value-of select="dsa:commasep($def/@e)"/>
+        </xsl:if>
+        <xsl:text>}</xsl:text>
+      </xsl:if>
+    </xsl:if>
+    <xsl:value-of select="concat('}, ', dsa:repraesentation(@repraesentation))"/>
     <xsl:if test="@hauszauber = 'true'">
       <xsl:text>, haus=true</xsl:text>
     </xsl:if>

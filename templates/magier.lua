@@ -498,10 +498,13 @@ return {
   --  Hat der Zauber ein elementares oder dämonisches Merkmal, so muss dies
   --  speziell angegeben werden, Beispiel:
   --    {"Kraft", Daemonisch="Thargunitoth", Elementar={}}
-  --  Für ein spezielles dämonisches oder elementares Merkmal muss der
-  --  Name der Domäne bzw. des Elements als Wert gegeben werden. Für das
-  --  allgemeine Merkmal Dämonisch bzw. Elementar muss der Wert {} angegeben
-  --  werden. Dies ermöglicht die korrekte Berechnung der Lernschwierigkeit.
+  --  Für das allgemeine Merkmal Dämonisch bzw. Elementar muss der Wert {}
+  --  angegeben werden (wie im Beispiel `Elementar={}`).
+  --  Ein einziges spezielles dämonisches oder elementares Merkmal kann als
+  --  benamter String eingegeben werden (wie im Beispiel "Thargunitoth").
+  --  Mehrere spezielle Merkmale müssen in einer Tabelle angegeben werden, etwa:
+  --    Elementar={"Wasser", "Luft"}
+  --  Dies ermöglicht die korrekte Berechnung der Lernschwierigkeit.
 
   --  Hinter der Repräsentation können noch benamte Werte stehen:
   --    `haus` kann auf true gesetzt werden, damit der Zauber ein Hauszauber ist.

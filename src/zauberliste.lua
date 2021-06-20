@@ -104,7 +104,13 @@ function schwierigkeit:submod_from(name, sub, merkmale, delta)
     if merkmale.gesamt ~= nil then
       ret = ret + delta
     end
-    if type(sub) == "string" and merkmale[sub] ~= nil then
+    if type(sub) == "table" then
+      for _,v in sub do
+        if merkmale[v] ~= nil then
+          ret = ret + delta
+        end
+      end
+    elseif type(sub) == "string" and merkmale[sub] ~= nil then
       ret = ret + delta
     end
   end

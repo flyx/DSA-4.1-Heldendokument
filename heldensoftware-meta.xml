@@ -844,4 +844,282 @@
       <r name="Topfhelm" ko="5" grs="0.5" gbe="0.5" />
     </ruestung>
   </ausruestung>
+  <zauber>
+    <z n="Abvenenum" m="Objekt" s="11"/>
+    <z n="Accuratum" m="Objekt"/>
+    <z n="Adamantium" m="Objekt" e="Erz" />
+    <z n="Adlerauge" m="Hellsicht,Eigenschaften" s="15"/>
+    <z n="Adlerschwinge" m="Form"/>
+    <z n="Aeolitus" m="Umwelt" e="Luft" s="18"/>
+    <z n="Aerofugo" m="Umwelt" e="Luft"/>
+    <z n="Aerogelo" m="Umwelt" e="Luft"/>
+    <z n="Alpgestalt" m="Einfluss,Herrschaft" />
+    <z n="Analys" m="Hellsicht,Metamagie"/>
+    <z n="Ängste lindern" m="Einfluss"/>
+    <z n="Animatio" m="Telekinese"/>
+    <z n="Applicatus" m="Objekt,Metamagie"/>
+    <z n="Arachnea" m="Herbeirufung"/>
+    <z n="Arcanovi" m="Objekt,Metamagie"/>
+    <z n="Armatrutz" m="Eigenschaften" e="Erz"/>
+    <z n="Atemnot" m="Eigenschaften"/>
+    <z n="Attributo" m="Eigenschaften"/>
+    <z n="Aufgeblasen" m="Form" e="Luft"/>
+    <z n="Auge des Limbus" m="Limbus,Kraft" />
+    <z n="Aureolus" m="Illusion" />
+    <z n="Auris Nasus" m="Illusion" s="35"/>
+    <z n="Axxeleratus" m="Eigenschaften" />
+    <z n="Balsam" m="Heilung,Form"/>
+    <z n="Band und Fessel" m="Einfluss"/>
+    <z n="Bannbaladin" m="Einfluss"/>
+    <z n="Bärenruhe" m="Form"/>
+    <z n="Beherrschung brechen" m="Antimagie,Herrschaft"/>
+    <z n="Beschwörung vereiteln" m="Antimagie,Beschwörung"/>
+    <z n="Bewegung stören" m="Antimagie,Telekinese"/>
+    <z n="Blendwerk" m="Illusion"/>
+    <z n="Blick aufs Wesen" m="Hellsicht"/>
+    <z n="Blick durch fremde Augen" m="Hellsicht,Verständigung"/>
+    <z n="Blick in die Gedanken" m="Hellsicht"/>
+    <z n="Blick in die Vergangenheit" m="Hellsicht,Temporal"/>
+    <z n="Blitz" m="Einfluss"/>
+    <z n="Böser Blick" m="Einfluss"/>
+    <z n="Brenne toter Stoff" m="Objekt" e="Feuer"/>
+    <z n="Caldofrigo" m="Objekt,Umwelt" e="Feuer,Eis"/>
+    <z n="Chamaelioni" m="Illusion" s="54"/>
+    <z n="Chimaeroform" m="Form" d="Asfaloth"/>
+    <z n="Chronoklassis" m="Herbeirufung,Temporal"/>
+    <z n="Chrononautos" m="Temporal"/>
+    <z n="Claudibus" m="Objekt"/>
+    <z n="Corpofesso" m="Eigenschaften"/>
+    <z n="Corpofrigo" m="Eigenschaften" e="Eis"/>
+    <z n="Cryptographo" m="Objekt,Verständigung"/>
+    <z n="Custodosigil" m="Objekt,Metamagie" e="Feuer"/>
+    <z n="Dämonenbann" m="Antimagie" d=""/>
+    <z n="Delicioso" m="Illusion"/>
+    <z n="Desintegratus" m="Objekt,Schaden"/>
+    <z n="Destructibo" m="Antimagie,Metamagie,Kraft"/>
+    <z n="Dichter und Denker" m="Herrschaft"/>
+    <z n="Dschinnenruf" m="Herbeirufung" e=""/>
+    <z n="Dunkelheit" m="Umwelt"/>
+    <z n="Duplicatus" m="Illusion"/>
+    <z n="Ecliptifactus" m="Form" d=""/>
+    <z n="Eigenschaften wiederherstellen" m="Antimagie,Eigenschaften" s="73"/>
+    <z n="Eigne Ängste" m="Einfluss,Eigenschaften"/>
+    <z n="Einfluss bannen" m="Antimagie,Einfluss"/>
+    <z n="Eins mit der Natur" m="Eigenschaften" e=""/>
+    <z n="Eisenrost" m="Objekt,Temporal"/>
+    <z n="Eiseskälte" m="Eigenschaften"/>
+    <z n="Elementarbann" m="Antimagie" e=""/>
+    <z n="Elementarer Diener" m="Herbeirufung" e=""/>
+    <z n="Elfenstimme" m="Verständigung"/>
+    <z n="Erinnerung verlasse dich!" m="Herrschaft"/>
+    <z n="Exposami" m="Hellsicht"/>
+    <z n="Falkenauge" m="Eigenschaften"/>
+    <z n="Favilludo" m="Illusion"/>
+    <z n="Firnlauf" m="Eigenschaften" e="Eis"/>
+    <z n="Flim Flam" m="Umwelt"/>
+    <z n="Fluch der Pestilenz" d="Mishkara"/>
+    <z n="Foramen" m="Hellsicht,Telekinese"/>
+    <z n="Fortifex" m="Umwelt" e="Erz"/>
+    <z n="Fulminictus" m="Schaden,Kraft"/>
+    <z n="Gardianum" m="Antimagie,Kraft,Metamagie"/>
+    <z n="Gedankenbilder" m="Verständigung" s="94"/>
+    <z n="Gefäß der Jahre" m="Beschwörung,Form,Temporal"/>
+    <z n="Gefunden!" m="Hellsicht"/>
+    <z n="Geisterbann" m="Antimagie,Geisterwesen"/>
+    <z n="Geisterruf" m="Geisterwesen,Herbeirufung"/>
+    <z n="Granit und Marmor" m="Form" e="Erz"/>
+    <z n="Große Gier" m="Einfluss,Herrschaft"/>
+    <z n="Große Verwirrung" m="Eigenschaften"/>
+    <z n="Halluzination" m="Herrschaft"/>
+    <z n="Harmlose Gestalt" m="Einfluss,Illusion"/>
+    <z n="Hartes schmelze!" m="Objekt" e="Wasser"/>
+    <z n="Haselbusch" m="Eigenschaften,Form" e="Humus"/>
+    <z n="Heilkraft bannen" m="Antimagie,Heilung" s="107"/>
+    <z n="Hellsicht trüben" m="Antimagie,Hellsicht"/>
+    <z n="Herbeirufung vereiteln" m="Antimagie,Herbeirufung"/>
+    <z n="Herr über das Tierreich" m="Herrschaft"/>
+    <z n="Herzschlag ruhe!" d="Blakharaz"/>
+    <z n="Hexenblick" m="Verständigung"/>
+    <z n="Hexengalle" m="Schaden"/>
+    <z n="Hexenholz" m="Telekinese"/>
+    <z n="Hexenknoten" m="Einfluss,Illusion"/>
+    <z n="Hexenkrallen" m="Eigenschaften,Form"/>
+    <z n="Hexenspeichel" m="Heilung"/>
+    <z n="Hilfreiche Tatze" m="Einfluss,Verständigung"/>
+    <z n="Höllenpein" m="Einfluss"/>
+    <z n="Holterdipolter" m="Umwelt"/>
+    <z n="Horriphobus" m="Einfluss"/>
+    <z n="Ingifaxius" m="Schaden" e="Feuer"/>
+    <z n="Ignisphaero" m="Schaden,Telekinese" e="Feuer" s="124"/>
+    <z n="Ignorantia" m="Einfluss,Illusion"/>
+    <z n="Illusion auflösen" m="Antimagie,Illusion"/>
+    <z n="Immortalis" m="Form,Temporal"/>
+    <z n="Imperavi" m="Herrschaft"/>
+    <z n="Impersona" m="Illusion"/>
+    <z n="Infinitium" m="Metamagie,Temporal"/>
+    <z n="Invercano" m="Antimagie,Kraft,Metamagie"/>
+    <z n="Invocatio maior" m="Beschwörung" d=""/>
+    <z n="Invocatio minor" m="Beschwörung" d=""/>
+    <z n="Iribaars Hand" m="Einfluss,Schaden" d="Amazeroth"/>
+    <z n="Juckreiz" m="Einfluss"/>
+    <z n="Karnifilo" m="Einfluss,Eigenschaften"/>
+    <z n="Katzenaugen" m="Eigenschaften"/>
+    <z n="Klarum Purum" m="Form,Heilung"/>
+    <z n="Klickeradomms" m="Telekinese"/>
+    <z n="Koboldgeschenk" m="Herrschaft"/>
+    <z n="Komm Kobold" m="Herbeirufung"/>
+    <z n="Körperlose Reise" m="Limbus,Verständigung"/>
+    <z n="Krabbelnder Schrecken" m="Herbeirufung" d="Mishkara"/>
+    <z n="Kraft des Erzes" m="Objekt" e="Erz"/>
+    <z n="Krähenruf" m="Einfluss,Herrschaft,Limbus"/>
+    <z n="Krötensprung" m="Eigenschaften" s="148"/>
+    <z n="Kulminatio" m="Schaden"/>
+    <z n="Kusch!" m="Einfluss"/>
+    <z n="Lach dich gesund" m="Heilung,Einfluss"/>
+    <z n="Lachkrampf" m="Einfluss"/>
+    <z n="Langer Lulatsch" m="Form,Objekt"/>
+    <z n="Last des Alters" m="Temporal,Form"/>
+    <z n="Leib der Erde" m="Form" e="Humus"/>
+    <z n="Leib der Wogen" m="Form" e="Wasser" s="157"/>
+    <z n="Leib des Eises" m="Form" e="Eis" s="159"/>
+    <z n="Leib des Erzes" m="Form" e="Erz"/>
+    <z n="Leib des Feuers" m="Form" e="Feuer" s="162"/>
+    <z n="Leib des Windes" m="Form" e="Luft" s="164"/>
+    <z n="Leidensbund" m="Heilung,Verständigung"/>
+    <z n="Levthans Feuer" m="Einfluss,Verständigung"/>
+    <z n="Limbus versiegeln" m="Antimagie,Limbus"/>
+    <z n="Lockruf" m="Telekinese,Illusion"/>
+    <z n="Lunge des Leviathan" m="Heilung"/>
+    <z n="Madas Spiegel" m="Hellsicht,Verständigung"/>
+    <z n="Magischer Raub" m="Kraft,Verständigung"/>
+    <z n="Mahlstrom" m="Umwelt" e="Wasser"/>
+    <z n="Manifesto" e=""/>
+    <z n="Meister der Elemente" m="Herbeirufung" e=""/>
+    <z n="Meister minderer Geister" m="Herbeirufung"/>
+    <z n="Memorabia" m="Herrschaft"/>
+    <z n="Memorans" m="Hellsicht,Eigenschaften"/>
+    <z n="Menetekel" m="Illusion"/>
+    <z n="Metamagie neutralisieren" m="Antimagie,Metamagie"/>
+    <z n="Metamorpho" m="Objekt" e="Eis"/>
+    <z n="Motoricus" m="Telekinese"/>
+    <z n="Movimento" m="Eigenschaften" s="183"/>
+    <z n="Murks und Patz" m="Einfluss"/>
+    <z n="Nackedei" m="Objekt,Telekinese"/>
+    <z n="Nebelleib" m="Form" e="Luft,Wasser"/>
+    <z n="Nebelwand" m="Umwelt" e="Luft,Wasser"/>
+    <z n="Nekropathia" m="Geisterwesen,Verständigung"/>
+    <z n="Nihilogravo" m="Umwelt"/>
+    <z n="Nuntiovolo" m="Beschwörung" d="Lolgramoth"/>
+    <z n="Objecto Obscuro" m="Objekt"/>
+    <z n="Objectofixo" m="Objekt,Temporal"/>
+    <z n="Objectovoco" m="Verständigung"/>
+    <z n="Objekt entzaubern" m="Antimagie,Objekt"/>
+    <z n="Oculus Astralis" m="Hellsicht,Kraft,Limbus,Metamagie" s="196"/>
+    <z n="Odem Arcanum" m="Hellsicht,Kraft"/>
+    <z n="Pandaemonium" m="Beschwörung" d="" s="199"/>
+    <z n="Panik überkomme euch!" m="Einfluss" d="Amazeroth"/>
+    <z n="Papperlapapp" m="Einfluss"/>
+    <z n="Paralysis" m="Form" e="Erz"/>
+    <z n="Pectetondo" m="Form"/>
+    <z n="Penetrizzel" m="Hellsicht"/>
+    <z n="Pentagramma" m="Antimagie,Beschwörung,Geisterwesen" d=""/>
+    <z n="Pestilenz erspüren" m="Hellsicht" s="207"/>
+    <z n="Pfeil des Eises" m="Objekt" e="Eis"/>
+    <z n="Pfeil der Erde" m="Objekt" e="Humus" s="208"/>
+    <z n="Pfeil des Erzes" m="Objekt" e="Erz" s="208"/>
+    <z n="Pfeil des Feuers" m="Objekt" e="Feuer" s="208"/>
+    <z n="Pfeil der Luft" m="Objekt" e="Luft" s="208"/>
+    <z n="Pfeil des Wassers" m="Objekt" e="Wasser" s="208"/>
+    <z n="Planastrale" m="Limbus" s="210"/>
+    <z n="Plumbumbarum" m="Einfluss"/>
+    <z n="Projektimago" m="Illusion,Verständigung"/>
+    <z n="Protectionis" m="Antimagie,Metamagie"/>
+    <z n="Psychostabilis" m="Antimagie,Eigenschaften"/>
+    <z n="Radau" m="Telekinese" e="Luft"/>
+    <z n="Reflectimago" m="Illusion"/>
+    <z n="Reptilea" m="Herbeirufung"/>
+    <z n="Respondami" m="Herrschaft"/>
+    <z n="Reversalis" m="Metamagie"/>
+    <z n="Ruhe Körper" m="Heilung"/>
+    <z n="Salander Mutander" m="Form"/>
+    <z n="Sanftmut" m="Einfluss"/>
+    <z n="Sapefacta" m="Telekinese" e="Luft,Wasser"/>
+    <z n="Satuarias Herrlichkeit" m="Eigenschaften,Illusion"/>
+    <z n="Schabernack" m="Einfluss"/>
+    <z n="Schadenszauber bannen" m="Antimagie,Schaden"/>
+    <z n="Schelmenkleister" m="Umwelt"/>
+    <z n="Schelmenlaune" m="Einfluss"/>
+    <z n="Schelmenmaske" m="Illusion"/>
+    <z n="Schelmenrausch" m="Einfluss"/>
+    <z n="Schleier der Unwissenheit" m="Eigenschaften,Metamagie"/>
+    <z n="Schwarz und Rot" m="Eigenschaften,Schaden"/>
+    <z n="Schwarzer Schrecken" m="Einfluss"/>
+    <z n="Seelentier erkennen" m="Hellsicht"/>
+    <z n="Seelenwanderung" m="Eigenschaften,Verständigung"/>
+    <z n="Seidenweich" m="Illusion"/>
+    <z n="Seidenzunge" m="Einfluss"/>
+    <z n="Sensattacco" m="Eigenschaften,Hellsicht"/>
+    <z n="Sensibar" m="Hellsicht"/>
+    <z n="Serpentialis" m="Form"/>
+    <z n="Silentium" m="Umwelt"/>
+    <z n="Sinesigil" m="Illusion"/>
+    <z n="Skelettarius" d="Thargunitoth"/>
+    <z n="Solidirid" m="Umwelt" e="Luft" s="245"/>
+    <z n="Somnigravis" m="Einfluss"/>
+    <z n="Spinnenlauf" m="Eigenschaften"/>
+    <z n="Spurlos" m="Umwelt"/>
+    <z n="Standfest" m="Eigenschaften"/>
+    <z n="Staub wandle!" e="Erz"/>
+    <z n="Stein wandle!" m="Beschwörung" d=""/>
+    <z n="Stillstand" m="Umwelt" e="Eis"/>
+    <z n="Sumus Elixiere" e="Humus"/>
+    <z n="Tauschrausch" m="Limbus"/>
+    <z n="Tempus Statis" m="Temporal"/>
+    <z n="Tiere besprechen" m="Heilung,Form"/>
+    <z n="Tiergedanken" m="Hellsicht,Verständigung"/>
+    <z n="Tlalucs Odem" m="Beschwörung,Schaden" d=""/>
+    <z n="Totes handle!" m="Beschwörung" d="Thargunitoth"/>
+    <z n="Transformatio" m="Objekt"/>
+    <z n="Transmutare" m="Form"/>
+    <z n="Transversalis" m="Limbus"/>
+    <z n="Traumgestalt" m="Verständigung"/>
+    <z n="Unberührt von Satinav" m="Objekt,Temporal"/>
+    <z n="Unitatio" m="Verständigung,Kraft"/>
+    <z n="Unsichtbarer Jäger" m="Illusion"/>
+    <z n="Veränderung aufheben" m="Antimagie,Umwelt"/>
+    <z n="Verschwindibus" m="Limbus"/>
+    <z n="Verständigung stören" m="Antimagie,Verständigung"/>
+    <z n="Verwandlung beenden" m="Antimagie,Form"/>
+    <z n="Vipernblick" m="Einfluss"/>
+    <z n="Visibili" m="Form"/>
+    <z n="Vocolimbo" m="Illusion"/>
+    <z n="Vogelzwitschern" m="Illusion"/>
+    <z n="Wand aus Dornen" e="Humus"/>
+    <z n="Gletscherwand" e="Eis" s="275"/>
+    <z n="Wand aus Erz" e="Erz" s="275"/>
+    <z n="Wand aus Flammen" e="Feuer" s="275"/>
+    <z n="Wand aus Luft" e="Luft" s="275"/>
+    <z n="Warmes Blut" m="Eigenschaften,Hellsicht" e="Feuer"/>
+    <z n="Wasseratem" m="Form"/>
+    <z n="Weiches erstarre!" m="Umwelt" e="Erz"/>
+    <z n="Weihrauchwolke" m="Illusion"/>
+    <z n="Weisheit der Bäume" m="Form" e="Humus"/>
+    <z n="Weiße Mähn" m="Beschwörung"/>
+    <z n="Wellenlauf" m="Eigenschaften" e="Wasser"/>
+    <z n="Wettermeisterschaft" m="Umwelt" e="Luft"/>
+    <z n="Widerwille" m="Einfluss,Illusion" s="285"/>
+    <z n="Windhose" m="Umwelt" e="Luft"/>
+    <z n="Windstille" m="Umwelt" e="Luft"/>
+    <z n="Wipfellauf" m="Eigenschaften" e="Humus"/>
+    <z n="Xenographus" m="Hellsicht"/>
+    <z n="Zagibu Ubigaz" m="Objekt" e="Erz"/>
+    <z n="Zappenduster" m="Umwelt,Antimagie"/>
+    <z n="Zauberklinge" m="Objekt,Kraft"/>
+    <z n="Zaubernahrung" m="Eigenschaften,Einfluss"/>
+    <z n="Zauberwesen" m="Herbeirufung,Verständigung"/>
+    <z n="Zauberzwang" m="Herrschaft,Schaden"/>
+    <z n="Zorn der Elemente" m="Schaden" e=""/>
+    <z n="Zunge lähmen" m="Eigenschaften"/>
+    <z n="Zwingtanz" m="Herrschaft"/>
+  </zauber>
 </meta>
