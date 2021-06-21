@@ -326,12 +326,17 @@ return {
   --  <Art> muss der Name eines Kampftalents sein. Die restlichen Werte werden
   --  auf Basis der Art berechnet (insbesondere die eBE wird über den BE-Wert
   --  des referenzierten Talents gesetzt und fließt dann auch in AT und PA ein).
-  --  Kommt eine Waffenspezialisierung zum Tragen, kann in der Zeile zusätzlich
-  --  `spez=true` gesetzt werden, um AT und PA um je 1 zu erhöhen.
+  --  Entspricht der gegebene Name der Waffe nicht der Art der Waffe
+  --  (beispielsweise wenn der Held die persönliche Axt 'Haarspalter' führt, die
+  --  eine Orknase ist), dann kann zum Schluss `art="Orknase"` gesetzt werden.
+  --  Die Waffenart wird nicht auf dem Bogen ausgegeben, wird aber verwendet, um
+  --  AT/PA-Boni aufgrund von existierender Waffenspezialisierung anzuwenden.
   nahkampf = {
     {}, {}, {}, {}, {}
   },
   --  Fernkampfwaffen. Beispiel: TODO
+  --  Wie bei Nahkampfwaffen kann auch bei Fernkampfwaffen der benamte Wert
+  --  `art="…"` mit angegeben werden.
   --
   --    <Name> <Art> <TP> <Entfernungen> <TP/Entfernung> <Geschosse>
   fernkampf = {
