@@ -97,7 +97,15 @@ local function mod_tp(tp, schwelle, schritt)
   return tp
 end
 
-local function atpa_mod(basis, talent, schwelle, schritt, wm, spez)
+local function art(zeile)
+  if zeile.art ~= nil then
+    return zeile.art
+  else
+    return zeile[1]
+  end
+end
+
+local function atpa_mod(basis, talent, schwelle, schritt, wm, art, spez)
   local val = basis
   local cur_kk = data:cur("KK")
   if cur_kk ~= "" then
@@ -106,8 +114,13 @@ local function atpa_mod(basis, talent, schwelle, schritt, wm, spez)
       cur_kk = cur_kk + schritt
     end
   end
-  if spez then
-    val = val + 1
+  if art ~= nil and spez ~= nil then
+    for _, s in ipairs(spez) do
+      if s == art then
+        val = val + 1
+        break
+      end
+    end
   end
   return val + talent + wm
 end
@@ -216,14 +229,14 @@ nahkampf_render[11]= {false, function(v, talent, ebe)
   if talent == nil or #talent < 4 or atb == "" or #v < 8 then
     return
   end
-  tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4], v[5], v[6], v[8], v.spez))
+  tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4], v[5], v[6], v[8], art(v), talent.spez))
 end}
 nahkampf_render[12]= {false, function(v, talent, ebe)
   local pab = data:cur("PA")
   if talent == nil or #talent < 5 or pab == "" or #v < 9 then
     return
   end
-  tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[5], v[5], v[6], v[9], v.spez))
+  tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[5], v[5], v[6], v[9], art(v), talent.spez))
 end}
 nahkampf_render[13]= {false, function(v, talent, ebe)
   if #v < 6 then
@@ -254,11 +267,21 @@ local fernkampf_render = {
     render_tp(tp)
   end},
   [15]= {false, function(v, talent, ebe)
-    local fk = data:cur("FK")
-    if talent == nil or #talent < 6 or fk == "" then
+    local fk_basis = data:cur("FK")
+    if talent == nil or #talent < 6 or fk_basis == "" then
       return
     end
-    tex.sprint(-2, fk + talent[6] - ebe)
+    local fk = talent[6] - ebe
+    local a = art(v)
+    if talent.spez ~= nil then
+      for _, s in ipairs(talent.spez) do
+        if s == a then
+          fk = fk + 2
+          break
+        end
+      end
+    end
+    tex.sprint(-2, fk_basis + fk)
   end}
 }
 
@@ -281,7 +304,7 @@ local waffenlos_render = {
         atb = atb + 1
       end
     end
-    tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4], v[2], v[3], 0, false))
+    tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4], v[2], v[3], 0, nil, nil))
   end},
   [6]= {false, function(v, talent, ebe)
     local pab = data:cur("PA")
@@ -293,7 +316,7 @@ local waffenlos_render = {
         pab = pab + 1
       end
     end
-    tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[4], v[2], v[3], 0, false))
+    tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[4], v[2], v[3], 0, nil, nil))
   end},
   [7]= {false, function(v, talent, ebe)
     tp = mod_tp({dice=1, die=6, num=0}, v[2], v[3])

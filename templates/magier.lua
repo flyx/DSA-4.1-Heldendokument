@@ -308,10 +308,6 @@ return {
     --  Hinten steht, bei welchem Talent AT und PA um je 1 verbessert werden.
     --  Dies wird beim Berechnen der waffenlosen AT/PA mit eingerechnet.
     kampfstil = {},
-    --  Waffenspezialisierungen. Momentan ignoriert, TODO.
-    waffenspezialisierung = {},
-    --  Zauberspezialisierungen. Momentan ignoriert, TODO.
-    zauberspezialisierung = {},
 
     --  Die weiteren Sonderfertigkeiten werden nicht für Berechnungen benutzt
     --  und können frei als mehrzeilige Werte angegeben werden.

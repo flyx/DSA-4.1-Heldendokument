@@ -72,13 +72,22 @@ function gruppe.render(self, name, start_white)
 
   tex.sprint([[\\ \hline]])
   for i, v in ipairs(data.talente[name]) do
-    local vals = v
+    local vals = {unpack(v)}
     if be_col ~= -1 and #vals >= be_col then
-      vals = {unpack(vals)}
       -- replace dash with proper minus and x with proper times.
       local be = vals[be_col]
       be = string.gsub(string.gsub(be, "x", "×"), "-", "−")
       vals[be_col] = be
+    end
+    if v.spez ~= nil then
+      vals[1] = vals[1] .. " ("
+      for i, s in ipairs(v.spez) do
+        if i > 1 then
+          vals[1] = vals[1] .. ", "
+        end
+        vals[1] = vals[1] .. s
+      end
+      vals[1] = vals[1] .. ")"
     end
     if num_items == 1 then
       common.row(vals)

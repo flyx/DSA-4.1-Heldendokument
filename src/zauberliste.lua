@@ -199,6 +199,16 @@ function zauberliste.seite(start)
       z = {unpack(data.zauber[i])}
       z.haus = data.zauber[i].haus
       z.lernmod = data.zauber[i].lernmod
+      if data.zauber[i].spez ~= nil then
+        z[2] = z[2] .. " ("
+        for i, s in ipairs(data.zauber[i].spez) do
+          if i > 1 then
+            z[2] = z[2] .. ", "
+          end
+          z[2] = z[2] .. s
+        end
+        z[2] = z[2] .. ")"
+      end
     end
     while #z < 9 do
       if #z == 7 then

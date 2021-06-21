@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<xsl:transform version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:exslt="http://exslt.org/common"
     xmlns:func="http://exslt.org/functions"
     xmlns:dsa="https://flyx.org/dsa-4.1-heldendokument"
@@ -517,6 +517,31 @@
   },</xsl:text>
   </xsl:template>
 
+  <xsl:template match="talent|zauber" mode="spezialisierungen">
+    <xsl:variable name="name" select="@name"/>
+    <xsl:variable name="sfname">
+      <xsl:choose>
+        <xsl:when test="local-name() = 'talent'">
+          <xsl:text>Talentspezialisierung</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>Zauberspezialisierung</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="spez" select="../../sf/sonderfertigkeit[starts-with(@name, $sfname) and *[1]/@name = $name]"/>
+    <xsl:if test="$spez">
+      <xsl:text>, spez={</xsl:text>
+      <xsl:for-each select="$spez">
+        <xsl:if test="position() > 1">
+          <xsl:text>, </xsl:text>
+        </xsl:if>
+        <xsl:value-of select="concat('[[', spezialisierung/@name, ']]')"/>
+      </xsl:for-each>
+      <xsl:text>}</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="talent" mode="kampf">
     <xsl:variable name="name" select="@name"/>
     <xsl:variable name="def" select="$kampfTalente[@name=$name]"/>
@@ -542,6 +567,7 @@
     </xsl:choose>
     <xsl:text>, </xsl:text>
     <xsl:value-of select="@value"/>
+    <xsl:apply-templates select="." mode="spezialisierungen"/>
     <xsl:text>},</xsl:text>
   </xsl:template>
 
@@ -573,6 +599,7 @@
     </xsl:if>
     <xsl:text>", </xsl:text>
     <xsl:value-of select="@value"/>
+    <xsl:apply-templates select="." mode="spezialisierungen"/>
     <xsl:text>},</xsl:text>
   </xsl:template>
 
@@ -584,6 +611,7 @@
     <xsl:value-of select="dsa:probe(@probe)"/>
     <xsl:text>, </xsl:text>
     <xsl:value-of select="@value"/>
+    <xsl:apply-templates select="." mode="spezialisierungen"/>
     <xsl:text>},</xsl:text>
   </xsl:template>
 
@@ -606,6 +634,7 @@
     <xsl:value-of select="@k"/>
     <xsl:text>, </xsl:text>
     <xsl:value-of select="@value"/>
+    <xsl:apply-templates select="." mode="spezialisierungen"/>
     <xsl:text>},</xsl:text>
   </xsl:template>
 
@@ -1246,6 +1275,7 @@
     <xsl:if test="@hauszauber = 'true'">
       <xsl:text>, haus=true</xsl:text>
     </xsl:if>
+    <xsl:apply-templates select="." mode="spezialisierungen"/>
     <xsl:text>},</xsl:text>
   </xsl:template>
 
@@ -1321,4 +1351,4 @@
     <xsl:value-of select="substring-before(substring-after(@name, '('), ')')"/>
     <xsl:value-of select="concat('&quot;, ', @value, '}')"/>
   </xsl:template>
-</xsl:stylesheet>
+</xsl:transform>

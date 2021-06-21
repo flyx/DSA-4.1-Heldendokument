@@ -460,7 +460,6 @@
     <sf name="Waffe zerbrechen" art="nahkampf"/>
     <sf name="Waffenloser Kampfstil" art="waffenlos" named="1" id="kampfstil" boni="1"/>
     <sf name="Waffenmeister" art="nahkampf"/>
-    <sf name="Waffenspezialisierung" art="nahkampf" id="waffenspezialisierung" sub="talent" subsub="spezialisierung"/>
     <sf name="Windmühle" art="nahkampf"/>
     <sf name="Wuchtschlag" art="nahkampf"/>
     <sf name="Wurf" art="waffenlos"/>
@@ -469,7 +468,7 @@
     <sf name="Zauber vereinigen" art="magisch"/>
     <sf name="Zauberkontrolle" art="magisch"/>
     <sf name="Zauberroutine" art="magisch"/>
-    <sf name="Zauberspezialisierung" art="magisch" id="zauberspezialisierung" sub="zauber" subsub="spezialisierung"/>
+    <sf name="Zauberspezialisierung" art="magisch" sub="zauber" subsub="spezialisierung"/>
     <sf name="Zaubertanz" art="ritual" named="1"/>
     <sf name="Zauberzeichen" art="magisch" named="1"/>
     <sf name="Zibilja-Ritual" art="ritual" named="1"/>
