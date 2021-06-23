@@ -442,17 +442,21 @@
     <xsl:variable name="begabungen" select="../zauberliste/zauber[@repraesentation='Magiedilletant']"/>
     <xsl:text>
     gaben = {</xsl:text><xsl:apply-templates select="$gaben"/>
-    <xsl:call-template name="fill">
-      <xsl:with-param name="cur" select="count($gaben) + 1"/>
-      <xsl:with-param name="max" select="$min_gaben"/>
-    </xsl:call-template>
+      <xsl:if test="not($begabungen)">
+        <xsl:call-template name="fill">
+          <xsl:with-param name="cur" select="count($gaben) + 1"/>
+          <xsl:with-param name="max" select="$min_gaben"/>
+        </xsl:call-template>
+      </xsl:if>
     <xsl:text>
     },
     begabungen = {</xsl:text><xsl:apply-templates select="$begabungen" mode="begabungen"/>
-    <xsl:call-template name="fill">
-      <xsl:with-param name="cur" select="count($begabungen) + 1"/>
-      <xsl:with-param name="max" select="$min_begabungen"/>
-    </xsl:call-template>
+      <xsl:if test="not($gaben) and $begabungen">
+        <xsl:call-template name="fill">
+          <xsl:with-param name="cur" select="count($begabungen) + 1"/>
+          <xsl:with-param name="max" select="$min_gaben"/>
+        </xsl:call-template>
+      </xsl:if>
     <xsl:text>
     },
     kampf = {</xsl:text><xsl:apply-templates select="$kampf" mode="kampf"/>

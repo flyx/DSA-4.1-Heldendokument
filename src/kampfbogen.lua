@@ -150,7 +150,7 @@ local function kampfwerte(rows, render, typ_index, num_values)
     local ebe = 0
     if #v >= 1 and typ_index > 0 then
       local pattern = "^" .. v[typ_index]
-      for i,t in ipairs(data.talente.kampf) do
+      for i,t in ipairs(data.talente.Kampf) do
         if #t >= 1 then
           found, _ = string.find(t[1], pattern)
           if found ~= nil then

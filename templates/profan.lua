@@ -63,41 +63,24 @@
 --  Anzahl Zeilen in einer Tabelle bestimmt werden. Mehrzeilige Textwerte
 --  (Aussehen, Vorteile, Kleidung etc) haben dagegen eine feste Anzahl Zeilen.
 
-return {
-  dokument = {
-    --  Seiten, die gerendert werden sollten. Die Seiten werden in der
-    --  Reihenfolge der Nennung gerendert. Verfügbare Seiten sind:
-    --    "front"       => Frontseite des Heldenbogens
-    --    "talente"     => Talentbogen
-    --    "kampf"       => Kampfbogen
-    --    "ausruestung" => Ausrüstungsbogen
-    --    "liturgien"   => Liturgien & Ausrüstung. Ersetzt den Ausrüstungsbogen für Geweihte.
-    --    "zauberdok"   => Zauberdokument
-    --    "zauber"      => Zauberliste. Produziert mehrere Seiten wenn nötig.
-    seiten = {"front", "talente", "kampf", "ausruestung"},
-    --  Talentreihenfolge auf dem Talentbogen. Kann umsortiert werden, falls
-    --  die übliche Sortierung ungeschickt ist. Verfügbare Tabellen sind:
-    --    "sonderfertigkeiten" => Die Liste von Sonderfertigkeiten (außer Kampf)
-    --    "begabungen"         => Übernatürliche Begabungen
-    --    "gaben"              => Gaben
-    --    "kampf"              => Kampftechniken
-    --    "koerper"            => Körperliche Talente
-    --    "gesellschaft"       => Gesellschaftliche Talente
-    --    "natur"              => Naturtalente
-    --    "wissen"             => Wissenstalente
-    --    "sprachen"           => Sprachen & Schriften
-    --    "handwerk"           => Handwerkliche Talente
-    --  Die Tabellen werden automatisch auf zwei Seiten verteilt, so dass auf
-    --  beiden Seiten möglichst gleich viel Platz verwendet wird.
-    --  Enthält eine Tabelle keine Zeilen (standardmäßig beispielsweise
-    --  talente.begabungen), so wird diese Tabelle nicht ins Dokument
-    --  geschrieben.
-    talentreihenfolge = {
-      "sonderfertigkeiten", "gaben", "begabungen", "kampf", "koerper",
-      "gesellschaft", "natur", "wissen", "sprachen", "handwerk"
-    },
+Layout {
+  Front {},
+  Talentliste {
+    Sonderfertigkeiten(6),
+    Gaben(2),
+    Kampf(13),
+    Koerper(17),
+    Gesellschaft(9),
+    Natur(7),
+    Wissen(17),
+    Sprachen(10),
+    Handwerk(15)
   },
+  Kampfbogen {},
+  Ausruestungsbogen {}
+}
 
+return {
   -- Grundsätzliche Informationen zum Helden.
   held = {
     name         = "",
@@ -203,24 +186,21 @@ return {
     --    Name - Probe (3 Eigenschaften) - TaW
     --  Wenn nicht benötigt, kann `gaben = {}` gesetzt werden – dies verhindert,
     --  dass die Tabelle überhaupt ins Dokument geschrieben wird.
-    gaben = {
-      {}, {}
-    },
+    Gaben = {},
     --  Für übernatürliche Begabungen. Wird genauso behandelt wie gaben.
-    begabungen = {},
+    Begabungen = {},
     --  Kampftechniken. Jeder Wert erzeugt eine Zeile. Die Wertreihenfolge ist:
     --    Name - Steigerungsspalte - Behinderung - AT - PA - TaW
-    kampf = {
+    Kampf = {
       {"Dolche",                "D", "BE-1", "", "", ""},
       {"Hiebwaffen",            "D", "BE-4", "", "", ""},
       {"Raufen",                "C", "BE",   "", "", ""},
       {"Ringen",                "D", "BE",   "", "", ""},
-      {"Wurfmesser",            "C", "BE-3", "", "", ""},
-      {}, {}, {}, {}, {}, {}, {}, {}
+      {"Wurfmesser",            "C", "BE-3", "", "", ""}
     },
     --  Körperliche Talente. Jeder Wert erzeugt eine Zeile. Die Reihenfolge ist:
     --    Name - Probe (3 Eigenschaften) - Behinderung - TaW
-    koerper = {
+    Koerper = {
       {"Athletik",           "GE", "KO", "KK", "BEx2", ""},
       {"Klettern",           "MU", "GE", "KK", "BEx2", ""},
       {"Körperbeherrschung", "MU", "IN", "GE", "BEx2", ""},
@@ -232,47 +212,41 @@ return {
       {"Sinnesschärfe",      "KL", "IN", "IN", "–",    ""},
       {"Tanzen",             "CH", "GE", "GE", "BEx2", ""},
       {"Zechen",             "IN", "KO", "KK", "–",    ""},
-      {}, {}, {}, {}, {}, {},
     },
     --  Gesellschaftliche Talente. Jeder Wert erzeugt eine Zeile:
     --    Name - Probe (3 Eigenschaften) - TaW
-    gesellschaft = {
+    Gesellschaft = {
       {"Menschenkenntnis", "KL", "IN", "CH", ""},
       {"Überreden",        "MU", "IN", "CH", ""},
-      {}, {}, {}, {}, {}, {}, {}
     },
     --  Naturtalente. Jeder Wert erzeugt eine Zeile:
     --    Name - Probe (3 Eigenschaften) - TaW
-    natur = {
+    Natur = {
       {"Fährtensuchen", "KL", "IN", "IN", ""},
       {"Orientierung",  "KL", "IN", "IN", ""},
       {"Wildnisleben",  "IN", "GE", "KO", ""},
-      {}, {}, {}, {}
     },
     --  Wissenstalente. Jeder Wert erzeugt eine Zeile:
     --    Name - Probe (3 Eigenschaften) - TaW
-    wissen = {
+    Wissen = {
       {"Götter / Kulte",            "KL", "KL", "IN", ""},
       {"Rechnen",                   "KL", "KL", "IN", ""},
       {"Sagen / Legenden",          "KL", "IN", "CH", ""},
-      {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}
     },
     --  Sprachen und Schriften. Jeder Wert erzeugt eine Zeile:
     --    Name - Komplexität - TaW
-    sprachen = {
+    Sprachen = {
       {"Muttersprache: ", "", ""},
-      {}, {}, {}, {}, {}, {}, {}, {}, {}
     },
     --  Handwerkliche Talente. Jeder Wert erzeugt eine Zeile:
     --    Name - Probe (3 Eigenschaften) - TaW
-    handwerk = {
+    Handwerk = {
       {"Heilkunde Wunden", "KL", "CH", "FF", ""},
       {"Holzbearbeitung",  "KL", "FF", "KK", ""},
       {"Kochen",           "KL", "IN", "FF", ""},
       {"Lederarbeiten",    "KL", "FF", "FF", ""},
       {"Malen / Zeichnen", "KL", "IN", "FF", ""},
       {"Schneidern",       "KL", "FF", "FF", ""},
-      {}, {}, {}, {}, {}, {}, {}, {}, {}
     }
   },
   --  Sonderfertigkeiten. Diese werden an verschiedene Stellen im Dokument

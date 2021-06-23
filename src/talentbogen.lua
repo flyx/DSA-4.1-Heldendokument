@@ -4,27 +4,27 @@ local talentbogen = {}
 
 local gruppe = {
   labels = {
-    gesellschaft = "Gesellschaftliche Talente",
-    natur = "Naturtalente",
-    wissen = "Wissenstalente",
-    handwerk = "Handwerkstalente",
-    gaben    = "Gaben",
-    begabungen = "Übernatürliche Begabungen"
+    Gesellschaft = "Gesellschaftliche Talente",
+    Natur = "Naturtalente",
+    Wissen = "Wissenstalente",
+    Handwerk = "Handwerkstalente",
+    Gaben    = "Gaben",
+    Begabungen = "Übernatürliche Begabungen"
   }
 }
 
 function gruppe.spec(self, name)
-  if name == "sonderfertigkeiten" then
+  if name == "Sonderfertigkeiten" then
     return "Sonderfertigkeiten (außer Kampf)", 1, 0, 1, -1, "", ""
-  elseif name == "kampf" then
+  elseif name == "Kampf" then
     return "Kampftechniken", 3, 4.542, 7, 3,
         [[|x{0.4cm}|x{1cm}|x{0.65cm}@{\dotsep}x{0.65cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{BE} & \Th{AT} & \Th{PA} & \multicolumn{1}{c}{\Th{TaW}}]]
-  elseif name == "koerper" then
+  elseif name == "Koerper" then
     return "Körperliche Talente", 5, 4.6, 7, 5,
         [[|x{0.55cm}@{\dotsep}x{0.55cm}@{\dotsep}x{0.55cm}|x{1.0cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{BE} & \multicolumn{1}{c}{\Th{TaW}}]]
-  elseif name == "sprachen" then
+  elseif name == "Sprachen" then
     return "Sprachen & Schriften", 2, 6.8, 4, -1,
         [[|x{0.9cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{Komp} & \multicolumn{1}{c}{\Th{TaW}}]]
@@ -35,10 +35,12 @@ function gruppe.spec(self, name)
   end
 end
 
-function gruppe.render(self, name, start_white)
-  if #(data.talente[name]) == 0 then
+function gruppe.render(self, g, start_white)
+  local name = getmetatable(g).name
+  if #(data.talente[name]) == 0 and g() == 0 then
     return
   end
+
   label, title_col_len, item_name_len, num_items, be_col, col_spec, headers = self:spec(name)
   if data.m_spalte and item_name_len > 0 then
     item_name_len = item_name_len - 0.4
@@ -71,6 +73,9 @@ function gruppe.render(self, name, start_white)
   tex.sprint(headers)
 
   tex.sprint([[\\ \hline]])
+  while #data.talente[name] < g() do
+    table.insert(data.talente[name], {})
+  end
   for i, v in ipairs(data.talente[name]) do
     local vals = {unpack(v)}
     if be_col ~= -1 and #vals >= be_col then
@@ -101,22 +106,21 @@ function gruppe.render(self, name, start_white)
   tex.print([[\vspace{1.9pt}]])
 end
 
-function talentbogen.num_rows(name)
-  local ret = 6
-  if name == "sonderfertigkeiten" then
-    if data.sf.allgemein.zeilen ~= nil then
-      ret = data.sf.allgemein.zeilen
+function talentbogen.num_rows(g)
+  local ret = g()
+  local name = getmetatable(g).name
+  if name ~= "Sonderfertigkeiten" then
+    if #data.talente[name] > ret then
+      ret = #data.talente[name]
     end
-  else
-    ret = #data.talente[name]
   end
   return ret
 end
 
 function talentbogen.gruppen()
   local total_rows = 0
-  for i, talent in ipairs(data.dokument.talentreihenfolge) do
-    local v = talentbogen.num_rows(talent)
+  for i, g in ipairs(common.current_page) do
+    local v = talentbogen.num_rows(g)
     if v > 0 then
       total_rows = total_rows + v + 2
     end
@@ -125,8 +129,8 @@ function talentbogen.gruppen()
   local total_printed_rows = 0
   local start_white = true
   local swapped = false
-  for i, talent in ipairs(data.dokument.talentreihenfolge) do
-    local rows_to_print = talentbogen.num_rows(talent)
+  for i, g in ipairs(common.current_page) do
+    local rows_to_print = talentbogen.num_rows(g)
     --  size of heading
     if rows_to_print > 0 then
       rows_to_print = rows_to_print + 2
@@ -138,7 +142,9 @@ function talentbogen.gruppen()
       swapped = true
     end
 
-    if talent == "sonderfertigkeiten" then
+    local gruppe_id = getmetatable(g).name
+
+    if gruppe_id == "Sonderfertigkeiten" then
       tex.print([[\begin{NiceTabular}{p{.5\textwidth-.5\columnsep-.5\fboxsep-1pt}}]])
       if start_white then
         tex.print([[\CodeBefore\rowcolors{3}{white}{gray!30}\Body]])
@@ -153,7 +159,7 @@ function talentbogen.gruppen()
       tex.print("")
       tex.print([[\vspace{1.9pt}]])
     else
-      gruppe:render(talent, start_white)
+      gruppe:render(g, start_white)
     end
     if rows_to_print % 2 == 1 then
       start_white = not start_white

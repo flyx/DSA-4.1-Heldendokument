@@ -12,11 +12,14 @@ if i > #arg then
   tex.error("missing argument for hero data!")
 end
 
-local f = loadfile(arg[i], "t", {})
+local schema = require("schema")
+
+local f = loadfile(arg[i], "t", schema)
 if f == nil then
   tex.error("cannot read file: " .. arg[i])
 end
 local values = f()
+values.layout = schema.Layout:instance()
 
 local function sum_and_round(items, pos)
   local cur = nil

@@ -272,18 +272,20 @@ end
 common.value_line = value_line
 
 local pages_source = {
-  front       = "frontseite.tex",
-  talente     = "talentbogen.tex",
-  kampf       = "kampfbogen.tex",
-  ausruestung = "ausruestung.tex",
-  liturgien   = "liturgien.tex",
-  zauberdok   = "zauberdokument.tex",
-  zauber      = "zauberliste.tex"
+  Front             = "frontseite.tex",
+  Talentliste       = "talentbogen.tex",
+  Kampfbogen        = "kampfbogen.tex",
+  Ausruestungsbogen = "ausruestung.tex",
+  Liturgiebogen     = "liturgien.tex",
+  Zauberdokument    = "zauberdokument.tex",
+  Zauberliste       = "zauberliste.tex"
 }
 
 function common.pages()
-  for i, p in ipairs(data.dokument.seiten) do
-    tex.print("\\input{" .. pages_source[p] .. "}")
+  for i,p in ipairs(data.layout) do
+    local pKind = getmetatable(p).name
+    tex.print([[\directlua{common.current_page = data.layout[]] .. tostring(i) .. "]}")
+    tex.print("\\input{" .. pages_source[pKind] .. "}")
   end
 end
 

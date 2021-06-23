@@ -408,7 +408,7 @@
     <sf name="Meisterliche Zauberkontrolle" art="magisch" roman="2"/>
     <sf name="Meisterliches Entwaffnen" art="nahkampf"/>
     <sf name="Meisterparade" art="nahkampf"/>
-    <sf name="Meisterschütze" art="fernkampf"/>
+    <sf name="Meisterschütze" art="fernkampf" sub="talent"/>
     <sf name="Merkmalskenntnis" art="ignore" named="1"/>
     <sf name="Niederringen" art="waffenlos"/>
     <sf name="Niederwerfen" art="nahkampf"/>
