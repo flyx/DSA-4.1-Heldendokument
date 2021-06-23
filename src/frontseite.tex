@@ -33,9 +33,9 @@
 \begin{dsaSheetBox}[\textwidth]
     \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
         \directlua{common.multiline_content({
-            name="Aussehen", rows=data.held.aussehen.zeilen or 3,
+            name="Aussehen", rows=common.current_page.Aussehen(),
             baselinestretch=1.35, preamble="Aussehen",
-            hspace="10pt"}, data.held.aussehen)
+            hspace="10pt"}, data.Held.Aussehen)
         }
     \end{tabular}
 \end{dsaSheetBox}%
@@ -47,11 +47,12 @@
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
             \directlua{
-                local fixed = common.list_known(data.vorteile,
-                    {eisern = "Eisern", flink = "Flink"})
+                local fixed = common.list_known(data.Vorteile,
+                    {Eisern = "Eisern", Flink = "Flink"})
                 common.multiline_content({
-                    name="Vorteile", rows=data.vorteile.zeilen or 7, baselinestretch=1.35
-                }, data.vorteile, fixed, data.vorteile.magisch)
+                    name="Vorteile", rows=common.current_page.Vorteile(),
+                    baselinestretch=1.35
+                }, data.Vorteile, fixed, data.Vorteile.magisch)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -63,13 +64,13 @@
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
             \directlua{
-                local fixed = common.list_known(data.nachteile,
-                    {glasknochen = "Glasknochen", behaebig = "Behäbig",
-                        kleinwuechsig = "Kleinwüchsig", zwergenwuchs = "Zwergenwuchs"})
+                local fixed = common.list_known(data.Nachteile,
+                    {Glasknochen = "Glasknochen", Behaebig = "Behäbig",
+                        Kleinwuechsig = "Kleinwüchsig", Zwergenwuchs = "Zwergenwuchs"})
                 common.multiline_content({
-                    name="Nachteile", rows=data.nachteile.zeilen or 7,
+                    name="Nachteile", rows=common.current_page.Nachteile(),
                     baselinestretch=1.35
-                }, data.nachteile, fixed, data.nachteile.magisch)
+                }, data.Nachteile, fixed, data.Nachteile.magisch)
             }
         \end{tabular}
     \end{dsaSheetBox}

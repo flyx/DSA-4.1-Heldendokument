@@ -83,7 +83,7 @@ local MetaType = {
         return ret
       end,
       __call = function(self, value)
-        if type(value) ~= base then
+        if base ~= nil and type(value) ~= base then
           return self:err("%s als Argument erwartet, bekam %s", base, type(value))
         end
         local ret = construct(self, value)
@@ -183,6 +183,71 @@ local Record = Type("table",
   end
 )
 
+local ListWithKnown = Type("table",
+  function(known)
+    return known
+  end,
+  function(self, value)
+    local ret = {}
+    for _,v in ipairs(value) do
+      if type(v) ~= "string" then
+        return self:err("string in Liste erwartet, bekam %s", type(v))
+      end
+      local name = self[v]
+      if name ~= nil then
+        ret[name] = true
+      else
+        table.insert(ret, v)
+      end
+    end
+    for k,v in pairs(self) do
+      if ret[v] == nil then
+        ret[v] = false
+      end
+    end
+    return ret
+  end
+)
+
+local FixedList = Type("table",
+  function(inner, length)
+    return {inner = inner, length = length}
+  end,
+  function(self, value)
+    for i=1,self.length do
+      if #value == i - 1 then
+        self:err("zu wenige Werte, %d erwartet, bekam %d", self.length, #v)
+        errors = true
+      elseif i <= #value then
+        local v = value[i]
+        local mt = getmetatable(v)
+        context:push(self.name .. "[" .. tostring(i) .. "]")
+        if mt == nil or mt == string_metatable then
+          v = self.inner(v)
+          mt = getmetatable(v)
+          value[i] = v
+        end
+        if mt ~= Poison and mt ~= self.inner then
+          self:err("falscher Typ: erwartete %s, bekam %s", self.inner.name, mt.name)
+          errors = true
+        end
+        context:pop()
+      end
+    end
+    if #value > self.length then
+      self:err("zu viele Werte, %d erwartet, bekam %d", self.length, #v)
+      errors = true
+    end
+    for k,_ in pairs(value) do
+      if type(k) == "string" then
+        self:err("unbekannter Wert: %s", k)
+        errors = true
+      end
+    end
+    return errors and Poison or value
+  end
+)
+
 local Number = Type("number",
   function(min, max)
     return {min = min, max = max, __call = function(self) return self[1] end}
@@ -203,6 +268,45 @@ local String = Type("string",
     return {value}
   end
 )
+
+local Simple = Type(nil,
+  function()
+    return {__call = function(self) return self[1] end}
+  end,
+  function(self, value)
+    if type(value) ~= "string" and type(value) ~= "number" then
+      return self:err("string oder number als Argument erwartet, bekam %s", base, type(value))
+    end
+    return {value}
+  end
+)("Simple")
+
+local Multiline = Type(nil,
+  function()
+    return {}
+  end,
+  function(self, value)
+    if type(value) == "string" then
+      return {value}
+    elseif type(value) == "table" then
+      for k,v in pairs(value) do
+        if type(k) ~= "number" then
+          return self:err("unbekannter Wert in table: %s", k)
+        end
+        if type(v) == "table" then
+          for l,w in pairs(v) do
+            return self:err("string oder {} in Liste erwartet, bekam nicht-leere table")
+          end
+        elseif type(v) ~= "string" then
+          return self:err("string oder {} in Liste erwartet, bekam %s", type(v))
+        end
+      end
+      return value
+    else
+      return self:err("string oder table als Argument erwartet, bekam %s", type(value))
+    end
+  end
+)("Multiline")
 
 local Boolean = Type("bool",
   function()
@@ -226,7 +330,12 @@ local Void = Type("table",
 )
 
 local Zeilen = Number("Zeilen", 0, 100)
-local Front = Record("Front", {Aussehen = {Zeilen, 3} })
+
+local Front = Record("Front", {
+  Aussehen = {Zeilen, 3},
+  Vorteile = {Zeilen, 7},
+  Nachteile = {Zeilen, 7},
+})
 local Talentliste = MixedList("Talentliste",
   Number("Sonderfertigkeiten", 0, 100),
   Number("Gaben", 0, 100),
@@ -319,5 +428,79 @@ schema.Layout.default = {
   Zauberdokument {},
   Zauberliste {}
 }
+
+Record("Held", {
+  Name         = {Simple, ""},
+  GP           = {Simple, ""},
+  Rasse        = {Simple, ""},
+  Kultur       = {Simple, ""},
+  Profession   = {Simple, ""},
+  Geschlecht   = {Simple, ""},
+  Tsatag       = {Simple, ""},
+  Groesse      = {Simple, ""},
+  Gewicht      = {Simple, ""},
+  Haarfarbe    = {Simple, ""},
+  Augenfarbe   = {Simple, ""},
+  Stand        = {Simple, ""},
+  Sozialstatus = {Simple, ""},
+  Titel        = {Multiline, ""},
+  Aussehen     = {Multiline, ""},
+})
+schema.Held.singleton = true
+schema.Held.default = {}
+
+ListWithKnown("Vorteile", {
+  Flink = "Flink", Eisern = "Eisern"
+})
+schema.Vorteile.singleton = true
+schema.Vorteile.default = {}
+
+ListWithKnown("Vorteile.magisch", {
+  -- TODO: Astrale Regeneration
+})
+schema["Vorteile.magisch"].singleton = true
+schema["Vorteile.magisch"].default = {}
+schema.Vorteile.magisch = schema["Vorteile.magisch"]
+
+ListWithKnown("Nachteile", {
+  Glasknochen = "Glasknochen",
+  ["Behäbig"] = "Behaebig",
+  ["Kleinwüchsig"] = "Kleinwuechsig",
+  Zwergenwuchs = "Zwergenwuchs"
+})
+schema.Nachteile.singleton = true
+schema.Nachteile.default = {}
+
+ListWithKnown("Nachteile.magisch", {
+  -- TODO: Schwache Ausstrahlung
+})
+schema["Nachteile.magisch"].singleton = true
+schema["Nachteile.magisch"].default = {}
+schema.Nachteile.magisch = schema["Nachteile.magisch"]
+
+-- TODO: nicht-Ganzzahlen erkennen
+local Ganzzahl = Number("Ganzzahl", -1000, 1000)
+
+local BasisEig = FixedList("BasisEig", Ganzzahl, 3)
+local AbgeleiteteEig = FixedList("AbgeleiteteEig", Ganzzahl, 3)
+
+Record("Eigenschaften", {
+  MU = {BasisEig, {0, 0, 0}},
+  KL = {BasisEig, {0, 0, 0}},
+  IN = {BasisEig, {0, 0, 0}},
+  CH = {BasisEig, {0, 0, 0}},
+  FF = {BasisEig, {0, 0, 0}},
+  GE = {BasisEig, {0, 0, 0}},
+  KO = {BasisEig, {0, 0, 0}},
+  KK = {BasisEig, {0, 0, 0}},
+  LE = {AbgeleiteteEig, {0, 0, 0}},
+  AU = {AbgeleiteteEig, {0, 0, 0}},
+  AE = {AbgeleiteteEig, {0, 0, 0}},
+  MR = {AbgeleiteteEig, {0, 0, 0}},
+  KE = {AbgeleiteteEig, {0, 0, 0}},
+  INI = {Ganzzahl, 0},
+})
+schema.Eigenschaften.singleton = true
+schema.Eigenschaften.default = {}
 
 return schema

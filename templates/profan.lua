@@ -80,90 +80,30 @@ Layout {
   Ausruestungsbogen {}
 }
 
+Held {
+  Name = "Testos Testeros",
+  Stand = "Hoch",
+}
+
+Vorteile {
+  "Gebildet 5", "Flink"
+}
+
+Vorteile.magisch {
+  "Nix"
+}
+
+Nachteile {
+  "Gerechtigkeitswahn 10", "Behäbig", "Glasknochen"
+}
+
+Eigenschaften {
+  MU = {3, 4, 5},
+  KK = {3, 12, 14},
+  GE = {-2, 10, 9},
+}
+
 return {
-  -- Grundsätzliche Informationen zum Helden.
-  held = {
-    name         = "",
-    gp           = "",
-    rasse        = "",
-    kultur       = "",
-    profession   = "",
-    geschlecht   = "",
-    tsatag       = "",
-    groesse      = "",
-    gewicht      = "",
-    haarfarbe    = "",
-    augenfarbe   = "",
-    stand        = "",
-    sozialstatus = "",
-    --  Mehrzeilig, immer 4 Zeilen.
-    titel        = "",
-    --  Mehrzeilig, standardmäßig 3 Zeilen.
-    aussehen     = "",
-  },
-  --  Vorteile wie Nachteile haben eine allgemeine und eine magische Liste.
-  --  Die allgemeinen Vorteile stehen vornan und generieren einen mehrzeiligen
-  --  textuellen Wert. Hier kann auch `zeilen` gesetzt werden, um die
-  --  insgesamt verwendeten Zeilen auf der Frontseite anzugeben (Standard: 7).
-  --
-  --  Bestimmte Vor- und Nachteile (Eisern, Glasknochen etc)
-  --  werden als benamte Werte gesetzt, weil sie die Berechnung bestimmter Werte
-  --  verändern (etwa die Wundschwelle). Das Setzen des benamten Werts auf
-  --  `true` bedingt, dass der korrekte Name in den Text geschrieben
-  --  wird und die referenzierte Berechnung korrekt modifiziert wird.
-  --
-  --  Ist der benamte Tabellenwert `magisch` in den Vorteilen vorhanden, wird
-  --  die Astralenergie des Charakters berechnet. Der Tabellenwert kann eine
-  --  weitere Liste von Vor- bzw. Nachteilen enthalten, die hinter die
-  --  allgemeinen Vor-/Nachteile geschrieben werden; außerdem wird diese Liste
-  --  in die magischen Vor-/Nachteile auf dem Zauberdokument geschrieben.
-  vorteile = {
-    "",
-    eisern = false,
-    flink = false,
-    -- magisch = {}    -- Aktivieren für magisch begabte Charaktere
-  },
-  nachteile = {
-    "",
-    glasknochen = false,
-    behaebig = false,
-    kleinwuechsig = false,
-    zwergenwuchs = false,
-  },
-  --  Eigenschaften. Der erste Wert ist der Modifikator.
-  --  Bei Basis-Eigenschaften ist der zweite Wert der Startwert, der dritte Wert
-  --  der aktuelle Wert.
-  --  Bei abgeleiteten Eigenschaften ist der zweite Wert der zugekauft-Wert, der
-  --  dritte Wert die permanent verlorenen Punkte.
-  --  Werte die 0 sind, werden nicht ausgegeben; abgeleitete Werte, die von
-  --  Basiseigenschaften abhängen, die 0 sind, werden ebenfalls nicht ausgegeben.
-  eig = {
-    MU  = {0, 0, 0},
-    KL  = {0, 0, 0},
-    IN  = {0, 0, 0},
-    CH  = {0, 0, 0},
-    FF  = {0, 0, 0},
-    GE  = {0, 0, 0},
-    KO  = {0, 0, 0},
-    KK  = {0, 0, 0},
-    --  GS hängt komplett von den entsprechenden Vor- und Nachteilen sowie GE ab
-    LE  = {0, 0, 0},
-    AU  = {0, 0, 0},
-    AE  = {0, 0, 0},
-    MR  = {0, 0, 0},
-    --  Die zugekauften und permanenten Werte von Karmaenergie werden nicht in
-    --  den Bogen eingetragen, da sie regeltechnisch ebenso in den Modifikator
-    --  eingerechnet werden können und keine zusätzlichen Auswirkungen haben.
-    --  Werden hier Werte ungleich 0 eingegeben, fließen sie dennoch in den
-    --  aktuellen Wert mit ein.
-    KE  = {0, 0, 0},
-    --  INI hat ausschließlich den Modifikator, der von der Rasse kommen kann.
-    --  Der Modifikator von Kampfgespür und Kampfreflexe sollte hier nicht
-    --  eingetragen werden, dieser wird bereits mit eingerechnet, wenn die
-    --  Sonderfertigkeiten angekreuzt sind.
-    INI = {0},
-    --  Die restlichen Werte werden komplett automatisch berechnet.
-  },
   --  Abenteuerpunkte.
   ap = {
     gesamt = "",
@@ -194,8 +134,8 @@ return {
     Kampf = {
       {"Dolche",                "D", "BE-1", "", "", ""},
       {"Hiebwaffen",            "D", "BE-4", "", "", ""},
-      {"Raufen",                "C", "BE",   "", "", ""},
-      {"Ringen",                "D", "BE",   "", "", ""},
+      {"Raufen",                "C", "BE",   0, 0, 0},
+      {"Ringen",                "D", "BE",   0, 0, 0},
       {"Wurfmesser",            "C", "BE-3", "", "", ""}
     },
     --  Körperliche Talente. Jeder Wert erzeugt eine Zeile. Die Reihenfolge ist:

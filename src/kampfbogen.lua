@@ -408,10 +408,10 @@ function kampfbogen.ausweichen()
       val = val + 3
     end
   end
-  if data.vorteile.flink then
+  if data.Vorteile.Flink then
     val = val + 1
   end
-  if data.nachteile.behaebig then
+  if data.Nachteile.Behaebig then
     val = val - 1
   end
   for i,v in ipairs(data.talente.koerper) do

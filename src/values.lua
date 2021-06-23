@@ -19,7 +19,15 @@ if f == nil then
   tex.error("cannot read file: " .. arg[i])
 end
 local values = f()
-values.layout = schema.Layout:instance()
+values.Layout = schema.Layout:instance()
+values.Held = schema.Held:instance()
+values.Vorteile = schema.Vorteile:instance()
+values.Vorteile.magisch = schema.Vorteile.magisch:instance()
+values.Vorteile.magisch.asp = #values.Vorteile.magisch > 0
+
+values.Nachteile = schema.Nachteile:instance()
+values.Nachteile.magisch = schema.Nachteile.magisch:instance()
+values.eig = schema.Eigenschaften:instance()
 
 local function sum_and_round(items, pos)
   local cur = nil
@@ -43,7 +51,7 @@ local getter_map = {
     LE = function() return {"KO", "KO", "KK", div=2} end,
     AU = function() return {"MU", "KO", "GE", div=2} end,
     AE = function()
-      if data.vorteile.magisch then
+      if data.Vorteile.magisch.asp then
         if data.sf.magisch.gefaess_der_sterne then
           return {"MU", "IN", "CH", "CH", div=2}
         else
@@ -55,7 +63,7 @@ local getter_map = {
     end,
     MR = function() return {"MU", "KL", "KO", div=5} end,
     KE = function() return {"KE", hide_formula = true} end,
-    INI = function() return {"MU", "MU", "IN", "GE", div=5, add_sf=true} end,
+    INI = function() return {"MU", "MU", "IN", "GE", div=5} end,
     AT = function() return {"MU", "GE", "KK", div=5} end,
     PA = function() return {"IN", "GE", "KK", div=5} end,
     FK = function() return {"IN", "FF", "KK", div=5} end,
@@ -112,9 +120,9 @@ setmetatable(getter_map.calc, {
     for i,v in ipairs(vals) do
       local x = 0
       if v == "KE" then
-        x = data.eig.KE[1]
+        x = data.eig.KE[1]()
       else
-        x = data.eig[v][3]
+        x = data.eig[v][3]()
       end
       if x == 0 then
         return ""
@@ -125,25 +133,20 @@ setmetatable(getter_map.calc, {
     if val == 0 then
       return ""
     end
-    local others = data.eig[name]
-    if others and #others >= 1 then
-      -- Modifikator
-      val = val + others[1]
-      if #others >= 2 then
-        -- Zugekauft
-        val = val + others[2]
-        if #others >= 3 then
-          -- Permanent
-          val = val - others[3]
-        end
-      end
-    end
-    if vals.add_sf then
+
+    if name == "INI" then
+      val = val + data.eig["INI"]()
       if data.sf.kampfreflexe then
         val = val + 4
       end
       if data.sf.kampfgespuer then
         val = val + 2
+      end
+    else
+      local others = data.eig[name]
+      if others then
+        -- Modifikator, Zugekauft, Permanent
+        val = val + others[1]() + others[2]() - others[3]()
       end
     end
     return getter_map.sparse(val)
@@ -154,19 +157,19 @@ function values:cur(name, div)
   div = div or 1
   local kind = getter_map[name]
   if kind == "basic" then
-    return getter_map.sparse(self.eig[name][3], div)
+    return getter_map.sparse(self.eig[name][3](), div)
   elseif kind == "calculated" then
     return getter_map.calc(self, name)
   elseif kind == "gs_mod" then
     local ge = self:cur("GE")
     if ge ~= "" then
       local gsmod = 0
-      for i,v in ipairs({{"kleinwuechsig", -1}, {"zwergenwuchs", -2}, {"behaebig", -1}}) do
-        if self.nachteile[v[1]] then
+      for i,v in ipairs({{"Kleinwuechsig", -1}, {"Zwergenwuchs", -2}, {"Behaebig", -1}}) do
+        if self.Nachteile[v[1]] then
           gsmod = gsmod + v[2]
         end
       end
-      if self.vorteile.flink then
+      if self.Vorteile.Flink then
         gsmod = gsmod + 1
       end
       if ge < 10 then

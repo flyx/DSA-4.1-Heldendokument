@@ -282,9 +282,9 @@ local pages_source = {
 }
 
 function common.pages()
-  for i,p in ipairs(data.layout) do
+  for i,p in ipairs(data.Layout) do
     local pKind = getmetatable(p).name
-    tex.print([[\directlua{common.current_page = data.layout[]] .. tostring(i) .. "]}")
+    tex.print([[\directlua{common.current_page = data.Layout[]] .. tostring(i) .. "]}")
     tex.print("\\input{" .. pages_source[pKind] .. "}")
   end
 end

@@ -11,23 +11,23 @@ end
 
 local held_basis = {
   labels = {
-    name="Name", gp="GP-Basis", rasse="Rasse", kultur="Kultur", profession="Profession",
-    geschlecht="Geschlecht", tsatag="Tsatag", groesse="Größe",
-    gewicht="Gewicht", haarfarbe="Haarfarbe", augenfarbe="Augenfarbe",
-    stand="Stand", sozialstatus="Sozialstatus", titel="Titel"
+    Name="Name", GP="GP-Basis", Rasse="Rasse", Kultur="Kultur", Profession="Profession",
+    Geschlecht="Geschlecht", Tsatag="Tsatag", Groesse="Größe",
+    Gewicht="Gewicht", Haarfarbe="Haarfarbe", Augenfarbe="Augenfarbe",
+    Stand="Stand", Sozialstatus="Sozialstatus", Titel="Titel"
   }
 }
 
 function held_basis.top(self)
-  for i,n in ipairs({"name", "gp", "rasse", "kultur", "profession"}) do
+  for i,n in ipairs({"Name", "GP", "Rasse", "Kultur", "Profession"}) do
     local_heading(self.labels[n])
     tex.sprint("&")
     if i == 5 then
       tex.sprint([[\multicolumn{3}{l}{]])
-      tex.sprint(-2, data.held[n])
+      tex.sprint(-2, data.Held[n])
       tex.sprint("}")
     else
-      tex.sprint(-2, data.held[n])
+      tex.sprint(-2, data.Held[n])
     end
     if i % 2 == 0 then
       tex.sprint([[\\ \hline]])
@@ -38,30 +38,30 @@ function held_basis.top(self)
 end
 
 function held_basis.links(self)
-  for i,n in ipairs({"geschlecht", "tsatag", "groesse", "gewicht",
-                     "haarfarbe", "augenfarbe"}) do
+  for i,n in ipairs({"Geschlecht", "Tsatag", "Groesse", "Gewicht",
+                     "Haarfarbe", "Augenfarbe"}) do
     if i ~= 1 then
       tex.sprint([[\\ \hline]])
     end
     local_heading(self.labels[n])
     tex.sprint("&")
-    tex.sprint(-2, data.held[n])
+    tex.sprint(-2, data.Held[n])
   end
 end
 
 function held_basis.rechts(self)
-  for i,n in ipairs({"stand", "sozialstatus"}) do
+  for i,n in ipairs({"Stand", "Sozialstatus"}) do
     if i ~= 1 then
       tex.sprint([[\\ \hline]])
     end
     local_heading(self.labels[n])
     tex.sprint("&")
-    tex.sprint(-2, data.held[n])
+    tex.sprint(-2, data.Held[n])
   end
   tex.sprint([[\\ \hline]])
   common.multiline_content({
     name="Titel", rows=4, cols=2, col=[[p{.9\textwidth}]], baselinestretch=1.35,
-    preamble=self.labels["titel"], hspace="54.92pt"}, data.held.titel)
+    preamble=self.labels["Titel"], hspace="54.92pt"}, data.Held.Titel)
 end
 
 frontseite.held = held_basis
@@ -108,7 +108,7 @@ function eigenschaften.links(self)
       if j == 3 then
         tex.sprint([[\cellcolor{white}]])
       end
-      local val = data.eig[e][j]
+      local val = data.eig[e][j]()
       if j == 1 then
         tex.sprint(-2, eigenschaften.render_mod(val))
       elseif j == 2 and i ~= 9 then
@@ -198,10 +198,10 @@ function eigenschaften.rechts(self)
               end
               local base = data:cur("KO", 2/k)
               if base ~= "" then
-                if data.vorteile.eisern then
+                if data.Vorteile.Eisern then
                   base = base + 2
                 end
-                if data.nachteile.glasknochen then
+                if data.Nachteile.Glasknochen then
                   base = base - 2
                 end
                 tex.sprint(-2, common.round(base))
@@ -209,9 +209,9 @@ function eigenschaften.rechts(self)
             end
             tex.sprint([[\\\hline\end{tabular}}\egroup\par]])
             common.p([[
-              {\tiny\hspace{2pt}\directlua{common.checkbox(data.vorteile.eisern)} Eisern (WS+2)
+              {\tiny\hspace{2pt}\directlua{common.checkbox(data.Vorteile.Eisern)} Eisern (WS+2)
               \hfill
-              \directlua{common.checkbox(data.nachteile.glasknochen)} Glasknochen (WS−2)\hspace{2pt}}\\
+              \directlua{common.checkbox(data.Nachteile.Glasknochen)} Glasknochen (WS−2)\hspace{2pt}}\\
             ]])
 
             common.p([[
@@ -224,7 +224,11 @@ function eigenschaften.rechts(self)
         end
       else
         if j == 1 then
-          tex.sprint(-2, eigenschaften.render_mod(data.eig[e][1]))
+          if i == 6 then
+            tex.sprint(-2, eigenschaften.render_mod(data.eig[e]()))
+          else
+            tex.sprint(-2, eigenschaften.render_mod(data.eig[e][1]()))
+          end
         elseif j == 3 then
           tex.sprint([[\begin{minipage}[t][0.49em][b]{0.8cm}\centering\small]])
           val, label = self.max[e]()
@@ -239,7 +243,7 @@ function eigenschaften.rechts(self)
           tex.print()
           tex.print([[\vspace{1pt}\end{minipage}]])
         else
-          tex.sprint(-2, data.sparse(data.eig[e][j < 3 and j or j - 1]))
+          tex.sprint(-2, data.sparse(data.eig[e][j < 3 and j or j - 1]()))
         end
       end
     end
