@@ -44,25 +44,26 @@ local Kampfbogen = d.Record("Kampfbogen", {
 
 local Ausruestungsbogen = d.Record("Ausruestungsbogen", {
   Kleidung = {Zeilen, 5},
-  Gegenstaende = {Zeilen, 29},
+  Gegenstaende = {Zeilen, 33},
   Proviant = {Zeilen, 8},
   Vermoegen = {d.Record("Vermoegen", {
     Muenzen = {Zeilen, 4},
-    Sonstiges = {Zeilen, 5}
+    Sonstiges = {Zeilen, 7}
   }), {}},
-  Verbindungen = {Zeilen, 6},
+  Verbindungen = {Zeilen, 9},
   Notizen = {Zeilen, 7},
   Tiere = {Zeilen, 4},
 })
 
 local Liturgiebogen = d.Record("Liturgiebogen", {
   Kleidung = {Zeilen, 5},
+  Liturgien = {Zeilen, 27},
   Gegenstaende = {Zeilen, 29},
   ProviantVermoegen = {d.Record("ProviantVermoegen", {
     Gezaehlt = {Zeilen, 4},
     Sonstiges = {Zeilen, 5},
   }), {}},
-  VerbindungenNotizen = {Zeilen, 8},
+  VerbindungenNotizen = {Zeilen, 9},
   Tiere = {Zeilen, 4},
 })
 
@@ -277,5 +278,31 @@ schema.Waffen = {
     RBein = {Ganzzahl, 0},
   })) {},
 }
+
+d.singleton(d.Multiline, "Kleidung")
+d.singleton(d.MixedList, "Ausruestung", d.HeterogeneousList("Gegenstand", String, Simple, String))
+d.singleton(d.MixedList, "Proviant", d.HeterogeneousList("Rationen", String, Simple, Simple, Simple))
+
+local Muenzen = d.HeterogeneousList("Muenzen", String, Simple, Simple, Simple, Simple, Simple, Simple, Simple, Simple)
+
+d.singleton(d.MixedList, "Vermoegen", Muenzen) {
+  {"Dukaten", "", "", "", "", "", "", "", ""},
+  {"Silbertaler", "", "", "", "", "", "", "", ""},
+  {"Heller", "", "", "", "", "", "", "", ""},
+  {"Kreuzer", "", "", "", "", "", "", "", ""},
+}
+schema.Vermoegen.Sonstiges = d.singleton(d.Multiline, "Vermoegen.Sonstiges") {}
+
+d.singleton(d.Multiline, "Verbindungen")
+d.singleton(d.Multiline, "Notizen")
+
+local Tier = d.HeterogeneousList("Tier", String, String, Ganzzahl, Ganzzahl, Ganzzahl, Schaden, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl)
+d.singleton(d.MixedList, "Tiere", Tier)
+
+d.singleton(d.HeterogeneousList, "Liturgiekenntnis", String, Simple) {
+  "", ""
+}
+
+d.singleton(d.MixedList, "Liturgien", d.HeterogeneousList("Liturgie", Ganzzahl, String, String))
 
 return schema

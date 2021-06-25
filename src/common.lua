@@ -75,18 +75,15 @@ function common.padded_values(t, max_items, name)
   end
 end
 
-function common.inner_rows(v, num_items, num_rows, optional_addition)
+function common.inner_rows(v, num_items, num_rows)
   if num_rows == nil then
     num_rows = #v
   end
-  if #v > 0 then
+  if num_rows > 0 then
     local my_row = num_items > 1 and common.fixed_length_row(num_items, false) or common.row
     for i=1,num_rows do
       if i > #v then
-        if optional_addition ~= nil and #v + #(v[optional_addition]) <= num_rows
-            and i <= #v + #(v[optional_addition]) then
-          my_row(v[optional_addition][i - #v])
-        elseif num_items > 1 then
+        if num_items > 1 then
           my_row({})
         else
           my_row("")
@@ -216,7 +213,7 @@ function common.kenntnis(name, items)
     while #vals < 2 do
       table.insert(vals, "")
     end
-    tex.sprint(string.format([[\large\mansontt\bfseries %s & %s & \cellcolor{white}%s \\]], name, unpack(vals)))
+    tex.sprint(string.format([[\large\mansontt\bfseries %s & %s & \cellcolor{white}%s \\]], name, vals[1](), vals[2]()))
     if i ~= #items then
       tex.sprint([[\multicolumn{3}{c}{}\\[-9pt] ]])
     end
@@ -324,10 +321,10 @@ end
 
 function common.proviant_vermoegen()
   local content = {}
-  for i=1,4 do
+  for i=1,common.current_page.ProviantVermoegen.Gezaehlt() do
       local l = {}
-      merge(l, data.proviant[i])
-      merge(l, data.vermoegen[i])
+      merge(l, data.Proviant[i])
+      merge(l, data.Vermoegen[i])
       table.insert(content, l)
   end
 

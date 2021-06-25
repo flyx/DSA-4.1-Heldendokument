@@ -393,10 +393,7 @@ function kampfbogen.schilde()
 end
 
 function kampfbogen.ruestungsteile()
-  while #data.Waffen.R < common.current_page.Ruestung() do
-    table.insert(data.Waffen.R, {})
-  end
-  common.inner_rows(data.Waffen.R, 3)
+  common.inner_rows(data.Waffen.R, 3, common.current_page.Ruestung())
 end
 
 function kampfbogen.ruestung(name)

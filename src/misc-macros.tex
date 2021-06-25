@@ -7,10 +7,10 @@
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
             \directlua{
                 common.multiline_content({
-                    name="Kleidung", rows=data.kleidung.zeilen or 6,
+                    name="Kleidung", rows=common.current_page.Kleidung(),
                     preamble="\noexpand\\footnotesize Kleidung", hspace="5pt",
                     baselinestretch=1.033, fontsize={8,12}
-                }, data.kleidung)
+                }, data.Kleidung)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -28,7 +28,7 @@
         \Body
             \dsaTHeading{\Large Ausrüstung} & \normalfont\tiny\bfseries Gewicht & \normalfont\tiny\bfseries Wo getragen? \\ \hline
             \directlua{
-                common.inner_rows(data.ausruestung, 3)
+                common.inner_rows(data.Ausruestung, 3, common.current_page.Gegenstaende())
             }
         \end{NiceTabular}
     \end{dsaSheetBox}
@@ -43,7 +43,7 @@
     \begin{tabular}{p{5.3cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}}
         \dsaTHeading{\Large Proviant / Tränke} & \multicolumn{4}{c}{\normalfont\bfseries\scriptsize Rationen / Ladungen} \\ \hline
         \directlua{
-            common.inner_rows(data.proviant, 5)
+            common.inner_rows(data.proviant, 5, common.current_page.Proviant())
         }
     \end{tabular}
 \end{dsaSheetBox}
@@ -58,16 +58,16 @@
     \begin{tabular}{p{2.6cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}}
         \multicolumn{2}{l}{\dsaTHeading{\Large Vermögen}} & \multicolumn{7}{l}{\normalfont\tiny (1 Dukate = 10 Silbertaler = 100 Heller = 1000 Kreuzer)} \\ \hline
         \directlua{
-            common.inner_rows(data.vermoegen, 9)
+            common.inner_rows(data.Vermoegen, 9, common.current_page.Vermoegen.Muenzen())
         } \\ \hline%
     \end{tabular}
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
         \directlua{
             common.multiline_content({
-                name="Vermögen", rows=data.vermoegen.sonstiges.zeilen or 4,
+                name="Vermögen", rows=common.current_page.Vermoegen.Sonstiges(),
                 preamble="\noexpand\\footnotesize Sonstiges", hspace="5pt",
                 baselinestretch=1.033, fontsize={8,12}
-            }, data.vermoegen.sonstiges)
+            }, data.Vermoegen.Sonstiges)
         }
     \end{tabular}
 \end{dsaSheetBox}
@@ -89,10 +89,10 @@
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
         \directlua{
             common.multiline_content({
-                name="Vermögen", rows=data.vermoegen.sonstiges.zeilen or 4,
+                name="Vermögen", rows=common.current_page.ProviantVermoegen.Sonstiges(),
                 preamble="\noexpand\\footnotesize Sonstiges", hspace="5pt",
                 baselinestretch=1.033, fontsize={8,12}
-            }, data.vermoegen.sonstiges)
+            }, data.Vermoegen.Sonstiges)
         }
     \end{tabular}
 \end{dsaSheetBox}
@@ -103,10 +103,10 @@
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
             \directlua{
                 common.multiline_content({
-                    name="Verbindungen", rows=data.verbindungen.zeilen or 6,
+                    name="Verbindungen", rows=common.current_page.Verbindungen(),
                     preamble="\noexpand\\Large Verbindungen", hspace="5pt",
                     baselinestretch=1.033, fontsize={8,12}
-                }, data.verbindungen)
+                }, data.Verbindungen)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -117,10 +117,10 @@
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
             \directlua{
                 common.multiline_content({
-                    name="Notizen", rows=data.notizen.zeilen or 4,
+                    name="Notizen", rows=common.current_page.Notizen(),
                     preamble="\noexpand\\Large Notizen", hspace="5pt",
                     baselinestretch=1.033, fontsize={8,12}
-                }, data.notizen)
+                }, data.Notizen)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -136,15 +136,15 @@
             \dsaTHeading{\Large Verbindungen \& Notizen} \\ \hline
             \directlua{
                 local merged = {}
-                for _, v in ipairs(data.verbindungen) do
+                for _, v in ipairs(data.Verbindungen) do
                     table.insert(merged, v)
                 end
                 table.insert(merged, {})
-                for _, v in ipairs(data.notizen) do
+                for _, v in ipairs(data.Notizen) do
                     table.insert(merged, v)
                 end
                 common.multiline_content({
-                    name="Verbindungen und Notizen", rows=data.notizen.zeilen or 8,
+                    name="Verbindungen und Notizen", rows=common.current_page.VerbindungenNotizen(),
                     baselinestretch=1.033, fontsize={8,12}
                 }, merged)
             }
@@ -165,7 +165,7 @@
         \scriptsize\textbf{KO} & \scriptsize\textbf{GS} & \scriptsize\textbf{AU} & \scriptsize\textbf{MR} &
         \scriptsize\textbf{LO} & \scriptsize\textbf{TK} & \scriptsize\textbf{ZK} \\ \hline
         \directlua{
-            common.inner_rows(data.tiere, 15)
+            common.inner_rows(data.Tiere, 15, common.current_page.Tiere())
         }
     \end{tabular}
 \end{dsaSheetBox}
@@ -174,7 +174,7 @@
 \newcommand{\Liturgien}{%
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \directlua{
-            common.kenntnis("Liturgiekenntnis", {data.liturgien.kenntnis})
+            common.kenntnis("Liturgiekenntnis", {data.Liturgiekenntnis})
         }
 
         \vspace{13.5pt}
@@ -190,7 +190,7 @@
                     {1, "c|", "Seite"}, "Liturgie", "Grad")
             } \Xhline{2\arrayrulewidth}
             \directlua{
-                common.inner_rows(data.liturgien, 3)
+                common.inner_rows(data.Liturgien, 3, common.current_page.Liturgien())
             }
         \end{NiceTabular}
     \end{dsaSheetBox}

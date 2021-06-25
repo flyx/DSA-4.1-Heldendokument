@@ -77,7 +77,8 @@ Layout {
     Handwerk(15)
   },
   Kampfbogen {},
-  Ausruestungsbogen {}
+  Ausruestungsbogen {},
+  Liturgiebogen {}
 }
 
 Held {

@@ -45,6 +45,16 @@ values.Waffen = {
   S = schema.Waffen.Schilde:instance(),
   R = schema.Waffen.Ruestung:instance()
 }
+values.Kleidung = schema.Kleidung:instance()
+values.Ausruestung = schema.Ausruestung:instance()
+values.Proviant = schema.Proviant:instance()
+values.Vermoegen = schema.Vermoegen:instance()
+values.Vermoegen.Sonstiges = schema.Vermoegen.Sonstiges:instance()
+values.Verbindungen = schema.Verbindungen:instance()
+values.Notizen = schema.Notizen:instance()
+values.Tiere = schema.Tiere:instance()
+values.Liturgiekenntnis = schema.Liturgiekenntnis:instance()
+values.Liturgien = schema.Liturgien:instance()
 
 local function sum_and_round(items, pos)
   local cur = nil
