@@ -24,10 +24,14 @@ values.Held = schema.Held:instance()
 values.Vorteile = schema.Vorteile:instance()
 values.Vorteile.magisch = schema.Vorteile.magisch:instance()
 values.Vorteile.magisch.asp = #values.Vorteile.magisch > 0
-
 values.Nachteile = schema.Nachteile:instance()
 values.Nachteile.magisch = schema.Nachteile.magisch:instance()
 values.eig = schema.Eigenschaften:instance()
+values.AP = schema.AP:instance()
+values.Talente = {}
+for k,v in pairs(schema.Talente) do
+  values.Talente[k] = v:instance()
+end
 
 local function sum_and_round(items, pos)
   local cur = nil

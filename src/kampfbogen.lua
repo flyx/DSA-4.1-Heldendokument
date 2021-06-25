@@ -122,7 +122,10 @@ local function atpa_mod(basis, talent, schwelle, schritt, wm, art, spez)
       end
     end
   end
-  return val + talent + wm
+  if type(talent) == "number" then
+    val = val + talent
+  end
+  return val + wm
 end
 
 local function render_num(input)
@@ -150,13 +153,13 @@ local function kampfwerte(rows, render, typ_index, num_values)
     local ebe = 0
     if #v >= 1 and typ_index > 0 then
       local pattern = "^" .. v[typ_index]
-      for i,t in ipairs(data.talente.Kampf) do
+      for i,t in ipairs(data.Talente.Kampf) do
         if #t >= 1 then
-          found, _ = string.find(t[1], pattern)
+          found, _ = string.find(t[1](), pattern)
           if found ~= nil then
             talent = t
             if #talent >= 3 then
-              ebe = calc_be(talent[3])
+              ebe = calc_be(talent[3]())
             end
             break
           end
@@ -414,10 +417,10 @@ function kampfbogen.ausweichen()
   if data.Nachteile.Behaebig then
     val = val - 1
   end
-  for i,v in ipairs(data.talente.koerper) do
+  for i,v in ipairs(data.Talente.Koerper) do
     if #v >= 6 then
       found, _ = string.find(v[1], "^Akrobatik")
-      if found ~= nil then
+      if found ~= nil and type(v[6] == "number") then
         local x = v[6] - 11
         while x > 0 do
           val = val + 1

@@ -37,7 +37,7 @@ end
 
 function gruppe.render(self, g, start_white)
   local name = getmetatable(g).name
-  if #(data.talente[name]) == 0 and g() == 0 then
+  if #(data.Talente[name]) == 0 and g() == 0 then
     return
   end
 
@@ -73,26 +73,32 @@ function gruppe.render(self, g, start_white)
   tex.sprint(headers)
 
   tex.sprint([[\\ \hline]])
-  while #data.talente[name] < g() do
-    table.insert(data.talente[name], {})
+  while #data.Talente[name] < g() do
+    table.insert(data.Talente[name], {})
   end
-  for i, v in ipairs(data.talente[name]) do
-    local vals = {unpack(v)}
-    if be_col ~= -1 and #vals >= be_col then
-      -- replace dash with proper minus and x with proper times.
-      local be = vals[be_col]
-      be = string.gsub(string.gsub(be, "x", "×"), "-", "−")
-      vals[be_col] = be
-    end
-    if v.spez ~= nil then
-      vals[1] = vals[1] .. " ("
-      for i, s in ipairs(v.spez) do
-        if i > 1 then
-          vals[1] = vals[1] .. ", "
+  for i, v in ipairs(data.Talente[name]) do
+    local vals = {}
+    for j, w in ipairs(v) do
+      local input = w()
+      if j == 1 then
+        if v.spez ~= nil then
+          input = input .. " ("
+          for k, s in ipairs(v.spez) do
+            if k > 1 then
+              input = input .. ", "
+            end
+            input = input .. s
+          end
+          input = inpt .. ")"
         end
-        vals[1] = vals[1] .. s
+      elseif j == be_col then
+        if input == "-" then
+          input = "–"
+        else
+          input = string.gsub(string.gsub(input, "x", "×"), "-", "−")
+        end
       end
-      vals[1] = vals[1] .. ")"
+      table.insert(vals, input)
     end
     if num_items == 1 then
       common.row(vals)
@@ -110,8 +116,8 @@ function talentbogen.num_rows(g)
   local ret = g()
   local name = getmetatable(g).name
   if name ~= "Sonderfertigkeiten" then
-    if #data.talente[name] > ret then
-      ret = #data.talente[name]
+    if #data.Talente[name] > ret then
+      ret = #data.Talente[name]
     end
   end
   return ret

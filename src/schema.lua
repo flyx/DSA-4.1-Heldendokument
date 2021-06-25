@@ -59,8 +59,8 @@ local function geterr(self, key)
 end
 
 local Type = {
-  __call = function(self, ...)
-    return self:def(...)
+  __call = function(self, name, ...)
+    return self:def(name, ...)
   end
 }
 
@@ -121,8 +121,25 @@ local MixedList = Type("table",
   end,
   function(self, value)
     local errors = false
-    for _,v in ipairs(value) do
+    for i,v in ipairs(value) do
       local mt = getmetatable(v)
+      context:push(" [" .. tostring(i) .. "]")
+      if mt == nil or mt == string_metatable then
+        if #self == 1 then
+          v = self[1](v)
+          mt = getmetatable(v)
+          value[i] = v
+        else
+          local e = "("
+          for i,t in ipairs(self) do
+            if j > 1 then
+              e = e .. ","
+            end
+            e = e .. t.name
+          end
+          return self:err("enthält table ohne Typ. Erlaubt sind: %s", e)
+        end
+      end
       if mt ~= Poison then
         local found = false
         for _,t in ipairs(self) do
@@ -143,6 +160,7 @@ local MixedList = Type("table",
           errors = true
         end
       end
+      context:pop()
     end
     return errors and Poison or value
   end
@@ -248,6 +266,36 @@ local FixedList = Type("table",
   end
 )
 
+local HeterogeneousList = Type("table",
+  function(...)
+    return {...}
+  end,
+  function(self, value)
+    if #value ~= #self then
+      for _, v in ipairs(self) do
+        io.write("exp: " .. v.name .. "\n")
+      end
+      return self:err("falsche Anzahl Werte, %d erwartet, bekam %d", #self, #value)
+    end
+    local errors = false
+    for i,v in ipairs(value) do
+      local mt = getmetatable(v)
+      context:push(self.name .. "[" .. tostring(i) .. "]")
+      if mt == nil or mt == string_metatable then
+        v = self[i](v)
+        mt = getmetatable(v)
+        value[i] = v
+      end
+      if mt ~= Poison and mt ~= self[i] then
+        self:err("falscher Typ: erwartete %s, bekam %s", self[i].name, mt.name)
+        errors = true
+      end
+      context:pop()
+    end
+    return errors and Poison or value
+  end
+)
+
 local Number = Type("number",
   function(min, max)
     return {min = min, max = max, __call = function(self) return self[1] end}
@@ -266,6 +314,33 @@ local String = Type("string",
   end,
   function(self, value)
     return {value}
+  end
+)("String")
+
+local Matching = Type("string",
+  function(...)
+    local ret = {patterns = {}, __call = function(self) return self[1] end}
+    for _, p in ipairs({...}) do
+      table.insert(ret.patterns, "^" .. p .. "$")
+    end
+    return ret
+  end,
+  function(self, value)
+    for _, p in ipairs(self.patterns) do
+      local pos, _ = string.find(value, p)
+      if pos ~= nil then
+        return {value}
+      end
+    end
+    local l = "('"
+    for i, p in ipairs(self.patterns) do
+      if i > 1 then
+        l = l .. "', '"
+      end
+      l = l .. string.sub(p, 2, string.len(p) - 1)
+    end
+    l = l .. "')"
+    return self:err("Inhalt '%s' illegal, erwartet: %s", value, l)
   end
 )
 
@@ -328,6 +403,16 @@ local Void = Type("table",
     return value
   end
 )
+
+local function singleton(TypeClass, name, ...)
+  local type = TypeClass(name, ...)
+  type.singleton = true
+  type.default = {}
+  return function(default)
+    type.default = default
+    return type
+  end
+end
 
 local Zeilen = Number("Zeilen", 0, 100)
 
@@ -403,13 +488,10 @@ local Zauberdokument = Record("Zauberdokument", {
 
 local Zauberliste = Void("Zauberliste")
 
-MixedList("Layout",
+singleton(MixedList, "Layout",
   Front, Talentliste, Kampfbogen, Ausruestungsbogen, Liturgiebogen,
   Zauberdokument, Zauberliste
-)
-
-schema.Layout.singleton = true
-schema.Layout.default = {
+) {
   Front {},
   Talentliste {
     schema.Sonderfertigkeiten(6),
@@ -429,7 +511,7 @@ schema.Layout.default = {
   Zauberliste {}
 }
 
-Record("Held", {
+singleton(Record, "Held", {
   Name         = {Simple, ""},
   GP           = {Simple, ""},
   Rasse        = {Simple, ""},
@@ -446,45 +528,33 @@ Record("Held", {
   Titel        = {Multiline, ""},
   Aussehen     = {Multiline, ""},
 })
-schema.Held.singleton = true
-schema.Held.default = {}
 
-ListWithKnown("Vorteile", {
+singleton(ListWithKnown, "Vorteile", {
   Flink = "Flink", Eisern = "Eisern"
 })
-schema.Vorteile.singleton = true
-schema.Vorteile.default = {}
 
-ListWithKnown("Vorteile.magisch", {
+schema.Vorteile.magisch = singleton(ListWithKnown, "Vorteile.magisch", {
   -- TODO: Astrale Regeneration
-})
-schema["Vorteile.magisch"].singleton = true
-schema["Vorteile.magisch"].default = {}
-schema.Vorteile.magisch = schema["Vorteile.magisch"]
+}) {}
 
-ListWithKnown("Nachteile", {
+singleton(ListWithKnown, "Nachteile", {
   Glasknochen = "Glasknochen",
   ["Behäbig"] = "Behaebig",
   ["Kleinwüchsig"] = "Kleinwuechsig",
   Zwergenwuchs = "Zwergenwuchs"
 })
-schema.Nachteile.singleton = true
-schema.Nachteile.default = {}
 
-ListWithKnown("Nachteile.magisch", {
+schema.Nachteile.magisch = singleton(ListWithKnown, "Nachteile.magisch", {
   -- TODO: Schwache Ausstrahlung
-})
-schema["Nachteile.magisch"].singleton = true
-schema["Nachteile.magisch"].default = {}
-schema.Nachteile.magisch = schema["Nachteile.magisch"]
+}) {}
 
--- TODO: nicht-Ganzzahlen erkennen
+-- TODO: nicht-Ganzzahlen erkennen und Fehler werfen
 local Ganzzahl = Number("Ganzzahl", -1000, 1000)
 
 local BasisEig = FixedList("BasisEig", Ganzzahl, 3)
 local AbgeleiteteEig = FixedList("AbgeleiteteEig", Ganzzahl, 3)
 
-Record("Eigenschaften", {
+singleton(Record, "Eigenschaften", {
   MU = {BasisEig, {0, 0, 0}},
   KL = {BasisEig, {0, 0, 0}},
   IN = {BasisEig, {0, 0, 0}},
@@ -500,7 +570,72 @@ Record("Eigenschaften", {
   KE = {AbgeleiteteEig, {0, 0, 0}},
   INI = {Ganzzahl, 0},
 })
-schema.Eigenschaften.singleton = true
-schema.Eigenschaften.default = {}
+
+singleton(Record, "AP", {
+  Gesamt = {Simple, ""},
+  Eingesetzt = {Simple, ""},
+  Guthaben = {Simple, ""}
+})
+
+local SteigSpalte = Matching("SteigSpalte", "A%*?", "B", "C", "D", "E", "F", "G", "H")
+local Behinderung = Matching("Behinderung", "%-", "BE", "BE%-[1-9]", "BEx[2-9]")
+local Eigenschaft = Matching("Eigenschaft", "%*%*", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK")
+
+HeterogeneousList("KampfTalent",
+  String, SteigSpalte, Behinderung, Simple, Simple, Simple)
+HeterogeneousList("KoerperTalent", String, Eigenschaft, Eigenschaft, Eigenschaft, Behinderung, Simple)
+HeterogeneousList("Talent",
+  String, Eigenschaft, Eigenschaft, Eigenschaft, Simple)
+HeterogeneousList("Sprache", String, Simple, Simple)
+
+schema.Talente = {
+  Begabungen = singleton(MixedList, "Talente.Begabungen", schema.Talent) {},
+  Gaben = singleton(MixedList, "Talente.Gaben", schema.Talent) {},
+  Kampf = singleton(MixedList, "Talente.Kampf", schema.KampfTalent) {
+    {"Dolche",                "D", "BE-1", "", "", ""},
+    {"Hiebwaffen",            "D", "BE-4", "", "", ""},
+    {"Raufen",                "C", "BE",   "", "", ""},
+    {"Ringen",                "D", "BE",   "", "", ""},
+    {"Wurfmesser",            "C", "BE-3", "", "", ""},
+  },
+  Koerper = singleton(MixedList, "Talente.Koerper", schema.KoerperTalent) {
+    {"Athletik",           "GE", "KO", "KK", "BEx2", ""},
+    {"Klettern",           "MU", "GE", "KK", "BEx2", ""},
+    {"Körperbeherrschung", "MU", "IN", "GE", "BEx2", ""},
+    {"Schleichen",         "MU", "IN", "GE", "BE",   ""},
+    {"Schwimmen",          "GE", "KO", "KK", "BEx2", ""},
+    {"Selbstbeherrschung", "MU", "KO", "KK", "-",    ""},
+    {"Sich Verstecken",    "MU", "IN", "GE", "BE-2", ""},
+    {"Singen",             "IN", "CH", "CH", "BE-3", ""},
+    {"Sinnesschärfe",      "KL", "IN", "IN", "-",    ""},
+    {"Tanzen",             "CH", "GE", "GE", "BEx2", ""},
+    {"Zechen",             "IN", "KO", "KK", "-",    ""},
+  },
+  Gesellschaft = singleton(MixedList, "Talente.Gesellschaft", schema.Talent) {
+    {"Menschenkenntnis", "KL", "IN", "CH", ""},
+    {"Überreden",        "MU", "IN", "CH", ""},
+  },
+  Natur = singleton(MixedList, "Talente.Natur", schema.Talent) {
+    {"Fährtensuchen", "KL", "IN", "IN", ""},
+    {"Orientierung",  "KL", "IN", "IN", ""},
+    {"Wildnisleben",  "IN", "GE", "KO", ""},
+  },
+  Wissen = singleton(MixedList, "Talente.Natur", schema.Talent) {
+    {"Götter / Kulte",            "KL", "KL", "IN", ""},
+    {"Rechnen",                   "KL", "KL", "IN", ""},
+    {"Sagen / Legenden",          "KL", "IN", "CH", ""},
+  },
+  Sprachen = singleton(MixedList, "Talente.Sprachen", schema.Sprache) {
+    {"Muttersprache: ", "", ""},
+  },
+  Handwerk = singleton(MixedList, "Talente.Handwerk", schema.Talent) {
+    {"Heilkunde Wunden", "KL", "CH", "FF", ""},
+    {"Holzbearbeitung",  "KL", "FF", "KK", ""},
+    {"Kochen",           "KL", "IN", "FF", ""},
+    {"Lederarbeiten",    "KL", "FF", "FF", ""},
+    {"Malen / Zeichnen", "KL", "IN", "FF", ""},
+    {"Schneidern",       "KL", "FF", "FF", ""},
+  },
+}
 
 return schema
