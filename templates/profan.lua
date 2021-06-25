@@ -163,6 +163,32 @@ Talente.Handwerk {
   {"Schneidern",       "KL", "FF", "FF", ""},
 }
 
+SF {
+  "Kulturkunde (Almada)"
+}
+
+SF.Nahkampf {
+  Ausweichen {I, II},
+  "Kampfgespür", "Wuchtschlag",
+  Schildkampf {I},
+}
+
+SF.Fernkampf {
+  "Scharfschütze (Bogen)"
+}
+
+SF.Waffenlos {
+  Kampfstile {
+    ["Bornländisch"] = "Ringen",
+    ["Gladiatorenstil"] = "Raufen",
+  },
+  "Griff", "Fußfeger"
+}
+
+SF.Magisch {
+  "Gefäß der Sterne", "Zauberkontrolle"
+}
+
 return {
   --  Kann auf true gesetzt werden, um allen Talenten eine Spalte betitelt mit
   --  M hinzuzufügen. Diese ist dafür gedacht, benutzt zu werden, um
@@ -174,47 +200,6 @@ return {
   --      {"Athletik",           "GE", "KO", "KK", "BEx2", 0, m = "+"},
   m_spalte = false,
 
-  --  Sonderfertigkeiten. Diese werden an verschiedene Stellen im Dokument
-  --  verteilt.
-  sf = {
-    --  Drei Werte für Ausweichen I, II und III.
-    ausweichen = {false, false, false},
-    --  Diese drei Werte werden auf der Frontseite angezeigt.
-    gefaess_der_sterne = false,
-    kampfgespuer = false,
-    kampfreflexe = false,
-    --  Auf dem Kampfbogen
-    linkhand = false,
-    --  Zwei Werte für Parierwaffen I und II.
-    parierwaffen = {false, false},
-    --  Drei Werte für Rüstungsgewöhnung I, II und III.
-    ruestungsgewoehnung = {false, false, false},
-    --  Zwei Werte für Parierwaffen I und II.
-    schildkampf = {false, false},
-    --  Kampfstile. Diese müssen speziell angegeben werden:
-    --    kampfstil = {
-    --      ["Bornländisch"] = "Ringen",
-    --      ["Gladiatorenstil"] = "Raufen",
-    --    }
-    --  Vorne steht der Name des Kampfstils innerhalb von ["…"].
-    --  Hinten steht, bei welchem Talent AT und PA um je 1 verbessert werden.
-    --  Dies wird beim Berechnen der waffenlosen AT/PA mit eingerechnet.
-    kampfstil = {},
-
-    --  Die weiteren Sonderfertigkeiten werden nicht für Berechnungen benutzt
-    --  und können frei als mehrzeilige Werte angegeben werden.
-
-    --  Mehrzeilig, standardmäßig 6 Zeilen.
-    allgemein = "",
-    --  Mehrzeilig, standardmäßig 3 Zeilen.
-    nahkampf = "",
-    --  Mehrzeilig, standardmäßig 3 Zeilen.
-    fernkampf = "",
-    --  Mehrzeilig, standardmäßig 2 Zeilen.
-    waffenlos = "",
-    --  Mehrzeilig, standardmäßig 5 Zeilen.
-    magisch = "",
-  },
   --  Nahkampfwaffen. Beispiel:
   --
   --    {"Dolch", "Dolche", "H", "1W+1", 12, 5,  0,    0, -1, 0, 0}

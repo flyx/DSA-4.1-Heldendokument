@@ -302,7 +302,7 @@ local waffenlos_render = {
     if talent == nil or #talent < 4 or atb == "" or #v < 3 then
       return
     end
-    for _, t in pairs(data.sf.kampfstil) do
+    for _, t in pairs(data.sf.Waffenlos.Kampfstile) do
       if v[1] == t then
         atb = atb + 1
       end
@@ -314,7 +314,7 @@ local waffenlos_render = {
     if talent == nil or #talent < 4 or pab == "" or #v < 3 then
       return
     end
-    for _, t in pairs(data.sf.kampfstil) do
+    for _, t in pairs(data.sf.Waffenlos.Kampfstile) do
       if v[1] == t then
         pab = pab + 1
       end
@@ -349,20 +349,20 @@ local schilde_render = {
       if val == "" then
         return
       end
-      if data.sf.linkhand then
+      if data.sf.Nahkampf.Linkhand then
         val = val + 1
       end
       for i=1,2 do
-        if data.sf.schildkampf[i] then
+        if data.sf.Nahkampf.Schildkampf[i] then
           val = val + 2
         end
       end
       tex.sprint(-2, val + v[5])
     elseif v[2] == "Parierwaffe" then
       local val = v[5]
-      if data.sf.parierwaffen[2] then
+      if data.sf.Nahkampf.Parierwaffen[2] then
         val = val + 2
-      elseif data.sf.parierwaffen[1] then
+      elseif data.sf.Nahkampf.Parierwaffen[1] then
         val = val - 1
       else
         val = val - 4
@@ -407,7 +407,7 @@ function kampfbogen.ausweichen()
     val = val - be
   end
   for i=1,3 do
-    if data.sf.ausweichen[i] then
+    if data.sf.Nahkampf.Ausweichen[i] then
       val = val + 3
     end
   end

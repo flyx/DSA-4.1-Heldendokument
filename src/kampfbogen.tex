@@ -46,10 +46,10 @@
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
         \directlua{
             common.multiline_content({
-                name="Nahkampf-SF", rows=data.sf.nahkampf.zeilen or 3,
+                name="Nahkampf-SF", rows=common.current_page.Nahkampf.SF(),
                 preamble="\noexpand\\footnotesize Sonderfertigkeiten",
                 baselinestretch=1.04, hspace="5pt", fontsize={8,12}
-            }, data.sf.nahkampf)
+            }, data.sf.Nahkampf)
         }
     \end{tabular}
 \end{dsaSheetBox}
@@ -73,10 +73,10 @@
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
         \directlua{
             common.multiline_content({
-                name="Fernkampf-SF", rows=data.sf.fernkampf.zeilen or 3,
+                name="Fernkampf-SF", rows=common.current_page.Fernkampf.SF(),
                 preamble="\noexpand\\footnotesize Sonderfertigkeiten",
                 baselinestretch=1.04, hspace="5pt", fontsize={8,12}
-            }, data.sf.fernkampf)
+            }, data.sf.Fernkampf)
         }
     \end{tabular}
 \end{dsaSheetBox}
@@ -100,14 +100,14 @@
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
             \directlua{
                 local stile = {}
-                for k,v in pairs(data.sf.kampfstil) do
+                for k,v in pairs(data.sf.Waffenlos.Kampfstile) do
                     table.insert(stile, "Kampfstil " .. k)
                 end
                 common.multiline_content({
-                    name="Waffenlos-SF", rows=data.sf.waffenlos.zeilen or 3,
-                    preamble="\noexpand\\footnotesize Sonderfertigkeiten",
-                    baselinestretch=1.04, hspace="5pt", fontsize={8,12}
-                }, stile, data.sf.waffenlos)
+                  name="Waffenlos-SF", rows=common.current_page.Waffenlos.SF(),
+                  preamble="\noexpand\\footnotesize Sonderfertigkeiten",
+                  baselinestretch=1.04, hspace="5pt", fontsize={8,12}
+                }, stile, data.sf.Waffenlos)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -135,9 +135,10 @@
         \footnotesize\normalfont\bfseries\centering
         \directlua{
             common.checkboxlist({
-                {"Linkhand (PA+1)", data.sf.linkhand},
-                {{"Schildkampf I (PA+2)", "II (PA+2)"}, data.sf.schildkampf},
-                {{"Parierwaffen I", "II"}, data.sf.parierwaffen}
+                {"Linkhand (PA+1)", data.sf.Nahkampf.Linkhand},
+                {{"Schildkampf I (PA+2)", "II (PA+2)"},
+                    data.sf.Nahkampf.Schildkampf},
+                {{"Parierwaffen I", "II"}, data.sf.Nahkampf.Parierwaffen}
             })
         }
     \end{dsaSheetBox}
@@ -164,7 +165,7 @@
                     \normalfont\scriptsize\bfseries Rüstungsgewöhnung
                     \directlua{
                         common.checkboxlist({
-                            {{"I", "II", "III"}, data.sf.ruestungsgewoehnung}
+                            {{"I", "II", "III"}, data.sf.Nahkampf.Ruestungsgewoehnung}
                         })
                     }
 
@@ -189,7 +190,7 @@
                 \normalsize $+$ &
                 \begin{minipage}{2.5cm}
                     \centering
-                    \directlua{common.checkboxlist({{{"I", "II", "III"}, data.sf.ausweichen}})} \\
+                    \directlua{common.checkboxlist({{{"I", "II", "III"}, data.sf.Nahkampf.Ausweichen}})} \\
                     jeweils +3 \\
                     Flink (+1) / Behäbig (-1)?
                 \end{minipage}

@@ -203,24 +203,45 @@ local Record = Type("table",
 
 local ListWithKnown = Type("table",
   function(known)
-    return known
+    return {known = known}
   end,
   function(self, value)
     local ret = {}
     for _,v in ipairs(value) do
       if type(v) ~= "string" then
-        return self:err("string in Liste erwartet, bekam %s", type(v))
-      end
-      local name = self[v]
-      if name ~= nil then
-        ret[name] = true
+        local mt = getmetatable(v)
+        if mt == nil then
+          return self:err("string in Liste erwartet, bekam %s", type(v))
+        else
+          local def = self.known[mt.name]
+          if type(def) == "string" then
+            return self:err("string in Liste erwartet, bekam %s", type(v))
+          elseif def ~= mt then
+            return self:err("%s erwartet, bekam %s", def.name, mt.name)
+          else
+            ret[mt.name] = v
+          end
+        end
       else
-        table.insert(ret, v)
+        local name = self.known[v]
+        if name ~= nil then
+          if type(name) == "string" then
+            ret[name] = true
+          else
+            return self:err("der Wert %s muss mit einem Konstructor `%s {…}` angegeben werden.", v, v)
+          end
+        else
+          table.insert(ret, v)
+        end
       end
     end
-    for k,v in pairs(self) do
-      if ret[v] == nil then
-        ret[v] = false
+    for k,v in pairs(self.known) do
+      if type(v) == "string" then
+        if ret[v] == nil then
+          ret[v] = false
+        end
+      elseif ret[k] == nil then
+        ret[k] = v {}
       end
     end
     return ret
@@ -272,9 +293,6 @@ local HeterogeneousList = Type("table",
   end,
   function(self, value)
     if #value ~= #self then
-      for _, v in ipairs(self) do
-        io.write("exp: " .. v.name .. "\n")
-      end
       return self:err("falsche Anzahl Werte, %d erwartet, bekam %d", #self, #value)
     end
     local errors = false
@@ -291,6 +309,64 @@ local HeterogeneousList = Type("table",
         errors = true
       end
       context:pop()
+    end
+    return errors and Poison or value
+  end
+)
+
+local Numbered = Type("table",
+  function(max)
+    return {max=max}
+  end,
+  function(self, value)
+    local ret = {}
+    for i=1,self.max do
+      table.insert(ret, false)
+    end
+    local errors = false
+    for i, v in ipairs(value) do
+      context:push(self.name .. "[" .. tostring(i) .. "]")
+      if type(v) ~= "number" then
+        self:err("falscher Typ: erwartete number, bekam %s", type(v))
+        errors = true
+      elseif v < 1 or v > self.max then
+        self:err("Wert %d außerhalb des erlaubten Bereichs 1..%d", v, self.max)
+        errors = true
+      else
+        ret[i] = true
+      end
+      context:pop()
+    end
+    return errors and Poison or ret
+  end
+)
+
+local MapToFixed = Type("table",
+  function(...)
+    return {...}
+  end,
+  function(self, value)
+    local errors = false
+    for k,v in pairs(value) do
+      context:push(self.name .. "->" .. k)
+      local found = false
+      for _,e in ipairs(self) do
+        if v == e then
+          found = true
+          break
+        end
+      end
+      if not found then
+        local l = "('"
+        for i,e in ipairs(self) do
+          if i > i then
+            l = l .. "','"
+          end
+          l = l .. e
+        end
+        self:err("Unbekannter Wert '%s', erwartete %s')", v, l)
+        errors = true
+      end
     end
     return errors and Poison or value
   end
@@ -434,11 +510,6 @@ local Talentliste = MixedList("Talentliste",
   Number("Handwerk", 0, 100)
 )
 
-local WaffenUndSF = Record("WaffenUndSF", {
-  Waffen = {Zeilen, 5},
-
-})
-
 local Kampfbogen = Record("Kampfbogen", {
   Nahkampf = {Record("NahkampfWaffenUndSF", {
     Waffen = {Zeilen, 5},
@@ -480,6 +551,8 @@ local Liturgiebogen = Record("Liturgiebogen", {
 })
 
 local Zauberdokument = Record("Zauberdokument", {
+  VorUndNachteile = {Zeilen, 5},
+  Sonderfertigkeiten = {Zeilen, 5},
   Rituale = {Zeilen, 30},
   Ritualkenntnis = {Zeilen, 2},
   Artefakte = {Zeilen, 9},
@@ -637,5 +710,31 @@ schema.Talente = {
     {"Schneidern",       "KL", "FF", "FF", ""},
   },
 }
+
+singleton(ListWithKnown, "SF", {})
+
+schema.SF.Nahkampf = singleton(ListWithKnown, "SF.Nahkampf", {
+  Ausweichen = Numbered("Ausweichen", 3),
+  ["Kampfgespür"] = "Kampfgespuer",
+  Kampfreflexe = "Kampfreflexe",
+  Linkhand = "Linkhand",
+  Parierwaffen = Numbered("Parierwaffen", 2),
+  ["Ruestungsgewoehnung"] = Numbered("Ruestungsgewoehnung", 3),
+  Schildkampf = Numbered("Schildkampf", 2)
+}) {}
+
+schema.SF.Fernkampf = singleton(ListWithKnown, "SF.Fernkampf", {}) {}
+
+schema.SF.Waffenlos = singleton(ListWithKnown, "SF.Waffenlos", {
+  Kampfstile = MapToFixed("Kampfstile", "Raufen", "Ringen")
+}) {}
+
+schema.SF.Magisch = singleton(ListWithKnown, "SF.Magisch", {
+  ["Gefäß der Sterne"] = "GefaessDerSterne"
+}) {}
+
+schema.I = 1
+schema.II = 2
+schema.III = 3
 
 return schema

@@ -160,7 +160,7 @@ function talentbogen.gruppen()
       tex.sprint([[\setarstrut{\scriptsize}\multicolumn{1}{l}{\multirow{2}{*}{\Large \textmansontt{\bfseries Sonderfertigkeiten}}} \\ \restorearstrut]])
       tex.sprint([[\\ \hline]])
       common.multiline_content({
-        name="Sonderfertigkeiten", rows=rows_to_print - 2, baselinestretch=1.033}, data.sf.allgemein)
+        name="Sonderfertigkeiten", rows=rows_to_print - 2, baselinestretch=1.033}, data.sf.Allgemein)
       tex.print([[\hline\end{NiceTabular}]])
       tex.print("")
       tex.print([[\vspace{1.9pt}]])

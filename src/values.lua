@@ -32,6 +32,13 @@ values.Talente = {}
 for k,v in pairs(schema.Talente) do
   values.Talente[k] = v:instance()
 end
+values.sf = {
+  Allgemein = schema.SF:instance(),
+  Nahkampf = schema.SF.Nahkampf:instance(),
+  Fernkampf = schema.SF.Fernkampf:instance(),
+  Waffenlos = schema.SF.Waffenlos:instance(),
+  Magisch = schema.SF.Magisch:instance(),
+}
 
 local function sum_and_round(items, pos)
   local cur = nil
@@ -56,7 +63,7 @@ local getter_map = {
     AU = function() return {"MU", "KO", "GE", div=2} end,
     AE = function()
       if data.Vorteile.magisch.asp then
-        if data.sf.magisch.gefaess_der_sterne then
+        if data.sf.Magisch.GefaessDerSterne then
           return {"MU", "IN", "CH", "CH", div=2}
         else
           return {"MU", "IN", "CH", div=2}

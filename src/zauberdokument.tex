@@ -52,7 +52,7 @@
             \directlua{
                 common.multiline_content({
                     name="Magische Vor- und Nachteile",
-                    rows=data.vorteile.magisch.zeilen or 5,
+                    rows=common.current_page.VorUndNachteile(),
                     baselinestretch=1.033, fontsize={8,12}
                 }, data.Vorteile.magisch, data.Nachteile.magisch)
             }
@@ -68,9 +68,9 @@
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
                 common.multiline_content({
-                    name="Magische SF", rows=data.sf.magisch.zeilen or 5,
+                    name="Magische SF", rows=common.current_page.Sonderfertigkeiten(),
                     baselinestretch=1.033, fontsize={8,12}
-                }, data.sf.magisch)
+                }, data.sf.Magisch)
             } \hline
 
             \raggedright\normalsize \textmansontt{\textbf{Regeneration:}} \colorbox{white}{\parbox[c]{3cm}{\normalfont\centering\directlua{zauberdokument.asp_regeneration()}}} \textmansontt{\textbf{pro Phase}}
@@ -87,7 +87,7 @@
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
                 common.multiline_content({
-                    name="Artefakte", rows=data.magie.artefakte.zeilen or 9,
+                    name="Artefakte", rows=common.current_page.Artefakte(),
                     baselinestretch=1.033, fontsize={8,12}
                 }, data.magie.artefakte)
             }
@@ -104,7 +104,7 @@
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
                 common.multiline_content({
-                    name="Notizen", rows=data.magie.notizen.zeilen or 6,
+                    name="Notizen", rows=common.current_page.Notizen(),
                     baselinestretch=1.033, fontsize={8,12}
                 }, data.magie.notizen)
             }
