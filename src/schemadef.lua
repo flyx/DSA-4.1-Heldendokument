@@ -293,20 +293,28 @@ d.HeterogeneousList = Type("table",
     return {...}
   end,
   function(self, value)
-    if #value ~= #self then
-      return self:err("falsche Anzahl Werte, %d erwartet, bekam %d", #self, #value)
+    while #value < #self do
+      local def = self[#value + 1]
+      if def[3] == nil then
+        return self:err("Wert #%d (%s) fehlt", #value + 1, def[1])
+      end
+      table.insert(value, def[2](def[3]))
+    end
+    if #value > #self then
+      return self:err("zu viele Werte, %d erwartet, bekam %d", #self, #value)
     end
     local errors = false
     for i,v in ipairs(value) do
+      local def = self[i]
       local mt = getmetatable(v)
-      d.context:push(self.name .. "[" .. tostring(i) .. "]")
+      d.context:push(self.name .. "[" .. tostring(i) .. " (" .. def[1] ..")]")
       if mt == nil or mt == string_metatable then
-        v = self[i](v)
+        v = def[2](v)
         mt = getmetatable(v)
         value[i] = v
       end
-      if mt ~= Poison and mt ~= self[i] then
-        self:err("falscher Typ: erwartete %s, bekam %s", self[i].name, mt.name)
+      if mt ~= Poison and mt ~= def[2] then
+        self:err("falscher Typ: erwartete %s, bekam %s", def[2].name, mt.name)
         errors = true
       end
       d.context:pop()
@@ -404,6 +412,9 @@ d.Matching = Type("string",
     return ret
   end,
   function(self, value)
+    if value == "" then
+      return {value}
+    end
     for _, p in ipairs(self.patterns) do
       local pos, _ = string.find(value, p)
       if pos ~= nil then

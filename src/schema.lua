@@ -172,11 +172,11 @@ local Behinderung = d.Matching("Behinderung", "%-", "BE", "BE%-[1-9]", "BEx[2-9]
 local Eigenschaft = d.Matching("Eigenschaft", "%*%*", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK")
 
 d.HeterogeneousList("KampfTalent",
-  String, SteigSpalte, Behinderung, Simple, Simple, Simple)
-d.HeterogeneousList("KoerperTalent", String, Eigenschaft, Eigenschaft, Eigenschaft, Behinderung, Simple)
+  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"AT", Simple, ""}, {"PA", Simple, ""}, {"TaW", Simple, ""})
+d.HeterogeneousList("KoerperTalent", {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"BE", Behinderung, ""}, {"Taw", Simple, ""})
 d.HeterogeneousList("Talent",
-  String, Eigenschaft, Eigenschaft, Eigenschaft, Simple)
-d.HeterogeneousList("Sprache", String, Simple, Simple)
+  {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"TaW", Simple, ""})
+d.HeterogeneousList("Sprache", {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""})
 
 schema.Talente = {
   Begabungen = d.singleton(d.MixedList, "Talente.Begabungen", schema.Talent) {},
@@ -254,16 +254,16 @@ schema.I = 1
 schema.II = 2
 schema.III = 3
 
-local Distanzklasse = d.Matching("Distanzklasse", "[HNSP]+")
+local Distanzklasse = d.Matching("Distanzklasse", "[HNSP]*")
 local Schaden = d.Matching("Schaden", "[0-9]*W[0-9]*", "[0-9]*W[0-9]*[%+%-][0-9]+")
 
 schema.Waffen = {
   Nahkampf = d.singleton(d.MixedList, "Waffen.Nahkampf", d.HeterogeneousList("Nahkampfwaffe",
-      String, String, Distanzklasse, Schaden, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Simple, Simple)) {},
+      {"Name", String, ""}, {"Talent", String, ""}, {"DK", Distanzklasse, ""}, {"TP", Schaden, ""}, {"TP/KK Schwelle", Simple, ""}, {"TP/KK Schritt", Simple, ""}, {"INI", Simple, ""}, {"WM AT", Simple, ""}, {"WM PA", Simple, ""}, {"BF1", Simple, ""}, {"BF2", Simple, ""})) {},
   Fernkampf = d.singleton(d.MixedList, "Waffen.Fernkampf", d.HeterogeneousList("Fernkampfwaffe",
-      String, String, Schaden, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Simple, Simple, Simple)) {},
+      {"Name", String, ""}, {"Talent", String, ""}, {"TP", Schaden, ""}, {"Entfernung1", Simple, ""}, {"Entfernung2", Simple, ""}, {"Entfernung3", Simple, ""}, {"Entfernung4", Simple, ""}, {"Entfernung5", Simple, ""}, {"TP/Entfernung1", Simple, ""}, {"TP/Entfernung2", Simple, ""}, {"TP/Entfernung3", Simple, ""}, {"TP/Entfernung4", Simple, ""}, {"TP/Entfernung5", Simple, ""}, {"Geschosse1", Simple, ""}, {"Geschosse2", Simple, ""}, {"Geschosse3", Simple, ""})) {},
   Schilde = d.singleton(d.MixedList, "Waffen.Schilde", d.HeterogeneousList("Schild",
-      String, String, Ganzzahl, Ganzzahl, Ganzzahl, Simple, Simple)) {},
+      {"Name", String}, {"Typ", String}, {"INI", Ganzzahl}, {"WM AT", Ganzzahl}, {"WM PA", Ganzzahl}, {"BF1", Simple, ""}, {"BF2", Simple, ""})) {},
   Ruestung = d.singleton(d.MixedList, "Waffen.Ruestung", d.Record("Ruestungsteil", {
     [1] = {String, ""},
     [2] = {Ganzzahl, 0},
@@ -280,10 +280,10 @@ schema.Waffen = {
 }
 
 d.singleton(d.Multiline, "Kleidung")
-d.singleton(d.MixedList, "Ausruestung", d.HeterogeneousList("Gegenstand", String, Simple, String))
-d.singleton(d.MixedList, "Proviant", d.HeterogeneousList("Rationen", String, Simple, Simple, Simple))
+d.singleton(d.MixedList, "Ausruestung", d.HeterogeneousList("Gegenstand", {"Name", String}, {"Gewicht", Simple, ""}, {"Getragen", String, ""}))
+d.singleton(d.MixedList, "Proviant", d.HeterogeneousList("Rationen", {"Name", String}, {"Ration1", Simple, ""}, {"Ration2", Simple, ""}, {"Ration3", Simple, ""}, {"Ration4", Simple, ""}))
 
-local Muenzen = d.HeterogeneousList("Muenzen", String, Simple, Simple, Simple, Simple, Simple, Simple, Simple, Simple)
+local Muenzen = d.HeterogeneousList("Muenzen", {"Name", String, ""}, {"Wert1", Simple, ""}, {"Wert2", Simple, ""}, {"Wert3", Simple, ""}, {"Wert4", Simple, ""}, {"Wert5", Simple, ""}, {"Wert6", Simple, ""}, {"Wert7", Simple, ""}, {"Wert8", Simple, ""})
 
 d.singleton(d.MixedList, "Vermoegen", Muenzen) {
   {"Dukaten", "", "", "", "", "", "", "", ""},
@@ -296,13 +296,18 @@ schema.Vermoegen.Sonstiges = d.singleton(d.Multiline, "Vermoegen.Sonstiges") {}
 d.singleton(d.Multiline, "Verbindungen")
 d.singleton(d.Multiline, "Notizen")
 
-local Tier = d.HeterogeneousList("Tier", String, String, Ganzzahl, Ganzzahl, Ganzzahl, Schaden, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl, Ganzzahl)
+local Tier = d.HeterogeneousList("Tier", {"Name", String}, {"Art", String, ""}, {"INI", Simple, ""}, {"AT", Simple, ""}, {"PA", Simple, ""}, {"TP", Schaden, ""}, {"LE", Simple, ""}, {"RS", Simple, ""}, {"KO", Simple, ""}, {"KO", Simple, ""}, {"GS", Simple, ""}, {"AU", Simple, ""}, {"MR", Simple, ""}, {"LO", Simple, ""}, {"TK", Simple, ""}, {"ZK", Simple, ""})
 d.singleton(d.MixedList, "Tiere", Tier)
 
-d.singleton(d.HeterogeneousList, "Liturgiekenntnis", String, Simple) {
+d.singleton(d.HeterogeneousList, "Liturgiekenntnis", {"Gottheit", String, ""}, {"Wert", Simple, ""}) {
   "", ""
 }
 
-d.singleton(d.MixedList, "Liturgien", d.HeterogeneousList("Liturgie", Ganzzahl, String, String))
+d.singleton(d.MixedList, "Liturgien", d.HeterogeneousList("Liturgie", {"Seite", Simple, ""}, {"Name", String}, {"Grad", String, ""}))
+
+schema.Magie = {
+  Rituale = d.singleton(d.MixedList, "Magie.Rituale", d.HeterogeneousList("Ritual", {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"Dauer", Simple, ""}, {"Kosten", Simple, ""}, {"Wirkung", Simple, ""})) {},
+  Ritualkenntnis = d.singleton(d.MixedList, "Magie.Ritualkenntnis", d.HeterogeneousList("RK-Wert", {"Name", String}, {"Wert", Simple, ""}))
+}
 
 return schema
