@@ -1,5 +1,7 @@
 local data = require("values")
 local common = require("common")
+local schemadef = require("schemadef")
+local schema = require("schema")
 
 local kampfbogen = {}
 
@@ -152,7 +154,7 @@ local function kampfwerte(rows, render, typ_index, num_values)
     local talent = nil
     local ebe = 0
     if #v >= 1 and typ_index > 0 then
-      local pattern = "^" .. v[typ_index]
+      local pattern = "^" .. v[typ_index]()
       for i,t in ipairs(data.Talente.Kampf) do
         if #t >= 1 then
           found, _ = string.find(t[1](), pattern)
@@ -182,9 +184,9 @@ local function kampfwerte(rows, render, typ_index, num_values)
         local val = v[input_index]
         if val ~= nil then
           if render == nil then
-            tex.sprint(-2, val)
+            tex.sprint(-2, val())
           else
-            render(val)
+            render(val())
           end
         end
         input_index = input_index + 1
@@ -232,21 +234,21 @@ nahkampf_render[11]= {false, function(v, talent, ebe)
   if talent == nil or #talent < 4 or atb == "" or #v < 8 then
     return
   end
-  tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4], v[5], v[6], v[8], art(v), talent.spez))
+  tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4](), v[5](), v[6](), v[8](), art(v), talent.spez))
 end}
 nahkampf_render[12]= {false, function(v, talent, ebe)
   local pab = data:cur("PA")
   if talent == nil or #talent < 5 or pab == "" or #v < 9 then
     return
   end
-  tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[5], v[5], v[6], v[9], art(v), talent.spez))
+  tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[5](), v[5](), v[6](), v[9](), art(v), talent.spez))
 end}
 nahkampf_render[13]= {false, function(v, talent, ebe)
   if #v < 6 then
     return
   end
-  local tp = parse_tp(v[4])
-  tp = mod_tp(tp, v[5], v[6])
+  local tp = parse_tp(v[4]())
+  tp = mod_tp(tp, v[5](), v[6]())
   if tp ~= nil then
     render_tp(tp)
   end
@@ -256,7 +258,10 @@ for i=14,17 do
 end
 
 function kampfbogen.nahkampf()
-  kampfwerte(data.nahkampf, nahkampf_render, 2, 15)
+  while #data.Waffen.N < common.current_page.Nahkampf.Waffen() do
+    table.insert(data.Waffen.N, {})
+  end
+  kampfwerte(data.Waffen.N, nahkampf_render, 2, 15)
 end
 
 local fernkampf_render = {
@@ -274,7 +279,7 @@ local fernkampf_render = {
     if talent == nil or #talent < 6 or fk_basis == "" then
       return
     end
-    local fk = talent[6] - ebe
+    local fk = talent[6]() - ebe
     local a = art(v)
     if talent.spez ~= nil then
       for _, s in ipairs(talent.spez) do
@@ -293,7 +298,10 @@ for i=10,14 do
 end
 
 function kampfbogen.fernkampf()
-  kampfwerte(data.fernkampf, fernkampf_render, 2, 18)
+  while #data.Waffen.F < common.current_page.Fernkampf.Waffen() do
+    table.insert(data.Waffen.F, {})
+  end
+  kampfwerte(data.Waffen.F, fernkampf_render, 2, 18)
 end
 
 local waffenlos_render = {
@@ -303,11 +311,11 @@ local waffenlos_render = {
       return
     end
     for _, t in pairs(data.sf.Waffenlos.Kampfstile) do
-      if v[1] == t then
+      if v[1]() == t then
         atb = atb + 1
       end
     end
-    tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4], v[2], v[3], 0, nil, nil))
+    tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4](), v[2](), v[3](), 0, nil, nil))
   end},
   [6]= {false, function(v, talent, ebe)
     local pab = data:cur("PA")
@@ -319,10 +327,10 @@ local waffenlos_render = {
         pab = pab + 1
       end
     end
-    tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[4], v[2], v[3], 0, nil, nil))
+    tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[4](), v[2](), v[3](), 0, nil, nil))
   end},
   [7]= {false, function(v, talent, ebe)
-    tp = mod_tp({dice=1, die=6, num=0}, v[2], v[3])
+    tp = mod_tp({dice=1, die=6, num=0}, v[2](), v[3]())
     if tp ~= nil then
       render_tp(tp)
     end
@@ -330,7 +338,8 @@ local waffenlos_render = {
 }
 
 function kampfbogen.waffenlos()
-  kampfwerte({
+  local Ganzzahl = schema.Ganzzahl
+  kampfwerte(schemadef.MixedList("Waffenlos", schemadef.HeterogeneousList("Kampftalent", schema.String, schema.Ganzzahl, schema.Ganzzahl, schema.Ganzzahl)) {
     {"Raufen", 10, 3, 0},
     {"Ringen", 10, 3, 0}
   }, waffenlos_render, 1, 7)
@@ -344,7 +353,7 @@ local schilde_render = {
     if #v < 5 then
       return
     end
-    if v[2] == "Schild" then
+    if v[2]() == "Schild" then
       local val = data:cur("PA")
       if val == "" then
         return
@@ -357,9 +366,9 @@ local schilde_render = {
           val = val + 2
         end
       end
-      tex.sprint(-2, val + v[5])
-    elseif v[2] == "Parierwaffe" then
-      local val = v[5]
+      tex.sprint(-2, val + v[5]())
+    elseif v[2]() == "Parierwaffe" then
+      local val = v[5]()
       if data.sf.Nahkampf.Parierwaffen[2] then
         val = val + 2
       elseif data.sf.Nahkampf.Parierwaffen[1] then
@@ -369,7 +378,7 @@ local schilde_render = {
       end
       common.render_delta(val)
     else
-      tex.error("Typ muss 'Schild' oder 'Parierwaffe' sein: " .. v[2])
+      tex.error("Typ muss 'Schild' oder 'Parierwaffe' sein: " .. v[2]())
     end
   end},
   [7] = {true, render_num},
@@ -377,18 +386,29 @@ local schilde_render = {
 }
 
 function kampfbogen.schilde()
-  kampfwerte(data.schilde, schilde_render, 0, 8)
+  while #data.Waffen.S < common.current_page.Schilde() do
+    table.insert(data.Waffen.S, {})
+  end
+  kampfwerte(data.Waffen.S, schilde_render, 0, 8)
+end
+
+function kampfbogen.ruestungsteile()
+  while #data.Waffen.R < common.current_page.Ruestung() do
+    table.insert(data.Waffen.R, {})
+  end
+  common.inner_rows(data.Waffen.R, 3)
 end
 
 function kampfbogen.ruestung(name)
   local value = nil
-  for i,v in ipairs(data.ruestung) do
+
+  for i,v in ipairs(data.Waffen.R) do
     local item = v[name]
     if item ~= nil then
       if value == nil then
-        value = item
+        value = item()
       else
-        value = value + item
+        value = value + item()
       end
     end
   end

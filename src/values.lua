@@ -39,12 +39,18 @@ values.sf = {
   Waffenlos = schema.SF.Waffenlos:instance(),
   Magisch = schema.SF.Magisch:instance(),
 }
+values.Waffen = {
+  N = schema.Waffen.Nahkampf:instance(),
+  F = schema.Waffen.Fernkampf:instance(),
+  S = schema.Waffen.Schilde:instance(),
+  R = schema.Waffen.Ruestung:instance()
+}
 
 local function sum_and_round(items, pos)
   local cur = nil
   for i,v in ipairs(items) do
     if #v >= pos then
-      local num = tonumber(v[pos])
+      local num = tonumber(v[pos]())
       if num == nil then
         return ""
       elseif cur == nil then
@@ -199,16 +205,16 @@ function values:cur(name, div)
     end
     return 8 + gsmod
   elseif kind == "rs" then
-    return sum_and_round(self.ruestung, 2)
+    return sum_and_round(self.Waffen.R, 2)
   elseif kind == "be" or kind == "be_voll" then
-    local val = sum_and_round(self.ruestung, 3)
+    local val = sum_and_round(self.Waffen.R, 3)
     if val == "" then
       return val
     end
     if kind == "be" then
-      if self.sf.ruestungsgewoehnung[3] then
+      if self.sf.Nahkampf.Ruestungsgewoehnung[3] then
         val = val - 2
-      elseif self.sf.ruestungsgewoehnung[1] then
+      elseif self.sf.Nahkampf.Ruestungsgewoehnung[1] then
         val = val - 1
       end
       if val < 0 then

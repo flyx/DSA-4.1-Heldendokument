@@ -189,6 +189,22 @@ SF.Magisch {
   "Gefäß der Sterne", "Zauberkontrolle"
 }
 
+Waffen.Nahkampf {
+  {"Dolch", "Dolche", "H", "1W+1", 12, 5,  0,    0, -1, 0, 0}
+}
+
+Waffen.Fernkampf {
+  {"Leichte Armbrust", "Armbrust", "1W+6", 1, 0, 0, 0, -1, 1, 0, 0, -1, -2, "", "", ""}
+}
+
+Waffen.Schilde {
+  {"Lederschild", "Schild",  -1,  3, 2, "", ""}
+}
+
+Waffen.Ruestung {
+  {"Garether Platte", 4.7, 3.7, Brust=6, Ruecken=5, Bauch=6, LArm=5, RArm=5, LBein=4, RBein=4}
+}
+
 return {
   --  Kann auf true gesetzt werden, um allen Talenten eine Spalte betitelt mit
   --  M hinzuzufügen. Diese ist dafür gedacht, benutzt zu werden, um
@@ -199,60 +215,6 @@ return {
   --
   --      {"Athletik",           "GE", "KO", "KK", "BEx2", 0, m = "+"},
   m_spalte = false,
-
-  --  Nahkampfwaffen. Beispiel:
-  --
-  --    {"Dolch", "Dolche", "H", "1W+1", 12, 5,  0,    0, -1, 0, 0}
-  --     <Name>   <Art>     <DK> <TP>    <TP/KK> <INI> <WM>   <BF>
-  --
-  --  <Art> muss der Name eines Kampftalents sein. Die restlichen Werte werden
-  --  auf Basis der Art berechnet (insbesondere die eBE wird über den BE-Wert
-  --  des referenzierten Talents gesetzt und fließt dann auch in AT und PA ein).
-  --  Entspricht der gegebene Name der Waffe nicht der Art der Waffe
-  --  (beispielsweise wenn der Held die persönliche Axt 'Haarspalter' führt, die
-  --  eine Orknase ist), dann kann zum Schluss `art="Orknase"` gesetzt werden.
-  --  Die Waffenart wird nicht auf dem Bogen ausgegeben, wird aber verwendet, um
-  --  AT/PA-Boni aufgrund von existierender Waffenspezialisierung anzuwenden.
-  nahkampf = {
-    {}, {}, {}, {}, {}
-  },
-  --  Fernkampfwaffen. Beispiel: TODO
-  --  Wie bei Nahkampfwaffen kann auch bei Fernkampfwaffen der benamte Wert
-  --  `art="…"` mit angegeben werden.
-  --
-  --    <Name> <Art> <TP> <Entfernungen> <TP/Entfernung> <Geschosse>
-  fernkampf = {
-    {}, {}, {},
-  },
-  --  Hinweis: Waffenloser Kampf wird komplett automatisch berechnet.
-
-  --  Schilde und Parierwaffen.
-  --  Der Typ muss entweder "Schild" oder "Parierwaffe" sein. Beispiel:
-  --
-  --    {"Lederschild", "Schild",  -1,  3, 2, "", ""}
-  --     <Name>         <Typ>     <INI> <WM>  <BF>
-  schilde = {
-    {},
-    {},
-  },
-  --  Rüstung
-  --  Der RS und die BE der Rüstungsteile werden automatisch aufsummiert und in
-  --  die Zeile Summe geschrieben.
-  --  Dies geschieht nicht, wenn kein einziges Rüstungsteil einen Zahlenwert hat
-  --  oder wenn mindestens ein Rüstungsteil einen Wert hat, der keine Zahl ist.
-  --  In diesen Fällen bleiben die Felder leer.
-  --
-  --  Jedes Rüstungsstück hat die namenlosen Werte Name, gRS und gBE.
-  --  Kommazahlen benutzen den Punkt statt das Komma für die Dezimalziffern.
-  --  Dahinter können noch benamte Werte für die einzelnen Zonen stehen.
-  --  Zonennamen: kopf, brust, ruecken, l_arm, r_arm, bauch, r_bein, l_bein.
-  --
-  --  Beispiel:
-  --    {"Garether Platte", 4.7, 3.7, brust=6, ruecken=5, bauch=6,
-  --     l_arm=5, r_arm=5, l_bein=4, r_bein=4}
-  ruestung = {
-    {}, {}, {}, {}, {}, {},
-  },
 
   --  Mehrzeilig, standardmäßig 5 Zeilen.
   kleidung = "",

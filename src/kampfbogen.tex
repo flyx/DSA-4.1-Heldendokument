@@ -157,7 +157,7 @@
                 \dsaTHeading{RS} &
                 \dsaTHeading{BE} \\ \Xhline{2\arrayrulewidth}
                 \directlua{
-                    common.inner_rows(data.ruestung, 3)
+                    kampfbogen.ruestungsteile()
                 } \\ \Xhline{2\arrayrulewidth}
                 \normalfont\bfseries\scriptsize Summe &
                 \directlua{tex.sprint(data:cur("RS"))} & \directlua{tex.sprint(data:cur("BE_voll"))} \\ \Xhline{2\arrayrulewidth}
