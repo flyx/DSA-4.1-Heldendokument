@@ -52,10 +52,14 @@ local function err(v, msg, ...)
 end
 
 local function geterr(self, key)
-  if key == "err" then
-    return err
+  return function(syntax)
+    if key == "err" then
+      return err
+    elseif key == "print_syntax" then
+      return syntax
+    end
   end
-  return nil
+
 end
 
 local Type = {
@@ -65,7 +69,7 @@ local Type = {
 }
 
 local MetaType = {
-  __call = function(self, base, def, construct)
+  __call = function(self, base, def, construct, syntax)
     local ret = {
       def = function(self, name, ...)
         local ret = def(...)
@@ -80,6 +84,9 @@ local MetaType = {
         end
         setmetatable(ret, self)
         d.schema[name] = ret
+        if d.typelist ~= nil then
+          table.insert(d.typelist, ret)
+        end
         return ret
       end,
       __call = function(self, value)
@@ -203,11 +210,8 @@ d.Record = Type("table",
 )
 
 d.ListWithKnown = Type("table",
-  function(known, optional)
-    if optional == nil then
-      optional = {}
-    end
-    return {known = known, optional = optional}
+  function(known)
+    return {known = known}
   end,
   function(self, value)
     local ret = {}
@@ -244,7 +248,7 @@ d.ListWithKnown = Type("table",
         if ret[v] == nil then
           ret[v] = false
         end
-      elseif ret[k] == nil and not self.optional[k] then
+      elseif ret[k] == nil then
         ret[k] = v {}
       end
     end
@@ -506,11 +510,22 @@ function d.singleton(TypeClass, name, ...)
   end
 end
 
+function d:gendocs()
+  io.write("# Eingabedokumentation")
+  for _, t in self.typelist do
+    io.write("## " .. t.name .. "\n\n<pre><code>")
+    t:print_syntax()
+  end
+end
+
 setmetatable(d, {
-  __call = function(self)
+  __call = function(self, docgen)
     self.schema.String = self.String("String")
     self.schema.Simple = self.Simple("Simple")
     self.schema.Multiline = self.Multiline("Multiline")
+    if docgen then
+      self.typelist = {}
+    end
     return self.schema
   end
 })
