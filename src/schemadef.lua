@@ -203,8 +203,11 @@ d.Record = Type("table",
 )
 
 d.ListWithKnown = Type("table",
-  function(known)
-    return {known = known}
+  function(known, optional)
+    if optional == nil then
+      optional = {}
+    end
+    return {known = known, optional = optional}
   end,
   function(self, value)
     local ret = {}
@@ -241,7 +244,7 @@ d.ListWithKnown = Type("table",
         if ret[v] == nil then
           ret[v] = false
         end
-      elseif ret[k] == nil then
+      elseif ret[k] == nil and not self.optional[k] then
         ret[k] = v {}
       end
     end

@@ -305,9 +305,38 @@ d.singleton(d.HeterogeneousList, "Liturgiekenntnis", {"Gottheit", String, ""}, {
 
 d.singleton(d.MixedList, "Liturgien", d.HeterogeneousList("Liturgie", {"Seite", Simple, ""}, {"Name", String}, {"Grad", String, ""}))
 
+local Element = d.Matching("Element", "gesamt", "Eis", "Humus", "Feuer", "Wasser", "Luft", "Erz")
+local Elementar = d.MixedList("Elementar", Element)
+local Domaene = d.Matching("Domaene", "gesamt", "Blakharaz", "Belhalhar", "Charyptoroth", "Lolgramoth", "Thargunitoth", "Amazeroth", "Belshirash", "Asfaloth", "Tasfarelel", "Belzhorash", "Agrimoth", "Belkelel")
+local Daemonisch = d.MixedList("Daemonisch", Domaene)
+local Merkmale = d.ListWithKnown("Merkmale", {
+  Elementar = Elementar,
+  Daemonisch = Daemonisch
+}, { -- optional
+  Elementar = true,
+  Daemonisch = true,
+})
+
+local function merkmale(name)
+  return d.singleton(d.ListWithKnown, name, {
+    Elementar = Elementar,
+    Daemonisch = Daemonisch
+  }, { -- optional
+    Elementar = true,
+    Daemonisch = true,
+  }) {}
+end
+
 schema.Magie = {
   Rituale = d.singleton(d.MixedList, "Magie.Rituale", d.HeterogeneousList("Ritual", {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"Dauer", Simple, ""}, {"Kosten", Simple, ""}, {"Wirkung", Simple, ""})) {},
   Ritualkenntnis = d.singleton(d.MixedList, "Magie.Ritualkenntnis", d.HeterogeneousList("RK-Wert", {"Name", String}, {"Wert", Simple, ""}))
+  Regeneration = d.singleton(d.Simple, "Magie.Regeneration") "",
+  Artefakte = d.singleton(d.Multiline, "Magie.Artefakte") {},
+  Notizen = d.singleton(d.Multiline, "Magie.Notizen") {},
+  Repraesentationen = d.singleton(d.MixedList, "Magie.Repraesentationen", d.Matching("Repraesentation", "Ach", "Alh", "Bor", "Dru", "Dra", "Elf", "Fee", "Geo", "Gro", "Gül", "Kob", "Kop", "Hex", "Mag", "Mud", "Nac", "Srl", "Sch")) {},
+  Merkmalskenntnis = merkmale("Magie.Merkmalskenntnis"),
+  Begabungen = merkmale("Magie.Begabungen"),
+  Unfaehigkeiten = merkmale("Magie.Unfaehigkeiten"),
 }
 
 return schema
