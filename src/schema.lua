@@ -347,9 +347,10 @@ if gendoc then
   if standalone then
     io.write([[
 <!doctype html>
-<html lang="de">
+<html lang="de" style="background-color: darkslategray;">
   <head>
     <title>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</title>
+    <link rel="stylesheet" href="code.css"/>
   </head>
   <body>
 ]])

@@ -70,7 +70,7 @@ function syntax_printer:sym(s)
 end
 
 function syntax_printer:ph(name)
-  io.write([[<span class="placeholder">&lt;]])
+  io.write([[<span class="metasym">&lt;]])
   io.write(name)
   io.write([[&gt;</span>]])
 end
@@ -213,6 +213,11 @@ local MetaType = {
           end
           syntax(self, printer)
           printer:close()
+        elseif self.force_named then
+          printer:id(self.name)
+          printer:sym("(")
+          syntax(self, printer)
+          printer:sym(")")
         else
           syntax(self, printer)
         end
@@ -780,8 +785,8 @@ function d:singleton(TypeClass, name, doc, ...)
 end
 
 function d:gendocs()
-  io.write("<h1>Dokumentation Eingabedaten</h1>\n\n")
-  io.write("<h2>Grundsätzliche Struktur</h2>\n\n<pre><code>")
+  io.write("<article class=\"doc\">\n\n<section><h1>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</h1>\n\n")
+  io.write("<p>Grundsätzliche Struktur:</p>\n\n<pre><code>")
   for _, t in ipairs(self.typelist) do
     io.write([[<a href="#]])
     io.write(t.name)
@@ -805,7 +810,9 @@ function d:gendocs()
   Wird ein Element nicht angegeben, erhält es einen Standard-Wert, was in der Regel bedeutet, dass die Daten leer sind.
   Die Ausnahme ist <code>Layout</code>, dessen Standardwert alle verfügbaren Seiten generiert.
   Dies eignet sich als Kopiervorlage, aber für einen spezifischen Helden ist es eher unnütz, da man kaum sowohl Ausrüstungs- wie auch Liturgiebogen benötigt.</p>]])
-  io.write([[<h2>Grundlegende Typen</h2>\n\n<p>
+  io.write([[</section><section><h2>Grundlegende Typen</h2>
+
+  <p>
   Die im Folgenden definierten Typen werden an vielen Stellen für Werte benutzt.</p>]])
   for _, n in ipairs({"String", "Ganzzahl", "Simple", "Boolean", "Multiline"}) do
     io.write([[<h3 id="]] .. n .. [[">]] .. n .. "</h3>\n\n<pre><code>")
@@ -817,7 +824,7 @@ function d:gendocs()
     io.write("</p>")
   end
   for _, t in ipairs(self.typelist) do
-    io.write([[<h2 id="]])
+    io.write([[</section><section><h2 id="]])
     io.write(t.name)
     io.write([[">]])
     io.write(t.name)
@@ -842,13 +849,14 @@ function d:gendocs()
         table.remove(refs)
       end
       syntax_printer.known[cur] = true
-      io.write("<h" .. tostring(depth + 1) .. [[ id="]] .. cur.name .. [[">]] .. cur.name .. "</h2>\n\n<pre><code>")
+      io.write("<h" .. tostring(depth + 2) .. [[ id="]] .. cur.name .. [[">]] .. cur.name .. "</h2>\n\n<pre><code>")
       cur:print_syntax(syntax_printer)
       io.write("</code></pre>\n\n<p>")
       io.write(cur.documentation)
       io.write("</p>\n\n")
     end
   end
+  io.write("</section></article>")
 end
 
 setmetatable(d, {

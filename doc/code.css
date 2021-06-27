@@ -1,0 +1,63 @@
+article.doc {
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+article.doc section {
+  background-color: white;
+  margin-top: .5em;
+  margin-bottom: .5em;
+  padding: 0;
+  overflow: auto; /* prevent margin collapse */
+}
+
+article.doc section p {
+  margin: .5em;
+}
+
+article.doc h1,
+article.doc h2 {
+  margin-top: 0;
+  padding: .25em .5em;
+  background-color: rgb(141, 131, 148);
+  font-size: large;
+}
+
+article.doc h1 {
+  text-align: center;
+}
+
+article.doc h3,
+article.doc h4,
+article.doc h5,
+article.doc h6 {
+  font-size: medium;
+  padding: .5em;
+}
+
+pre {
+  background-color: rgb(238, 238, 238);
+  padding: .5em .75em;
+  margin-left: 1.5em;
+  margin-right: 1.5em;
+  border-radius: .67em;
+  white-space: pre-wrap;
+}
+
+code .metasym {
+  font-weight: bold;
+  color: gray;
+}
+
+code .num {
+  color: darkblue;
+}
+
+code .id {
+  font-style: italic;
+}
+
+code .sym {
+  font-weight: bold;
+}
