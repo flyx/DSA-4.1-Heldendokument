@@ -163,9 +163,10 @@ local Type = {
 local MetaType = {
   __call = function(self, base, def, construct, syntax)
     local ret = {
-      def = function(self, name, ...)
+      def = function(self, name, doc, ...)
         local ret = def(...)
         ret.name = name
+        ret.documentation = doc
         ret.instance = function(self)
           --  only used on singleton types
           if self.value == nil then
@@ -302,9 +303,34 @@ d.MixedList = Type("table",
   end
 )
 
+local function rec_print(v)
+  if type(v) == "table" then
+    io.write("{")
+    for k,w in pairs(v) do
+      io.write("[")
+      rec_print(k)
+      io.write("]=")
+      rec_print(w)
+      io.write(",")
+    end
+    io.write("}")
+  elseif type(v) == "string" then
+    io.write("[[")
+    io.write(v)
+    io.write("]]")
+  else
+    io.write(v)
+  end
+end
+
 d.Record = Type("table",
-  function(defs)
-    return {defs = defs}
+  function(...)
+    local ret = {defs = {}, order = {}}
+    for _,f in ipairs({...}) do
+      ret.defs[f[1]] = {f[2], f[3]}
+      table.insert(ret.order, f[1])
+    end
+    return ret
   end,
   function(self, value)
     local errors = false
@@ -330,6 +356,9 @@ d.Record = Type("table",
     end
     for k,v in pairs(self.defs) do
       if value[k] == nil then
+        if v[1] == nil then
+          io.write("XXX name=" .. self.name .. ", k=" .. k .. "\n")
+        end
         value[k] = v[1](v[2])
       end
     end
@@ -337,16 +366,16 @@ d.Record = Type("table",
   end,
   function(self, printer)
     local first = true
-    for k,v in pairs(self.defs) do
+    for _,f in pairs(self.order) do
       if first then
         first = false
       else
         printer:sym(",")
         printer:nl()
       end
-      printer:id(k)
+      printer:id(f)
       printer:sym(" = ")
-      printer:ref(v[1])
+      printer:ref(self.defs[f][1])
     end
   end
 )
@@ -410,6 +439,7 @@ d.ListWithKnown = Type("table",
         printer:sym(",")
         printer:nl()
         printer:meta("(optional) ")
+        printer:id(v.name .. " ")
         v:print_syntax(printer)
       end
     end
@@ -736,8 +766,8 @@ d.Void = Type("table",
   end
 )
 
-function d:singleton(TypeClass, name, ...)
-  local type = TypeClass(name, ...)
+function d:singleton(TypeClass, name, doc, ...)
+  local type = TypeClass(name, doc, ...)
   type.singleton = true
   type.default = {}
   if self.typelist ~= nil then
@@ -751,6 +781,41 @@ end
 
 function d:gendocs()
   io.write("<h1>Dokumentation Eingabedaten</h1>\n\n")
+  io.write("<h2>Grundsätzliche Struktur</h2>\n\n<pre><code>")
+  for _, t in ipairs(self.typelist) do
+    io.write([[<a href="#]])
+    io.write(t.name)
+    io.write([[">]])
+    io.write(t.name)
+    io.write([[</a>]])
+    if t.name == "Magie.Regeneration" then
+      syntax_printer:sym("(")
+      syntax_printer:meta("...")
+      syntax_printer:sym(")")
+    else
+      syntax_printer:sym(" {")
+      syntax_printer:meta("...")
+      syntax_printer:sym("}")
+    end
+    syntax_printer:nl()
+  end
+  io.write([[</code></pre><p>
+  Jedes Element auf der obersten Ebene ist optional, ihre Reihenfolge beliebig.
+  Die Struktur der einzelnen Elemente wird bei dem jeweiligen verlinkten Typen beschrieben.
+  Wird ein Element nicht angegeben, erhält es einen Standard-Wert, was in der Regel bedeutet, dass die Daten leer sind.
+  Die Ausnahme ist <code>Layout</code>, dessen Standardwert alle verfügbaren Seiten generiert.
+  Dies eignet sich als Kopiervorlage, aber für einen spezifischen Helden ist es eher unnütz, da man kaum sowohl Ausrüstungs- wie auch Liturgiebogen benötigt.</p>]])
+  io.write([[<h2>Grundlegende Typen</h2>\n\n<p>
+  Die im Folgenden definierten Typen werden an vielen Stellen für Werte benutzt.</p>]])
+  for _, n in ipairs({"String", "Ganzzahl", "Simple", "Boolean", "Multiline"}) do
+    io.write([[<h3 id="]] .. n .. [[">]] .. n .. "</h3>\n\n<pre><code>")
+    local t = self.schema[n]
+    syntax_printer.known[t] = true
+    t:print_syntax(syntax_printer)
+    io.write("</code></pre><p>")
+    io.write(t.documentation)
+    io.write("</p>")
+  end
   for _, t in ipairs(self.typelist) do
     io.write([[<h2 id="]])
     io.write(t.name)
@@ -759,7 +824,9 @@ function d:gendocs()
     io.write([[</h2>]])
     io.write("\n\n<pre><code>")
     t:print_syntax(syntax_printer)
-    io.write("</code></pre>\n\n")
+    io.write("</code></pre>\n\n<p>")
+    io.write(t.documentation)
+    io.write("</p>\n\n")
     local refs = {}
     while true do
       if #syntax_printer.refs > 0 then
@@ -777,17 +844,19 @@ function d:gendocs()
       syntax_printer.known[cur] = true
       io.write("<h" .. tostring(depth + 1) .. [[ id="]] .. cur.name .. [[">]] .. cur.name .. "</h2>\n\n<pre><code>")
       cur:print_syntax(syntax_printer)
-      io.write("</code></pre>\n\n")
+      io.write("</code></pre>\n\n<p>")
+      io.write(cur.documentation)
+      io.write("</p>\n\n")
     end
   end
 end
 
 setmetatable(d, {
   __call = function(self, docgen)
-    self.schema.Boolean = self.Boolean("Boolean")
-    self.schema.String = self.String("String")
-    self.schema.Simple = self.Simple("Simple")
-    self.schema.Multiline = self.Multiline("Multiline")
+    self.schema.Boolean = self.Boolean("Boolean", "true oder false.")
+    self.schema.String = self.String("String", "Beliebiger Text in Hochkommata.")
+    self.schema.Simple = self.Simple("Simple", "Zahl oder Text.")
+    self.schema.Multiline = self.Multiline("Multiline", "Text oder Liste von Text.")
     if docgen then
       self.typelist = {}
     end
