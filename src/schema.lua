@@ -1,6 +1,23 @@
 local d = require("schemadef")
 
-local schema = d()
+local standalone = false
+local gendoc = false
+local curarg = 1
+while string.sub(arg[curarg], 1, 1) == "-" do
+  if arg[curarg] == "--standalone" then
+    standalone = true
+  else
+    io.stderr:write("unknown option: " .. arg[curarg] .. "\n")
+  end
+  curarg = curarg + 1
+end
+if arg[curarg] == "gendoc" then
+  gendoc = true
+elseif arg[curarg] ~= nil then
+  io.stderr:write("unknown command: " .. arg[curarg] .. "\n")
+end
+
+local schema = d(gendoc)
 local Simple = schema.Simple
 local String = schema.String
 local Multiline = schema.Multiline
@@ -13,7 +30,7 @@ local Front = d.Record("Front", {
   Nachteile = {Zeilen, 7},
 })
 
-local Talentliste = d.MixedList("Talentliste",
+local Talentliste = d.MixedList("Talentliste", "Gruppe",
   d.Number("Sonderfertigkeiten", 0, 100),
   d.Number("Gaben", 0, 100),
   d.Number("Begabungen", 0, 100),
@@ -78,7 +95,7 @@ local Zauberdokument = d.Record("Zauberdokument", {
 
 local Zauberliste = d.Void("Zauberliste")
 
-d.singleton(d.MixedList, "Layout",
+d:singleton(d.MixedList, "Layout", "Seite",
   Front, Talentliste, Kampfbogen, Ausruestungsbogen, Liturgiebogen,
   Zauberdokument, Zauberliste
 ) {
@@ -101,7 +118,7 @@ d.singleton(d.MixedList, "Layout",
   Zauberliste {}
 }
 
-d.singleton(d.Record, "Held", {
+d:singleton(d.Record, "Held", {
   Name         = {Simple, ""},
   GP           = {Simple, ""},
   Rasse        = {Simple, ""},
@@ -119,22 +136,22 @@ d.singleton(d.Record, "Held", {
   Aussehen     = {Multiline, ""},
 })
 
-d.singleton(d.ListWithKnown, "Vorteile", {
+d:singleton(d.ListWithKnown, "Vorteile", {
   Flink = "Flink", Eisern = "Eisern"
 })
 
-schema.Vorteile.magisch = d.singleton(d.ListWithKnown, "Vorteile.magisch", {
+schema.Vorteile.magisch = d:singleton(d.ListWithKnown, "Vorteile.magisch", {
   -- TODO: Astrale Regeneration
 }) {}
 
-d.singleton(d.ListWithKnown, "Nachteile", {
+d:singleton(d.ListWithKnown, "Nachteile", {
   Glasknochen = "Glasknochen",
   ["Behäbig"] = "Behaebig",
   ["Kleinwüchsig"] = "Kleinwuechsig",
   Zwergenwuchs = "Zwergenwuchs"
 })
 
-schema.Nachteile.magisch = d.singleton(d.ListWithKnown, "Nachteile.magisch", {
+schema.Nachteile.magisch = d:singleton(d.ListWithKnown, "Nachteile.magisch", {
   -- TODO: Schwache Ausstrahlung
 }) {}
 
@@ -144,7 +161,7 @@ local Ganzzahl = d.Number("Ganzzahl", -1000, 1000)
 local BasisEig = d.FixedList("BasisEig", Ganzzahl, 3)
 local AbgeleiteteEig = d.FixedList("AbgeleiteteEig", Ganzzahl, 3)
 
-d.singleton(d.Record, "Eigenschaften", {
+d:singleton(d.Record, "Eigenschaften", {
   MU = {BasisEig, {0, 0, 0}},
   KL = {BasisEig, {0, 0, 0}},
   IN = {BasisEig, {0, 0, 0}},
@@ -161,7 +178,7 @@ d.singleton(d.Record, "Eigenschaften", {
   INI = {Ganzzahl, 0},
 })
 
-d.singleton(d.Record, "AP", {
+d:singleton(d.Record, "AP", {
   Gesamt = {Simple, ""},
   Eingesetzt = {Simple, ""},
   Guthaben = {Simple, ""}
@@ -179,16 +196,16 @@ d.HeterogeneousList("Talent",
 d.HeterogeneousList("Sprache", {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""})
 
 schema.Talente = {
-  Begabungen = d.singleton(d.MixedList, "Talente.Begabungen", schema.Talent) {},
-  Gaben = d.singleton(d.MixedList, "Talente.Gaben", schema.Talent) {},
-  Kampf = d.singleton(d.MixedList, "Talente.Kampf", schema.KampfTalent) {
+  Begabungen = d:singleton(d.MixedList, "Talente.Begabungen", schema.Talent) {},
+  Gaben = d:singleton(d.MixedList, "Talente.Gaben", schema.Talent) {},
+  Kampf = d:singleton(d.MixedList, "Talente.Kampf", schema.KampfTalent) {
     {"Dolche",                "D", "BE-1", "", "", ""},
     {"Hiebwaffen",            "D", "BE-4", "", "", ""},
     {"Raufen",                "C", "BE",   "", "", ""},
     {"Ringen",                "D", "BE",   "", "", ""},
     {"Wurfmesser",            "C", "BE-3", "", "", ""},
   },
-  Koerper = d.singleton(d.MixedList, "Talente.Koerper", schema.KoerperTalent) {
+  Koerper = d:singleton(d.MixedList, "Talente.Koerper", schema.KoerperTalent) {
     {"Athletik",           "GE", "KO", "KK", "BEx2", ""},
     {"Klettern",           "MU", "GE", "KK", "BEx2", ""},
     {"Körperbeherrschung", "MU", "IN", "GE", "BEx2", ""},
@@ -201,24 +218,24 @@ schema.Talente = {
     {"Tanzen",             "CH", "GE", "GE", "BEx2", ""},
     {"Zechen",             "IN", "KO", "KK", "-",    ""},
   },
-  Gesellschaft = d.singleton(d.MixedList, "Talente.Gesellschaft", schema.Talent) {
+  Gesellschaft = d:singleton(d.MixedList, "Talente.Gesellschaft", schema.Talent) {
     {"Menschenkenntnis", "KL", "IN", "CH", ""},
     {"Überreden",        "MU", "IN", "CH", ""},
   },
-  Natur = d.singleton(d.MixedList, "Talente.Natur", schema.Talent) {
+  Natur = d:singleton(d.MixedList, "Talente.Natur", schema.Talent) {
     {"Fährtensuchen", "KL", "IN", "IN", ""},
     {"Orientierung",  "KL", "IN", "IN", ""},
     {"Wildnisleben",  "IN", "GE", "KO", ""},
   },
-  Wissen = d.singleton(d.MixedList, "Talente.Natur", schema.Talent) {
+  Wissen = d:singleton(d.MixedList, "Talente.Natur", schema.Talent) {
     {"Götter / Kulte",            "KL", "KL", "IN", ""},
     {"Rechnen",                   "KL", "KL", "IN", ""},
     {"Sagen / Legenden",          "KL", "IN", "CH", ""},
   },
-  Sprachen = d.singleton(d.MixedList, "Talente.Sprachen", schema.Sprache) {
+  Sprachen = d:singleton(d.MixedList, "Talente.Sprachen", schema.Sprache) {
     {"Muttersprache: ", "", ""},
   },
-  Handwerk = d.singleton(d.MixedList, "Talente.Handwerk", schema.Talent) {
+  Handwerk = d:singleton(d.MixedList, "Talente.Handwerk", schema.Talent) {
     {"Heilkunde Wunden", "KL", "CH", "FF", ""},
     {"Holzbearbeitung",  "KL", "FF", "KK", ""},
     {"Kochen",           "KL", "IN", "FF", ""},
@@ -228,9 +245,9 @@ schema.Talente = {
   },
 }
 
-d.singleton(d.ListWithKnown, "SF", {})
+d:singleton(d.ListWithKnown, "SF", {})
 
-schema.SF.Nahkampf = d.singleton(d.ListWithKnown, "SF.Nahkampf", {
+schema.SF.Nahkampf = d:singleton(d.ListWithKnown, "SF.Nahkampf", {
   Ausweichen = d.Numbered("Ausweichen", 3),
   ["Kampfgespür"] = "Kampfgespuer",
   Kampfreflexe = "Kampfreflexe",
@@ -240,13 +257,13 @@ schema.SF.Nahkampf = d.singleton(d.ListWithKnown, "SF.Nahkampf", {
   Schildkampf = d.Numbered("Schildkampf", 2)
 }) {}
 
-schema.SF.Fernkampf = d.singleton(d.ListWithKnown, "SF.Fernkampf", {}) {}
+schema.SF.Fernkampf = d:singleton(d.ListWithKnown, "SF.Fernkampf", {}) {}
 
-schema.SF.Waffenlos = d.singleton(d.ListWithKnown, "SF.Waffenlos", {
+schema.SF.Waffenlos = d:singleton(d.ListWithKnown, "SF.Waffenlos", {
   Kampfstile = d.MapToFixed("Kampfstile", "Raufen", "Ringen")
 }) {}
 
-schema.SF.Magisch = d.singleton(d.ListWithKnown, "SF.Magisch", {
+schema.SF.Magisch = d:singleton(d.ListWithKnown, "SF.Magisch", {
   ["Gefäß der Sterne"] = "GefaessDerSterne"
 }) {}
 
@@ -258,13 +275,13 @@ local Distanzklasse = d.Matching("Distanzklasse", "[HNSP]*")
 local Schaden = d.Matching("Schaden", "[0-9]*W[0-9]*", "[0-9]*W[0-9]*[%+%-][0-9]+")
 
 schema.Waffen = {
-  Nahkampf = d.singleton(d.MixedList, "Waffen.Nahkampf", d.HeterogeneousList("Nahkampfwaffe",
+  Nahkampf = d:singleton(d.MixedList, "Waffen.Nahkampf", d.HeterogeneousList("Nahkampfwaffe",
       {"Name", String, ""}, {"Talent", String, ""}, {"DK", Distanzklasse, ""}, {"TP", Schaden, ""}, {"TP/KK Schwelle", Simple, ""}, {"TP/KK Schritt", Simple, ""}, {"INI", Simple, ""}, {"WM AT", Simple, ""}, {"WM PA", Simple, ""}, {"BF1", Simple, ""}, {"BF2", Simple, ""})) {},
-  Fernkampf = d.singleton(d.MixedList, "Waffen.Fernkampf", d.HeterogeneousList("Fernkampfwaffe",
+  Fernkampf = d:singleton(d.MixedList, "Waffen.Fernkampf", d.HeterogeneousList("Fernkampfwaffe",
       {"Name", String, ""}, {"Talent", String, ""}, {"TP", Schaden, ""}, {"Entfernung1", Simple, ""}, {"Entfernung2", Simple, ""}, {"Entfernung3", Simple, ""}, {"Entfernung4", Simple, ""}, {"Entfernung5", Simple, ""}, {"TP/Entfernung1", Simple, ""}, {"TP/Entfernung2", Simple, ""}, {"TP/Entfernung3", Simple, ""}, {"TP/Entfernung4", Simple, ""}, {"TP/Entfernung5", Simple, ""}, {"Geschosse1", Simple, ""}, {"Geschosse2", Simple, ""}, {"Geschosse3", Simple, ""})) {},
-  Schilde = d.singleton(d.MixedList, "Waffen.Schilde", d.HeterogeneousList("Schild",
+  Schilde = d:singleton(d.MixedList, "Waffen.Schilde", d.HeterogeneousList("Schild",
       {"Name", String}, {"Typ", String}, {"INI", Ganzzahl}, {"WM AT", Ganzzahl}, {"WM PA", Ganzzahl}, {"BF1", Simple, ""}, {"BF2", Simple, ""})) {},
-  Ruestung = d.singleton(d.MixedList, "Waffen.Ruestung", d.Record("Ruestungsteil", {
+  Ruestung = d:singleton(d.MixedList, "Waffen.Ruestung", d.Record("Ruestungsteil", {
     [1] = {String, ""},
     [2] = {Ganzzahl, 0},
     [3] = {Ganzzahl, 0},
@@ -279,31 +296,31 @@ schema.Waffen = {
   })) {},
 }
 
-d.singleton(d.Multiline, "Kleidung")
-d.singleton(d.MixedList, "Ausruestung", d.HeterogeneousList("Gegenstand", {"Name", String}, {"Gewicht", Simple, ""}, {"Getragen", String, ""}))
-d.singleton(d.MixedList, "Proviant", d.HeterogeneousList("Rationen", {"Name", String}, {"Ration1", Simple, ""}, {"Ration2", Simple, ""}, {"Ration3", Simple, ""}, {"Ration4", Simple, ""}))
+d:singleton(d.Multiline, "Kleidung")
+d:singleton(d.MixedList, "Ausruestung", d.HeterogeneousList("Gegenstand", {"Name", String}, {"Gewicht", Simple, ""}, {"Getragen", String, ""}))
+d:singleton(d.MixedList, "Proviant", d.HeterogeneousList("Rationen", {"Name", String}, {"Ration1", Simple, ""}, {"Ration2", Simple, ""}, {"Ration3", Simple, ""}, {"Ration4", Simple, ""}))
 
 local Muenzen = d.HeterogeneousList("Muenzen", {"Name", String, ""}, {"Wert1", Simple, ""}, {"Wert2", Simple, ""}, {"Wert3", Simple, ""}, {"Wert4", Simple, ""}, {"Wert5", Simple, ""}, {"Wert6", Simple, ""}, {"Wert7", Simple, ""}, {"Wert8", Simple, ""})
 
-d.singleton(d.MixedList, "Vermoegen", Muenzen) {
+d:singleton(d.MixedList, "Vermoegen", Muenzen) {
   {"Dukaten", "", "", "", "", "", "", "", ""},
   {"Silbertaler", "", "", "", "", "", "", "", ""},
   {"Heller", "", "", "", "", "", "", "", ""},
   {"Kreuzer", "", "", "", "", "", "", "", ""},
 }
-schema.Vermoegen.Sonstiges = d.singleton(d.Multiline, "Vermoegen.Sonstiges") {}
+schema.Vermoegen.Sonstiges = d:singleton(d.Multiline, "Vermoegen.Sonstiges") {}
 
-d.singleton(d.Multiline, "Verbindungen")
-d.singleton(d.Multiline, "Notizen")
+d:singleton(d.Multiline, "Verbindungen")
+d:singleton(d.Multiline, "Notizen")
 
 local Tier = d.HeterogeneousList("Tier", {"Name", String}, {"Art", String, ""}, {"INI", Simple, ""}, {"AT", Simple, ""}, {"PA", Simple, ""}, {"TP", Schaden, ""}, {"LE", Simple, ""}, {"RS", Simple, ""}, {"KO", Simple, ""}, {"KO", Simple, ""}, {"GS", Simple, ""}, {"AU", Simple, ""}, {"MR", Simple, ""}, {"LO", Simple, ""}, {"TK", Simple, ""}, {"ZK", Simple, ""})
-d.singleton(d.MixedList, "Tiere", Tier)
+d:singleton(d.MixedList, "Tiere", Tier)
 
-d.singleton(d.HeterogeneousList, "Liturgiekenntnis", {"Gottheit", String, ""}, {"Wert", Simple, ""}) {
+d:singleton(d.HeterogeneousList, "Liturgiekenntnis", {"Gottheit", String, ""}, {"Wert", Simple, ""}) {
   "", ""
 }
 
-d.singleton(d.MixedList, "Liturgien", d.HeterogeneousList("Liturgie", {"Seite", Simple, ""}, {"Name", String}, {"Grad", String, ""}))
+d:singleton(d.MixedList, "Liturgien", d.HeterogeneousList("Liturgie", {"Seite", Simple, ""}, {"Name", String}, {"Grad", String, ""}))
 
 local Element = d.Matching("Element", "gesamt", "Eis", "Humus", "Feuer", "Wasser", "Luft", "Erz")
 local Elementar = d.MixedList("Elementar", Element)
@@ -318,7 +335,7 @@ local Merkmale = d.ListWithKnown("Merkmale", {
 })
 
 local function merkmale(name)
-  return d.singleton(d.ListWithKnown, name, {
+  return d:singleton(d.ListWithKnown, name, {
     Elementar = Elementar,
     Daemonisch = Daemonisch
   }, { -- optional
@@ -327,16 +344,38 @@ local function merkmale(name)
   }) {}
 end
 
+local Repraesentation = d.Matching("Repraesentation", "Ach", "Alh", "Bor", "Dru", "Dra", "Elf", "Fee", "Geo", "Gro", "Gül", "Kob", "Kop", "Hex", "Mag", "Mud", "Nac", "Srl", "Sch")
+
 schema.Magie = {
-  Rituale = d.singleton(d.MixedList, "Magie.Rituale", d.HeterogeneousList("Ritual", {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"Dauer", Simple, ""}, {"Kosten", Simple, ""}, {"Wirkung", Simple, ""})) {},
-  Ritualkenntnis = d.singleton(d.MixedList, "Magie.Ritualkenntnis", d.HeterogeneousList("RK-Wert", {"Name", String}, {"Wert", Simple, ""}))
-  Regeneration = d.singleton(d.Simple, "Magie.Regeneration") "",
-  Artefakte = d.singleton(d.Multiline, "Magie.Artefakte") {},
-  Notizen = d.singleton(d.Multiline, "Magie.Notizen") {},
-  Repraesentationen = d.singleton(d.MixedList, "Magie.Repraesentationen", d.Matching("Repraesentation", "Ach", "Alh", "Bor", "Dru", "Dra", "Elf", "Fee", "Geo", "Gro", "Gül", "Kob", "Kop", "Hex", "Mag", "Mud", "Nac", "Srl", "Sch")) {},
+  Rituale = d:singleton(d.MixedList, "Magie.Rituale", d.HeterogeneousList("Ritual", {"Name", String}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"Dauer", Simple, ""}, {"Kosten", Simple, ""}, {"Wirkung", Simple, ""})) {},
+  Ritualkenntnis = d:singleton(d.MixedList, "Magie.Ritualkenntnis", d.HeterogeneousList("RK-Wert", {"Name", String}, {"Wert", Simple, ""})) {},
+  Regeneration = d:singleton(d.Simple, "Magie.Regeneration") "",
+  Artefakte = d:singleton(d.Multiline, "Magie.Artefakte") {},
+  Notizen = d:singleton(d.Multiline, "Magie.Notizen") {},
+  Repraesentationen = d:singleton(d.MixedList, "Magie.Repraesentationen", Repraesentation) {},
   Merkmalskenntnis = merkmale("Magie.Merkmalskenntnis"),
   Begabungen = merkmale("Magie.Begabungen"),
   Unfaehigkeiten = merkmale("Magie.Unfaehigkeiten"),
+  Zauber = d:singleton(d.MixedList, "Magie.Zauber", d.HeterogeneousList("Zauber", {"Seite", Simple, ""}, {"Name", String}, {"Probe1", Eigenschaft}, {"Probe2", Eigenschaft}, {"Probe3", Eigenschaft}, {"TaW", Simple, ""}, {"Spalte", SteigSpalte}, {"Merkmale", Merkmale, {}}, {"Repraesentation", Repraesentation, ""}, {"Hauszauber", schema.Boolean, false})) {}
 }
+
+if gendoc then
+  if standalone then
+    io.write([[
+<!doctype html>
+<html lang="de">
+  <head>
+    <title>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</title>
+  </head>
+  <body>
+]])
+  end
+  d:gendocs()
+  if standalone then
+    io.write([[
+  </body>
+</html>]])
+  end
+end
 
 return schema

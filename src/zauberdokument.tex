@@ -25,7 +25,7 @@
     \Body
         \scriptsize\textbf{Ritualname} & \multicolumn{3}{c|}{\scriptsize \textbf{Probe}} & \scriptsize\textbf{Dauer} & \scriptsize\textbf{Kosten} & \scriptsize\textbf{Wirkung / Anmerkung} \\ \hline
         \directlua{
-            common.inner_rows(data.magie.rituale, 7)
+            common.inner_rows(data.Magie.Rituale, 7, common.current_page.Rituale())
         }
     \end{NiceTabular}
     \vspace{2pt}
@@ -38,7 +38,7 @@
 
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \directlua{
-            common.kenntnis("Ritualkenntnis", data.magie.rituale.kenntnis)
+            common.kenntnis("Ritualkenntnis", data.Magie.Ritualkenntnis, common.current_page.Ritualkenntnis())
         }
 	\end{dsaSheetBox}
 
@@ -89,7 +89,7 @@
                 common.multiline_content({
                     name="Artefakte", rows=common.current_page.Artefakte(),
                     baselinestretch=1.033, fontsize={8,12}
-                }, data.magie.artefakte)
+                }, data.Magie.Artefakte)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -106,7 +106,7 @@
                 common.multiline_content({
                     name="Notizen", rows=common.current_page.Notizen(),
                     baselinestretch=1.033, fontsize={8,12}
-                }, data.magie.notizen)
+                }, data.Magie.Notizen)
             }
         \end{tabular}
     \end{dsaSheetBox}

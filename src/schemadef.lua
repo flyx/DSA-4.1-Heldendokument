@@ -38,7 +38,7 @@ local function err(v, msg, ...)
   else
     io.stderr:write(string.format("\n%s(%d):", info.short_src, info.currentline))
   end
-  for i,b in ipairs(context) do
+  for i,b in ipairs(d.context) do
     if i == 1 then
       io.stderr:write(" ")
     else
@@ -51,20 +51,112 @@ local function err(v, msg, ...)
   return d.Poison
 end
 
-local function geterr(self, key)
-  return function(syntax)
-    if key == "err" then
-      return err
-    elseif key == "print_syntax" then
-      return syntax
+local syntax_printer = {
+  levels = {},
+  refs = {},
+  known = {},
+}
+
+function syntax_printer:id(name)
+  io.write([[<span class="id">]])
+  io.write(name)
+  io.write([[</span>]])
+end
+
+function syntax_printer:sym(s)
+  io.write([[<span class="sym">]])
+  io.write(s)
+  io.write([[</span>]])
+end
+
+function syntax_printer:ph(name)
+  io.write([[<span class="placeholder">&lt;]])
+  io.write(name)
+  io.write([[&gt;</span>]])
+end
+
+function syntax_printer:ref(target, name)
+  if self.known[target] == nil then
+    local found = false
+    for _,v in ipairs(self.refs) do
+      if v == target then
+        found = true
+        break
+      end
+    end
+    if not found then
+      table.insert(self.refs, target)
     end
   end
+  if name == nil then
+    io.write([[<a href="#]])
+    io.write(target.name)
+    io.write([[">&lt;]])
+    io.write(target.name)
+    io.write([[&gt;</a>]])
+  else
+    self:meta("&lt;" .. name .. ":")
+    io.write([[<a href="#]] .. target.name .. [[">]] .. target.name .. [[</a>]])
+    self:meta("&gt;")
+  end
+end
 
+function syntax_printer:meta(s)
+  io.write([[<span class="metasym">]] .. s .. [[</span>]])
+end
+
+function syntax_printer:choice(...)
+  self:meta("[ ")
+  for i, v in ipairs({...}) do
+    if i > 1 then
+      self:meta(" | ")
+    end
+    self:id(v)
+  end
+  self:meta(" ]")
+end
+
+function syntax_printer:num(n)
+  io.write([[<span class="num">]] .. tostring(n) .. [[</span>]])
+end
+
+function syntax_printer:nl()
+  io.write("\n")
+  io.write(string.rep("  ", #self.levels))
+end
+
+function syntax_printer:open(name)
+  table.insert(self.levels, {named = (name ~= nil)})
+  if name ~= nil then
+    self:id(name)
+    io.write(" ")
+    self:sym("{")
+    self:nl()
+  else
+    self:sym("{")
+  end
+end
+
+function syntax_printer:close()
+  local lvl = table.remove(self.levels)
+  if lvl.named then
+    self:nl()
+  end
+  self:sym("}")
 end
 
 local Type = {
   __call = function(self, name, ...)
     return self:def(name, ...)
+  end,
+  props = function(self, key)
+    if key == "err" then
+      return err
+    elseif key == "print_syntax" then
+      return getmetatable(self).print_syntax
+    else
+      return nil
+    end
   end
 }
 
@@ -84,9 +176,6 @@ local MetaType = {
         end
         setmetatable(ret, self)
         d.schema[name] = ret
-        if d.typelist ~= nil then
-          table.insert(d.typelist, ret)
-        end
         return ret
       end,
       __call = function(self, value)
@@ -113,7 +202,20 @@ local MetaType = {
         end
         return ret
       end,
-      __index = geterr
+      __index = Type.props,
+      print_syntax = function(self, printer)
+        if base == "table" then
+          if self.singleton or self.force_named then
+            printer:open(self.name)
+          else
+            printer:open()
+          end
+          syntax(self, printer)
+          printer:close()
+        else
+          syntax(self, printer)
+        end
+      end
     }
     setmetatable(ret, Type)
     return ret
@@ -124,7 +226,17 @@ setmetatable(Type, MetaType)
 
 d.MixedList = Type("table",
   function(...)
-    return {...}
+    local args = {...}
+    if #args > 1 then
+      if args == 2 then
+        self:err("MixedList must have itemname iff giving more than one type")
+      end
+      args.itemname = table.remove(args, 1)
+      for _,t in ipairs(args) do
+        t.force_named = true
+      end
+    end
+    return args
   end,
   function(self, value)
     local errors = false
@@ -171,6 +283,22 @@ d.MixedList = Type("table",
       d.context:pop()
     end
     return errors and Poison or value
+  end,
+  function(self, printer)
+    if #self > 1 then
+      printer:meta("&lt;" .. self.itemname .. ': [ ')
+      for i,t in ipairs(self) do
+        if i > 1 then
+          printer:meta(" | ")
+        end
+        printer:ref(t)
+      end
+      printer:meta(" ]&gt;")
+      printer:sym(", ...")
+    else
+      printer:ref(self[1])
+      printer:sym(", ...")
+    end
   end
 )
 
@@ -206,12 +334,29 @@ d.Record = Type("table",
       end
     end
     return errors and Poison or value
+  end,
+  function(self, printer)
+    local first = true
+    for k,v in pairs(self.defs) do
+      if first then
+        first = false
+      else
+        printer:sym(",")
+        printer:nl()
+      end
+      printer:id(k)
+      printer:sym(" = ")
+      printer:ref(v[1])
+    end
   end
 )
 
 d.ListWithKnown = Type("table",
-  function(known)
-    return {known = known}
+  function(known, optional)
+    if optional == nil then
+      optional = {}
+    end
+    return {known = known, optional = optional}
   end,
   function(self, value)
     local ret = {}
@@ -244,15 +389,30 @@ d.ListWithKnown = Type("table",
       end
     end
     for k,v in pairs(self.known) do
-      if type(v) == "string" then
-        if ret[v] == nil then
-          ret[v] = false
+      if not self.optional[k] then
+        if type(v) == "string" then
+          if ret[v] == nil then
+            ret[v] = false
+          end
+        elseif ret[k] == nil then
+          ret[k] = v {}
         end
-      elseif ret[k] == nil then
-        ret[k] = v {}
       end
     end
     return ret
+  end,
+  function(self, printer)
+    d.String:print_syntax(printer)
+    printer:sym(", ")
+    printer:meta("...")
+    for k,v in pairs(self.known) do
+      if type(v) ~= "string" then
+        printer:sym(",")
+        printer:nl()
+        printer:meta("(optional) ")
+        v:print_syntax(printer)
+      end
+    end
   end
 )
 
@@ -292,6 +452,14 @@ d.FixedList = Type("table",
       end
     end
     return errors and Poison or value
+  end,
+  function(self, printer)
+    for i=1,self.length do
+      if i > 1 then
+        printer:sym(", ")
+      end
+      self.inner:print_syntax(printer)
+    end
   end
 )
 
@@ -327,6 +495,14 @@ d.HeterogeneousList = Type("table",
       d.context:pop()
     end
     return errors and Poison or value
+  end,
+  function(self, printer)
+    for i,v in ipairs(self) do
+      if i > 1 then
+        printer:sym(", ")
+      end
+      printer:ref(v[2], v[1])
+    end
   end
 )
 
@@ -354,6 +530,16 @@ d.Numbered = Type("table",
       d.context:pop()
     end
     return errors and Poison or ret
+  end,
+  function(self, printer)
+    printer:meta("[ ")
+    for i=1,self.max do
+      if i > 1 then
+        printer:meta(" | ")
+      end
+      printer:id(string.rep("I", i))
+    end
+    printer:meta(" ]")
   end
 )
 
@@ -386,6 +572,9 @@ d.MapToFixed = Type("table",
       d.context:pop()
     end
     return errors and Poison or value
+  end,
+  function(self, printer)
+    printer:id("TODO")
   end
 )
 
@@ -398,6 +587,13 @@ d.Number = Type("number",
       return self:err("Zahl %d außerhalb des erwarteten Bereichs %d..%s", value, self.min, self.max)
     end
     return {value}
+  end,
+  function(self, printer)
+    printer:meta("[")
+    printer:num(self.min)
+    printer:meta("..")
+    printer:num(self.max)
+    printer:meta("]")
   end
 )
 
@@ -407,13 +603,18 @@ d.String = Type("string",
   end,
   function(self, value)
     return {value}
+  end,
+  function(self, printer)
+    printer:sym("\"")
+    printer:ph("Text")
+    printer:sym("\"")
   end
 )
 
 d.Matching = Type("string",
   function(...)
-    local ret = {patterns = {}, __call = function(self) return self[1] end}
-    for _, p in ipairs({...}) do
+    local ret = {patterns = {}, raw = {...}, __call = function(self) return self[1] end}
+    for _, p in ipairs(ret.raw) do
       table.insert(ret.patterns, "^" .. p .. "$")
     end
     return ret
@@ -429,14 +630,23 @@ d.Matching = Type("string",
       end
     end
     local l = "('"
-    for i, p in ipairs(self.patterns) do
+    for i, p in ipairs(self.raw) do
       if i > 1 then
         l = l .. "', '"
       end
-      l = l .. string.sub(p, 2, string.len(p) - 1)
+      l = l .. p
     end
     l = l .. "')"
     return self:err("Inhalt '%s' illegal, erwartet: %s", value, l)
+  end,
+  function(self, printer)
+    printer:sym("\"")
+    if #self.raw == 1 then
+      printer:id(self.raw[1])
+    else
+      printer:choice(unpack(self.raw))
+    end
+    printer:sym("\"")
   end
 )
 
@@ -449,6 +659,11 @@ d.Simple = Type(nil,
       return self:err("string oder number als Argument erwartet, bekam %s", base, type(value))
     end
     return {value}
+  end,
+  function(self, printer)
+    printer:meta("[ ")
+    d.String:print_syntax(printer)
+    printer:meta(" | &lt;Zahl&gt; ]")
   end
 )
 
@@ -476,15 +691,33 @@ d.Multiline = Type(nil,
     else
       return self:err("string oder table als Argument erwartet, bekam %s", type(value))
     end
+  end,
+  function(self, printer)
+    printer:meta("[ ")
+    d.String:print_syntax(printer)
+    printer:meta(" | ")
+    printer:sym("{ ")
+    printer:meta("[ ")
+    d.String:print_syntax(printer)
+    printer:meta(" | ")
+    printer:sym("{}")
+    printer:meta(" ]")
+    printer:sym(", ")
+    printer:meta("...")
+    printer:sym(" }")
+    printer:meta(" ]")
   end
 )
 
-d.Boolean = Type("bool",
+d.Boolean = Type("boolean",
   function()
     return {__call = function(self) return self[1] end}
   end,
   function(self, value)
     return {value}
+  end,
+  function(self, printer)
+    printer:choice("true", "false")
   end
 )
 
@@ -497,13 +730,19 @@ d.Void = Type("table",
       return self:err("Tabelle muss leer sein, enthält Wert [%s]", k)
     end
     return value
+  end,
+  function(self, printer)
+    printer:sym("{}")
   end
 )
 
-function d.singleton(TypeClass, name, ...)
+function d:singleton(TypeClass, name, ...)
   local type = TypeClass(name, ...)
   type.singleton = true
   type.default = {}
+  if self.typelist ~= nil then
+    table.insert(self.typelist, type)
+  end
   return function(default)
     type.default = default
     return type
@@ -511,15 +750,41 @@ function d.singleton(TypeClass, name, ...)
 end
 
 function d:gendocs()
-  io.write("# Eingabedokumentation")
-  for _, t in self.typelist do
-    io.write("## " .. t.name .. "\n\n<pre><code>")
-    t:print_syntax()
+  io.write("<h1>Dokumentation Eingabedaten</h1>\n\n")
+  for _, t in ipairs(self.typelist) do
+    io.write([[<h2 id="]])
+    io.write(t.name)
+    io.write([[">]])
+    io.write(t.name)
+    io.write([[</h2>]])
+    io.write("\n\n<pre><code>")
+    t:print_syntax(syntax_printer)
+    io.write("</code></pre>\n\n")
+    local refs = {}
+    while true do
+      if #syntax_printer.refs > 0 then
+        table.insert(refs, syntax_printer.refs)
+        syntax_printer.refs = {}
+      end
+      if #refs == 0 then
+        break
+      end
+      local cur = table.remove(refs[#refs], 1)
+      local depth = #refs
+      if #refs[depth] == 0 then
+        table.remove(refs)
+      end
+      syntax_printer.known[cur] = true
+      io.write("<h" .. tostring(depth + 1) .. [[ id="]] .. cur.name .. [[">]] .. cur.name .. "</h2>\n\n<pre><code>")
+      cur:print_syntax(syntax_printer)
+      io.write("</code></pre>\n\n")
+    end
   end
 end
 
 setmetatable(d, {
   __call = function(self, docgen)
+    self.schema.Boolean = self.Boolean("Boolean")
     self.schema.String = self.String("String")
     self.schema.Simple = self.Simple("Simple")
     self.schema.Multiline = self.Multiline("Multiline")

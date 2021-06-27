@@ -43,7 +43,7 @@
     \begin{tabular}{p{5.3cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}}
         \dsaTHeading{\Large Proviant / Tränke} & \multicolumn{4}{c}{\normalfont\bfseries\scriptsize Rationen / Ladungen} \\ \hline
         \directlua{
-            common.inner_rows(data.proviant, 5, common.current_page.Proviant())
+            common.inner_rows(data.Proviant, 5, common.current_page.Proviant())
         }
     \end{tabular}
 \end{dsaSheetBox}
@@ -174,7 +174,7 @@
 \newcommand{\Liturgien}{%
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \directlua{
-            common.kenntnis("Liturgiekenntnis", {data.Liturgiekenntnis})
+            common.kenntnis("Liturgiekenntnis", {data.Liturgiekenntnis}, 1)
         }
 
         \vspace{13.5pt}
@@ -210,15 +210,15 @@
             \renewcommand{\arraystretch}{1.25}
             \bfseries\large\mansontt
             \begin{tabular}{p{4cm}p{13.7cm}} \hline
-                Repräsentationen: & \normalfont\directlua{zauberliste.repraesentationen:render(data.magie.repraesentationen)} \\ \hline
+                Repräsentationen: & \normalfont\directlua{zauberliste.repraesentationen:render(data.Magie.Repraesentationen)} \\ \hline
                 Merkmale: & \normalfont\directlua{
-                    zauberliste.merkmalliste(data.magie.merkmale)
+                    zauberliste.merkmalliste(data.Magie.Merkmalskenntnis)
                 } \\ \hline
                 Begabungen: & \normalfont\directlua{
-                    zauberliste.merkmalliste(data.magie.begabungen)
+                    zauberliste.merkmalliste(data.Magie.Begabungen)
                 } \\ \hline
                 Unfähigkeiten: & \normalfont\directlua{
-                    zauberliste.merkmalliste(data.magie.unfaehigkeiten)
+                    zauberliste.merkmalliste(data.Magie.Unfaehigkeiten)
                 }
             \end{tabular}
         \end{dsaSheetBox}

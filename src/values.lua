@@ -12,49 +12,57 @@ if i > #arg then
   tex.error("missing argument for hero data!")
 end
 
+local d = require("schemadef")
 local schema = require("schema")
 
-local f = loadfile(arg[i], "t", schema)
-if f == nil then
-  tex.error("cannot read file: " .. arg[i])
+loadfile(arg[i], "t", schema)()
+if d.Poison.count > 0 then
+  tex.error("Fehler beim Laden der Heldendefinition!")
 end
-local values = f()
-values.Layout = schema.Layout:instance()
-values.Held = schema.Held:instance()
-values.Vorteile = schema.Vorteile:instance()
+
+local values = {
+  Layout = schema.Layout:instance(),
+  Held = schema.Held:instance(),
+  Vorteile = schema.Vorteile:instance(),
+  Nachteile = schema.Nachteile:instance(),
+  eig = schema.Eigenschaften:instance(),
+  AP = schema.AP:instance(),
+  Talente = {},
+  sf = {
+    Allgemein = schema.SF:instance(),
+    Nahkampf = schema.SF.Nahkampf:instance(),
+    Fernkampf = schema.SF.Fernkampf:instance(),
+    Waffenlos = schema.SF.Waffenlos:instance(),
+    Magisch = schema.SF.Magisch:instance(),
+  },
+  Waffen = {
+    N = schema.Waffen.Nahkampf:instance(),
+    F = schema.Waffen.Fernkampf:instance(),
+    S = schema.Waffen.Schilde:instance(),
+    R = schema.Waffen.Ruestung:instance(),
+  },
+  Kleidung = schema.Kleidung:instance(),
+  Ausruestung = schema.Ausruestung:instance(),
+  Proviant = schema.Proviant:instance(),
+  Vermoegen = schema.Vermoegen:instance(),
+  Verbindungen = schema.Verbindungen:instance(),
+  Notizen = schema.Notizen:instance(),
+  Tiere = schema.Tiere:instance(),
+  Liturgiekenntnis = schema.Liturgiekenntnis:instance(),
+  Liturgien = schema.Liturgien:instance(),
+  Magie = {}
+}
+
 values.Vorteile.magisch = schema.Vorteile.magisch:instance()
 values.Vorteile.magisch.asp = #values.Vorteile.magisch > 0
-values.Nachteile = schema.Nachteile:instance()
 values.Nachteile.magisch = schema.Nachteile.magisch:instance()
-values.eig = schema.Eigenschaften:instance()
-values.AP = schema.AP:instance()
-values.Talente = {}
 for k,v in pairs(schema.Talente) do
   values.Talente[k] = v:instance()
 end
-values.sf = {
-  Allgemein = schema.SF:instance(),
-  Nahkampf = schema.SF.Nahkampf:instance(),
-  Fernkampf = schema.SF.Fernkampf:instance(),
-  Waffenlos = schema.SF.Waffenlos:instance(),
-  Magisch = schema.SF.Magisch:instance(),
-}
-values.Waffen = {
-  N = schema.Waffen.Nahkampf:instance(),
-  F = schema.Waffen.Fernkampf:instance(),
-  S = schema.Waffen.Schilde:instance(),
-  R = schema.Waffen.Ruestung:instance()
-}
-values.Kleidung = schema.Kleidung:instance()
-values.Ausruestung = schema.Ausruestung:instance()
-values.Proviant = schema.Proviant:instance()
-values.Vermoegen = schema.Vermoegen:instance()
+for k,v in pairs(schema.Magie) do
+  values.Magie[k] = v:instance()
+end
 values.Vermoegen.Sonstiges = schema.Vermoegen.Sonstiges:instance()
-values.Verbindungen = schema.Verbindungen:instance()
-values.Notizen = schema.Notizen:instance()
-values.Tiere = schema.Tiere:instance()
-values.Liturgiekenntnis = schema.Liturgiekenntnis:instance()
-values.Liturgien = schema.Liturgien:instance()
 
 local function sum_and_round(items, pos)
   local cur = nil

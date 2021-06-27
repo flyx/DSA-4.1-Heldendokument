@@ -206,15 +206,19 @@ function common.round(v, down)
   return tonumber(string.format("%.0f", v + delta))
 end
 
-function common.kenntnis(name, items)
+function common.kenntnis(name, items, count)
   tex.sprint([[{\normalfont\normalsize\begin{tabular}{p{3.7cm}@{(}x{3.7cm}@{):\hspace{1pt}}x{0.7cm}}]])
-  for i, item in ipairs(items) do
-    local vals = {unpack(item)}
-    while #vals < 2 do
-      table.insert(vals, "")
+  io.write(name .. " count: " .. tostring(#items))
+  for i=1,count do
+    local item = items[i]
+    local vals
+    if item == nil then
+      vals = {"", ""}
+    else
+      vals = {item[1](), item[2]()}
     end
-    tex.sprint(string.format([[\large\mansontt\bfseries %s & %s & \cellcolor{white}%s \\]], name, vals[1](), vals[2]()))
-    if i ~= #items then
+    tex.sprint(string.format([[\large\mansontt\bfseries %s & %s & \cellcolor{white}%s \\]], name, vals[1], vals[2]))
+    if i ~= count then
       tex.sprint([[\multicolumn{3}{c}{}\\[-9pt] ]])
     end
   end

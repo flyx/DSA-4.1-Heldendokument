@@ -78,7 +78,9 @@ Layout {
   },
   Kampfbogen {},
   Ausruestungsbogen {},
-  Liturgiebogen {}
+  Liturgiebogen {},
+  Zauberdokument {},
+  Zauberliste {}
 }
 
 Held {
@@ -206,56 +208,46 @@ Waffen.Ruestung {
   {"Garether Platte", 4.7, 3.7, Brust=6, Ruecken=5, Bauch=6, LArm=5, RArm=5, LBein=4, RBein=4}
 }
 
-return {
-  --  Kann auf true gesetzt werden, um allen Talenten eine Spalte betitelt mit
-  --  M hinzuzufügen. Diese ist dafür gedacht, benutzt zu werden, um
-  --  Meisterhandwerk-Talente zu markieren sowie Mirakel+ und Mirakel-.
-  --  Die M-Spalte ist gerade breit genug für ein Zeichen.
-  --  Soll ein Talent einen Eintrag in der M-Spalte haben, muss hinter dem
-  --  Talentwert ein mit `m` benamter Eintrag hinzugefügt werden. Beispiel:
-  --
-  --      {"Athletik",           "GE", "KO", "KK", "BEx2", 0, m = "+"},
-  m_spalte = false,
+Magie.Rituale {
+  {[[Schlaf rauben]], "", "", "", "", "", ""},
+  {[[Ängste mehren]], "", "", "", "", "", ""},
+  {[[Hexensalbe]], "", "", "", "", "", ""},
+}
 
-  --  Mehrzeilig, standardmäßig 5 Zeilen.
-  kleidung = "",
-  --  Jeder Wert generiert eine Zeile.
-  --  Die Menge der hier definierten Werte ist für die Verwendung des
-  --  profanen Ausrüstungsbogens ausgelegt.
-  --  Wird statt dessen der Liturgienbogen verwendet, sollte die Liste kürzer
-  --  sein, weil dort weniger Platz verfügbar ist.
-  ausruestung = {
-  -- Name, Gewicht, wo getragen
-    {"",   "",      ""},
-    {},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}
-  },
-  --  Proviant und Tränke
-  --  Jeder Wert generiert eine Zeile:
-  --    Name, (4 Rationswerte)
-  proviant = {
-    {"", "", "", "", ""},
-    {}, {}, {}, {}, {}, {}, {}
-  },
-  --  In die Vermögenstabelle lassen sich beliebige Währungen eintragen.
-  --  Jede Währung generiert eine Zeile.
-  vermoegen = {
-    {"Dukaten", "", "", "", "", "", "", "", ""},
-    {"Silbertaler"},
-    {"Heller"},
-    {"Kreuzer"},
-    --  Mehrzeilig, standardmäßig 4 Zeilen.
-    sonstiges = ""
-  },
-  --  Mehrzeilig, standardmäßig 6 Zeilen.
-  verbindungen = "",
-  --  Mehrzeilig, standardmäßig 7 Zeilen.
-  notizen = "",
-  --  Tiere. Jeder Wert generiert eine Zeile.
-  tiere = {
-  -- Name, Art, INI, AT, PA, TP, LE, RS, KO, GS, AU, MR, LO, TK, ZK
-    {"",   "",  "",  "", "", "", "", "", "", "", "", "", "", "", ""},
-    {}, {}, {}
-  },
-  --  Ende der Werte für profane Charaktere. Für Geweihte oder Magier bitte die
-  --  anderen Vorlagen verwenden.
+Magie.Ritualkenntnis {
+  {"Hexe", 5}
+}
+
+Magie.Artefakte {
+  "Arr", "Tee", "Fuck", "Tee"
+}
+
+Magie.Repraesentationen {
+  "Hex"
+}
+
+Magie.Merkmalskenntnis {
+  "Limbus", "Metamagie"
+}
+
+Magie.Zauber {
+  {"", [[Abvenenum reine Speise]], "KL", "KL", "FF", 5, "C", {}, "Hex"},
+  {"", [[Ängste lindern]], "MU", "IN", "CH", 5, "C", {}, "Hex", true},
+  {"", [[Attributo]], "KL", "CH", "**", 2, "B", {}, "Hex"},
+  {"", [[Beherrschung brechen]], "KL", "IN", "CH", 3, "C", {}, "Hex"},
+  {"", [[Eigenschaft wiederherstellen]], "KL", "IN", "CH", 4, "C", {}, "Hex", true},
+  {"", [[Einfluss bannen]], "IN", "CH", "CH", 3, "B", {}, "Hex"},
+  {"", [[Harmlose Gestalt]], "KL", "CH", "GE", 3, "C", {}, "Hex"},
+  {"", [[Hexenblick]], "IN", "IN", "CH", 7, "B", {"Limbus"}, "Hex", true},
+  {"", [[Hexenholz]], "KL", "FF", "KK", 5, "B", {}, "Hex", true},
+  {"", [[Hexenknoten]], "KL", "IN", "CH", 2, "C", {}, "Hex"},
+  {"", [[Hexenspeichel]], "IN", "CH", "FF", 10, "C", {}, "Hex", true},
+  {"", [[Klarum Purum]], "KL", "KL", "CH", 10, "D", {}, "Hex"},
+  {"", [[Krähenruf]], "MU", "CH", "CH", 2, "C", {}, "Hex"},
+  {"", [[Krötensprung]], "IN", "GE", "KK", 7, "B", {}, "Hex"},
+  {"", [[Pestilenz erspüren]], "KL", "IN", "CH", 7, "C", {}, "Hex"},
+  {"", [[Radau]], "MU", "CH", "KO", 2, "C", {"Metamagie"}, "Hex"},
+  {"", [[Sanftmut]], "MU", "CH", "CH", 7, "B", {}, "Hex", true},
+  {"", [[Tiere besprechen]], "MU", "IN", "CH", 7, "C", {}, "Hex", true},
+  {"", [[Verwandlung beenden]], "KL", "CH", "FF", 2, "D", {}, "Hex"},
 }
