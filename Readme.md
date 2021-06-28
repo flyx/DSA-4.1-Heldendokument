@@ -7,37 +7,39 @@ Helden aus der Heldensoftware können importiert werden.
 ## Features
 
  * Kein editierbares PDF – Werte können beim Bauen des Heldendokuments eingegeben werden, das generierte Dokument ist nicht interaktiv.
+
    Der Vorteil davon ist, dass das Dokument in PDF-Readern, die keine interaktiven Element unterstützen, vollständig angezeigt werden kann.
    Das betrifft viele PDF-Reader auf Tablets.
-
    Außerdem sieht das Dokument nicht stark unterschiedlich in verschiedenen Readern aus.
  * Die Werte des Helden können in einer Textdatei gespeichert werden, aus der bei Änderungen immer wieder ein neues Dokument erstellt werden kann.
    Dadurch kann der Held beispielsweise einfach in einem Versionskontrollsystem abgelegt werden.
    Warum würde man Versionskontrolle wollen? Naja, um beispielsweise wenn auf einer Convention ein Held mit maximal 5000 AP verlangt wird, man einfach eine frühere Version bauen kann. Alltäglicher Anwendungsfall!
  * Alternierender Hintergrund pro Zeile bei vielen Tabellen für bessere Lesbarkeit.
    Das schließt beispielsweise Talente, Liturgien, Rituale und Zauber ein.
- * Dynamische Größe der meisten Tabellen:
-   Die meisten Tabellen, haben eine variable Anzahl an Zeilen.
+ * Dynamische Größe von Tabellen:
+   Die meisten Tabellen haben eine variable Anzahl an Zeilen.
    Man kann beispielsweise mehr Zeilen in gesellschaftlichen Talenten haben und dafür weniger Zeilen bei den Körperlichen – oder die „Gaben“-Tabelle komplett entfernen, wenn man sie nicht braucht.
-   Für all dies muss man nur die Eingabe-Textdatei ändern.
- * Hochformat-Zaubertabelle mit nur den wesentlichsten Informationen und einer Spalte, in der man die Zeile im Liber angeben kann.
+   Dies kann in der Eingabe-Textdatei definiert werden.
+ * Hochformat-Zaubertabelle mit nur den wesentlichsten Informationen und einer Spalte, in der man die Zeile im Liber Cantiones angeben kann.
    Niemand braucht die Querformat-Tabelle.
    Außerdem wird automatisch eine zweite, dritte, … Seite erzeugt wenn man viele Zauber hat.
  * Frei und quelloffen: Der Quellcode ist unter einer freien Lizenz verfügbar und das Dokument kann komplett mit Open-Source-Software gebaut werden.
    Nur die verwendeten Bilder und Schriftarten unterliegen urheberrechtlichen Beschränkungen.
  * Berechnung abgeleiteter Werte:
-   Abgeleitete Eigenschaften und berechenbare Werte auf dem Kampfbogen werden automatisch ausgefüllt, wenn die zugrundeliegenden Werte verfügbar sind.
-   Ebenfalls automatisch berechnet wird die Lernschwierigkeit von Zaubern.
+   Abgeleitete Eigenschaften und berechenbare Werte werden automatisch ausgefüllt, wenn die zugrundeliegenden Werte verfügbar sind.
+   Dies schließt abgeleitete Eigenschaften, Kampfwerte und Lernschwierigkeiten von Zaubern ein.
  * Blanko-Generierung:
    Für Spieler, die den Bogen lieber von Hand ausfüllen, kann ein leerer Bogen generiert werden.
-   Die abgeleiteten Werte werden leer gelassen, wenn die zugrundeliegenden Werte leer sind.
+   Die berechneten Werte werden leer gelassen, wenn die zugrundeliegenden Werte leer sind.
+   Die Definition von Tabellengrößen ist unabhängig von den enthaltenen Daten und kann auch für einen leeren Bogen spezifiziert werden.
 
 ## Wie generiere ich das Dokument?
 
-Es gibt zwei Möglichkeiten:
+Um das Dokument zu generieren, braucht man eine Umgebung, in der alle benötigten Ressourcen und Programme verfügbar sind.
+Es gibt zwei Möglichkeiten, eine solche Umgebung aufzusetzen:
 
- * Mit [Docker](https://www.docker.com): Dies ist ein Werzeug, um alle nötigen Werkzeuge reproduzierbar zusammenzustellen.
-   Installiert man Docker, kann man ein *image* erstellen, in dem die benötigte Software enthalten ist.
+ * Mit [Docker](https://www.docker.com): Dies ist ein Werzeug, um die gesamte Umgebung reproduzierbar einzurichten.
+   Hat man Docker installiert, kann man damit ein *image* erstellen, in dem die benötigte Software enthalten ist.
    Mit diesem Image kann dann das Heldendokument generiert werden.
    Das Image ist portierbar zwischen Betriebssystemen, insbesondere Windows-Nutzern wird zu dieser Alternative geraten.
    Es liegt auch eine Definition für ein erweitertes Docker-Image bereit, das ein Web-Frontend zur Generierung bereitstellt – für Leute, die die Kommandozeile nicht mögen.
@@ -119,29 +121,24 @@ Der Pfad `../templates/profan.lua` kann durch den Pfad zu einer beliebigen Helde
 
 ## Eine Helden-Datei erstellen
 
-Die Dateneingabe für den Helden ist eine simple Lua-Datei.
-Als Ausgangspunkt sollten die Templates im Ordner `templates` verwendet werden.
-Sie sind ausführlich kommentiert und erläutern, wie man Werte einfügt und verändert.
-
-Die Templates selbst können als Eingabe benutzt werden, um leere Heldendokumente zu erstellen – falls man sie einfach ausdrucken und mit Bleistift befüllen will *wie die Barbaren*.
-In den Templates sind ausschließlich die Basis-Talente vorausgefüllt.
-Unabhängig davon, ob Zeilen in Tabellen ausgefüllt sind oder nicht, lässt sich die Anzahl Zeilen immer dadurch beeinflussen, dass man zusätzliche, möglicherweise leere, Zeilenwerte (meistens `{}`, siehe Templates) einfügt oder löscht.
+Die Dateneingabe für den Helden geschieht über eine Lua-Datei.
+Eine sehr rudimentäre Dokumentation der Struktur der Eingabedatei ist [hier](https://flyx.github.io/DSA-4.1-Heldendokument/) verfügbar.
+Im Ordner `templates` finden sich Dateien mit Layouts für einen profanen Charakter (Frontseite, Talentbogen, Kampfbogen, Ausrüstungsbogen), einen geweihten Character (Liturgiebogen statt Ausrüstungsbogen) und einen magischen Character (zusätzlich Zauberdokument und Zauberliste).
+Die Templates enthalten zudem die Basis-Talente – löscht man die entsprechenden Definitionen, hat man komplett unausgefüllte Tabellen auf dem Talentbogen.
+Will man einen Bogen für einen Helden erstellen, empfiehlt es sich, eines der Templates als Ausgangspunkt zu nehmen.
 
 ### Import aus der Heldensoftware
 
-Der Held muss über `Datei > Exportieren > Held exportieren` exportiert werden.
+Der Held muss über in der Heldensoftware über `Datei > Exportieren > Held exportieren` exportiert werden.
 Die erstellte XML-Datei (hier als Beispiel `held.xml`) kann dann folgendermaßen in Daten für den Heldenbogen (hier `held.lua`) transformiert werden:
 
     xsltproc import.xsl held.xml > held.lua
 
 Windows-Nutzer können das wohl auch [irgendwie über PowerShell machen](https://gist.github.com/wschwarz/5073004).
-
 Der Docker-Server bietet diese Funktion auf seinem Webinterface ebenfalls an.
 
-Der Import umfasst derzeit im Wesentlichen Frontseite, Rituale, Zauber und Sonderfertigkeiten.
-Bei den Zaubern fehlen derzeit die Merkmale, die nachgetragen werden sollten, damit die Lernschwierigkeit korrekt berechnet wird.
-Die Ausrüstung auf dem Kampfbogen wird derzeit nicht übertragen und muss manuell nachgetragen werden.
-Generell ist der Import wenig getestet und Fehler im resultierenden Dokument oder Fehlermeldungen können gerne als Issues hier im Repository berichtet werden.
+Der Import ist ein Beta-Feature und wenig getestet.
+Fehler im resultierenden Dokument oder auftretende Fehlermeldungen können gerne als Issues hier im Repository berichtet werden.
 
 ## Lizenz
 

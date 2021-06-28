@@ -20,4 +20,9 @@ docker-bare: ${SOURCES} docker/bare.dockerfile docker/held.sh
 docker-server: docker/server.dockerfile docker/index.html docker/serve.go
 	docker build -f docker/server.dockerfile -t dsa-4.1-heldendokument-generator .
 
-.PHONY: docker-bare docker-server
+doc: doc/index.html
+
+doc/index.html: src/schemadef.lua src/schema.lua
+	cd src && texlua schema.lua --standalone gendoc > ../doc/index.html
+
+.PHONY: docker-bare docker-server doc

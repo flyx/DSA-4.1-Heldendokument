@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="de" style="background-color: darkslategray;">
+  <head>
+    <title>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</title>
+    <link rel="stylesheet" href="code.css"/>
+  </head>
+  <body>
+<article class="doc">
+
+<section><h1>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</h1>
+
+<p>Grundsätzliche Struktur:</p>
+
+<pre><code><a href="#Layout">Layout</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Held">Held</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Vorteile">Vorteile</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Vorteile.magisch">Vorteile.magisch</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Nachteile">Nachteile</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Nachteile.magisch">Nachteile.magisch</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Eigenschaften">Eigenschaften</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#AP">AP</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Talente.Begabungen">Talente.Begabungen</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Talente.Gaben">Talente.Gaben</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Talente.Kampf">Talente.Kampf</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Talente.Koerper">Talente.Koerper</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Talente.Gesellschaft">Talente.Gesellschaft</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Talente.Natur">Talente.Natur</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Talente.Wissen">Talente.Wissen</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Talente.Sprachen">Talente.Sprachen</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Talente.Handwerk">Talente.Handwerk</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#SF">SF</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#SF.Nahkampf">SF.Nahkampf</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#SF.Fernkampf">SF.Fernkampf</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#SF.Waffenlos">SF.Waffenlos</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#SF.Magisch">SF.Magisch</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Waffen.Nahkampf">Waffen.Nahkampf</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Waffen.Fernkampf">Waffen.Fernkampf</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Waffen.Schilde">Waffen.Schilde</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Waffen.Ruestung">Waffen.Ruestung</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Kleidung">Kleidung</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Ausruestung">Ausruestung</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Proviant">Proviant</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Vermoegen">Vermoegen</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Vermoegen.Sonstiges">Vermoegen.Sonstiges</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Verbindungen">Verbindungen</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Notizen">Notizen</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Tiere">Tiere</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Liturgiekenntnis">Liturgiekenntnis</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Liturgien">Liturgien</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Magie.Rituale">Magie.Rituale</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Magie.Ritualkenntnis">Magie.Ritualkenntnis</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Magie.Regeneration">Magie.Regeneration</a><span class="sym">(</span><span class="metasym">...</span><span class="sym">)</span>
+<a href="#Magie.Artefakte">Magie.Artefakte</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Magie.Notizen">Magie.Notizen</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Magie.Repraesentationen">Magie.Repraesentationen</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Magie.Merkmalskenntnis">Magie.Merkmalskenntnis</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Magie.Begabungen">Magie.Begabungen</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Magie.Unfaehigkeiten">Magie.Unfaehigkeiten</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Magie.Zauber">Magie.Zauber</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+</code></pre><p>
+  Jedes Element auf der obersten Ebene ist optional, ihre Reihenfolge beliebig.
+  Die Struktur der einzelnen Elemente wird bei dem jeweiligen verlinkten Typen beschrieben.
+  Wird ein Element nicht angegeben, erhält es einen Standard-Wert, was in der Regel bedeutet, dass die Daten leer sind.
+  Die Ausnahme ist <code>Layout</code>, dessen Standardwert alle verfügbaren Seiten generiert.
+  Dies eignet sich als Kopiervorlage, aber für einen spezifischen Helden ist es eher unnütz, da man kaum sowohl Ausrüstungs- wie auch Liturgiebogen benötigt.</p></section><section><h2>Grundlegende Typen</h2>
+
+  <p>
+  Die im Folgenden definierten Typen werden an vielen Stellen für Werte benutzt.</p><h3 id="String">String</h3>
+
+<pre><code><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span></code></pre><p>Beliebiger Text in Hochkommata.</p><h3 id="Ganzzahl">Ganzzahl</h3>
+
+<pre><code><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span></code></pre><p>Eine Zahl in Dezimalschreibweise.</p><h3 id="Simple">Simple</h3>
+
+<pre><code><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | &lt;Zahl&gt; ]</span></code></pre><p>Zahl oder Text.</p><h3 id="Boolean">Boolean</h3>
+
+<pre><code><span class="metasym">[ </span><span class="id">true</span><span class="metasym"> | </span><span class="id">false</span><span class="metasym"> ]</span></code></pre><p>true oder false.</p><h3 id="Multiline">Multiline</h3>
+
+<pre><code><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span></code></pre><p>Text oder Liste von Text.</p></section><section><h2 id="Layout">Layout</h2>
+
+<pre><code><span class="id">Layout</span> <span class="sym">{</span>
+  <span class="metasym">&lt;Seite: [ </span><a href="#Front">&lt;Front&gt;</a><span class="metasym"> | </span><a href="#Talentliste">&lt;Talentliste&gt;</a><span class="metasym"> | </span><a href="#Kampfbogen">&lt;Kampfbogen&gt;</a><span class="metasym"> | </span><a href="#Ausruestungsbogen">&lt;Ausruestungsbogen&gt;</a><span class="metasym"> | </span><a href="#Liturgiebogen">&lt;Liturgiebogen&gt;</a><span class="metasym"> | </span><a href="#Zauberdokument">&lt;Zauberdokument&gt;</a><span class="metasym"> | </span><a href="#Zauberliste">&lt;Zauberliste&gt;</a><span class="metasym"> ]&gt;</span><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Definiert, welche Seiten in welcher Reihenfolge generiert werden.
+Für die einzelnen Seiten können weitere Spezifikationen vorgenommen werden, dies ist bei den Typen der
+einzelnen Seiten beschrieben.</p>
+
+<h3 id="Front">Front</h2>
+
+<pre><code><span class="id">Front</span> <span class="sym">{</span>
+  <span class="id">Aussehen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Vorteile</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Nachteile</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a>
+<span class="sym">}</span></code></pre>
+
+<p>Frontseite</p>
+
+<h4 id="Zeilen">Zeilen</h2>
+
+<pre><code><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span></code></pre>
+
+<p>Anzahl Zeilen in einem Feld oder einer Tabelle</p>
+
+<h3 id="Talentliste">Talentliste</h2>
+
+<pre><code><span class="id">Talentliste</span> <span class="sym">{</span>
+  <span class="metasym">&lt;Gruppe: [ </span><a href="#Sonderfertigkeiten">&lt;Sonderfertigkeiten&gt;</a><span class="metasym"> | </span><a href="#Gaben">&lt;Gaben&gt;</a><span class="metasym"> | </span><a href="#Begabungen">&lt;Begabungen&gt;</a><span class="metasym"> | </span><a href="#Kampf">&lt;Kampf&gt;</a><span class="metasym"> | </span><a href="#Koerper">&lt;Koerper&gt;</a><span class="metasym"> | </span><a href="#Gesellschaft">&lt;Gesellschaft&gt;</a><span class="metasym"> | </span><a href="#Natur">&lt;Natur&gt;</a><span class="metasym"> | </span><a href="#Wissen">&lt;Wissen&gt;</a><span class="metasym"> | </span><a href="#Sprachen">&lt;Sprachen&gt;</a><span class="metasym"> | </span><a href="#Handwerk">&lt;Handwerk&gt;</a><span class="metasym"> ]&gt;</span><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Sonderfertigkeiten & Talente. Der Inhalt dieses Werts definiert die Reihenfolge der Untergruppen und die Anzahl Zeilen jeder Untergruppe.</p>
+
+<h4 id="Sonderfertigkeiten">Sonderfertigkeiten</h2>
+
+<pre><code><span class="id">Sonderfertigkeiten</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+
+<p>Zeilen für Sonderfertigkeiten</p>
+
+<h4 id="Gaben">Gaben</h2>
+
+<pre><code><span class="id">Gaben</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+
+<p>Zeilen für Gaben</p>
+
+<h4 id="Begabungen">Begabungen</h2>
+
+<pre><code><span class="id">Begabungen</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+
+<p>Zeilen für Übernatürliche Begabungen</p>
+
+<h4 id="Kampf">Kampf</h2>
+
+<pre><code><span class="id">Kampf</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+
+<p>Zeilen für Kampftalente</p>
+
+<h4 id="Koerper">Koerper</h2>
+
+<pre><code><span class="id">Koerper</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+
+<p>Zeilen für Körperliche Talente</p>
+
+<h4 id="Gesellschaft">Gesellschaft</h2>
+
+<pre><code><span class="id">Gesellschaft</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+
+<p>Zeilen für Gesellschaftstalente</p>
+
+<h4 id="Natur">Natur</h2>
+
+<pre><code><span class="id">Natur</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+
+<p>Zeilen für Naturtalente</p>
+
+<h4 id="Wissen">Wissen</h2>
+
+<pre><code><span class="id">Wissen</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+
+<p>Zeilen für Wissenstalente</p>
+
+<h4 id="Sprachen">Sprachen</h2>
+
+<pre><code><span class="id">Sprachen</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+
+<p>Zeilen für Sprachen & Schriften</p>
+
+<h4 id="Handwerk">Handwerk</h2>
+
+<pre><code><span class="id">Handwerk</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+
+<p>Zeilen für Handwerkstalente</p>
+
+<h3 id="Kampfbogen">Kampfbogen</h2>
+
+<pre><code><span class="id">Kampfbogen</span> <span class="sym">{</span>
+  <span class="id">Nahkampf</span><span class="sym"> = </span><a href="#NahkampfWaffenUndSF">&lt;NahkampfWaffenUndSF&gt;</a><span class="sym">,</span>
+  <span class="id">Fernkampf</span><span class="sym"> = </span><a href="#FernkampfWaffenUndSF">&lt;FernkampfWaffenUndSF&gt;</a><span class="sym">,</span>
+  <span class="id">Waffenlos</span><span class="sym"> = </span><a href="#Waffenlos">&lt;Waffenlos&gt;</a><span class="sym">,</span>
+  <span class="id">Schilde</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Ruestung</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a>
+<span class="sym">}</span></code></pre>
+
+<p>Kampfbogen.</p>
+
+<h4 id="NahkampfWaffenUndSF">NahkampfWaffenUndSF</h2>
+
+<pre><code><span class="sym">{</span><span class="id">Waffen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">SF</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">}</span></code></pre>
+
+<p>Zeilen für Nahkampfwaffen und -SF.</p>
+
+<h4 id="FernkampfWaffenUndSF">FernkampfWaffenUndSF</h2>
+
+<pre><code><span class="sym">{</span><span class="id">Waffen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">SF</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">}</span></code></pre>
+
+<p>Zeilen für Fernkampfwaffen und -SF.</p>
+
+<h4 id="Waffenlos">Waffenlos</h2>
+
+<pre><code><span class="sym">{</span><span class="id">SF</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">}</span></code></pre>
+
+<p>Zeilen für waffenlose Manöver.</p>
+
+<h3 id="Ausruestungsbogen">Ausruestungsbogen</h2>
+
+<pre><code><span class="id">Ausruestungsbogen</span> <span class="sym">{</span>
+  <span class="id">Kleidung</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Gegenstaende</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Proviant</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Vermoegen</span><span class="sym"> = </span><a href="#Vermoegen">&lt;Vermoegen&gt;</a><span class="sym">,</span>
+  <span class="id">Verbindungen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Notizen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Tiere</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a>
+<span class="sym">}</span></code></pre>
+
+<p>Ausrüstungsbogen.</p>
+
+<h4 id="Vermoegen">Vermoegen</h2>
+
+<pre><code><span class="sym">{</span><span class="id">Muenzen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Sonstiges</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">}</span></code></pre>
+
+<p>Zeilen in der Vermögensbox.</p>
+
+<h3 id="Liturgiebogen">Liturgiebogen</h2>
+
+<pre><code><span class="id">Liturgiebogen</span> <span class="sym">{</span>
+  <span class="id">Kleidung</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Liturgien</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Gegenstaende</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">ProviantVermoegen</span><span class="sym"> = </span><a href="#ProviantVermoegen">&lt;ProviantVermoegen&gt;</a><span class="sym">,</span>
+  <span class="id">VerbindungenNotizen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Tiere</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a>
+<span class="sym">}</span></code></pre>
+
+<p>Bogen für Liturgien & Ausrüsung.</p>
+
+<h4 id="ProviantVermoegen">ProviantVermoegen</h2>
+
+<pre><code><span class="sym">{</span><span class="id">Gezaehlt</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Sonstiges</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">}</span></code></pre>
+
+<p>Zeilen für Proviant & Vermögen Box.</p>
+
+<h3 id="Zauberdokument">Zauberdokument</h2>
+
+<pre><code><span class="id">Zauberdokument</span> <span class="sym">{</span>
+  <span class="id">VorUndNachteile</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Sonderfertigkeiten</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Rituale</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Ritualkenntnis</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Artefakte</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
+  <span class="id">Notizen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a>
+<span class="sym">}</span></code></pre>
+
+<p>Zauberdokument.</p>
+
+<h3 id="Zauberliste">Zauberliste</h2>
+
+<pre><code><span class="id">Zauberliste</span> <span class="sym">{</span>
+  <span class="sym">{}</span>
+<span class="sym">}</span></code></pre>
+
+<p>Zauberliste.</p>
+
+</section><section><h2 id="Held">Held</h2>
+
+<pre><code><span class="id">Held</span> <span class="sym">{</span>
+  <span class="id">Name</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">GP</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Rasse</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Kultur</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Profession</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Geschlecht</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Tsatag</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Groesse</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Gewicht</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Haarfarbe</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Augenfarbe</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Stand</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Sozialstatus</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Titel</span><span class="sym"> = </span><a href="#Multiline">&lt;Multiline&gt;</a><span class="sym">,</span>
+  <span class="id">Aussehen</span><span class="sym"> = </span><a href="#Multiline">&lt;Multiline&gt;</a>
+<span class="sym">}</span></code></pre>
+
+<p>Grundlegende Daten des Helden.</p>
+
+</section><section><h2 id="Vorteile">Vorteile</h2>
+
+<pre><code><span class="id">Vorteile</span> <span class="sym">{</span>
+  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von nicht-magischen Vorteilen.</p>
+
+</section><section><h2 id="Vorteile.magisch">Vorteile.magisch</h2>
+
+<pre><code><span class="id">Vorteile.magisch</span> <span class="sym">{</span>
+  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von magischen Vorteilen.</p>
+
+</section><section><h2 id="Nachteile">Nachteile</h2>
+
+<pre><code><span class="id">Nachteile</span> <span class="sym">{</span>
+  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von nicht-magischen Nachteilen</p>
+
+</section><section><h2 id="Nachteile.magisch">Nachteile.magisch</h2>
+
+<pre><code><span class="id">Nachteile.magisch</span> <span class="sym">{</span>
+  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von magischen Nachteilen.</p>
+
+</section><section><h2 id="Eigenschaften">Eigenschaften</h2>
+
+<pre><code><span class="id">Eigenschaften</span> <span class="sym">{</span>
+  <span class="id">MU</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
+  <span class="id">KL</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
+  <span class="id">IN</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
+  <span class="id">CH</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
+  <span class="id">FF</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
+  <span class="id">GE</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
+  <span class="id">KO</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
+  <span class="id">KK</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
+  <span class="id">LE</span><span class="sym"> = </span><a href="#AbgeleiteteEig">&lt;AbgeleiteteEig&gt;</a><span class="sym">,</span>
+  <span class="id">AU</span><span class="sym"> = </span><a href="#AbgeleiteteEig">&lt;AbgeleiteteEig&gt;</a><span class="sym">,</span>
+  <span class="id">AE</span><span class="sym"> = </span><a href="#AbgeleiteteEig">&lt;AbgeleiteteEig&gt;</a><span class="sym">,</span>
+  <span class="id">MR</span><span class="sym"> = </span><a href="#AbgeleiteteEig">&lt;AbgeleiteteEig&gt;</a><span class="sym">,</span>
+  <span class="id">KE</span><span class="sym"> = </span><a href="#AbgeleiteteEig">&lt;AbgeleiteteEig&gt;</a><span class="sym">,</span>
+  <span class="id">INI</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Basis- und abgeleiteten Eigenschaften</p>
+
+<h3 id="BasisEig">BasisEig</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span><span class="sym">}</span></code></pre>
+
+<p>Eine Basiseigenschaft mit Modifikator, Startwert und aktuellem Wert.</p>
+
+<h3 id="AbgeleiteteEig">AbgeleiteteEig</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span><span class="sym">}</span></code></pre>
+
+<p>Eine abgeleitete Eigenschaft mit Modifikator, zugekauften Punkten und permanent verlorenen Punkten.</p>
+
+</section><section><h2 id="AP">AP</h2>
+
+<pre><code><span class="id">AP</span> <span class="sym">{</span>
+  <span class="id">Gesamt</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Eingesetzt</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
+  <span class="id">Guthaben</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a>
+<span class="sym">}</span></code></pre>
+
+<p>Abenteuerpunkte.</p>
+
+</section><section><h2 id="Talente.Begabungen">Talente.Begabungen</h2>
+
+<pre><code><span class="id">Talente.Begabungen</span> <span class="sym">{</span>
+  <a href="#Talent">&lt;Talent&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste übernatürlicher Begabungen.</p>
+
+<h3 id="Talent">Talent</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe1:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe2:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe3:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Ein allgemeines Talent.</p>
+
+<h3 id="Eigenschaft">Eigenschaft</h2>
+
+<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">%*%*</span><span class="metasym"> | </span><span class="id">MU</span><span class="metasym"> | </span><span class="id">KL</span><span class="metasym"> | </span><span class="id">IN</span><span class="metasym"> | </span><span class="id">CH</span><span class="metasym"> | </span><span class="id">FF</span><span class="metasym"> | </span><span class="id">GE</span><span class="metasym"> | </span><span class="id">KO</span><span class="metasym"> | </span><span class="id">KK</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+
+<p>Referenz auf einen Eigenschaftsnamen.</p>
+
+</section><section><h2 id="Talente.Gaben">Talente.Gaben</h2>
+
+<pre><code><span class="id">Talente.Gaben</span> <span class="sym">{</span>
+  <a href="#Talent">&lt;Talent&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Gaben.</p>
+
+</section><section><h2 id="Talente.Kampf">Talente.Kampf</h2>
+
+<pre><code><span class="id">Talente.Kampf</span> <span class="sym">{</span>
+  <a href="#KampfTalent">&lt;KampfTalent&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Kampftalenten.</p>
+
+<h3 id="KampfTalent">KampfTalent</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;AT:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;PA:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Ein Talent aus der Gruppe der Kampftalene.</p>
+
+<h3 id="SteigSpalte">SteigSpalte</h2>
+
+<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">A%*?</span><span class="metasym"> | </span><span class="id">B</span><span class="metasym"> | </span><span class="id">C</span><span class="metasym"> | </span><span class="id">D</span><span class="metasym"> | </span><span class="id">E</span><span class="metasym"> | </span><span class="id">F</span><span class="metasym"> | </span><span class="id">G</span><span class="metasym"> | </span><span class="id">H</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+
+<p>Eine Steigerungsspalte.</p>
+
+<h3 id="Behinderung">Behinderung</h2>
+
+<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">%-</span><span class="metasym"> | </span><span class="id">BE</span><span class="metasym"> | </span><span class="id">BE%-[1-9]</span><span class="metasym"> | </span><span class="id">BEx[2-9]</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+
+<p>Behinderung.</p>
+
+</section><section><h2 id="Talente.Koerper">Talente.Koerper</h2>
+
+<pre><code><span class="id">Talente.Koerper</span> <span class="sym">{</span>
+  <a href="#KoerperTalent">&lt;KoerperTalent&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von körperlichen Talenten.</p>
+
+<h3 id="KoerperTalent">KoerperTalent</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe1:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe2:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe3:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Taw:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Ein Talent aus der Gruppe der Körperlichen Talente.</p>
+
+</section><section><h2 id="Talente.Gesellschaft">Talente.Gesellschaft</h2>
+
+<pre><code><span class="id">Talente.Gesellschaft</span> <span class="sym">{</span>
+  <a href="#Talent">&lt;Talent&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Gesellschaftstalenten.</p>
+
+</section><section><h2 id="Talente.Natur">Talente.Natur</h2>
+
+<pre><code><span class="id">Talente.Natur</span> <span class="sym">{</span>
+  <a href="#Talent">&lt;Talent&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Naturtalenten.</p>
+
+</section><section><h2 id="Talente.Wissen">Talente.Wissen</h2>
+
+<pre><code><span class="id">Talente.Wissen</span> <span class="sym">{</span>
+  <a href="#Talent">&lt;Talent&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Wissenstalenten.</p>
+
+</section><section><h2 id="Talente.Sprachen">Talente.Sprachen</h2>
+
+<pre><code><span class="id">Talente.Sprachen</span> <span class="sym">{</span>
+  <a href="#Sprache">&lt;Sprache&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Sprachen & Schriften.</p>
+
+<h3 id="Sprache">Sprache</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Eine Sprache oder ein Schrift.</p>
+
+</section><section><h2 id="Talente.Handwerk">Talente.Handwerk</h2>
+
+<pre><code><span class="id">Talente.Handwerk</span> <span class="sym">{</span>
+  <a href="#Talent">&lt;Talent&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Handwerkstalenten.</p>
+
+</section><section><h2 id="SF">SF</h2>
+
+<pre><code><span class="id">SF</span> <span class="sym">{</span>
+  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Sonderfertigkeiten (außer Kampf & magischen)</p>
+
+</section><section><h2 id="SF.Nahkampf">SF.Nahkampf</h2>
+
+<pre><code><span class="id">SF.Nahkampf</span> <span class="sym">{</span>
+  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Parierwaffen </span><span class="sym">{</span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span><span class="sym">}</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Ausweichen </span><span class="sym">{</span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">}</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Schildkampf </span><span class="sym">{</span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span><span class="sym">}</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Ruestungsgewoehnung </span><span class="sym">{</span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">}</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Nahkampf-Sonderfertigkeiten.</p>
+
+</section><section><h2 id="SF.Fernkampf">SF.Fernkampf</h2>
+
+<pre><code><span class="id">SF.Fernkampf</span> <span class="sym">{</span>
+  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Fernkampf-Sonderfertigkeiten.</p>
+
+</section><section><h2 id="SF.Waffenlos">SF.Waffenlos</h2>
+
+<pre><code><span class="id">SF.Waffenlos</span> <span class="sym">{</span>
+  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Kampfstile </span><span class="sym">{</span><span class="id">TODO</span><span class="sym">}</span>
+<span class="sym">}</span></code></pre>
+
+<p>Listen waffenloser Sonderfertigkeiten.</p>
+
+</section><section><h2 id="SF.Magisch">SF.Magisch</h2>
+
+<pre><code><span class="id">SF.Magisch</span> <span class="sym">{</span>
+  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste magischer Sonderfertigkeiten</p>
+
+</section><section><h2 id="Waffen.Nahkampf">Waffen.Nahkampf</h2>
+
+<pre><code><span class="id">Waffen.Nahkampf</span> <span class="sym">{</span>
+  <a href="#Nahkampfwaffe">&lt;Nahkampfwaffe&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Nahkampfwaffen.</p>
+
+<h3 id="Nahkampfwaffe">Nahkampfwaffe</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Talent:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;DK:</span><a href="#Distanzklasse">Distanzklasse</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP:</span><a href="#Schaden">Schaden</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/KK Schwelle:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/KK Schritt:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;INI:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM AT:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM PA:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BF1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BF2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Eine Nahkampfwaffe.</p>
+
+<h3 id="Distanzklasse">Distanzklasse</h2>
+
+<pre><code><span class="sym">"</span><span class="id">[HNSP]*</span><span class="sym">"</span></code></pre>
+
+<p>Eine Distanzklasse.</p>
+
+<h3 id="Schaden">Schaden</h2>
+
+<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">[0-9]*W[0-9]*</span><span class="metasym"> | </span><span class="id">[0-9]*W[0-9]*[%+%-][0-9]+</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+
+<p>Trefferpunkte einer Waffe.</p>
+
+</section><section><h2 id="Waffen.Fernkampf">Waffen.Fernkampf</h2>
+
+<pre><code><span class="id">Waffen.Fernkampf</span> <span class="sym">{</span>
+  <a href="#Fernkampfwaffe">&lt;Fernkampfwaffe&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Fernkampfwaffen.</p>
+
+<h3 id="Fernkampfwaffe">Fernkampfwaffe</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Talent:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP:</span><a href="#Schaden">Schaden</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Entfernung1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Entfernung2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Entfernung3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Entfernung4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Entfernung5:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/Entfernung1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/Entfernung2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/Entfernung3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/Entfernung4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/Entfernung5:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Geschosse1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Geschosse2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Geschosse3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Eine Fernkampfwaffe.</p>
+
+</section><section><h2 id="Waffen.Schilde">Waffen.Schilde</h2>
+
+<pre><code><span class="id">Waffen.Schilde</span> <span class="sym">{</span>
+  <a href="#Schild">&lt;Schild&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Schilden und Parierwaffen.</p>
+
+<h3 id="Schild">Schild</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Typ:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;INI:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM AT:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM PA:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BF1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BF2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Ein Schild oder eine Parierwaffe.</p>
+
+</section><section><h2 id="Waffen.Ruestung">Waffen.Ruestung</h2>
+
+<pre><code><span class="id">Waffen.Ruestung</span> <span class="sym">{</span>
+  <a href="#Ruestungsteil">&lt;Ruestungsteil&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Rüstungsteilen.</p>
+
+<h3 id="Ruestungsteil">Ruestungsteil</h2>
+
+<pre><code><span class="sym">{</span><span class="id">1</span><span class="sym"> = </span><a href="#String">&lt;String&gt;</a><span class="sym">,</span>
+  <span class="id">2</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
+  <span class="id">3</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
+  <span class="id">Kopf</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
+  <span class="id">Brust</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
+  <span class="id">Ruecken</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
+  <span class="id">LArm</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
+  <span class="id">RArm</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
+  <span class="id">Bauch</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
+  <span class="id">LBein</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
+  <span class="id">RBein</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">}</span></code></pre>
+
+<p>Ein Rüstungsteil.</p>
+
+</section><section><h2 id="Kleidung">Kleidung</h2>
+
+<pre><code><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span></code></pre>
+
+<p>Mehrzeiliger Text für den Kleidungs-Kasten auf dem Ausrüstungsbogen.</p>
+
+</section><section><h2 id="Ausruestung">Ausruestung</h2>
+
+<pre><code><span class="id">Ausruestung</span> <span class="sym">{</span>
+  <a href="#Gegenstand">&lt;Gegenstand&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Ausrüstungsgegenständen.</p>
+
+<h3 id="Gegenstand">Gegenstand</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Gewicht:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Getragen:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Ein Ausrüstungsgegenstand.</p>
+
+</section><section><h2 id="Proviant">Proviant</h2>
+
+<pre><code><span class="id">Proviant</span> <span class="sym">{</span>
+  <a href="#Rationen">&lt;Rationen&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Proviant & Tränken.</p>
+
+<h3 id="Rationen">Rationen</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Ration1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Ration2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Ration3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Ration4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Proviant oder Trank mit Rationen.</p>
+
+</section><section><h2 id="Vermoegen">Vermoegen</h2>
+
+<pre><code><span class="id">Vermoegen</span> <span class="sym">{</span>
+  <a href="#Muenzen">&lt;Muenzen&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Münzenarten.</p>
+
+<h3 id="Muenzen">Muenzen</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert5:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert6:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert7:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert8:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Eine Münzenart mit mehreren Werten.</p>
+
+</section><section><h2 id="Vermoegen.Sonstiges">Vermoegen.Sonstiges</h2>
+
+<pre><code><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span></code></pre>
+
+<p>Sonstiges Vermögen.</p>
+
+</section><section><h2 id="Verbindungen">Verbindungen</h2>
+
+<pre><code><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span></code></pre>
+
+<p>Verbindungen.</p>
+
+</section><section><h2 id="Notizen">Notizen</h2>
+
+<pre><code><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span></code></pre>
+
+<p>Notizen auf dem Ausrüstungs / Liturgienbogen.</p>
+
+</section><section><h2 id="Tiere">Tiere</h2>
+
+<pre><code><span class="id">Tiere</span> <span class="sym">{</span>
+  <a href="#Tier">&lt;Tier&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Tieren.</p>
+
+<h3 id="Tier">Tier</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;INI:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;AT:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;PA:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP:</span><a href="#Schaden">Schaden</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;LE:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;RS:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;KO:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;KO:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;GS:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;AU:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;MR:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;LO:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TK:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;ZK:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Werte eines Tiers.</p>
+
+</section><section><h2 id="Liturgiekenntnis">Liturgiekenntnis</h2>
+
+<pre><code><span class="id">Liturgiekenntnis</span> <span class="sym">{</span>
+  <span class="metasym">&lt;Gottheit:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liturgiekenntnis.</p>
+
+</section><section><h2 id="Liturgien">Liturgien</h2>
+
+<pre><code><span class="id">Liturgien</span> <span class="sym">{</span>
+  <a href="#Liturgie">&lt;Liturgie&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Liturgien.</p>
+
+<h3 id="Liturgie">Liturgie</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Seite:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Grad:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Eine Liturgie.</p>
+
+</section><section><h2 id="Magie.Rituale">Magie.Rituale</h2>
+
+<pre><code><span class="id">Magie.Rituale</span> <span class="sym">{</span>
+  <a href="#Ritual">&lt;Ritual&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Ritualen.</p>
+
+<h3 id="Ritual">Ritual</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe1:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe2:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe3:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Dauer:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wirkung:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Ein Ritual.</p>
+
+</section><section><h2 id="Magie.Ritualkenntnis">Magie.Ritualkenntnis</h2>
+
+<pre><code><span class="id">Magie.Ritualkenntnis</span> <span class="sym">{</span>
+  <a href="#RK-Wert">&lt;RK-Wert&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Ritualkenntnissen.</p>
+
+<h3 id="RK-Wert">RK-Wert</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Ein Ritualkenntnis-Wert.</p>
+
+</section><section><h2 id="Magie.Regeneration">Magie.Regeneration</h2>
+
+<pre><code><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | &lt;Zahl&gt; ]</span></code></pre>
+
+<p>AsP-Regeneration pro Phase.</p>
+
+</section><section><h2 id="Magie.Artefakte">Magie.Artefakte</h2>
+
+<pre><code><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span></code></pre>
+
+<p>Artefakte.</p>
+
+</section><section><h2 id="Magie.Notizen">Magie.Notizen</h2>
+
+<pre><code><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span></code></pre>
+
+<p>Notizen auf dem Zauberdokument.</p>
+
+</section><section><h2 id="Magie.Repraesentationen">Magie.Repraesentationen</h2>
+
+<pre><code><span class="id">Magie.Repraesentationen</span> <span class="sym">{</span>
+  <a href="#Repraesentation">&lt;Repraesentation&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste beherrschter Repräsentationen.</p>
+
+<h3 id="Repraesentation">Repraesentation</h2>
+
+<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">Ach</span><span class="metasym"> | </span><span class="id">Alh</span><span class="metasym"> | </span><span class="id">Bor</span><span class="metasym"> | </span><span class="id">Dru</span><span class="metasym"> | </span><span class="id">Dra</span><span class="metasym"> | </span><span class="id">Elf</span><span class="metasym"> | </span><span class="id">Fee</span><span class="metasym"> | </span><span class="id">Geo</span><span class="metasym"> | </span><span class="id">Gro</span><span class="metasym"> | </span><span class="id">Gül</span><span class="metasym"> | </span><span class="id">Kob</span><span class="metasym"> | </span><span class="id">Kop</span><span class="metasym"> | </span><span class="id">Hex</span><span class="metasym"> | </span><span class="id">Mag</span><span class="metasym"> | </span><span class="id">Mud</span><span class="metasym"> | </span><span class="id">Nac</span><span class="metasym"> | </span><span class="id">Srl</span><span class="metasym"> | </span><span class="id">Sch</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+
+<p>Name einer Repräsentation.</p>
+
+</section><section><h2 id="Magie.Merkmalskenntnis">Magie.Merkmalskenntnis</h2>
+
+<pre><code><span class="id">Magie.Merkmalskenntnis</span> <span class="sym">{</span>
+  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Elementar </span><span class="sym">{</span><a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span><span class="sym">}</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Daemonisch </span><span class="sym">{</span><a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span><span class="sym">}</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste gelernter Merkmalskenntnisse</p>
+
+<h3 id="Element">Element</h2>
+
+<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">gesamt</span><span class="metasym"> | </span><span class="id">Eis</span><span class="metasym"> | </span><span class="id">Humus</span><span class="metasym"> | </span><span class="id">Feuer</span><span class="metasym"> | </span><span class="id">Wasser</span><span class="metasym"> | </span><span class="id">Luft</span><span class="metasym"> | </span><span class="id">Erz</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+
+<p>Name eines Elements, oder 'gesamt'.</p>
+
+<h3 id="Domaene">Domaene</h2>
+
+<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">gesamt</span><span class="metasym"> | </span><span class="id">Blakharaz</span><span class="metasym"> | </span><span class="id">Belhalhar</span><span class="metasym"> | </span><span class="id">Charyptoroth</span><span class="metasym"> | </span><span class="id">Lolgramoth</span><span class="metasym"> | </span><span class="id">Thargunitoth</span><span class="metasym"> | </span><span class="id">Amazeroth</span><span class="metasym"> | </span><span class="id">Belshirash</span><span class="metasym"> | </span><span class="id">Asfaloth</span><span class="metasym"> | </span><span class="id">Tasfarelel</span><span class="metasym"> | </span><span class="id">Belzhorash</span><span class="metasym"> | </span><span class="id">Agrimoth</span><span class="metasym"> | </span><span class="id">Belkelel</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+
+<p>Name einer Domäne, oder 'gesamt'</p>
+
+</section><section><h2 id="Magie.Begabungen">Magie.Begabungen</h2>
+
+<pre><code><span class="id">Magie.Begabungen</span> <span class="sym">{</span>
+  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Elementar </span><span class="sym">{</span><a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span><span class="sym">}</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Daemonisch </span><span class="sym">{</span><a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span><span class="sym">}</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Begabungen für Merkmale</p>
+
+</section><section><h2 id="Magie.Unfaehigkeiten">Magie.Unfaehigkeiten</h2>
+
+<pre><code><span class="id">Magie.Unfaehigkeiten</span> <span class="sym">{</span>
+  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Elementar </span><span class="sym">{</span><a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span><span class="sym">}</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Daemonisch </span><span class="sym">{</span><a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span><span class="sym">}</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Unfähigkeiten für Merkmale</p>
+
+</section><section><h2 id="Magie.Zauber">Magie.Zauber</h2>
+
+<pre><code><span class="id">Magie.Zauber</span> <span class="sym">{</span>
+  <a href="#Zauber">&lt;Zauber&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von gelernten Zaubern.</p>
+
+<h3 id="Zauber">Zauber</h2>
+
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Seite:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe1:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe2:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe3:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Spalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Merkmale:</span><a href="#Merkmale">Merkmale</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Repraesentation:</span><a href="#Repraesentation">Repraesentation</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Hauszauber:</span><a href="#Boolean">Boolean</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+
+<p>Ein Zauber.</p>
+
+<h3 id="Merkmale">Merkmale</h2>
+
+<pre><code><span class="sym">{</span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Elementar </span><span class="sym">{</span><a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span><span class="sym">}</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Daemonisch </span><span class="sym">{</span><a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span><span class="sym">}</span><span class="sym">}</span></code></pre>
+
+<p>Liste von Merkmalen eines Zaubers.</p>
+
+</section></article>  </body>
+</html>
