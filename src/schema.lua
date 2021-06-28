@@ -58,7 +58,7 @@ local Ausruestungsbogen = d.Record("Ausruestungsbogen", "Ausrüstungsbogen.",
   {"Kleidung", Zeilen, 5},
   {"Gegenstaende", Zeilen, 33},
   {"Proviant", Zeilen, 8},
-  {"Vermoegen", d.Record("Vermoegen", "Zeilen in der Vermögensbox.", {"Muenzen", Zeilen, 4}, {"Sonstiges", Zeilen, 7}), {}},
+  {"Vermoegen", d.Record("Vermoegensbox", "Zeilen in der Vermögensbox.", {"Muenzen", Zeilen, 4}, {"Sonstiges", Zeilen, 7}), {}},
   {"Verbindungen", Zeilen, 9},
   {"Notizen", Zeilen, 7},
   {"Tiere", Zeilen, 4})

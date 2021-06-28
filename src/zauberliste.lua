@@ -263,11 +263,11 @@ end
 
 function zauberliste.render()
   local num = 1
-  while num <= #data.Magie.Zauber do
+  repeat
     tex.print(string.format([[\Zauberliste{%d}]], (num-1)/49 + 1))
     tex.print("")
     num = num + 49
-  end
+  until num > #data.Magie.Zauber
 end
 
 return zauberliste
