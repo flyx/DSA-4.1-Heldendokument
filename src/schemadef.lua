@@ -262,6 +262,7 @@ d.MixedList = Type("table",
             end
             e = e .. t.name
           end
+          e = e .. ')'
           self:err("enthält table ohne Typ. Erlaubt sind: %s", e)
           errors = true
         end

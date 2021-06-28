@@ -339,7 +339,7 @@ local waffenlos_render = {
 
 function kampfbogen.waffenlos()
   local Ganzzahl = schema.Ganzzahl
-  kampfwerte(schemadef.MixedList("Waffenlos", schemadef.HeterogeneousList("Kampftalent", {"Name", schema.String}, {"TP/KK Schwelle", schema.Ganzzahl}, {"TP/KK Schritt", schema.Ganzzahl}, {"INI", schema.Ganzzahl})) {
+  kampfwerte(schemadef.MixedList("Waffenlos", "", schemadef.HeterogeneousList("Kampftalent", {"Name", schema.String}, {"TP/KK Schwelle", schema.Ganzzahl}, {"TP/KK Schritt", schema.Ganzzahl}, {"INI", schema.Ganzzahl})) {
     {"Raufen", 10, 3, 0},
     {"Ringen", 10, 3, 0}
   }, waffenlos_render, 1, 7)
@@ -436,8 +436,8 @@ function kampfbogen.ausweichen()
   end
   for i,v in ipairs(data.Talente.Koerper) do
     if #v >= 6 then
-      found, _ = string.find(v[1], "^Akrobatik")
-      if found ~= nil and type(v[6] == "number") then
+      found, _ = string.find(v[1](), "^Akrobatik")
+      if found ~= nil and type(v[6]()) == "number" then
         local x = v[6] - 11
         while x > 0 do
           val = val + 1
