@@ -50,8 +50,28 @@
   Front {},
   Talentliste {</xsl:text>
     <xsl:value-of select="dsa:page('Sonderfertigkeiten', $sf_zeilen)"/>
-    <xsl:value-of select="dsa:page('Gaben', $min_gaben)"/>
-    <xsl:value-of select="dsa:page('Begabungen', $min_begabungen)"/>
+    <xsl:variable name="actGaben">
+      <xsl:choose>
+        <xsl:when test="$min_begabungen = 0 and zauberliste/zauber[@repraesentation='Magiedilletant']">
+          <xsl:value-of select="0"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$min_gaben"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="actBegabungen">
+      <xsl:choose>
+        <xsl:when test="$min_begabungen = 0 and zauberliste/zauber[@repraesentation='Magiedilletant']">
+          <xsl:value-of select="$min_gaben"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$min_begabungen"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:value-of select="dsa:page('Gaben', $actGaben)"/>
+    <xsl:value-of select="dsa:page('Begabungen', $actBegabungen)"/>
     <xsl:value-of select="dsa:page('Kampf', $min_kampf)"/>
     <xsl:value-of select="dsa:page('Koerper', $min_koerper)"/>
     <xsl:value-of select="dsa:page('Gesellschaft', $min_gesellschaft)"/>
@@ -263,7 +283,8 @@ Nachteile.magisch {
 
   <func:function name="dsa:basisEig">
     <xsl:param name="label"/>
-    <func:result select="concat('{', eigenschaft[@name=$label]/@mod, ', ', eigenschaft[@name=$label]/@startwert, ', ', eigenschaft[@name=$label]/@value, '}')"/>
+    <xsl:variable name="mod" as="xs:integer" select="eigenschaft[@name=$label]/@mod"/>
+    <func:result select="concat('{', eigenschaft[@name=$label]/@mod, ', ', eigenschaft[@name=$label]/@startwert + $mod, ', ', eigenschaft[@name=$label]/@value + $mod, '}')"/>
   </func:function>
 
   <func:function name="dsa:abglEig">

@@ -89,7 +89,7 @@ function gruppe.render(self, g, start_white)
             end
             input = input .. s
           end
-          input = inpt .. ")"
+          input = input .. ")"
         end
       elseif j == be_col then
         if input == "-" then
