@@ -229,8 +229,8 @@ Held {
   <xsl:template match="vt">
     <xsl:text>
 Vorteile {
-  </xsl:text>
-    <xsl:apply-templates select="vorteil" mode="filter"/><xsl:text>
+  </xsl:text><xsl:apply-templates select="vorteil" mode="filter"/><xsl:text>
+  </xsl:text><xsl:apply-templates select="vorteil" mode="filter-id"/><xsl:text>
 }
 
 Vorteile.magisch {
@@ -276,8 +276,18 @@ Nachteile.magisch {
     <xsl:param name="nachteil" as="xs:boolean" select="false()"/>
     <xsl:variable name="name" select="@name"/>
     <xsl:variable name="def" select="$vorUndNachteile/vn[@name=$name]"/>
-    <xsl:if test="($def/@nachteil = '1') = $nachteil and ($def/@magisch = '1') = $magisch">
+    <xsl:if test="($def/@nachteil = '1') = $nachteil and ($def/@magisch = '1') = $magisch and not($def/@id)">
       <xsl:apply-templates select="."/>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="vorteil" mode="filter-id">
+    <xsl:param name="magisch" as="xs:boolean" select="false()"/>
+    <xsl:param name="nachteil" as="xs:boolean" select="false()"/>
+    <xsl:variable name="name" select="@name"/>
+    <xsl:variable name="def" select="$vorUndNachteile/vn[@name=$name]"/>
+    <xsl:if test="($def/@nachteil = '1') = $nachteil and ($def/@magisch = '1') = $magisch and $def/@id">
+      <xsl:value-of select="concat($def/@id, '(', @value, '),')"/>
     </xsl:if>
   </xsl:template>
 

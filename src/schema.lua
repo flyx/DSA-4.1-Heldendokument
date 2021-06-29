@@ -124,7 +124,10 @@ d:singleton(d.Record, "Held", [[Grundlegende Daten des Helden.]],
   {"Aussehen", Multiline, ""})
 
 d:singleton(d.ListWithKnown, "Vorteile", "Liste von nicht-magischen Vorteilen.", {
-  Flink = "Flink", Eisern = "Eisern"
+  Flink = d.Number("Flink", "Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen.", 1, 2),
+  Eisern = "Eisern"
+}, { -- optional
+  Flink = true
 })
 
 schema.Vorteile.magisch = d:singleton(d.ListWithKnown, "Vorteile.magisch", "Liste von magischen Vorteilen.", {

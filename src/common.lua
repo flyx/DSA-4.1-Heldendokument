@@ -305,9 +305,16 @@ end
 
 function common.list_known(input, known)
   local ret = {}
-  for k,v in pairs(known) do
-    if input[k] then
-      table.insert(ret, v)
+  for k,n in pairs(known) do
+    local v = input[k]
+    if v ~= nil then
+      if type(v) == "boolean" then
+        if v then
+          table.insert(ret, n)
+        end
+      else
+        table.insert(ret, n .. " " .. tostring(v()))
+      end
     end
   end
   return ret

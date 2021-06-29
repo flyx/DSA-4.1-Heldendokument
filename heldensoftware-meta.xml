@@ -93,10 +93,10 @@
     <vn name="Astralmacht" magisch="1"/>
     <vn name="Ausdauernder Zauberer" magisch="1"/>
     <vn name="Autoritätsgläubig" nachteil="1"/>
-    <vn name="Begabung für [Merkmal]" magisch="1" id="begabung_merkmal" liste="1"/>
+    <vn name="Begabung für [Merkmal]" magisch="1" liste="1"/>
     <vn name="Begabung für [Ritual]" magisch="1"/>
-    <vn name="Begabung für [Zauber]" magisch="1" id="begabung_zauber" liste="1"/>
-    <vn name="Behäbig" nachteil="1" id="behaebig"/>
+    <vn name="Begabung für [Zauber]" magisch="1" liste="1"/>
+    <vn name="Behäbig" nachteil="1"/>
     <vn name="Blutdurst" nachteil="1"/>
     <vn name="Blutrausch" nachteil="1"/>
     <vn name="Brünstigkeit" nachteil="1"/>
@@ -109,7 +109,7 @@
     <vn name="Eingeschränkter Sinn" nachteil="1"/>
     <vn name="Einhändig" nachteil="1"/>
     <vn name="Eisenaffine Aura" magisch="1"/>
-    <vn name="Eisern" id="eisern"/>
+    <vn name="Eisern"/>
     <vn name="Eitelkeit" nachteil="1"/>
     <vn name="Elfische Weltsicht" nachteil="1"/>
     <vn name="Ererbte Knochenkeule" magisch="1"/>
@@ -119,7 +119,7 @@
     <vn name="Feste Matrix" magisch="1"/>
     <vn name="Festgefügtes Denken" nachteil="1" magisch="1"/>
     <vn name="Fettleibig" nachteil="1"/>
-    <vn name="Flink" id="flink"/>
+    <vn name="Flink" id="Flink"/>
     <vn name="Fluch der Finsternis" nachteil="1" magisch="1"/>
     <vn name="Geiz" nachteil="1"/>
     <vn name="Gerechtigkeitswahn" nachteil="1"/>

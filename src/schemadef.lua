@@ -175,13 +175,14 @@ local MetaType = {
             return self.value
           end
         end
+        ret.base = base
         setmetatable(ret, self)
         d.schema[name] = ret
         return ret
       end,
       __call = function(self, value)
-        if base ~= nil and type(value) ~= base then
-          return self:err("%s als Argument erwartet, bekam %s", base, type(value))
+        if self.base ~= nil and type(value) ~= self.base then
+          return self:err("%s als Argument erwartet, bekam %s", self.base, type(value))
         end
         local ret = construct(self, value)
         if ret ~= Poison then
@@ -205,7 +206,7 @@ local MetaType = {
       end,
       __index = Type.props,
       print_syntax = function(self, printer)
-        if base == "table" then
+        if self.base == "table" then
           if self.singleton or self.force_named then
             printer:open(self.name)
           else
@@ -415,8 +416,10 @@ d.ListWithKnown = Type("table",
         if name ~= nil then
           if type(name) == "string" then
             ret[name] = true
-          else
+          elseif name.base == "table" then
             return self:err("der Wert %s muss mit einem Konstructor `%s {…}` angegeben werden.", v, v)
+          else
+            return self:err("der Wert %s muss mit einem Konstructor `%s(…)` angegeben werden.", v, v)
           end
         else
           table.insert(ret, v)

@@ -205,7 +205,7 @@ function values:cur(name, div)
         end
       end
       if self.Vorteile.Flink then
-        gsmod = gsmod + 1
+        gsmod = gsmod + self.Vorteile.Flink()
       end
       if ge < 10 then
         gsmod = gsmod - 1
