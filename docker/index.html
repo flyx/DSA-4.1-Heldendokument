@@ -47,6 +47,27 @@
         margin: 0;
         padding: .5em;
       }
+      #overlay {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        background-color: rgba(0, 0, 0, 0.5);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        min-height: 100vh;
+      }
+      #msg {
+        text-align: center;
+        padding: .5em;
+        border-radius: .5em;
+        background-color: white;
+        z-index: 2;
+      }
     </style>
   </head>
   <body>
@@ -58,7 +79,7 @@
         <input id="import" type="file" name="data" />
       </form>
     </header>
-    <form method="post" action="/process" target="_blank" id="main">
+    <form id="main">
       <div class="btn-wrapper">
         <button type="submit">Generieren</button>
         <div>
@@ -72,8 +93,15 @@
       <br/>
       <textarea name="data" id="data"></textarea>
     </form>
+    <div id="overlay" style="display: none;">
+      <div id="msg">
+        <p>Dokument wird erstellt, bitte warten (kann etwas dauern)</p>
+        <progress id="progress" max="100"></progress>
+      </div>
+    </div>
 
     <script type="text/javascript">
+
       function fillFrom() {
         fetch(new Request("/" + this.id)).then(resp => {
           if (resp.ok) {
@@ -102,6 +130,51 @@
             console.log(error);
         });
         this.value = null;
+      }
+      document.getElementById("main").onsubmit = function(e) {
+        const overlay = document.getElementById("overlay");
+        const progress = document.getElementById("progress");
+        const input = this.elements["data"].value;
+        const loc = window.location;
+        let ws_uri = (loc.protocol === "https:") ? "wss:" : "ws:";
+        ws_uri += "//" + loc.host + "/process";
+        socket = new WebSocket(ws_uri);
+        socket.binaryType = "arraybuffer";
+        socket.addEventListener("error", function (event) {
+          console.group("websocket error!");
+          console.error(event);
+          console.groupEnd();
+        });
+        socket.addEventListener('open', function (event) {
+          progress.value = "";
+          overlay.style.display = "flex";
+          socket.send(input);
+        });
+        socket.addEventListener('message', function (event) {
+          const arr = new Uint8Array(event.data);
+          const status = arr[arr.length - 1];
+          switch (status) {
+            case 0:
+              progress.value = arr[0];
+              return false;
+            case 1:
+              alert("Fehler! (Ausgabe in textarea)");
+              document.getElementById("data").value = event.data.text();
+              break;
+            case 2:
+              const link = document.createElement("a");
+              const pdf = new Blob([arr.slice(0, arr.length - 1)], {type: 'octet/stream'});
+              const url = URL.createObjectURL(pdf)
+              link.href = url;
+              link.download = "heldendokument.pdf";
+              link.click();
+              URL.revokeObjectURL(url);
+              break;
+          }
+          overlay.style.display = "none";
+          return true;
+        });
+        return false;
       }
     </script>
   </body>
