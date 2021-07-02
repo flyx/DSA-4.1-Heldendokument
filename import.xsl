@@ -577,7 +577,8 @@ SF.Waffenlos {
   </xsl:text>
     <xsl:apply-templates select="sonderfertigkeit">
       <xsl:with-param name="art" select="'waffenlos'"/>
-    </xsl:apply-templates>
+    </xsl:apply-templates><xsl:text>
+  </xsl:text><xsl:apply-templates select="sonderfertigkeit" mode="boni"/>
     <xsl:text>
 }
 
@@ -688,7 +689,7 @@ SF.Magisch {
         </xsl:when>
       </xsl:choose>
     </xsl:if>
-    <xsl:if test="not(./preceding-sibling::sonderfertigkeit[starts-with(@name, $name)]) and ((not($def/@art) and $art = '') or ($art = $def/@art))">
+    <xsl:if test="not($def/@boni) and not(./preceding-sibling::sonderfertigkeit[starts-with(@name, $name)]) and ((not($def/@art) and $art = '') or ($art = $def/@art))">
       <xsl:choose>
         <xsl:when test="$kind = 'roman'">
           <xsl:value-of select="concat($def/@id, ' {I')"/>
@@ -722,6 +723,40 @@ SF.Magisch {
           </xsl:message>
         </xsl:otherwise>
       </xsl:choose>
+    </xsl:if>
+  </xsl:template>
+
+  <func:function name="dsa:kampfstilTalent">
+    <xsl:param name="name"/>
+    <xsl:variable name="def" select="$kampfstile/stil[@name = substring-after($name, ': ')]"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$def/@talent">
+          <xsl:value-of select="$def/@talent"/>
+        </xsl:when>
+        <xsl:when test="../../BoniWaffenlos/boniSF[@sf=$name]/@talent">
+          <xsl:value-of select="../../BoniWaffenlos/boniSF[@sf=$name]/@talent"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="''"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+
+  <xsl:template match="sonderfertigkeit" mode="boni">
+    <xsl:variable name="kind" select="dsa:sfKind()"/>
+    <xsl:variable name="name" select="dsa:sfName($kind)"/>
+    <xsl:variable name="def" select="$sonderfertigkeiten/sf[@name=$name]"/>
+    <xsl:if test="$def/@boni = '1' and not(./preceding-sibling::sonderfertigkeit[starts-with(@name, $name)])">
+      <xsl:value-of select="concat($def/@id, ' {')"/>
+      <xsl:for-each select=".|./following-sibling::sonderfertigkeit[starts-with(@name, $name)]">
+        <xsl:if test="position() != 1">
+          <xsl:text>, </xsl:text>
+        </xsl:if>
+        <xsl:value-of select="concat('[ ', dsa:stringVal(substring-after(@name, ': ')), ' ] = ', dsa:stringVal(dsa:kampfstilTalent(@name)))"/>
+      </xsl:for-each>
+      <xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
 

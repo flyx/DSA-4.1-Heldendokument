@@ -321,7 +321,7 @@ local waffenlos_render = {
       return
     end
     for _, t in pairs(data.sf.Waffenlos.Kampfstile) do
-      if v[1] == t then
+      if v.Name == t then
         pab = pab + 1
       end
     end
