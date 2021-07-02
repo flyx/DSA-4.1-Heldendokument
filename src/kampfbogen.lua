@@ -339,7 +339,7 @@ local waffenlos_render = {
 
 function kampfbogen.waffenlos()
   local Ganzzahl = schema.Ganzzahl
-  kampfwerte(schemadef.MixedList("Waffenlos", "", schemadef.HeterogeneousList("Kampftalent", {"Name", schema.String}, {"TP/KK Schwelle", schema.Ganzzahl}, {"TP/KK Schritt", schema.Ganzzahl}, {"INI", schema.Ganzzahl})) {
+  kampfwerte(schemadef.MixedList("Waffenlos", "", schemadef.HeterogeneousList("Kampftalent", "", {"Name", schema.String}, {"TP/KK Schwelle", schema.Ganzzahl}, {"TP/KK Schritt", schema.Ganzzahl}, {"INI", schema.Ganzzahl})) {
     {"Raufen", 10, 3, 0},
     {"Ringen", 10, 3, 0}
   }, waffenlos_render, 1, 7)

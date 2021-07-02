@@ -119,12 +119,12 @@
     <vn name="Feste Matrix" magisch="1"/>
     <vn name="Festgefügtes Denken" nachteil="1" magisch="1"/>
     <vn name="Fettleibig" nachteil="1"/>
-    <vn name="Flink" id="Flink"/>
+    <vn name="Flink" id="Flink" numbered="2"/>
     <vn name="Fluch der Finsternis" nachteil="1" magisch="1"/>
     <vn name="Geiz" nachteil="1"/>
     <vn name="Gerechtigkeitswahn" nachteil="1"/>
     <vn name="Gesucht" nachteil="1"/>
-    <vn name="Glasknochen" nachteil="1" id="glasknochen"/>
+    <vn name="Glasknochen" nachteil="1"/>
     <vn name="Goldgier" nachteil="1"/>
     <vn name="Größenwahn" nachteil="1"/>
     <vn name="Halbzauberer" magisch="1"/>
@@ -136,7 +136,7 @@
     <vn name="Kälteempfindlichkeit" nachteil="1"/>
     <vn name="Kältestarre" nachteil="1"/>
     <vn name="Kein Vertrauter" nachteil="1" magisch="1"/>
-    <vn name="Kleinwüchsig" nachteil="1" id="kleinwuechsig"/>
+    <vn name="Kleinwüchsig" nachteil="1"/>
     <vn name="Körpergebundene Kraft" nachteil="1" magisch="1"/>
     <vn name="Krankhafte Reinlichkeit" nachteil="1"/>
     <vn name="Krankheitsanfällig" nachteil="1"/>
@@ -226,7 +226,7 @@
     <vn name="Zielschwierigkeiten" nachteil="1" magisch="1"/>
     <vn name="Zögerlicher Zauberer" nachteil="1" magisch="1"/>
     <vn name="Zweistimmiger Gesang" magisch="1"/>
-    <vn name="Zwergenwuchs" nachteil="1" id="zwergenwuchs"/>
+    <vn name="Zwergenwuchs" nachteil="1"/>
   </vorUndNachteile>
 
   <talente>
@@ -337,7 +337,7 @@
     <sf name="Aura verhüllen" art="magisch"/>
     <sf name="Ausfall" art="nahkampf"/>
     <sf name="Auspendeln" art="waffenlos"/>
-    <sf name="Ausweichen" art="nahkampf" id="ausweichen" roman="3"/>
+    <sf name="Ausweichen" art="nahkampf" id="Ausweichen" roman="3"/>
     <sf name="Befreiungsschlag" art="nahkampf"/>
     <sf name="Beidhändiger Kampf" art="nahkampf" roman="2"/>
     <sf name="Beinarbeit" art="waffenlos"/>
@@ -362,7 +362,7 @@
     <sf name="Formation" art="nahkampf"/>
     <sf name="Fußfeger" art="waffenlos"/>
     <sf name="Gabe des Odûn" art="ritual" named="1"/>
-    <sf name="Gefäß der Sterne" art="magisch" id="gefaess_der_sterne"/>
+    <sf name="Gefäß der Sterne" art="magisch"/>
     <sf name="Gegenhalten" art="nahkampf"/>
     <sf name="Gerade" art="waffenlos"/>
     <sf name="Gezielter Stich" art="nahkampf"/>
@@ -379,8 +379,8 @@
     <sf name="Improvisierte Waffen" art="nahkampf"/>
     <sf name="Invocatio Integra" art="ritual"/>
     <sf name="Kampf im Wasser" art="nahkampf"/>
-    <sf name="Kampfgespür" art="nahkampf" id="kampfgespuer"/>
-    <sf name="Kampfreflexe" art="nahkampf" id="kampfreflexe"/>
+    <sf name="Kampfgespür" art="nahkampf"/>
+    <sf name="Kampfreflexe" art="nahkampf"/>
     <sf name="Keulenritual" art="ritual" named="1"/>
     <sf name="Klammer" art="waffenlos"/>
     <sf name="Klingensturm" art="nahkampf"/>
@@ -397,7 +397,7 @@
     <sf name="Kriegsreiterei" art="nahkampf"/>
     <sf name="Kristallomantisches Ritual" art="ritual" named="1"/>
     <sf name="Kugelzauber" art="ritual" named="1"/>
-    <sf name="Linkhand" art="nahkampf" id="linkhand"/>
+    <sf name="Linkhand" art="nahkampf"/>
     <sf name="Liturgie" art="ignore" named="1" />
     <sf name="Liturgiekenntnis" art="ignore" />
     <sf name="Lockeres Zaubern" art="magisch"/>
@@ -413,16 +413,16 @@
     <sf name="Niederringen" art="waffenlos"/>
     <sf name="Niederwerfen" art="nahkampf"/>
     <sf name="Ottagaldr" art="magisch"/>
-    <sf name="Parierwaffen" art="nahkampf" id="parierwaffen" roman="2"/>
+    <sf name="Parierwaffen" art="nahkampf" id="Parierwaffen" roman="2"/>
     <sf name="Regeneration" art="magisch" roman="2"/>
     <sf name="Reiterkampf" art="nahkampf"/>
     <sf name="Repräsentation" art="ignore" named="1"/>
     <sf name="Ritual" art="ritual" named="1"/>
     <sf name="Ritualkenntnis" art="ignore" named="1"/>
     <sf name="Runenkunde" art="magisch"/>
-    <sf name="Rüstungsgewöhnung" art="nahkampf" id="ruestungsgewoehnung" roman="3"/>
+    <sf name="Rüstungsgewöhnung" art="nahkampf" id="Ruestungsgewoehnung" roman="3"/>
     <sf name="Scharfschütze" art="fernkampf" sub="talent"/>
-    <sf name="Schildkampf" art="nahkampf" id="schildkampf" roman="2"/>
+    <sf name="Schildkampf" art="nahkampf" id="Schildkampf" roman="2"/>
     <sf name="Schildspalter" art="nahkampf"/>
     <sf name="Schlangenring-Zauber" art="ritual" named="1"/>
     <sf name="Schmetterschlag" art="waffenlos"/>
@@ -458,7 +458,7 @@
     <sf name="Vielfache Ladungen" art="magisch"/>
     <sf name="Würgegriff" art="waffenlos"/>
     <sf name="Waffe zerbrechen" art="nahkampf"/>
-    <sf name="Waffenloser Kampfstil" art="waffenlos" named="1" id="kampfstil" boni="1"/>
+    <sf name="Waffenloser Kampfstil" art="waffenlos" named="1" id="Kampfstil" boni="1"/>
     <sf name="Waffenmeister" art="nahkampf"/>
     <sf name="Windmühle" art="nahkampf"/>
     <sf name="Wuchtschlag" art="nahkampf"/>
@@ -733,7 +733,7 @@
       <s name="Lederschild" typ="S" wm="-1/+3" ini="0" bf="5" />
       <s name="Mattenschild" typ="S" wm="-1/+4" ini="0" bf="6" />
       <s name="Großer Lederschild" typ="S" wm="-1/+4" ini="-1" bf="6" />
-      <s name="Thorwalerschild" typ="S" wm="-2/+4" ini="-1" bf="3" />
+      <s name="Thorwaler Rundschild" typ="S" wm="-2/+4" ini="-1" bf="3" />
       <s name="Großschild" typ="S" wm="-2/+5" ini="-2" bf="2" />
       <s name="Turmschild" typ="S" wm="-5/+7" ini="-3" bf="1" />
       <s name="Buckler" typ="SP" wm="0/+1" ini="0" bf="0" />

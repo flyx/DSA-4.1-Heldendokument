@@ -166,7 +166,7 @@ Magie.Unfaehigkeiten {
     <func:result>
       <xsl:choose>
         <xsl:when test="contains($value, '&quot;') or contains($value, '\')">
-          <xsl:value-of select="concat('[[', translate($value, '[]', '()'))"/>
+          <xsl:value-of select="concat('[[', translate($value, '[]', '()'), ']]')"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of select="concat('&quot;', $value, '&quot;')"/>
@@ -176,36 +176,39 @@ Magie.Unfaehigkeiten {
   </func:function>
 
   <xsl:template match="basis">
+    <xsl:variable name="profession" as="xs:string">
+      <xsl:value-of select="ausbildungen/ausbildung[@art='Hauptprofession']/@string"/>
+      <xsl:apply-templates select="ausbildungen/ausbildung[@art!='Hauptprofession']"/>
+    </xsl:variable>
+    <xsl:variable name="tsatag" as="xs:string">
+      <xsl:value-of select="rasse/aussehen/@gbtag"/><xsl:text>. </xsl:text>
+      <xsl:choose>
+        <xsl:when test="rasse/aussehen/@gbmonat = 1"><xsl:text>Praios</xsl:text></xsl:when>
+        <xsl:when test="rasse/aussehen/@gbmonat = 2"><xsl:text>Rondra</xsl:text></xsl:when>
+        <xsl:when test="rasse/aussehen/@gbmonat = 3"><xsl:text>Efferd</xsl:text></xsl:when>
+        <xsl:when test="rasse/aussehen/@gbmonat = 4"><xsl:text>Travia</xsl:text></xsl:when>
+        <xsl:when test="rasse/aussehen/@gbmonat = 5"><xsl:text>Boron</xsl:text></xsl:when>
+        <xsl:when test="rasse/aussehen/@gbmonat = 6"><xsl:text>Hesinde</xsl:text></xsl:when>
+        <xsl:when test="rasse/aussehen/@gbmonat = 7"><xsl:text>Firun</xsl:text></xsl:when>
+        <xsl:when test="rasse/aussehen/@gbmonat = 8"><xsl:text>Tsa</xsl:text></xsl:when>
+        <xsl:when test="rasse/aussehen/@gbmonat = 9"><xsl:text>Phex</xsl:text></xsl:when>
+        <xsl:when test="rasse/aussehen/@gbmonat = 10"><xsl:text>Peraine</xsl:text></xsl:when>
+        <xsl:when test="rasse/aussehen/@gbmonat = 11"><xsl:text>Ingerimm</xsl:text></xsl:when>
+        <xsl:when test="rasse/aussehen/@gbmonat = 12"><xsl:text>Rahja</xsl:text></xsl:when>
+        <xsl:when test="rasse/aussehen/@gbmonat = 13"><xsl:text>Namenloser</xsl:text></xsl:when>
+      </xsl:choose>
+      <xsl:text> </xsl:text>
+      <xsl:value-of select="concat(rasse/aussehen/@gbjahr, ' BF')"/>
+    </xsl:variable>
     <xsl:text>
 Held {
   Name       = </xsl:text><xsl:value-of select="dsa:stringVal(parent::held/@name)"/><xsl:text>,
   GP         = </xsl:text><xsl:value-of select="dsa:stringVal(rasse/aussehen/@gpstart)"/><xsl:text>,
   Rasse      = </xsl:text><xsl:value-of select="dsa:stringVal(rasse/@string)"/><xsl:text>,
   Kultur     = </xsl:text><xsl:value-of select="dsa:stringVal(kultur/@string)"/><xsl:text>,
-  Profession = [[</xsl:text>
-    <xsl:value-of select="ausbildungen/ausbildung[@art='Hauptprofession']/@string"/>
-    <xsl:apply-templates select="ausbildungen/ausbildung[@art!='Hauptprofession']"/><xsl:text>]],
+  Profession = </xsl:text><xsl:value-of select="dsa:stringVal($profession)"/><xsl:text>,
   Geschlecht = </xsl:text><xsl:value-of select="dsa:stringVal(geschlecht/@name)"/><xsl:text>,
-  Tsatag     = [[</xsl:text>
-    <xsl:value-of select="rasse/aussehen/@gbtag"/><xsl:text>. </xsl:text>
-    <xsl:choose>
-      <xsl:when test="rasse/aussehen/@gbmonat = 1"><xsl:text>Praios</xsl:text></xsl:when>
-      <xsl:when test="rasse/aussehen/@gbmonat = 2"><xsl:text>Rondra</xsl:text></xsl:when>
-      <xsl:when test="rasse/aussehen/@gbmonat = 3"><xsl:text>Efferd</xsl:text></xsl:when>
-      <xsl:when test="rasse/aussehen/@gbmonat = 4"><xsl:text>Travia</xsl:text></xsl:when>
-      <xsl:when test="rasse/aussehen/@gbmonat = 5"><xsl:text>Boron</xsl:text></xsl:when>
-      <xsl:when test="rasse/aussehen/@gbmonat = 6"><xsl:text>Hesinde</xsl:text></xsl:when>
-      <xsl:when test="rasse/aussehen/@gbmonat = 7"><xsl:text>Firun</xsl:text></xsl:when>
-      <xsl:when test="rasse/aussehen/@gbmonat = 8"><xsl:text>Tsa</xsl:text></xsl:when>
-      <xsl:when test="rasse/aussehen/@gbmonat = 9"><xsl:text>Phex</xsl:text></xsl:when>
-      <xsl:when test="rasse/aussehen/@gbmonat = 10"><xsl:text>Peraine</xsl:text></xsl:when>
-      <xsl:when test="rasse/aussehen/@gbmonat = 11"><xsl:text>Ingerimm</xsl:text></xsl:when>
-      <xsl:when test="rasse/aussehen/@gbmonat = 12"><xsl:text>Rahja</xsl:text></xsl:when>
-      <xsl:when test="rasse/aussehen/@gbmonat = 13"><xsl:text>Namenloser</xsl:text></xsl:when>
-    </xsl:choose>
-    <xsl:text> </xsl:text>
-    <xsl:value-of select="rasse/aussehen/@gbjahr"/>
-    <xsl:text> BF]],
+  Tsatag     = </xsl:text><xsl:value-of select="dsa:stringVal($tsatag)"/><xsl:text>,
   Groesse    = </xsl:text><xsl:value-of select="dsa:stringVal(concat(rasse/groesse/@value, ' Schritt'))"/><xsl:text>,
   Gewicht    = </xsl:text><xsl:value-of select="dsa:stringVal(concat(rasse/groesse/@gewicht, ' Stein'))"/><xsl:text>,
   Haarfarbe  = </xsl:text><xsl:value-of select="dsa:stringVal(rasse/aussehen/@haarfarbe)"/><xsl:text>,
@@ -691,16 +694,14 @@ SF.Magisch {
     <xsl:if test="not(./preceding-sibling::sonderfertigkeit[starts-with(@name, $name)]) and ((not($def/@art) and $art = '') or ($art = $def/@art))">
       <xsl:choose>
         <xsl:when test="$kind = 'roman'">
-          <xsl:variable name="text" as="xs:string">
-            <xsl:value-of select="@name"/>
-            <xsl:if test="./following-sibling::sonderfertigkeit[@name=concat($name, ' II')]">
-              <xsl:text>, II</xsl:text>
-            </xsl:if>
-            <xsl:if test="./following-sibling::sonderfertigkeit[@name=concat($name, ' III')]">
-              <xsl:text>, III</xsl:text>
-            </xsl:if>
-          </xsl:variable>
-          <xsl:value-of select="concat(dsa:stringVal($text), ', ')"/>
+          <xsl:value-of select="concat($def/@id, ' {I')"/>
+          <xsl:if test="./following-sibling::sonderfertigkeit[@name=concat($name, ' II')]">
+            <xsl:text>, II</xsl:text>
+          </xsl:if>
+          <xsl:if test="./following-sibling::sonderfertigkeit[@name=concat($name, ' III')]">
+            <xsl:text>, III</xsl:text>
+          </xsl:if>
+          <xsl:text>}, </xsl:text>
         </xsl:when>
         <xsl:when test="$kind = 'named'">
           <xsl:for-each select=".|./following-sibling::sonderfertigkeit[starts-with(@name, $name)]">
@@ -894,9 +895,6 @@ Waffen.Ruestung {</xsl:text>
 Liturgiekenntnis {</xsl:text>
     <xsl:value-of select="dsa:stringVal(substring-before(substring-after(@name, '('), ')'))"/>
     <xsl:value-of select="concat(', ', @value, '}')"/>
-    <xsl:text>
-}
-</xsl:text>
   </xsl:template>
 
   <xsl:template match="sf" mode="liturgien">
@@ -923,10 +921,24 @@ Liturgien {</xsl:text>
     </func:result>
   </func:function>
 
+  <func:function name="dsa:litorigname">
+    <xsl:param name="base"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="contains($base, '(')">
+          <xsl:value-of select="substring-before(substring-after($base, '('), ')')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="dsa:litname($base)"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+
   <xsl:template match="sonderfertigkeit" mode="liturgien-klseg">
     <xsl:variable name="base" select="substring(@name, string-length('Liturgie: ') + 1)"/>
     <xsl:variable name="name" select="dsa:litname($base)"/>
-    <xsl:variable name="def" select="$liturgien/l[@n=$name]"/>
+    <xsl:variable name="def" select="$liturgien/l[@n=dsa:litorigname($base)]"/>
     <xsl:if test="$def/@zw">
       <xsl:apply-templates select="." mode="liturgien">
         <xsl:with-param name="base" select="$base"/>
@@ -939,7 +951,7 @@ Liturgien {</xsl:text>
   <xsl:template match="sonderfertigkeit" mode="liturgien-sonst">
     <xsl:variable name="base" select="substring(@name, string-length('Liturgie: ') + 1)"/>
     <xsl:variable name="name" select="dsa:litname($base)"/>
-    <xsl:variable name="def" select="$liturgien/l[@n=$name]"/>
+    <xsl:variable name="def" select="$liturgien/l[@n=dsa:litorigname($base)]"/>
     <xsl:if test="not($def/@zw)">
       <xsl:apply-templates select="." mode="liturgien">
         <xsl:with-param name="base" select="$base"/>
@@ -963,16 +975,17 @@ Liturgien {</xsl:text>
         <xsl:text>""</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:value-of select="concat(', &quot;', $name, '&quot;, &quot;')"/>
-    <xsl:choose>
-      <xsl:when test="contains($base, '(')">
-        <xsl:value-of select="substring-before(substring-after($base, '('), ')')"/>
-      </xsl:when>
-      <xsl:when test="$def">
-        <xsl:value-of select="$def/@g"/>
-      </xsl:when>
-    </xsl:choose>
-    <xsl:text>", ""},</xsl:text>
+    <xsl:variable name="text" as="xs:string">
+      <xsl:value-of select="$name"/>
+      <xsl:if test="contains($base, '(')">
+        <xsl:value-of select="concat(' (', substring-before(substring-after($base, '('), ')'), ')')"/>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:value-of select="concat(', ', dsa:stringVal($text), ', &quot;')"/>
+    <xsl:if test="$def">
+      <xsl:value-of select="$def/@g"/>
+    </xsl:if>
+    <xsl:text>"},</xsl:text>
   </xsl:template>
 
   <func:function name="dsa:isRitual">
