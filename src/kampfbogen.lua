@@ -100,17 +100,17 @@ local function mod_tp(tp, schwelle, schritt)
 end
 
 local function art(zeile)
-  if zeile.art ~= nil then
-    return zeile.art
+  if zeile.Art ~= "" then
+    return zeile.Art
   else
-    return zeile[1]
+    return zeile.Name
   end
 end
 
 local function atpa_mod(basis, talent, schwelle, schritt, wm, art, spez)
   local val = basis
   local cur_kk = data:cur("KK")
-  if cur_kk ~= "" then
+  if cur_kk ~= "" and type(schwelle) == "number" and type(schritt) == "number" then
     while cur_kk < schwelle do
       val = val - 1
       cur_kk = cur_kk + schritt
@@ -127,7 +127,7 @@ local function atpa_mod(basis, talent, schwelle, schritt, wm, art, spez)
   if type(talent) == "number" then
     val = val + talent
   end
-  return val + wm
+  return type(wm) == "number" and val + wm or val
 end
 
 local function render_num(input)
@@ -157,11 +157,11 @@ local function kampfwerte(rows, render, typ_index, num_values)
       local pattern = "^" .. v[typ_index]()
       for i,t in ipairs(data.Talente.Kampf) do
         if #t >= 1 then
-          found, _ = string.find(t[1](), pattern)
+          found, _ = string.find(t.Name, pattern)
           if found ~= nil then
             talent = t
             if #talent >= 3 then
-              ebe = calc_be(talent[3]())
+              ebe = calc_be(talent.BE)
             end
             break
           end
@@ -218,7 +218,7 @@ nahkampf_render[2]= {true, function(v)
   end
 end}
 nahkampf_render[3]= {false, function(v, talent, ebe)
-  if talent ~= nil and #talent >= 3 then
+  if talent ~= nil then
     tex.sprint(-2, ebe)
   end
 end}
@@ -234,26 +234,26 @@ nahkampf_render[11]= {false, function(v, talent, ebe)
   if talent == nil or #talent < 4 or atb == "" or #v < 8 then
     return
   end
-  tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4](), v[5](), v[6](), v[8](), art(v), talent.spez))
+  tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent.AT, v["TP/KK Schwelle"], v["TP/KK Schritt"], v["WM AT"], art(v), talent.Spezialisierung))
 end}
 nahkampf_render[12]= {false, function(v, talent, ebe)
   local pab = data:cur("PA")
   if talent == nil or #talent < 5 or pab == "" or #v < 9 then
     return
   end
-  tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[5](), v[5](), v[6](), v[9](), art(v), talent.spez))
+  tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent.PA, v["TP/KK Schwelle"], v["TP/KK Schritt"], v["WM PA"], art(v), talent.Spezialisierung))
 end}
 nahkampf_render[13]= {false, function(v, talent, ebe)
   if #v < 6 then
     return
   end
-  local tp = parse_tp(v[4]())
-  tp = mod_tp(tp, v[5](), v[6]())
+  local tp = parse_tp(v.TP)
+  tp = mod_tp(tp, v["TP/KK Schwelle"], v["TP/KK Schritt"])
   if tp ~= nil then
     render_tp(tp)
   end
 end}
-for i=14,17 do
+for i=14,15 do
   nahkampf_render[i] = {true, render_num}
 end
 
@@ -276,17 +276,15 @@ local fernkampf_render = {
   end},
   [15]= {false, function(v, talent, ebe)
     local fk_basis = data:cur("FK")
-    if talent == nil or #talent < 6 or fk_basis == "" then
+    if talent == nil or fk_basis == "" then
       return
     end
-    local fk = talent[6]() - ebe
+    local fk = talent.TaW - ebe
     local a = art(v)
-    if talent.spez ~= nil then
-      for _, s in ipairs(talent.spez) do
-        if s == a then
-          fk = fk + 2
-          break
-        end
+    for _, s in ipairs(talent.Spezialisierung) do
+      if s == a then
+        fk = fk + 2
+        break
       end
     end
     tex.sprint(-2, fk_basis + fk)
@@ -311,11 +309,11 @@ local waffenlos_render = {
       return
     end
     for _, t in pairs(data.sf.Waffenlos.Kampfstile) do
-      if v[1]() == t then
+      if v.Name == t then
         atb = atb + 1
       end
     end
-    tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent[4](), v[2](), v[3](), 0, nil, nil))
+    tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent.AT, v["TP/KK Schwelle"], v["TP/KK Schritt"], 0))
   end},
   [6]= {false, function(v, talent, ebe)
     local pab = data:cur("PA")
@@ -327,10 +325,10 @@ local waffenlos_render = {
         pab = pab + 1
       end
     end
-    tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent[4](), v[2](), v[3](), 0, nil, nil))
+    tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent.PA, v["TP/KK Schwelle"], v["TP/KK Schritt"], 0))
   end},
   [7]= {false, function(v, talent, ebe)
-    tp = mod_tp({dice=1, die=6, num=0}, v[2](), v[3]())
+    tp = mod_tp({dice=1, die=6, num=0}, v["TP/KK Schwelle"], v["TP/KK Schritt"])
     if tp ~= nil then
       render_tp(tp)
     end
@@ -353,7 +351,7 @@ local schilde_render = {
     if #v < 5 then
       return
     end
-    if v[2]() == "Schild" then
+    if v.Typ == "Schild" then
       local val = data:cur("PA")
       if val == "" then
         return
@@ -366,9 +364,9 @@ local schilde_render = {
           val = val + 2
         end
       end
-      tex.sprint(-2, val + v[5]())
-    elseif v[2]() == "Parierwaffe" then
-      local val = v[5]()
+      tex.sprint(-2, val + v["WM PA"])
+    elseif v.Typ == "Parierwaffe" then
+      local val = v["WM PA"]
       if data.sf.Nahkampf.Parierwaffen[2] then
         val = val + 2
       elseif data.sf.Nahkampf.Parierwaffen[1] then
@@ -378,7 +376,7 @@ local schilde_render = {
       end
       common.render_delta(val)
     else
-      tex.error("Typ muss 'Schild' oder 'Parierwaffe' sein: " .. v[2]())
+      tex.error("Typ muss 'Schild' oder 'Parierwaffe' sein: " .. v.Typ)
     end
   end},
   [7] = {true, render_num},
@@ -436,9 +434,9 @@ function kampfbogen.ausweichen()
   end
   for i,v in ipairs(data.Talente.Koerper) do
     if #v >= 6 then
-      found, _ = string.find(v[1](), "^Akrobatik")
-      if found ~= nil and type(v[6]()) == "number" then
-        local x = v[6] - 11
+      found, _ = string.find(v.Name, "^Akrobatik")
+      if found ~= nil and type(v.TaW) == "number" then
+        local x = v.TaW - 11
         while x > 0 do
           val = val + 1
           x = x - 3

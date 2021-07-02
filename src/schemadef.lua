@@ -504,7 +504,21 @@ d.FixedList = Type("table",
 
 d.HeterogeneousList = Type("table",
   function(...)
-    return {...}
+    local ret = {...}
+    ret.__index = function(self, key)
+      local t = getmetatable(self)
+      for i, f in ipairs(t) do
+        if key == f[1] then
+          if f[2].__call ~= nil then
+            return self[i]()
+          else
+            return self[i]
+          end
+        end
+      end
+      return Type.props(self, key)
+    end
+    return ret
   end,
   function(self, value)
     while #value < #self do
@@ -706,7 +720,7 @@ d.Simple = Type(nil,
   end
 )
 
-d.Multiline = Type(nil,
+d.Multivalue = Type(nil,
   function()
     return {}
   end,
@@ -868,7 +882,7 @@ setmetatable(d, {
     self.schema.Boolean = self.Boolean("Boolean", "true oder false.")
     self.schema.String = self.String("String", "Beliebiger Text in Hochkommata.")
     self.schema.Simple = self.Simple("Simple", "Zahl oder Text.")
-    self.schema.Multiline = self.Multiline("Multiline", "Text oder Liste von Text.")
+    self.schema.Multiline = self.Multivalue("Multiline", "Text oder Liste von Text.")
     if docgen then
       self.typelist = {}
     end

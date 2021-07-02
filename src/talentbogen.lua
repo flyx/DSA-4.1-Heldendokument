@@ -78,12 +78,14 @@ function gruppe.render(self, g, start_white)
   end
   for i, v in ipairs(data.Talente[name]) do
     local vals = {}
-    for j, w in ipairs(v) do
+    for j = 1,#v-1 do
+      local w = v[j]
       local input = w()
       if j == 1 then
-        if v.spez ~= nil then
+        local spez = v.Spezialisierung
+        if #spez > 0 then
           input = input .. " ("
-          for k, s in ipairs(v.spez) do
+          for k, s in ipairs(spez) do
             if k > 1 then
               input = input .. ", "
             end

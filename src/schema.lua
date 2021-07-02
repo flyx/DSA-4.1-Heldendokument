@@ -175,13 +175,14 @@ d:singleton(d.Record, "AP", "Abenteuerpunkte.",
 local SteigSpalte = d.Matching("SteigSpalte", "Eine Steigerungsspalte.", "A%*?", "B", "C", "D", "E", "F", "G", "H")
 local Behinderung = d.Matching("Behinderung", "Behinderung.", "%-", "BE", "BE%-[1-9]", "BEx[2-9]")
 local Eigenschaft = d.Matching("Eigenschaft", "Referenz auf einen Eigenschaftsnamen.", "%*%*", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK")
+local Spezialisierung = d.Multivalue("Spezialisierung", "Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden.")
 
 d.HeterogeneousList("KampfTalent", "Ein Talent aus der Gruppe der Kampftalene.",
-  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"AT", Simple, ""}, {"PA", Simple, ""}, {"TaW", Simple, ""})
-d.HeterogeneousList("KoerperTalent", "Ein Talent aus der Gruppe der Körperlichen Talente.", {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"BE", Behinderung, ""}, {"Taw", Simple, ""})
+  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"AT", Simple, ""}, {"PA", Simple, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
+d.HeterogeneousList("KoerperTalent", "Ein Talent aus der Gruppe der Körperlichen Talente.", {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"BE", Behinderung, ""}, {"Taw", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
 d.HeterogeneousList("Talent", "Ein allgemeines Talent.",
-  {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"TaW", Simple, ""})
-d.HeterogeneousList("Sprache", "Eine Sprache oder ein Schrift.", {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""})
+  {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
+d.HeterogeneousList("Sprache", "Eine Sprache oder ein Schrift.", {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
 
 schema.Talente = {
   Begabungen = d:singleton(d.MixedList, "Talente.Begabungen", "Liste übernatürlicher Begabungen.", schema.Talent) {},
@@ -264,11 +265,11 @@ local Schaden = d.Matching("Schaden", "Trefferpunkte einer Waffe.", "[0-9]*W[0-9
 
 schema.Waffen = {
   Nahkampf = d:singleton(d.MixedList, "Waffen.Nahkampf", "Liste von Nahkampfwaffen.", d.HeterogeneousList("Nahkampfwaffe", "Eine Nahkampfwaffe.",
-      {"Name", String, ""}, {"Talent", String, ""}, {"DK", Distanzklasse, ""}, {"TP", Schaden, ""}, {"TP/KK Schwelle", Simple, ""}, {"TP/KK Schritt", Simple, ""}, {"INI", Simple, ""}, {"WM AT", Simple, ""}, {"WM PA", Simple, ""}, {"BF1", Simple, ""}, {"BF2", Simple, ""})) {},
+      {"Name", String, ""}, {"Talent", String, ""}, {"DK", Distanzklasse, ""}, {"TP", Schaden, ""}, {"TP/KK Schwelle", Simple, ""}, {"TP/KK Schritt", Simple, ""}, {"INI", Simple, ""}, {"WM AT", Simple, ""}, {"WM PA", Simple, ""}, {"BF1", Simple, ""}, {"BF2", Simple, ""}, {"Art", String, ""})) {},
   Fernkampf = d:singleton(d.MixedList, "Waffen.Fernkampf", "Liste von Fernkampfwaffen.", d.HeterogeneousList("Fernkampfwaffe", "Eine Fernkampfwaffe.",
-      {"Name", String, ""}, {"Talent", String, ""}, {"TP", Schaden, ""}, {"Entfernung1", Simple, ""}, {"Entfernung2", Simple, ""}, {"Entfernung3", Simple, ""}, {"Entfernung4", Simple, ""}, {"Entfernung5", Simple, ""}, {"TP/Entfernung1", Simple, ""}, {"TP/Entfernung2", Simple, ""}, {"TP/Entfernung3", Simple, ""}, {"TP/Entfernung4", Simple, ""}, {"TP/Entfernung5", Simple, ""}, {"Geschosse1", Simple, ""}, {"Geschosse2", Simple, ""}, {"Geschosse3", Simple, ""})) {},
+      {"Name", String, ""}, {"Talent", String, ""}, {"TP", Schaden, ""}, {"Entfernung1", Simple, ""}, {"Entfernung2", Simple, ""}, {"Entfernung3", Simple, ""}, {"Entfernung4", Simple, ""}, {"Entfernung5", Simple, ""}, {"TP/Entfernung1", Simple, ""}, {"TP/Entfernung2", Simple, ""}, {"TP/Entfernung3", Simple, ""}, {"TP/Entfernung4", Simple, ""}, {"TP/Entfernung5", Simple, ""}, {"Geschosse1", Simple, ""}, {"Geschosse2", Simple, ""}, {"Geschosse3", Simple, ""}, {"Art", String, ""})) {},
   Schilde = d:singleton(d.MixedList, "Waffen.Schilde", "Liste von Schilden und Parierwaffen.", d.HeterogeneousList("Schild", "Ein Schild oder eine Parierwaffe.",
-      {"Name", String}, {"Typ", String}, {"INI", Ganzzahl}, {"WM AT", Ganzzahl}, {"WM PA", Ganzzahl}, {"BF1", Simple, ""}, {"BF2", Simple, ""})) {},
+      {"Name", String}, {"Typ", String}, {"INI", Ganzzahl}, {"WM AT", Ganzzahl}, {"WM PA", Ganzzahl}, {"BF1", Simple, ""}, {"BF2", Simple, ""}, {"Art", String, ""})) {},
   Ruestung = d:singleton(d.MixedList, "Waffen.Ruestung", "Liste von Rüstungsteilen.", d.Record("Ruestungsteil", "Ein Rüstungsteil.",
     {1, String, ""},
     {2, Ganzzahl, 0},
@@ -283,7 +284,7 @@ schema.Waffen = {
     {"RBein", Ganzzahl, 0})) {},
 }
 
-d:singleton(d.Multiline, "Kleidung", "Mehrzeiliger Text für den Kleidungs-Kasten auf dem Ausrüstungsbogen.")
+d:singleton(d.Multivalue, "Kleidung", "Mehrzeiliger Text für den Kleidungs-Kasten auf dem Ausrüstungsbogen.")
 d:singleton(d.MixedList, "Ausruestung", "Liste von Ausrüstungsgegenständen.", d.HeterogeneousList("Gegenstand", "Ein Ausrüstungsgegenstand.", {"Name", String}, {"Gewicht", Simple, ""}, {"Getragen", String, ""}))
 d:singleton(d.MixedList, "Proviant", "Liste von Proviant & Tränken.", d.HeterogeneousList("Rationen", "Proviant oder Trank mit Rationen.", {"Name", String}, {"Ration1", Simple, ""}, {"Ration2", Simple, ""}, {"Ration3", Simple, ""}, {"Ration4", Simple, ""}))
 
@@ -295,10 +296,10 @@ d:singleton(d.MixedList, "Vermoegen", "Liste von Münzenarten.", Muenzen) {
   {"Heller", "", "", "", "", "", "", "", ""},
   {"Kreuzer", "", "", "", "", "", "", "", ""},
 }
-schema.Vermoegen.Sonstiges = d:singleton(d.Multiline, "Vermoegen.Sonstiges", "Sonstiges Vermögen.") {}
+schema.Vermoegen.Sonstiges = d:singleton(d.Multivalue, "Vermoegen.Sonstiges", "Sonstiges Vermögen.") {}
 
-d:singleton(d.Multiline, "Verbindungen", "Verbindungen.")
-d:singleton(d.Multiline, "Notizen", "Notizen auf dem Ausrüstungs / Liturgienbogen.")
+d:singleton(d.Multivalue, "Verbindungen", "Verbindungen.")
+d:singleton(d.Multivalue, "Notizen", "Notizen auf dem Ausrüstungs / Liturgienbogen.")
 
 local Tier = d.HeterogeneousList("Tier", "Werte eines Tiers.", {"Name", String}, {"Art", String, ""}, {"INI", Simple, ""}, {"AT", Simple, ""}, {"PA", Simple, ""}, {"TP", Schaden, ""}, {"LE", Simple, ""}, {"RS", Simple, ""}, {"KO", Simple, ""}, {"KO", Simple, ""}, {"GS", Simple, ""}, {"AU", Simple, ""}, {"MR", Simple, ""}, {"LO", Simple, ""}, {"TK", Simple, ""}, {"ZK", Simple, ""})
 d:singleton(d.MixedList, "Tiere", "Liste von Tieren.", Tier)
@@ -337,13 +338,13 @@ schema.Magie = {
   Rituale = d:singleton(d.MixedList, "Magie.Rituale", "Liste von Ritualen.", d.HeterogeneousList("Ritual", "Ein Ritual.", {"Name", String}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"Dauer", Simple, ""}, {"Kosten", Simple, ""}, {"Wirkung", Simple, ""})) {},
   Ritualkenntnis = d:singleton(d.MixedList, "Magie.Ritualkenntnis", "Liste von Ritualkenntnissen.", d.HeterogeneousList("RK-Wert", "Ein Ritualkenntnis-Wert.", {"Name", String}, {"Wert", Simple, ""})) {},
   Regeneration = d:singleton(d.Simple, "Magie.Regeneration", "AsP-Regeneration pro Phase.") "",
-  Artefakte = d:singleton(d.Multiline, "Magie.Artefakte", "Artefakte.") {},
-  Notizen = d:singleton(d.Multiline, "Magie.Notizen", "Notizen auf dem Zauberdokument.") {},
+  Artefakte = d:singleton(d.Multivalue, "Magie.Artefakte", "Artefakte.") {},
+  Notizen = d:singleton(d.Multivalue, "Magie.Notizen", "Notizen auf dem Zauberdokument.") {},
   Repraesentationen = d:singleton(d.MixedList, "Magie.Repraesentationen", "Liste beherrschter Repräsentationen.", Repraesentation) {},
   Merkmalskenntnis = merkmale("Magie.Merkmalskenntnis", "Liste gelernter Merkmalskenntnisse"),
   Begabungen = merkmale("Magie.Begabungen", "Liste von Begabungen für Merkmale"),
   Unfaehigkeiten = merkmale("Magie.Unfaehigkeiten", "Liste von Unfähigkeiten für Merkmale"),
-  Zauber = d:singleton(d.MixedList, "Magie.Zauber", "Liste von gelernten Zaubern.", d.HeterogeneousList("Zauber", "Ein Zauber.", {"Seite", Simple, ""}, {"Name", String}, {"Probe1", Eigenschaft}, {"Probe2", Eigenschaft}, {"Probe3", Eigenschaft}, {"TaW", Simple, ""}, {"Spalte", SteigSpalte}, {"Merkmale", Merkmale, {}}, {"Repraesentation", Repraesentation, ""}, {"Hauszauber", schema.Boolean, false})) {}
+  Zauber = d:singleton(d.MixedList, "Magie.Zauber", "Liste von gelernten Zaubern.", d.HeterogeneousList("Zauber", "Ein Zauber.", {"Seite", Simple, ""}, {"Name", String}, {"Probe1", Eigenschaft}, {"Probe2", Eigenschaft}, {"Probe3", Eigenschaft}, {"TaW", Simple, ""}, {"Spalte", SteigSpalte}, {"Merkmale", Merkmale, {}}, {"Repraesentation", Repraesentation, ""}, {"Hauszauber", schema.Boolean, false}, {"Spezialisierung", Spezialisierung, {}})) {}
 }
 
 if gendoc then

@@ -445,17 +445,14 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:variable name="spez" select="../../sf/sonderfertigkeit[starts-with(@name, $sfname) and *[1]/@name = $name]"/>
-    <xsl:if test="$spez">
-      <xsl:text>, spez={</xsl:text>
-      <xsl:for-each select="$spez">
-        <xsl:if test="position() > 1">
-          <xsl:text>, </xsl:text>
-        </xsl:if>
-        <xsl:value-of select="concat('[[', spezialisierung/@name, ']]')"/>
-      </xsl:for-each>
-      <xsl:text>}</xsl:text>
-    </xsl:if>
+    <xsl:text>, {</xsl:text>
+    <xsl:for-each select="../../sf/sonderfertigkeit[starts-with(@name, $sfname) and *[1]/@name = $name]">
+      <xsl:if test="position() > 1">
+        <xsl:text>, </xsl:text>
+      </xsl:if>
+      <xsl:value-of select="dsa:stringVal(spezialisierung/@name)"/>
+    </xsl:for-each>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="talent" mode="kampf">
