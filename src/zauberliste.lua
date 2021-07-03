@@ -202,15 +202,17 @@ function zauberliste.seite(start)
       end
     else
       local z = {}
-      for j,v in ipairs(zauber[i]) do
+      for j =1,10 do
+        local v = zauber[i][j]
         if j == 8 then
           z[8] = v
         else
           z[j] = v()
-          if j == 2 and zauber[i].spez ~= nil then
+          local spez = zauber[i].Spezialisierung
+          if j == 2 and #spez > 0 then
             z[2] = z[2] .. " ("
-            for i, s in ipairs(zauber[i].spez) do
-              if i > 1 then
+            for k, s in ipairs(spez) do
+              if k > 1 then
                 z[2] = z[2] .. ", "
               end
               z[2] = z[2] .. s
@@ -250,8 +252,8 @@ function zauberliste.seite(start)
       tex.sprint("&")
       tex.sprint(-2, z[9])
       tex.sprint("&")
-      tex.sprint(-2, schwierigkeit:mod(z[7], z[8], z[9], z.lernmod, z.haus))
-      if z.haus then
+      tex.sprint(-2, schwierigkeit:mod(z[7], z[8], z[9], z.lernmod, z[10]))
+      if z[10] then
         tex.sprint([[\hfill\faHome]])
       end
     end
