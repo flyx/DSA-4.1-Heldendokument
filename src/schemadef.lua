@@ -627,7 +627,12 @@ d.MapToFixed = Type("table",
     return errors and Poison or value
   end,
   function(self, printer)
-    printer:id("TODO")
+    printer:sym("[ ")
+    printer:ref(d.schema.String, "Kampfstil")
+    printer:sym(" ] = ")
+    printer:ref(d.schema.String, "VerbessertesTalent")
+    printer:sym(", ")
+    printer:meta("...")
   end
 )
 

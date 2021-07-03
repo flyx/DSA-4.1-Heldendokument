@@ -68,6 +68,10 @@
         background-color: white;
         z-index: 2;
       }
+      #errorDisplay {
+        min-width: 80vw;
+        min-height: 80vh;
+      }
     </style>
   </head>
   <body>
@@ -95,8 +99,14 @@
     </form>
     <div id="overlay" style="display: none;">
       <div id="msg">
-        <p>Dokument wird erstellt, bitte warten (kann etwas dauern)</p>
-        <progress id="progress" max="100"></progress>
+        <div id="processing">
+          <p>Dokument wird erstellt, bitte warten (kann etwas dauern)</p>
+          <progress id="progress" max="100"></progress>
+        </div>
+        <div id="error" style="display: none;">
+          <p>Fehler beim Verarbeiten! Ausgabe unten. <button id="closeError">Schließen</button></p>
+          <textarea id="errorDisplay"></textarea>
+        </div>
       </div>
     </div>
 
@@ -158,9 +168,10 @@
               progress.value = arr[0];
               return false;
             case 1:
-              alert("Fehler! (Ausgabe in textarea)");
-              document.getElementById("data").value = event.data.text();
-              break;
+              document.getElementById("errorDisplay").value = new TextDecoder().decode(arr.slice(0, arr.length - 1));
+              document.getElementById("error").style.display = "";
+              document.getElementById("processing").style.display = "none";
+              return true;
             case 2:
               const link = document.createElement("a");
               const pdf = new Blob([arr.slice(0, arr.length - 1)], {type: 'octet/stream'});
@@ -175,6 +186,11 @@
           return true;
         });
         return false;
+      }
+      document.getElementById("closeError").onclick = function(event) {
+        document.getElementById("error").style.display = "none";
+        document.getElementById("processing").style.display = "";
+        document.getElementById("overlay").style.display = "none";
       }
     </script>
   </body>
