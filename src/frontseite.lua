@@ -185,12 +185,12 @@ function eigenschaften.rechts(self)
         if j == 1 then
           if i == 7 then
             common.p([[
-              \multicolumn{4}{c}{\multirow{3}{*}{
+              \Block{3-4}{
                 \begin{minipage}{4.4cm}
                   \centering
                   {\textmansontt{\textbf{Wundschwellen}}}\smallbreak\vspace{-6pt}
                   {\tiny\normalfont (KO/2 • KO • KO×3/2)+Modifikator}\smallbreak
-                  \bgroup\fboxsep=0pt\colorbox{white}{\begin{tabular}{|x{1.2cm}|x{1.2cm}|x{1.2cm}|}\hline
+                  \bgroup\fboxsep=0pt\colorbox{white}{\begin{tabular}{|x{1.2cm}|x{1.2cm}|x{1.2cm}|}\hline\rule{0pt}{1em}
             ]])
             for k=1,3 do
               if k ~= 1 then
@@ -207,7 +207,7 @@ function eigenschaften.rechts(self)
                 tex.sprint(-2, common.round(base))
               end
             end
-            tex.sprint([[\\\hline\end{tabular}}\egroup\par]])
+            tex.sprint([[\\\hline\end{tabular}}\egroup\\]])
             common.p([[
               {\tiny\hspace{2pt}\directlua{common.checkbox(data.Vorteile.Eisern)} Eisern (WS+2)
               \hfill
@@ -216,7 +216,7 @@ function eigenschaften.rechts(self)
 
             common.p([[
                 \end{minipage}
-              }}
+              }
             ]])
           else
             tex.sprint([[\multicolumn{4}{c}{}]])

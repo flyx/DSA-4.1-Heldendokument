@@ -97,11 +97,8 @@
     \renewcommand{\arraystretch}{1.325}
     \vspace{-0.375pt}
     \begin{NiceTabular}{p{5.3cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}!{\vrule width 4\arrayrulewidth}x{1.2cm}|x{1.2cm}@{/}x{0.8cm}|x{1.2cm}}
-        \setarstrut{\tiny} & \dsaSH Aktuell & \dsaSH Modifikator & \multicolumn{2}{l}{
-            \dsaSH \begin{tabular}{x{1.25cm}@{\tiny/}x{0.85cm}}
-                Zugekauft & Max
-            \end{tabular}
-        } & \dsaSH Permanent \\ \restorearstrut
+        \setarstrut{\tiny} & \dsaSH Aktuell & \dsaSH Modifikator &
+        \multicolumn{1}{c@{\tiny/}}{\dsaSH Zugekauft} & \dsaSH Max & \dsaSH Permanent \\ \restorearstrut
         \directlua{frontseite.eigenschaften:rechts()}
     \end{NiceTabular}
     \vspace{-0.5875pt}
