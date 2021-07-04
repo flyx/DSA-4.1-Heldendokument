@@ -15,7 +15,11 @@ end
 local d = require("schemadef")
 local schema = require("schema")
 
-loadfile(arg[i], "t", schema)()
+local f, errmsg = loadfile(arg[i], "t", schema)
+if f == nil then
+  tex.error(errmsg)
+end
+f()
 if d.Poison.count > 0 then
   tex.error("Fehler beim Laden der Heldendefinition!")
 end
