@@ -22,7 +22,7 @@ docker-server: docker/server.dockerfile docker/index.html docker/serve.go
 
 doc: docs/index.html
 
-docs/index.html: src/schemadef.lua src/schema.lua
-	cd src && texlua schema.lua --standalone gendoc > ../docs/index.html
+docs/index.html: src/schemadef.lua src/schema.lua src/tools.lua
+	cd src && texlua tools.lua --standalone gendoc > ../docs/index.html
 
 .PHONY: docker-bare docker-server doc

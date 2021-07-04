@@ -13,7 +13,7 @@ if i > #arg then
 end
 
 local d = require("schemadef")
-local schema = require("schema")
+local schema = loadfile("schema.lua", "t")(false)
 
 local f, errmsg = loadfile(arg[i], "t", schema)
 if f == nil then

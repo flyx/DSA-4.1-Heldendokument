@@ -6,6 +6,7 @@ Helden aus der Heldensoftware können importiert werden.
 
 ## Features
 
+ * Das Heldendokument lässt sich mit Helden-Daten füllen, die aus der Heldensoftware exportiert wurde (siehe unten).
  * Kein editierbares PDF – Werte können beim Bauen des Heldendokuments eingegeben werden, das generierte Dokument ist nicht interaktiv.
 
    Der Vorteil davon ist, dass das Dokument in PDF-Readern, die keine interaktiven Element unterstützen, vollständig angezeigt werden kann.
@@ -20,7 +21,7 @@ Helden aus der Heldensoftware können importiert werden.
    Die meisten Tabellen haben eine variable Anzahl an Zeilen.
    Man kann beispielsweise mehr Zeilen in gesellschaftlichen Talenten haben und dafür weniger Zeilen bei den Körperlichen – oder die „Gaben“-Tabelle komplett entfernen, wenn man sie nicht braucht.
    Dies kann in der Eingabe-Textdatei definiert werden.
- * Hochformat-Zaubertabelle mit nur den wesentlichsten Informationen und einer Spalte, in der man die Zeile im Liber Cantiones angeben kann.
+ * Hochformat-Zaubertabelle mit nur den wesentlichsten Informationen und einer Spalte, in der man die Seite im Liber Cantiones angeben kann.
    Niemand braucht die Querformat-Tabelle.
    Außerdem wird automatisch eine zweite, dritte, … Seite erzeugt wenn man viele Zauber hat.
  * Frei und quelloffen: Der Quellcode ist unter einer freien Lizenz verfügbar und das Dokument kann komplett mit Open-Source-Software gebaut werden.
@@ -71,7 +72,7 @@ Dieses benutzt man wiefolgt:
 In diesem Beispiel wir als Datengrundlage das Template für einen profanen Helden, `templates/profan.lua` benutzt.
 Statt dessen kann natürlich ein eigener Held eingegeben werden.
 
-Das Docker-Image für das Web-Interface setzt voraus, dass *dsa-4.1-heldendokument* existiert.
+Das Docker-Image für das Web-Interface setzt voraus, dass *dsa-4.1-heldendokument* existiert, also der vorherige Schritt ausgeführt wurde.
 Es kann folgendermaßen gebaut werden:
 
     make docker-server
@@ -85,10 +86,11 @@ Läuft dieser Befehl, kann das Webinterface im Browser unter http://localhost/ a
 Das Webinterface ist minimal und dafür gedacht, den Inhalt der Helden-Datei ins Textfeld einzufügen und dann abzusenden.
 Es eignet sich nicht als Editor und speichert die Eingabe nicht ab.
 Die Generierung kann mehrere Minuten dauern.
+Das Webinterface inkludiert die Option, einen Held aus der Heldensoftware zu importieren.
 
 ### Manuell
 
-Es muss TeX Live 2021 oder installiert sein.
+Es muss TeX Live 2021 oder neuer installiert sein.
 Ältere Distributionen funktionieren nicht (betrifft aktuelles Debian).
 Mac-User können [MacTeX](https://www.tug.org/mactex/) benutzen.
 
@@ -116,7 +118,7 @@ Danach kann das Heldendokument generiert werden, indem im `src`-Verzeichnis folg
     latexmk -lualatex='lualatex %O %S ../templates/profan.lua' heldendokument.tex
 
 Der erste Befehl löscht vorherige Ausgaben und ist nötig, wenn im selben Verzeichnis bereits ein anderer Held generiert wurde.
-Dieser Befehl erzeugt die Datei `heldendokument.pdf`.
+Der zweite Befehl erzeugt die Datei `heldendokument.pdf`.
 Der Pfad `../templates/profan.lua` kann durch den Pfad zu einer beliebigen Heldendatei ersetzt werden.
 
 ## Eine Helden-Datei erstellen
@@ -126,6 +128,13 @@ Eine sehr rudimentäre Dokumentation der Struktur der Eingabedatei ist [hier](ht
 Im Ordner `templates` finden sich Dateien mit Layouts für einen profanen Charakter (Frontseite, Talentbogen, Kampfbogen, Ausrüstungsbogen), einen geweihten Character (Liturgiebogen statt Ausrüstungsbogen) und einen magischen Character (zusätzlich Zauberdokument und Zauberliste).
 Die Templates enthalten zudem die Basis-Talente – löscht man die entsprechenden Definitionen, hat man komplett unausgefüllte Tabellen auf dem Talentbogen.
 Will man einen Bogen für einen Helden erstellen, empfiehlt es sich, eines der Templates als Ausgangspunkt zu nehmen.
+
+Will man prüfen, ob eine Heldendatei Fehler enthält, lässt sich dies tun, indem man im Ordner `src` folgenden Befehl ausführt:
+
+    texlua tools.lua validate ../templates/profan.lua
+
+Der Pfad `../templates/profan.lua` muss durch den Pfad zur zu prüfenden Datei ersetzt werden.
+Das Docker-Webinterface führt diesen Schritt automatisch auf der Eingabe durch.
 
 ### Import aus der Heldensoftware
 

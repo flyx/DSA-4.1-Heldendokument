@@ -1,11 +1,15 @@
 #!/bin/sh
 
-set -e
-
 cd src
 cp /dev/stdin held.lua
 
-texlua schema.lua validate held.lua
+texlua tools.lua validate held.lua 2>heldendokument.log
+if [ $? -eq 1 ]; then
+  if [ "$1" = "-" ]; then
+    cp heldendokument.log /dev/stderr
+  fi
+  exit 1
+fi
 
 latexmk -c
 latexmk -lualatex='lualatex %O %S held.lua' heldendokument.tex
