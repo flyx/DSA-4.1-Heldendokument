@@ -3,7 +3,7 @@
 cd src
 cp /dev/stdin held.lua
 
-texlua tools.lua validate held.lua 2>heldendokument.log
+texlua tools.lua validate held.lua >heldendokument.log 2>&1
 if [ $? -eq 1 ]; then
   if [ "$1" = "-" ]; then
     cp heldendokument.log /dev/stderr
