@@ -310,26 +310,6 @@ d.MixedList = Type("table",
   end
 )
 
-local function rec_print(v)
-  if type(v) == "table" then
-    io.write("{")
-    for k,w in pairs(v) do
-      io.write("[")
-      rec_print(k)
-      io.write("]=")
-      rec_print(w)
-      io.write(",")
-    end
-    io.write("}")
-  elseif type(v) == "string" then
-    io.write("[[")
-    io.write(v)
-    io.write("]]")
-  else
-    io.write(v)
-  end
-end
-
 d.Record = Type("table",
   function(...)
     local ret = {defs = {}, order = {}}
