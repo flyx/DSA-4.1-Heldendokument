@@ -692,14 +692,28 @@ SF.Magisch {
     <xsl:if test="not($def/@boni) and not(./preceding-sibling::sonderfertigkeit[starts-with(@name, $name)]) and ((not($def/@art) and $art = '') or ($art = $def/@art))">
       <xsl:choose>
         <xsl:when test="$kind = 'roman'">
-          <xsl:value-of select="concat($def/@id, ' {I')"/>
-          <xsl:if test="./following-sibling::sonderfertigkeit[@name=concat($name, ' II')]">
-            <xsl:text>, II</xsl:text>
-          </xsl:if>
-          <xsl:if test="./following-sibling::sonderfertigkeit[@name=concat($name, ' III')]">
-            <xsl:text>, III</xsl:text>
-          </xsl:if>
-          <xsl:text>}, </xsl:text>
+          <xsl:choose>
+            <xsl:when test="$def/@id">
+              <xsl:value-of select="concat($def/@id, ' {I')"/>
+              <xsl:if test="./following-sibling::sonderfertigkeit[@name=concat($name, ' II')]">
+                <xsl:text>, II</xsl:text>
+              </xsl:if>
+              <xsl:if test="./following-sibling::sonderfertigkeit[@name=concat($name, ' III')]">
+                <xsl:text>, III</xsl:text>
+              </xsl:if>
+              <xsl:text>}, </xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="concat('&quot;', $name, ' I')"/>
+              <xsl:if test="./following-sibling::sonderfertigkeit[@name=concat($name, ' II')]">
+                <xsl:text>, II</xsl:text>
+              </xsl:if>
+              <xsl:if test="./following-sibling::sonderfertigkeit[@name=concat($name, ' III')]">
+                <xsl:text>, III</xsl:text>
+              </xsl:if>
+              <xsl:text>", </xsl:text>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:when>
         <xsl:when test="$kind = 'named'">
           <xsl:for-each select=".|./following-sibling::sonderfertigkeit[starts-with(@name, $name)]">
@@ -1247,9 +1261,14 @@ Magie.Zauber {</xsl:text>
       </xsl:if>
     </xsl:if>
     <xsl:value-of select="concat('}, ', dsa:repraesentation(@repraesentation))"/>
-    <xsl:if test="@hauszauber = 'true'">
-      <xsl:text>, true</xsl:text>
-    </xsl:if>
+    <xsl:choose>
+      <xsl:when test="@hauszauber = 'true'">
+        <xsl:text>, true</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>, false</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:apply-templates select="." mode="spezialisierungen"/>
     <xsl:text>},</xsl:text>
   </xsl:template>

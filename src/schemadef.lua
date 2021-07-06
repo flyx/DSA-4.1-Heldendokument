@@ -5,10 +5,11 @@ local d = {
   context = {},
   Poison = {
     name = "Poison",
-    count = 0
+    count = 0,
   },
   schema = {}
 }
+d.Poison.__metatable = d.Poison
 setmetatable(d.Poison, d.Poison)
 
 function d.context:push(name)
@@ -185,7 +186,7 @@ local MetaType = {
           return self:err("%s als Argument erwartet, bekam %s", self.base, type(value))
         end
         local ret = construct(self, value)
-        if ret ~= Poison then
+        if ret ~= d.Poison then
           setmetatable(ret, self)
           if self.singleton then
             if self.value ~= nil then
@@ -268,7 +269,7 @@ d.MixedList = Type("table",
           errors = true
         end
       end
-      if mt ~= nil and mt ~= string_metatable and mt ~= Poison then
+      if mt ~= nil and mt ~= string_metatable and mt ~= d.Poison then
         local found = false
         for _,t in ipairs(self) do
           if mt == t then
@@ -290,7 +291,7 @@ d.MixedList = Type("table",
       end
       d.context:pop()
     end
-    return errors and Poison or value
+    return errors and d.Poison or value
   end,
   function(self, printer)
     if #self > 1 then
@@ -334,7 +335,7 @@ d.Record = Type("table",
           mt = getmetatable(v)
           value[k] = v
         end
-        if mt ~= Poison and mt ~= expected[1] then
+        if mt ~= d.Poison and mt ~= expected[1] then
           self:err("falscher Typ: erwartete %s, bekam %s", expected[1].name, mt.name)
           errors = true
         end
@@ -349,7 +350,7 @@ d.Record = Type("table",
         value[k] = v[1](v[2])
       end
     end
-    return errors and Poison or value
+    return errors and d.Poison or value
   end,
   function(self, printer)
     local first = true
@@ -453,7 +454,7 @@ d.FixedList = Type("table",
           mt = getmetatable(v)
           value[i] = v
         end
-        if mt ~= Poison and mt ~= self.inner then
+        if mt ~= d.Poison and mt ~= self.inner then
           self:err("falscher Typ: erwartete %s, bekam %s", self.inner.name, mt.name)
           errors = true
         end
@@ -470,7 +471,7 @@ d.FixedList = Type("table",
         errors = true
       end
     end
-    return errors and Poison or value
+    return errors and d.Poison or value
   end,
   function(self, printer)
     for i=1,self.length do
@@ -521,13 +522,13 @@ d.HeterogeneousList = Type("table",
         mt = getmetatable(v)
         value[i] = v
       end
-      if mt ~= Poison and mt ~= def[2] then
+      if mt ~= d.Poison and mt ~= def[2] then
         self:err("falscher Typ: erwartete %s, bekam %s", def[2].name, mt.name)
         errors = true
       end
       d.context:pop()
     end
-    return errors and Poison or value
+    return errors and d.Poison or value
   end,
   function(self, printer)
     for i,v in ipairs(self) do
@@ -562,7 +563,7 @@ d.Numbered = Type("table",
       end
       d.context:pop()
     end
-    return errors and Poison or ret
+    return errors and d.Poison or ret
   end,
   function(self, printer)
     printer:meta("[ ")
@@ -604,7 +605,7 @@ d.MapToFixed = Type("table",
       end
       d.context:pop()
     end
-    return errors and Poison or value
+    return errors and d.Poison or value
   end,
   function(self, printer)
     printer:sym("[ ")
