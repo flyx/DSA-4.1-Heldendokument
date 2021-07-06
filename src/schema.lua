@@ -327,7 +327,9 @@ schema.Magie = {
   Notizen = d:singleton(d.Multivalue, "Magie.Notizen", "Notizen auf dem Zauberdokument.") {},
   Repraesentationen = d:singleton(d.MixedList, "Magie.Repraesentationen", "Liste beherrschter Repräsentationen.", Repraesentation) {},
   Merkmalskenntnis = merkmale("Magie.Merkmalskenntnis", "Liste gelernter Merkmalskenntnisse"),
-  Begabungen = merkmale("Magie.Begabungen", "Liste von Begabungen für Merkmale"),
+  Begabungen = d:singleton(d.Record, "Magie.Begabungen", "Begabungen für Zauber und Merkmale",
+    {"Merkmale", Merkmale, {}}, {"Zauber", d.ListWithKnown("ZauberBegabungen", "Liste von Zaubern, für die eine Begabung vorliegt", {}), {}}
+  ) {},
   Unfaehigkeiten = merkmale("Magie.Unfaehigkeiten", "Liste von Unfähigkeiten für Merkmale"),
   Zauber = d:singleton(d.MixedList, "Magie.Zauber", "Liste von gelernten Zaubern.", d.HeterogeneousList("Zauber", "Ein Zauber.", {"Seite", Simple, ""}, {"Name", String}, {"Probe1", Eigenschaft}, {"Probe2", Eigenschaft}, {"Probe3", Eigenschaft}, {"TaW", Simple, ""}, {"Spalte", SteigSpalte}, {"Merkmale", Merkmale, {}}, {"Repraesentation", Repraesentation, ""}, {"Hauszauber", schema.Boolean, false}, {"Spezialisierung", Spezialisierung, {}})) {}
 }

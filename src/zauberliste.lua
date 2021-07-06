@@ -141,14 +141,14 @@ function schwierigkeit:malus_repr(repr, known)
   return min
 end
 
-function schwierigkeit:mod(input, merkmale, repr, lernmod, haus)
+function schwierigkeit:mod(zaubername, input, merkmale, repr, haus)
   if math.min(string.len(input), string.len(repr)) == 0 then
     return ""
   end
   index = self:num(input)
   for i, merkmal in ipairs(merkmale) do
     index = index + self:mod_from(merkmal, data.Magie.Merkmalskenntnis, -1)
-    index = index + self:mod_from(merkmal, data.Magie.Begabungen, -1)
+    index = index + self:mod_from(merkmal, data.Magie.Begabungen.Merkmale, -1)
     index = index + self:mod_from(merkmal, data.Magie.Unfaehigkeiten, 1)
   end
   for _, name in ipairs({"Elementar", "Daemonisch"}) do
@@ -156,8 +156,13 @@ function schwierigkeit:mod(input, merkmale, repr, lernmod, haus)
     index = index + self:submod_from(name, merkmale[name], data.Magie.Begabungen[name], -1)
     index = index + self:submod_from(name, merkmale[name], data.Magie.Unfaehigkeiten[name], 1)
   end
+  for _, name in ipairs(data.Magie.Begabungen.Zauber) do
+    if name == zaubername then
+      index = index - 1
+      break
+    end
+  end
   index = index + (haus and -1 or 0)
-  index = index + (lernmod == nil and 0 or lernmod)
   index = index + self:malus_repr(repr, data.Magie.Repraesentationen)
   return self:name(index)
 end
@@ -166,8 +171,18 @@ local zauberliste = {
   repraesentationen = repraesentationen
 }
 
-function zauberliste.merkmalliste(input)
+function zauberliste.merkmalliste(input, zauber)
   local first = true
+  if zauber ~= nil then
+    for _, v in ipairs(zauber) do
+      if first then
+        first = false
+      else
+        tex.sprint(-2, ", ")
+      end
+      tex.sprint(-2, v)
+    end
+  end
   for _, v in ipairs(input) do
     if first then
       first = false
@@ -252,7 +267,7 @@ function zauberliste.seite(start)
       tex.sprint("&")
       tex.sprint(-2, z[9])
       tex.sprint("&")
-      tex.sprint(-2, schwierigkeit:mod(z[7], z[8], z[9], z.lernmod, z[10]))
+      tex.sprint(-2, schwierigkeit:mod(z[2], z[7], z[8], z[9], z[10]))
       if z[10] then
         tex.sprint([[\hfill\faHome]])
       end

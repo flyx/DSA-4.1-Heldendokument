@@ -493,10 +493,10 @@ einzelnen Seiten beschrieben.</p>
 
 <pre><code><span class="id">SF.Nahkampf</span> <span class="sym">{</span>
   <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Parierwaffen </span><span class="sym">{</span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span><span class="sym">}</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Ruestungsgewoehnung </span><span class="sym">{</span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">}</span><span class="sym">,</span>
   <span class="metasym">(optional) </span><span class="id">Schildkampf </span><span class="sym">{</span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span><span class="sym">}</span><span class="sym">,</span>
   <span class="metasym">(optional) </span><span class="id">Ausweichen </span><span class="sym">{</span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">}</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Ruestungsgewoehnung </span><span class="sym">{</span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">}</span>
+  <span class="metasym">(optional) </span><span class="id">Parierwaffen </span><span class="sym">{</span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span><span class="sym">}</span>
 <span class="sym">}</span></code></pre>
 
 <p>Liste von Nahkampf-Sonderfertigkeiten.</p>
@@ -791,12 +791,25 @@ einzelnen Seiten beschrieben.</p>
 </section><section><h2 id="Magie.Begabungen">Magie.Begabungen</h2>
 
 <pre><code><span class="id">Magie.Begabungen</span> <span class="sym">{</span>
-  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Elementar </span><span class="sym">{</span><a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span><span class="sym">}</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Daemonisch </span><span class="sym">{</span><a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span><span class="sym">}</span>
+  <span class="id">Merkmale</span><span class="sym"> = </span><a href="#Merkmale">&lt;Merkmale&gt;</a><span class="sym">,</span>
+  <span class="id">Zauber</span><span class="sym"> = </span><a href="#ZauberBegabungen">&lt;ZauberBegabungen&gt;</a>
 <span class="sym">}</span></code></pre>
 
-<p>Liste von Begabungen für Merkmale</p>
+<p>Begabungen für Zauber und Merkmale</p>
+
+<h3 id="Merkmale">Merkmale</h2>
+
+<pre><code><span class="sym">{</span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Elementar </span><span class="sym">{</span><a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span><span class="sym">}</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Daemonisch </span><span class="sym">{</span><a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span><span class="sym">}</span><span class="sym">}</span></code></pre>
+
+<p>Liste von Merkmalen eines Zaubers.</p>
+
+<h3 id="ZauberBegabungen">ZauberBegabungen</h2>
+
+<pre><code><span class="sym">{</span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre>
+
+<p>Liste von Zaubern, für die eine Begabung vorliegt</p>
 
 </section><section><h2 id="Magie.Unfaehigkeiten">Magie.Unfaehigkeiten</h2>
 
@@ -821,14 +834,6 @@ einzelnen Seiten beschrieben.</p>
 <pre><code><span class="sym">{</span><span class="metasym">&lt;Seite:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe1:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe2:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe3:</span><a href="#Eigenschaft">Eigenschaft</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Spalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Merkmale:</span><a href="#Merkmale">Merkmale</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Repraesentation:</span><a href="#Repraesentation">Repraesentation</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Hauszauber:</span><a href="#Boolean">Boolean</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Spezialisierung:</span><a href="#Spezialisierung">Spezialisierung</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
 <p>Ein Zauber.</p>
-
-<h3 id="Merkmale">Merkmale</h2>
-
-<pre><code><span class="sym">{</span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Elementar </span><span class="sym">{</span><a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span><span class="sym">}</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Daemonisch </span><span class="sym">{</span><a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span><span class="sym">}</span><span class="sym">}</span></code></pre>
-
-<p>Liste von Merkmalen eines Zaubers.</p>
 
 </section></article>  </body>
 </html>

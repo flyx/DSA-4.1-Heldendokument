@@ -138,12 +138,17 @@ Magie.Merkmalskenntnis {
 }
 
 Magie.Begabungen {
-  </xsl:text>
+  Zauber = {</xsl:text>
+    <xsl:apply-templates select="vt" mode="single">
+      <xsl:with-param name="item" select="'vorteil'"/>
+      <xsl:with-param name="name" select="'Begabung für [Zauber]'"/>
+    </xsl:apply-templates><xsl:text>},
+  Merkmale = {</xsl:text>
     <xsl:apply-templates select="vt" mode="merkmale">
       <xsl:with-param name="item" select="'vorteil'"/>
       <xsl:with-param name="name" select="'Begabung für [Merkmal]'"/>
     </xsl:apply-templates>
-    <xsl:text>
+    <xsl:text>},
 }
 
 Magie.Unfaehigkeiten {
@@ -1176,6 +1181,14 @@ Magie.Repraesentationen {
     <xsl:if test="not(starts-with(@value, 'Elementar') or starts-with(@value, 'Dämonisch'))">
       <xsl:value-of select="concat(dsa:stringVal(@value), ', ')"/>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="vt" mode="single">
+    <xsl:param name="item"/>
+    <xsl:param name="name"/>
+    <xsl:for-each select="*[local-name() = $item and starts-with(@name, $name)]">
+      <xsl:value-of select="concat(dsa:stringVal(@value), ', ')"/>
+    </xsl:for-each>
   </xsl:template>
 
   <xsl:template match="zauberliste">
