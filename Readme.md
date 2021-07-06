@@ -1,31 +1,36 @@
 # DSA 4.1 Heldendokument
 
 Ein DSA 4.1 Heldendokument, das sich am original Heldendokument orientiert.
-Es kann über Lua-Quellcode mit Werten befüllt werden und berechnet abgeleitete Werte automatisch.
+Es kann bei der Erstellung mit Werten befüllt werden und berechnet dann abgeleitete Werte automatisch.
 Helden aus der Heldensoftware können importiert werden.
+
+Das Heldendokument wird als PDF mit LuaLaTeX erstellt.
+Daten müssen zum Zeitpunkt der Erstellung eingegeben werden.
+Ändern sich die Daten, muss ein neues PDF erstellt werden.
+Das Dokument bietet keine interaktiven Features wie Heldenerstellung oder Steigerung.
 
 ## Features
 
- * Das Heldendokument lässt sich mit Helden-Daten füllen, die aus der Heldensoftware exportiert wurde (siehe unten).
- * Kein editierbares PDF – Werte können beim Bauen des Heldendokuments eingegeben werden, das generierte Dokument ist nicht interaktiv.
+### Allgemein
 
-   Der Vorteil davon ist, dass das Dokument in PDF-Readern, die keine interaktiven Element unterstützen, vollständig angezeigt werden kann.
-   Das betrifft viele PDF-Reader auf Tablets.
-   Außerdem sieht das Dokument nicht stark unterschiedlich in verschiedenen Readern aus.
- * Die Werte des Helden können in einer Textdatei gespeichert werden, aus der bei Änderungen immer wieder ein neues Dokument erstellt werden kann.
-   Dadurch kann der Held beispielsweise einfach in einem Versionskontrollsystem abgelegt werden.
-   Warum würde man Versionskontrolle wollen? Naja, um beispielsweise wenn auf einer Convention ein Held mit maximal 5000 AP verlangt wird, man einfach eine frühere Version bauen kann. Alltäglicher Anwendungsfall!
+ * Da das erstellte PDF keine interaktiven Features hat, kann es in allen verbreiteten PDF-Readern korrekt angezeigt werden, insbesondere auf Tablets.
  * Alternierender Hintergrund pro Zeile bei vielen Tabellen für bessere Lesbarkeit.
    Das schließt beispielsweise Talente, Liturgien, Rituale und Zauber ein.
- * Dynamische Größe von Tabellen:
-   Die meisten Tabellen haben eine variable Anzahl an Zeilen.
-   Man kann beispielsweise mehr Zeilen in gesellschaftlichen Talenten haben und dafür weniger Zeilen bei den Körperlichen – oder die „Gaben“-Tabelle komplett entfernen, wenn man sie nicht braucht.
-   Dies kann in der Eingabe-Textdatei definiert werden.
  * Hochformat-Zaubertabelle mit nur den wesentlichsten Informationen und einer Spalte, in der man die Seite im Liber Cantiones angeben kann.
    Niemand braucht die Querformat-Tabelle.
    Außerdem wird automatisch eine zweite, dritte, … Seite erzeugt wenn man viele Zauber hat.
  * Frei und quelloffen: Der Quellcode ist unter einer freien Lizenz verfügbar und das Dokument kann komplett mit Open-Source-Software gebaut werden.
    Nur die verwendeten Bilder und Schriftarten unterliegen urheberrechtlichen Beschränkungen.
+ * Dynamische Größe von Tabellen:
+   Die meisten Tabellen haben eine variable Anzahl an Zeilen.
+   Man kann beispielsweise mehr Zeilen in gesellschaftlichen Talenten haben und dafür weniger Zeilen bei den Körperlichen – oder die „Gaben“-Tabelle komplett entfernen, wenn man sie nicht braucht.
+   Dies kann in der Eingabe-Textdatei definiert werden.
+
+### Werteingabe
+
+ * Die Werte des Helden können in einer Textdatei gespeichert werden, aus der bei Änderungen immer wieder ein neues Dokument erstellt werden kann.
+   Eine Textdatei hat einige Vorzüge gegenüber der PDF: Sie ist kleiner, man kann Änderungen besser nachvollziehen und sie kann besser in ein Versionskontrollsystem abgelegt werden.
+   Die PDF kann aus der Textdatei mit den Daten immer wieder neu generiert werden.
  * Berechnung abgeleiteter Werte:
    Abgeleitete Eigenschaften und berechenbare Werte werden automatisch ausgefüllt, wenn die zugrundeliegenden Werte verfügbar sind.
    Dies schließt abgeleitete Eigenschaften, Kampfwerte und Lernschwierigkeiten von Zaubern ein.
@@ -33,6 +38,7 @@ Helden aus der Heldensoftware können importiert werden.
    Für Spieler, die den Bogen lieber von Hand ausfüllen, kann ein leerer Bogen generiert werden.
    Die berechneten Werte werden leer gelassen, wenn die zugrundeliegenden Werte leer sind.
    Die Definition von Tabellengrößen ist unabhängig von den enthaltenen Daten und kann auch für einen leeren Bogen spezifiziert werden.
+ * Ein Import-Werkzeug steht bereit, um einen Helden aus der Heldensoftware in eine Eingabedatei für das Heldendokument umzuwandeln.
 
 ## Wie generiere ich das Dokument?
 
@@ -53,6 +59,8 @@ Es gibt zwei Möglichkeiten, eine solche Umgebung aufzusetzen:
 
    Diese Alternative wird vor allem Benutzern empfohlen, die TeX ohnehin installiert haben.
    Muss man es extra dafür installieren, verbraucht man nicht arg viel weniger Speicher als mit der Docker-Variante.
+
+Die nachfolgenden Anleitungen gehen davon aus, dass das DSA-4.1-Heldendokument komplett heruntergeladen und in einen Ordner entpackt wurde.
 
 ### Docker
 
@@ -85,7 +93,7 @@ Es kann folgendermaßen gestartet werden:
 Läuft dieser Befehl, kann das Webinterface im Browser unter http://localhost/ aufgerufen werden.
 Das Webinterface ist minimal und dafür gedacht, den Inhalt der Helden-Datei ins Textfeld einzufügen und dann abzusenden.
 Es eignet sich nicht als Editor und speichert die Eingabe nicht ab.
-Die Generierung kann mehrere Minuten dauern.
+Die Generierung kann mehrere Minuten dauern, ein simpler Fortschrittsbalken wird währenddessen angezeigt.
 Das Webinterface inkludiert die Option, einen Held aus der Heldensoftware zu importieren.
 
 ### Manuell
@@ -115,11 +123,17 @@ Die folgenden Befehle nutzen unzip, curl, ImageMagick und poppler-utils, um dies
 Danach kann das Heldendokument generiert werden, indem im `src`-Verzeichnis folgende Befehle ausgeführt wird:
 
     latexmk -c
-    latexmk -lualatex='lualatex %O %S ../templates/profan.lua' heldendokument.tex
+    latexmk heldendokument.tex
 
 Der erste Befehl löscht vorherige Ausgaben und ist nötig, wenn im selben Verzeichnis bereits ein anderer Held generiert wurde.
-Der zweite Befehl erzeugt die Datei `heldendokument.pdf`.
-Der Pfad `../templates/profan.lua` kann durch den Pfad zu einer beliebigen Heldendatei ersetzt werden.
+Der zweite Befehl erzeugt die Datei `heldendokument.pdf` als leeres Heldendokument.
+Um das Dokument mit Daten zu befüllen, muss zusätzlich der Pfad zu einer Heldendatei angegeben werden:
+
+    latexmk -c
+    latexmk -lualatex='lualatex %O %S ../templates/profan.lua' heldendokument.tex
+
+Hier wird als Beispiel das Heldendokument aus dem Template für einen profanen Charakter generiert.
+Der Pfad kann entsprechend verändert werden, um einen Dokument aus einer eigenen Heldendatei zu generieren.
 
 ## Eine Helden-Datei erstellen
 
@@ -143,7 +157,9 @@ Die erstellte XML-Datei (hier als Beispiel `held.xml`) kann dann folgendermaßen
 
     xsltproc import.xsl held.xml > held.lua
 
-Windows-Nutzer können das wohl auch [irgendwie über PowerShell machen](https://gist.github.com/wschwarz/5073004).
+Das Import-Skript ist in XSLT 1.0 geschrieben und sollte mit jeder konformen Implementierung funktionieren, also beispielsweise auch mit der in der Windows Powershell.
+Getestet wird es allerdings nur mit `xsltproc`, weshalb zur Benutzung dieses Tools geraten wird.
+
 Der Docker-Server bietet diese Funktion auf seinem Webinterface ebenfalls an.
 
 Der Import ist ein Beta-Feature und wenig getestet.

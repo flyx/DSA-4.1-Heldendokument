@@ -1,3 +1,6 @@
+local d = require("schemadef")
+local schema = loadfile("schema.lua", "t")(false)
+
 local i = 1
 while i <= #arg do
   local name = arg[i]
@@ -8,20 +11,19 @@ while i <= #arg do
   end
 end
 
-if i > #arg then
-  tex.error("missing argument for hero data!")
+if i < #arg then
+  tex.error("zu viele Argumente. Erstes überflüssiges Argument: '" .. tostring(arg[i+1]) .. "'")
 end
 
-local d = require("schemadef")
-local schema = loadfile("schema.lua", "t")(false)
-
-local f, errmsg = loadfile(arg[i], "t", schema)
-if f == nil then
-  tex.error(errmsg)
-end
-f()
-if d.Poison.count > 0 then
-  tex.error("Fehler beim Laden der Heldendefinition!")
+if i == #arg then
+  local f, errmsg = loadfile(arg[i], "t", schema)
+  if f == nil then
+    tex.error(errmsg)
+  end
+  f()
+  if d.Poison.count > 0 then
+    tex.error("Fehler beim Laden der Heldendefinition!")
+  end
 end
 
 local values = {
