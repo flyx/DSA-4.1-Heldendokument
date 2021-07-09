@@ -279,7 +279,8 @@ local pages_source = {
   Ausruestungsbogen = "ausruestung.tex",
   Liturgiebogen     = "liturgien.tex",
   Zauberdokument    = "zauberdokument.tex",
-  Zauberliste       = "zauberliste.tex"
+  Zauberliste       = "zauberliste.tex",
+  Ereignisliste     = "ereignisse.tex",
 }
 
 function common.pages()

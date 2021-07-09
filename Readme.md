@@ -102,7 +102,7 @@ Es muss TeX Live 2021 oder neuer installiert sein.
 Ältere Distributionen funktionieren nicht (betrifft aktuelles Debian).
 Mac-User können [MacTeX](https://www.tug.org/mactex/) benutzen.
 
-Zusätzlich müssen die Schriftarten [Manson](https://fontsgeek.com/manson-font) und [NewG8](https://github.com/probonopd/font-newg8/releases/tag/continuous) im System installiert sein, so dass sie von LuaTeX gesehen werden.
+Zusätzlich müssen die Schriftarten [Manson](https://fontsgeek.com/manson-font), [NewG8](https://github.com/probonopd/font-newg8/releases/tag/continuous) und [Copse](https://www.fontsquirrel.com/fonts/copse) im System installiert sein, so dass sie von LuaTeX gesehen werden.
 Für Mac-Nutzer bedeutet dies, dass sie systemweit, nicht nur für den aktuellen Benutzer, installiert sein müssen – dies lässt sich in den Einstellungen von *Font Book* festlegen.
 
 Das Fanprodukt-Logo und der Hintergrund müssen von Ulisses heruntergeladen und an die korrekte Stelle gelegt werden.

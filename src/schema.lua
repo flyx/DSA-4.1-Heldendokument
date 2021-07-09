@@ -65,12 +65,13 @@ local Zauberdokument = d.Record("Zauberdokument", "Zauberdokument.",
   {"Notizen", Zeilen, 6})
 
 local Zauberliste = d.Void("Zauberliste", "Zauberliste.")
+local Ereignisliste = d.Void("Ereignisliste", "Ereignisliste.")
 
 d:singleton(d.MixedList, "Layout", [[Definiert, welche Seiten in welcher Reihenfolge generiert werden.
 Für die einzelnen Seiten können weitere Spezifikationen vorgenommen werden, dies ist bei den Typen der
 einzelnen Seiten beschrieben.]], "Seite",
   Front, Talentliste, Kampfbogen, Ausruestungsbogen, Liturgiebogen,
-  Zauberdokument, Zauberliste
+  Zauberdokument, Zauberliste, Ereignisliste
 ) {
   Front {},
   Talentliste {
@@ -164,7 +165,7 @@ local Spezialisierung = d.Multivalue("Spezialisierung", "Liste von Spezialisieru
 
 d.HeterogeneousList("KampfTalent", "Ein Talent aus der Gruppe der Kampftalene.",
   {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"AT", Simple, ""}, {"PA", Simple, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
-d.HeterogeneousList("KoerperTalent", "Ein Talent aus der Gruppe der Körperlichen Talente.", {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"BE", Behinderung, ""}, {"Taw", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
+d.HeterogeneousList("KoerperTalent", "Ein Talent aus der Gruppe der Körperlichen Talente.", {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
 d.HeterogeneousList("Talent", "Ein allgemeines Talent.",
   {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
 d.HeterogeneousList("Sprache", "Eine Sprache oder ein Schrift.", {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
@@ -333,5 +334,12 @@ schema.Magie = {
   Unfaehigkeiten = merkmale("Magie.Unfaehigkeiten", "Liste von Unfähigkeiten für Merkmale"),
   Zauber = d:singleton(d.MixedList, "Magie.Zauber", "Liste von gelernten Zaubern.", d.HeterogeneousList("Zauber", "Ein Zauber.", {"Seite", Simple, ""}, {"Name", String}, {"Probe1", Eigenschaft}, {"Probe2", Eigenschaft}, {"Probe3", Eigenschaft}, {"TaW", Simple, ""}, {"Spalte", SteigSpalte}, {"Merkmale", Merkmale, {}}, {"Repraesentation", Repraesentation, ""}, {"Hauszauber", schema.Boolean, false}, {"Spezialisierung", Spezialisierung, {}})) {}
 }
+
+local SteigerMethode = d.Matching("SteigerMethode", "Steigerungsmethode", "SE", "Lehrmeister", "Gegenseitig", "Selbststudium")
+
+local SteigerTalent = d.HeterogeneousList("SteigerTalent", "Steigerung eines Talents",
+  {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"}, {"SE", schema.Boolean, false})
+
+d:singleton(d.MixedList, "Ereignisse", "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", SteigerTalent) {}
 
 return schema

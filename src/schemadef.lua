@@ -499,6 +499,20 @@ d.HeterogeneousList = Type("table",
       end
       return Type.props(self, key)
     end
+    ret.__newindex = function(self, key, value)
+      local t = getmetatable(self)
+      for i, f in ipairs(t) do
+        if key == f[1] then
+          if f[2].__call ~= nil then
+            self[i][1] = value
+          else
+            self[i] = value
+          end
+          return
+        end
+      end
+      rawset(self, key, value)
+    end
     return ret
   end,
   function(self, value)

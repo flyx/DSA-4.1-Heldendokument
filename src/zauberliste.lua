@@ -66,107 +66,6 @@ setmetatable(merkmale.kurz, {
   end
 })
 
-local schwierigkeit = {"A*", "A", "B", "C", "D", "E", "F", "G", "H"}
-
-function schwierigkeit:num(input)
-  for i=1,#self do
-    if self[i] == input then
-      return i
-    end
-  end
-  tex.error("Unbekannte Komplexität: '" .. input .. "'")
-end
-
-function schwierigkeit:name(index)
-  if index <= 0 then
-    index = 1
-  elseif index > #self then
-    index = #self
-  end
-  return self[index]
-end
-
-function schwierigkeit:mod_from(merkmal, merkmale, delta)
-  if type(merkmale) ~= "table" then
-    tex.error("Folgender Wert muss eine Liste sein, ist aber keine: '" .. merkmale .. "'")
-    return 0
-  end
-  for i, n in ipairs(merkmale) do
-    if merkmal == n then
-      return delta
-    end
-  end
-  return 0
-end
-
-function schwierigkeit:submod_from(name, sub, merkmale, delta)
-  local ret = 0
-  if sub ~= nil and merkmale ~= nil then
-    if merkmale.gesamt ~= nil then
-      ret = ret + delta
-    end
-    if type(sub) == "table" then
-      for _,v in ipairs(sub) do
-        if merkmale[v] ~= nil then
-          ret = ret + delta
-        end
-      end
-    elseif type(sub) == "string" and merkmale[sub] ~= nil then
-      ret = ret + delta
-    end
-  end
-  return ret
-end
-
-function schwierigkeit:malus_from(repr1, repr2)
-  if repr2 == "Srl" or repr2 == "Sch" then
-    return self:malus_from(repr2, repr1)
-  end
-  if repr1 == repr2 then
-    return 0
-  elseif repr1 == "Srl" then
-    return repr2 == "Mag" and 1 or 2
-  elseif repr1 == "Sch" then
-    return repr2 == "Srl" and 2 or 3
-  else
-    return 2
-  end
-end
-
-function schwierigkeit:malus_repr(repr, known)
-  local min = 3
-  for i,v in ipairs(known) do
-    min = math.min(min, self:malus_from(repr, v()))
-  end
-  return min
-end
-
-function schwierigkeit:mod(zaubername, input, merkmale, repr, haus)
-  if math.min(string.len(input), string.len(repr)) == 0 then
-    return ""
-  end
-  index = self:num(input)
-  for i, merkmal in ipairs(merkmale) do
-    index = index + self:mod_from(merkmal, data.Magie.Merkmalskenntnis, -1)
-    index = index + self:mod_from(merkmal, data.Magie.Begabungen.Merkmale, -1)
-    index = index + self:mod_from(merkmal, data.Magie.Unfaehigkeiten, 1)
-  end
-  for _, name in ipairs({"Elementar", "Daemonisch"}) do
-    index = index + self:submod_from(name, merkmale[name], data.Magie.Merkmalskenntnis[name], -1)
-    index = index + self:submod_from(name, merkmale[name], data.Magie.Begabungen[name], -1)
-    index = index + self:submod_from(name, merkmale[name], data.Magie.Unfaehigkeiten[name], 1)
-  end
-  for _, name in ipairs(data.Magie.Begabungen.Zauber) do
-    if name == zaubername then
-      index = index - 1
-      break
-    end
-  end
-  index = index + (haus and -1 or 0)
-  index = index + self:malus_repr(repr, data.Magie.Repraesentationen)
-  return self:name(index)
-end
-
 local zauberliste = {
   repraesentationen = repraesentationen
 }
@@ -267,7 +166,7 @@ function zauberliste.seite(start)
       tex.sprint("&")
       tex.sprint(-2, z[9])
       tex.sprint("&")
-      tex.sprint(-2, schwierigkeit:mod(z[2], z[7], z[8], z[9], z[10]))
+      tex.sprint(-2, data:lernschwierigkeit(z[2], z[7], z[8], z[9], z[10]))
       if z[10] then
         tex.sprint([[\hfill\faHome]])
       end

@@ -95,6 +95,10 @@
   BoldItalicFont = NewG8-BolIta,
   ItalicFont     = NewG8-Ita
 ]
+\setmonofont{Copse}[
+  Extension      = .ttf,
+  UprightFont    = Copse-Regular
+]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % environments

@@ -1,5 +1,6 @@
 local d = require("schemadef")
 local schema = loadfile("schema.lua", "t")(false)
+local skt = require("skt")
 
 local i = 1
 while i <= #arg do
@@ -56,7 +57,8 @@ local values = {
   Tiere = schema.Tiere:instance(),
   Liturgiekenntnis = schema.Liturgiekenntnis:instance(),
   Liturgien = schema.Liturgien:instance(),
-  Magie = {}
+  Magie = {},
+  Ereignisse = {},
 }
 
 values.Vorteile.magisch = schema.Vorteile.magisch:instance()
@@ -259,20 +261,146 @@ function values:formula(name)
   return getter_map:formula(name)
 end
 
-if values.magie ~= nil then
-  for _, name in ipairs({"merkmale", "begabungen", "unfaehigkeiten"}) do
-    local subject = values.magie[name]
-    if subject ~= nil then
-      for _, kind in ipairs({"Daemonisch", "Elementar"}) do
-        local set = subject[kind]
-        if type(set) == "table" then
-          for _, item in ipairs(set) do
-            set[item] = true
+local function merkmal_mod_from(merkmal, merkmale, delta)
+  if type(merkmale) ~= "table" then
+    tex.error("Folgender Wert muss eine Liste sein, ist aber keine: '" .. merkmale .. "'")
+    return 0
+  end
+  for i, n in ipairs(merkmale) do
+    if merkmal == n then
+      return delta
+    end
+  end
+  return 0
+end
+
+local function merkmal_submod_from(name, sub, merkmale, delta)
+  local ret = 0
+  if sub ~= nil and merkmale ~= nil then
+    if merkmale.gesamt ~= nil then
+      ret = ret + delta
+    end
+    if type(sub) == "table" then
+      for _,v in ipairs(sub) do
+        if merkmale[v] ~= nil then
+          ret = ret + delta
+        end
+      end
+    elseif type(sub) == "string" and merkmale[sub] ~= nil then
+      ret = ret + delta
+    end
+  end
+  return ret
+end
+
+local function repr_malus_between(repr1, repr2)
+  if repr2 == "Srl" or repr2 == "Sch" then
+    return repr_malus_between(repr2, repr1)
+  end
+  if repr1 == repr2 then
+    return 0
+  elseif repr1 == "Srl" then
+    return repr2 == "Mag" and 1 or 2
+  elseif repr1 == "Sch" then
+    return repr2 == "Srl" and 2 or 3
+  else
+    return 2
+  end
+end
+
+local function repr_malus(repr, known)
+  local min = 3
+  for i,v in ipairs(known) do
+    min = math.min(min, repr_malus_between(repr, v()))
+  end
+  return min
+end
+
+function values:lernschwierigkeit(zaubername, komp, merkmale, repr, haus)
+  if math.min(string.len(komp), string.len(repr)) == 0 then
+    return ""
+  end
+  index = skt.spalte:num(komp)
+  for i, merkmal in ipairs(merkmale) do
+    index = index + merkmal_mod_from(merkmal, self.Magie.Merkmalskenntnis, -1)
+    index = index + merkmal_mod_from(merkmal, self.Magie.Begabungen.Merkmale, -1)
+    index = index + merkmal_mod_from(merkmal, self.Magie.Unfaehigkeiten, 1)
+  end
+  for _, name in ipairs({"Elementar", "Daemonisch"}) do
+    index = index + merkmal_submod_from(name, merkmale[name], self.Magie.Merkmalskenntnis[name], -1)
+    index = index + merkmal_submod_from(name, merkmale[name], self.Magie.Begabungen[name], -1)
+    index = index + merkmal_submod_from(name, merkmale[name], self.Magie.Unfaehigkeiten[name], 1)
+  end
+  for _, name in ipairs(self.Magie.Begabungen.Zauber) do
+    if name == zaubername then
+      index = index - 1
+      break
+    end
+  end
+  index = index + (haus and -1 or 0)
+  index = index + repr_malus(repr, data.Magie.Repraesentationen)
+  return skt.spalte:name(index)
+end
+
+function values:tgruppe_schwierigkeit(gruppe)
+  if gruppe == "Gaben" then
+    return "F"
+  elseif gruppe == "Koerper" then
+    return "D"
+  else
+    return "B"
+  end
+end
+
+-- Ereignisse auf Charakter applizieren
+
+for _, e in ipairs(schema.Ereignisse:instance()) do
+  local mt = getmetatable(e)
+  local event = {""}
+  if mt.name == "SteigerTalent" then
+    event[1] = "Talentsteigerung (" .. e.Name .. ") von "
+    for _, g in ipairs({"Gaben", "Kampf", "Koerper", "Gesellschaft", "Natur", "Wissen", "Sprachen", "Handwerk"}) do
+      for _, t in ipairs(values.Talente[g]) do
+        if t.Name == e.Name then
+          if type(t.TaW) ~= "number" then
+            tex.error("\n[SteigerTalent] Kann '" .. e.Name .. "' nicht steigern: hat keinen Zahlenwert, sondern " .. type(t.TaW))
           end
+          event[1] = event[1] .. tonumber(t.TaW) .. " auf " .. tonumber(e.Zielwert)
+          local spalte
+          if g == "Kampf" then
+            spalte = t.Steigerungsspalte
+          elseif g == "Sprachen" then
+            -- TODO
+            spalte = "B"
+          else
+            spalte = values:tgruppe_schwierigkeit(g)
+          end
+          local ap = 0
+          while t.TaW < e.Zielwert do
+            t.TaW = t.TaW + 1
+            ap = ap + skt:kosten(spalte, t.TaW)
+          end
+          if type(values.AP.Eingesetzt()) == "number" then
+            values.AP.Eingesetzt[1] = values.AP.Eingesetzt() + ap
+          end
+          if type(values.AP.Guthaben()) == "number" then
+            values.AP.Guthaben[1] = values.AP.Guthaben() - ap
+            event[4] = values.AP.Guthaben()
+          else
+            event[4] = ""
+          end
+          event[2] = -1 * ap
+          event[3] = ""
+          goto found
         end
       end
     end
+    tex.error("\n[SteigerTalent] unbekanntes Talent: '" .. e.Name .. "'")
+    ::found::
+  else
+    tex.error("\n[Ereignisse] unbekannter Ereignistyp: '" .. mt.name .. "'")
   end
+  table.insert(values.Ereignisse, event)
 end
 
 return values

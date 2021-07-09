@@ -22,6 +22,7 @@ WORKDIR /tmp
 # again to avoid having it in the image.
 RUN apt install -y curl && \
     curl -L https://github.com/probonopd/font-newg8/releases/download/continuous/newg8-otf.zip -O && \
+    curl -L https://www.fontsquirrel.com/fonts/download/copse -o copse.zip && \
     curl -L https://mirrors.ctan.org/fonts/fontawesome5.zip -O && \
     curl -L https://mirrors.ctan.org/macros/latex/contrib/nicematrix.zip -O && \
     curl -L -s -o wds.pdf http://www.ulisses-spiele.de/download/468/ && \
@@ -30,6 +31,7 @@ RUN apt install -y curl && \
 # same with unzip…
     apt install -y unzip && \
     unzip newg8-otf.zip && \
+    unzip -p copse.zip "Copse-Regular.ttf" && \
     unzip fontawesome5.zip && \
     unzip nicematrix.zip && \
     unzip -p fanpaket.zip "Das Schwarze Auge - Fanpaket - 2013.07.29/Logo - Fanprodukt.png" >/heldendokument/img/logo-fanprodukt.png && \
@@ -41,7 +43,7 @@ RUN apt install -y curl && \
     apt remove -y --purge poppler-utils imagemagick && \
     apt autoremove -y && \
 # move things into place
-    mv *.otf /fonts && \
+    mv *.otf *.ttf /fonts && \
 # install fontawesome
     mv fontawesome5/tex /usr/share/texmf/tex/latex/fontawesome5 && \
     mv fontawesome5/type1 /usr/share/texmf/fonts/type1/public/fontawesome5 && \
