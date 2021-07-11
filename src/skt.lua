@@ -1,7 +1,14 @@
 local skt = {
   spalte = {
     {n="A*", f=1}, {n="A", f=1, [31] = 50}, {n="B", f=2}, {n="C", f=3}, {n="D", f=4, [28] = 170, [31] = 200}, {n="E", f=5, [8] = 48}, {n="F", f=7.5, [30] = 350, [31] = 375}, {n="G", f=10, [30] = 480, [31] = 500}, {n="H", f=20, [2] = 35, [6] = 140, [24] = 720, [27] = 830, [31] = 1000}
-  }
+  },
+  faktor = {
+    {1/2, "1/2"},
+    {9/16, "9/16"},
+    {3/4, "3/4"},
+    {1, "1"},
+    {3/2, "3/2"},
+  },
 }
 
 function skt.spalte:num(name)
@@ -29,6 +36,14 @@ function skt.spalte:effektiv(basis, zielwert, methode)
     index = index + (zielwert > 10 and 2 or 1)
   end
   return self:name(index)
+end
+
+function skt.faktor:apply(value)
+  return math.floor(value * self[1] + 0.5)
+end
+
+for _, f in ipairs(skt.faktor) do
+  f.apply = skt.faktor.apply
 end
 
 function skt:kosten(spalte, zielwert)

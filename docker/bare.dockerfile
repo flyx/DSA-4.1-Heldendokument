@@ -31,7 +31,7 @@ RUN apt install -y curl && \
 # same with unzip…
     apt install -y unzip && \
     unzip newg8-otf.zip && \
-    unzip -p copse.zip "Copse-Regular.ttf" && \
+    unzip -p copse.zip "Copse-Regular.ttf" > Copse-Regular.ttf && \
     unzip fontawesome5.zip && \
     unzip nicematrix.zip && \
     unzip -p fanpaket.zip "Das Schwarze Auge - Fanpaket - 2013.07.29/Logo - Fanprodukt.png" >/heldendokument/img/logo-fanprodukt.png && \

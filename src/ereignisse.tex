@@ -8,13 +8,13 @@
     \setlength{\tabcolsep}{2pt}
     \normalfont\fontsize{8}{12}\selectfont
     \begin{dsaSheetBox}
-        \begin{NiceTabular}{p{14.85cm}|x{0.3cm}y{0.7cm}|x{1cm}|y{1cm}}
+        \begin{NiceTabular}{p{13.85cm}|x{0.2cm}y{0.7cm}|x{0.9cm}|x{0.2cm}y{0.7cm}|y{1cm}}
         \CodeBefore
             \rowcolors{2}{white}{gray!30}
         \Body
             \directlua{
                 common.header_row("scriptsize", "dsaSH",
-                    "", {2, "c|", "Delta"}, "Faktor", {1, "c", "AP-Saldo"})
+                    "", {2, "c|", "Basis"}, "Faktor", {2, "c|", "Delta"}, {1, "c", "AP-Saldo"})
             } \Xhline{2\arrayrulewidth}
             \directlua{
               ereignisse.seite((#1 - 1) * 68 + 1)

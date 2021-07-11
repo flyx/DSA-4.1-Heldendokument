@@ -2,6 +2,18 @@ local common = require("common")
 
 local ereignisse = {}
 
+local function delta(val)
+  tex.sprint([[\texttt{]])
+  if val < 0 then
+    tex.sprint(-2, "–")
+  elseif val > 0 then
+    tex.sprint(-2, "+")
+  end
+  tex.sprint([[}&\texttt{]])
+  tex.sprint(math.abs(val))
+  tex.sprint([[}]])
+end
+
 function ereignisse.seite(start)
   local items = data.Ereignisse
   for i=start,start+57 do
@@ -11,18 +23,14 @@ function ereignisse.seite(start)
       end
     else
       tex.sprint(-2, items[i][1])
+      tex.sprint([[&]])
+      delta(items[i][2])
+      tex.sprint([[&]])
+      tex.sprint(items[i][3][2])
+      tex.sprint([[&]])
+      delta(items[i][4])
       tex.sprint([[&\texttt{]])
-      if items[i][2] < 0 then
-        tex.sprint(-2, "–")
-      elseif items[i][2] > 0 then
-        tex.sprint(-2, "+")
-      end
-      tex.sprint([[}&\texttt{]])
-      tex.sprint(math.abs(items[i][2]))
-      tex.sprint([[}&]])
-      tex.sprint(items[i][3])
-      tex.sprint([[&\texttt{]])
-      tex.sprint(items[i][4])
+      tex.sprint(items[i][5])
       tex.sprint([[}]])
     end
     if i ~= start+57 then

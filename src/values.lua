@@ -387,6 +387,22 @@ function values:tgruppe_schwierigkeit(gruppe)
   return skt.spalte:name(val)
 end
 
+function values:tgruppe_faktor(gruppe)
+  if gruppe == "SprachenUndSchriften" then
+    if self.Vorteile.EidetischesGedaechtnis then
+      return skt.faktor[1]
+    elseif self.Vorteile.GutesGedaechtnis then
+      return skt.faktor[3]
+    else
+      return skt.faktor[4]
+    end
+  elseif gruppe == "Wissen" and self.Vorteile.EidetischesGedaechtnis then
+    return skt.faktor[1]
+  else
+    return skt.faktor[4]
+  end
+end
+
 function values:talent_schwierigkeit_mod(talent)
   local name = talent[1]()
   local val = 0
@@ -403,6 +419,10 @@ function values:talent_schwierigkeit_mod(talent)
     end
   end
   return val
+end
+
+function values:talent_schwierigkeit(talent, gruppe)
+  return skt.spalte:name(skt.spalte:num(self:tgruppe_schwierigkeit(gruppe)) + self:talent_schwierigkeit_mod(talent))
 end
 
 function values:kampf_schwierigkeit(kampftalent)
@@ -450,39 +470,45 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
   local mt = getmetatable(e)
   local event = {""}
   if mt.name == "SteigerTalent" then
-    event[1] = "Talentsteigerung (" .. e.Name .. ") von "
-    for _, g in ipairs({"Gaben", "Kampf", "Koerper", "Gesellschaft", "Natur", "Wissen", "Sprachen", "Handwerk"}) do
+    event[1] = "Talentsteigerung (" .. e.Name .. ", " .. e.Methode .. ") von "
+    for _, g in ipairs({"Gaben", "Kampf", "Koerper", "Gesellschaft", "Natur", "Wissen", "SprachenUndSchriften", "Handwerk"}) do
       for _, t in ipairs(values.Talente[g]) do
         if t.Name == e.Name then
           if type(t.TaW) ~= "number" then
             tex.error("\n[SteigerTalent] Kann '" .. e.Name .. "' nicht steigern: hat keinen Zahlenwert, sondern " .. type(t.TaW))
           end
+          local mt = getmetatable(t)
           event[1] = event[1] .. tonumber(t.TaW) .. " auf " .. tonumber(e.Zielwert)
           local spalte
           if g == "Kampf" then
-            spalte = t.Steigerungsspalte
-          elseif g == "Sprachen" then
-            -- TODO
-            spalte = "B"
+            spalte = values:kampf_schwierigkeit(t)
+          elseif g == "SprachenUndSchriften" then
+            if mt.name == "Schrift" then
+              spalte = values:schrift_schwierigkeit(t)
+            else
+              spalte = values:sprache_schwierigkeit(t)
+            end
           else
-            spalte = values:tgruppe_schwierigkeit(g)
+            spalte = values:talent_schwierigkeit(t, g)
           end
+          local faktor = values:tgruppe_faktor(g)
           local ap = 0
           while t.TaW < e.Zielwert do
             t.TaW = t.TaW + 1
-            ap = ap + skt:kosten(spalte, t.TaW)
-          end
-          if type(values.AP.Eingesetzt()) == "number" then
-            values.AP.Eingesetzt[1] = values.AP.Eingesetzt() + ap
-          end
-          if type(values.AP.Guthaben()) == "number" then
-            values.AP.Guthaben[1] = values.AP.Guthaben() - ap
-            event[4] = values.AP.Guthaben()
-          else
-            event[4] = ""
+            ap = ap + skt:kosten(skt.spalte:effektiv(spalte, t.TaW, e.Methode), t.TaW)
           end
           event[2] = -1 * ap
-          event[3] = ""
+          event[3] = faktor
+          event[4] = -1 * faktor:apply(ap)
+          if type(values.AP.Eingesetzt()) == "number" then
+            values.AP.Eingesetzt[1] = values.AP.Eingesetzt() - event[4]
+          end
+          if type(values.AP.Guthaben()) == "number" then
+            values.AP.Guthaben[1] = values.AP.Guthaben() + event[4]
+            event[5] = values.AP.Guthaben()
+          else
+            event[5] = ""
+          end
           goto found
         end
       end

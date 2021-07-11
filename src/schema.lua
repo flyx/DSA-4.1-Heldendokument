@@ -119,6 +119,8 @@ local Daemonisch = d.MixedList("Daemonisch", "Spezifikation dämonischer Merkmal
 d:singleton(d.ListWithKnown, "Vorteile", "Liste von nicht-magischen Vorteilen.", {
   Flink = d.Number("Flink", "Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen.", 1, 2),
   Eisern = "Eisern",
+  ["Gutes Gedächtnis"] = "GutesGedaechtnis",
+  ["Eidetisches Gedächtnis"] = "EidetischesGedaechtnis",
   BegabungFuerTalentgruppe = d.FixedList("BegabungFuerTalentgruppe", "Begabung für eine oder mehrere Talentgruppen", Talentgruppe, nil),
   BegabungFuerTalent = d.FixedList("BegabungFuerTalent", "Begabung für ein oder mehrere Talente", String, nil),
 }, { -- optional
