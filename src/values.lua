@@ -71,6 +71,15 @@ for k,v in pairs(schema.Magie) do
   values.Magie[k] = v:instance()
 end
 values.Vermoegen.Sonstiges = schema.Vermoegen.Sonstiges:instance()
+for _,v in ipairs(values.Talente.SprachenUndSchriften) do
+  if getmetatable(v) == schema.Muttersprache then
+    values.Talente.SprachenUndSchriften.Muttersprache = v
+    break
+  end
+end
+if values.Talente.SprachenUndSchriften.Muttersprache == nil then
+  tex.error("[Talente.SprachenUndSchriften] Muttersprache fehlt.")
+end
 
 local function sum_and_round(items, pos)
   local cur = nil
@@ -342,16 +351,8 @@ function values:lernschwierigkeit(zaubername, komp, merkmale, repr, haus)
   return skt.spalte:name(index)
 end
 
-function values:tgruppe_schwierigkeit(gruppe)
-  if gruppe == "Gaben" or gruppe == "Begabungen" then
-    return "F"
-  end
-  local val
-  if gruppe == "Koerper" then
-    val = skt.spalte:num("D")
-  else
-    val = skt.spalte:num("B")
-  end
+function values:tgruppe_schwierigkeit_mod(gruppe)
+  local val = 0
   for _,n in ipairs(self.Vorteile.BegabungFuerTalentgruppe) do
     if n() == gruppe then
       val = val - 1
@@ -364,10 +365,54 @@ function values:tgruppe_schwierigkeit(gruppe)
       break
     end
   end
-  if self.Nachteile.Unstet and (gruppe == "Wissen" or gruppe == "Handwerk") then
+  if gruppe == "Nahkampf" or gruppe == "Fernkampf" then
+    val = val + self:tgruppe_schwierigkeit_mod("Kampf")
+  elseif self.Nachteile.Unstet and (gruppe == "Wissen" or gruppe == "Handwerk") then
     val = val + 1
   end
+  return val
+end
+
+function values:tgruppe_schwierigkeit(gruppe)
+  if gruppe == "Gaben" or gruppe == "Begabungen" then
+    return "F"
+  end
+  local val
+  if gruppe == "Koerper" then
+    val = skt.spalte:num("D")
+  else
+    val = skt.spalte:num("B")
+  end
+  val = val + self:tgruppe_schwierigkeit_mod(gruppe)
   return skt.spalte:name(val)
+end
+
+function values:sprache_schwierigkeit(sprache)
+  local mt = getmetatable(sprache)
+  local name = sprache[1]()
+  local x = name == "Asdharia" and 3 or 2
+  if mt.name == "Sprache" and name ~= "Atak" and name ~= "Füchsisch" then
+    x = x + 1
+    for _,s in ipairs(self.Talente.SprachenUndSchriften.Muttersprache.Sprachfamilie) do
+      if s() == name then
+        x = x - 1
+        break
+      end
+    end
+  end
+  return skt.spalte:name(x + self:tgruppe_schwierigkeit_mod("SprachenUndSchriften"))
+end
+
+function values:schrift_schwierigkeit(schrift)
+  local x = skt.spalte:num(schrift[2]()) + 1
+  local name = schrift[1]()
+  for _, s in ipairs(self.Talente.SprachenUndSchriften.Muttersprache.Schriftfamilie) do
+    if s() == name then
+      x = x - 1
+      break
+    end
+  end
+  return skt.spalte:name(x + self:tgruppe_schwierigkeit_mod("SprachenUndSchriften"))
 end
 
 -- Ereignisse auf Charakter applizieren

@@ -1,6 +1,120 @@
+local schema = require("schema")
 local data = require("values")
 
-local talentbogen = {}
+local talent = {}
+
+function talent.render(value)
+  local mt = getmetatable(value)
+  if mt.name == "Nah" then
+    talent.nah(value)
+  elseif mt.name == "NahAT" or mt.name == "Fern" then
+    talent.fern(value, mt.name == "Fern" and [[\faAngleDoubleRight]] or [[\faBahai]])
+  elseif mt.name == "Koerper" then
+    talent.koerper(value)
+  elseif mt.name == "Muttersprache" then
+    talent.sprache(value, "Muttersprache: ")
+  elseif mt.name == "Zweitsprache" then
+    talent.sprache(value, "Zweitsprache: ")
+  elseif mt.name == "Sprache" then
+    talent.sprache(value, "")
+  elseif mt.name == "Schrift" then
+    talent.schrift(value)
+  else
+    talent.sonstige(value)
+  end
+end
+
+function talent.spez(l)
+  if #l > 0 then
+    local ret = " ("
+    for k, s in ipairs(l) do
+      if k > 1 then
+        ret = ret .. ", "
+      end
+      ret = ret .. s
+    end
+    ret = ret .. ")"
+    return ret
+  else
+    return ""
+  end
+end
+
+function talent.be(value)
+  if value == "-" then
+    return "–"
+  else
+    return string.gsub(string.gsub(value, "x", "×"), "-", "−")
+  end
+end
+
+function talent.nah(v)
+  for j = 1,6 do
+    tex.sprint([[& ]])
+    local content = v[j]()
+    if j == 1 then
+      content = content .. talent.spez(v.Spezialisierung)
+    elseif j == 3 then
+      content = talent.be(content)
+    end
+    tex.sprint(-2, content)
+  end
+end
+
+function talent.fern(v, filler)
+  for j = 1,3 do
+    tex.sprint([[& ]])
+    local content = v[j]()
+    if j == 1 then
+      content = content .. talent.spez(v.Spezialisierung)
+    elseif j == 3 then
+      content = talent.be(content)
+    end
+    tex.sprint(-2, content)
+  end
+  tex.sprint([[& \multicolumn{2}{c|}{]] .. filler .. "} & ")
+  tex.sprint(-2, v[4]())
+end
+
+function talent.koerper(v)
+  for j = 1,6 do
+    tex.sprint([[& ]])
+    local content = v[j]()
+    if j == 1 then
+      content = content .. talent.spez(v.Spezialisierung)
+    elseif j == 5 then
+      content = talent.be(content)
+    end
+    tex.sprint(-2, content)
+  end
+end
+
+function talent.sprache(v, prefix)
+  tex.sprint([[& \faComments{} ]] .. prefix)
+  tex.sprint(-2, v[1]() .. talent.spez(v.Dialekt))
+  tex.sprint(" & " .. data:sprache_schwierigkeit(v))
+  for i=2,3 do
+    tex.sprint("& ")
+    tex.sprint(-2, v[i]())
+  end
+end
+
+function talent.schrift(v, mod)
+  tex.sprint([[& \faBookOpen{} ]])
+  tex.sprint(-2, v[1]())
+  tex.sprint(" & " .. data:schrift_schwierigkeit(v))
+  for i=3,4 do
+    tex.sprint("& ")
+    tex.sprint(-2, v[i]())
+  end
+end
+
+function talent.sonstige(v)
+  for i=1,5 do
+    tex.sprint(" & ")
+    tex.sprint(-2, v[i]())
+  end
+end
 
 local gruppe = {
   labels = {
@@ -15,23 +129,23 @@ local gruppe = {
 
 function gruppe.spec(self, name)
   if name == "Sonderfertigkeiten" then
-    return "Sonderfertigkeiten (außer Kampf)", nil, 1, 0, 1, -1, "", ""
+    return "Sonderfertigkeiten (außer Kampf)", nil, 1, 0, 1, "", ""
   elseif name == "Kampf" then
-    return "Kampftechniken", nil, 3, 4.542, 7, 3,
+    return "Kampftechniken", nil, 3, 4.542, 7,
         [[|x{0.4cm}|x{1cm}|x{0.65cm}@{\dotsep}x{0.65cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{BE} & \Th{AT} & \Th{PA} & \multicolumn{1}{c}{\Th{TaW}}]]
   elseif name == "SprachenUndSchriften" then
-    return "Sprachen & Schriften", nil, 3, 6.3, 4, -1,
+    return "Sprachen & Schriften", nil, 3, 6.245, 5,
         [[|x{0.4cm}|x{0.9cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{Komp} & \multicolumn{1}{c}{\Th{TaW}}]]
   end
   local spalte = data:tgruppe_schwierigkeit(name)
   if name == "Koerper" then
-    return "Körperliche Talente", spalte, 5, 4.6, 7, 5,
+    return "Körperliche Talente", spalte, 5, 4.6, 7,
         [[|x{0.55cm}@{\dotsep}x{0.55cm}@{\dotsep}x{0.55cm}|x{1.0cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{BE} & \multicolumn{1}{c}{\Th{TaW}}]]
   else
-    return self.labels[name], spalte, 5, 5.92, 6, -1,
+    return self.labels[name], spalte, 5, 5.92, 6,
         [[|x{0.5cm}@{\dotsep}x{0.5cm}@{\dotsep}x{0.5cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \multicolumn{1}{c}{\Th{TaW}}]]
   end
@@ -43,7 +157,7 @@ function gruppe.render(self, g, start_white)
     return
   end
 
-  label, spalte, title_col_len, item_name_len, num_items, be_col, col_spec, headers = self:spec(name)
+  label, spalte, title_col_len, item_name_len, num_items, col_spec, headers = self:spec(name)
   if data.m_spalte and item_name_len > 0 then
     item_name_len = item_name_len - 0.4
     col_spec = col_spec .. "|x{0.4cm}"
@@ -82,48 +196,11 @@ function gruppe.render(self, g, start_white)
   tex.sprint(headers)
 
   tex.sprint([[\\ \hline]])
+
   for i, v in ipairs(data.Talente[name]) do
-    local mt = getmetatable(v)
-    for j = 1,(num_items == 1 and 1 or num_items - 1) do
-      if j >= 4 and (mt.name == "NahAT" or mt.name == "Fern") then
-        if j == 4 then
-          tex.sprint([[& \multicolumn{2}{c|}{]])
-          if mt.name == "Fern" then
-            tex.sprint([[\faAngleDoubleRight]])
-          else
-            tex.sprint([[\faBahai]])
-          end
-          tex.sprint([[}]])
-        elseif j == 6 then
-          tex.sprint(" & ")
-          tex.sprint(-2, v[4]())
-        end
-      else
-        if num_items > 1 or j > 1 then
-          tex.sprint([[& ]])
-        end
-        local content = v[j]()
-        if j == 1 then
-          local spez = v.Spezialisierung
-          if #spez > 0 then
-            content = content .. " ("
-            for k, s in ipairs(spez) do
-              if k > 1 then
-                content = content .. ", "
-              end
-              content = content .. s
-            end
-            content = content .. ")"
-          end
-        elseif j == be_col then
-          if content == "-" then
-            content = "–"
-          else
-            content = string.gsub(string.gsub(content, "x", "×"), "-", "−")
-          end
-        end
-        tex.sprint(-2, content)
-      end
+    talent.render(v)
+    if data.m_spalte and item_name_len > 0 then
+      tex.sprint("&")
     end
     tex.sprint([[\\ \hline]])
   end
@@ -138,6 +215,8 @@ function gruppe.render(self, g, start_white)
   tex.print("")
   tex.print([[\vspace{1.9pt}]])
 end
+
+local talentbogen = {}
 
 function talentbogen.num_rows(g)
   local ret = g()

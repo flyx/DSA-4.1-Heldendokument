@@ -82,7 +82,7 @@ einzelnen Seiten beschrieben.]], "Seite",
     schema.Gesellschaft(9),
     schema.Natur(7),
     schema.Wissen(17),
-    schema.Sprachen(10),
+    schema.SprachenUndSchriften(10),
     schema.Handwerk(15)
   },
   Kampfbogen {},
@@ -201,9 +201,9 @@ d.HeterogeneousList("KoerperTalent", "Ein Talent aus der Gruppe der Körperliche
 d.HeterogeneousList("Talent", "Ein allgemeines Talent.",
   {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
 
-d.FixedList("Sprachfamilie", "Liste von Sprachen in einer Sprachfamilie.", String, nil)
-d.HeterogeneousList("Muttersprache", "Die Muttersprache und Sprachfamilie des Helden. Die erste der gegebenen Sprachen ist die Muttersprache, die weiteren Sprachen sind die aus derselben Sprachfamilie (relevant nur für die Berechnung der Steigerungskosten, werden nicht in den Bogen geschrieben).",
-  {"Familie", schema.Sprachfamilie, {}}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierung, {}})
+d.FixedList("Familie", "Liste von Sprachen oder Schriften in einer Familie.", String, nil)
+d.HeterogeneousList("Muttersprache", "Die Muttersprache des Helden. Anders als andere Sprachen definiert eine Muttersprache Listen der verwandten Sprachen und Schriften, welche nicht ausgegeben werden, sondern nur zur Berechnung der Steigerungsschwierigkeit anderer Sprachen und Schriften dienen.",
+  {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierung, {}}, {"Sprachfamilie", schema.Familie, {}}, {"Schriftfamilie", schema.Familie, {}})
 d.HeterogeneousList("Zweitsprache", "Eine Zweitsprache, für die die Grund-Steigerungsschwierigkeit gilt.",
   {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierung, {}})
 schema.Lehrsprache = schema.Zweitsprache
@@ -249,8 +249,8 @@ schema.Talente = {
     {"Rechnen",                   "KL", "KL", "IN", ""},
     {"Sagen / Legenden",          "KL", "IN", "CH", ""},
   },
-  SprachenUndSchriften = d:singleton(d.MixedList, "Talente.SprachenUndSchriften", "Liste von Sprachen & Schriften.", schema.Muttersprache, schema.Zweitsprache, schema.Sprache, schema.Schrift) {
-    {"Muttersprache: ", "", ""},
+  SprachenUndSchriften = d:singleton(d.MixedList, "Talente.SprachenUndSchriften", "Liste von Sprachen & Schriften.", "SpracheOderSchrift", schema.Muttersprache, schema.Zweitsprache, schema.Sprache, schema.Schrift) {
+    schema.Muttersprache {"", "", ""},
   },
   Handwerk = d:singleton(d.MixedList, "Talente.Handwerk", "Liste von Handwerkstalenten.", schema.Talent) {
     {"Heilkunde Wunden", "KL", "CH", "FF", ""},

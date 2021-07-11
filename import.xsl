@@ -77,7 +77,7 @@
     <xsl:value-of select="dsa:page('Gesellschaft', $min_gesellschaft)"/>
     <xsl:value-of select="dsa:page('Natur', $min_natur)"/>
     <xsl:value-of select="dsa:page('Wissen', $min_wissen)"/>
-    <xsl:value-of select="dsa:page('Sprachen', $min_sprachen)"/>
+    <xsl:value-of select="dsa:page('SprachenUndSchriften', $min_sprachen)"/>
     <xsl:value-of select="dsa:page('Handwerk', $min_handwerk)"/>
     <xsl:text>
   },
@@ -443,18 +443,19 @@ Talente.Natur {</xsl:text><xsl:apply-templates select="$natur"/><xsl:text>
 Talente.Wissen {</xsl:text><xsl:apply-templates select="$wissen"/><xsl:text>
 }
 
-Talente.Sprachen {</xsl:text>
+Talente.SprachenUndSchriften {</xsl:text>
     <xsl:variable name="kultur" select="../basis/kultur"/>
     <xsl:apply-templates select="$sprachenSchriften[@name = dsa:muttersprache($kultur)]" mode="sprachen-schriften">
-      <xsl:with-param name="praefix" select="'Muttersprache'"/>
+      <xsl:with-param name="kind" select="'Muttersprache'"/>
     </xsl:apply-templates>
     <xsl:if test="dsa:zweitsprache(../basis/kultur) != ''">
       <xsl:apply-templates select="$sprachenSchriften[@name = dsa:zweitsprache($kultur)]" mode="sprachen-schriften">
-        <xsl:with-param name="praefix" select="'Zweitsprache'"/>
+        <xsl:with-param name="kind" select="'Zweitsprache'"/>
       </xsl:apply-templates>
     </xsl:if>
-    <xsl:apply-templates select="$sprachenSchriften[@name != dsa:muttersprache($kultur) and @name != dsa:zweitsprache($kultur)]" mode="sprachen-schriften"/>
-    <xsl:text>
+    <xsl:apply-templates select="$sprachenSchriften[@name != dsa:muttersprache($kultur) and @name != dsa:zweitsprache($kultur)]" mode="sprachen-schriften">
+      <xsl:with-param name="kind" select="'Sprache'"/>
+    </xsl:apply-templates><xsl:text>
 }
 
 Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
@@ -541,24 +542,26 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
   </xsl:template>
 
   <xsl:template match="talent" mode="sprachen-schriften">
-    <xsl:param name="praefix" select="''"/>
-    <xsl:variable name="text" as="xs:string">
-      <xsl:if test="$praefix != ''">
-        <xsl:value-of select="concat($praefix, ': ')"/>
-      </xsl:if>
-      <xsl:choose>
-        <xsl:when test="starts-with(@name, 'Sprachen kennen ')">
-          <xsl:value-of select="substring(@name, 17)"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@name"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
+    <xsl:param name="kind" select="'Sprache'"/>
     <xsl:text>
-  {</xsl:text>
-    <xsl:value-of select="concat(dsa:stringVal($text), ', ', @k, ', ', @value)"/>
-    <xsl:apply-templates select="." mode="spezialisierungen"/>
+  </xsl:text>
+    <xsl:choose>
+      <xsl:when test="starts-with(@name, 'Lesen/Schreiben')">
+        <!-- TODO: Schrift komplexität -->
+        <xsl:value-of select="concat('Schrift {', dsa:stringVal(substring(@name, 17)), ', &quot;A&quot;, ')"/>
+      </xsl:when>
+      <xsl:when test="$kind = 'Muttersprache'">
+        <xsl:value-of select="concat('Muttersprache {{', dsa:stringVal(substring(@name, 17)), '}, ')"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="concat($kind, ' {', dsa:stringVal(substring(@name, 17)), ', ')"/>
+      </xsl:otherwise>
+    </xsl:choose>
+
+    <xsl:value-of select="concat(@k, ', ', @value)"/>
+    <xsl:if test="not(starts-with(@name, 'Lesen/Schreiben'))">
+      <xsl:apply-templates select="." mode="spezialisierungen"/>
+    </xsl:if>
     <xsl:text>},</xsl:text>
   </xsl:template>
 

@@ -55,7 +55,7 @@ Talente.Wissen {
 }
 
 Talente.SprachenUndSchriften {
-  Muttersprache {{}, "", ""},
+  Muttersprache {"", "", ""},
 }
 
 Talente.Handwerk {
