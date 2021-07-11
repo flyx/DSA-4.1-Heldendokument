@@ -20,9 +20,9 @@ function gruppe.spec(self, name)
     return "Kampftechniken", nil, 3, 4.542, 7, 3,
         [[|x{0.4cm}|x{1cm}|x{0.65cm}@{\dotsep}x{0.65cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{BE} & \Th{AT} & \Th{PA} & \multicolumn{1}{c}{\Th{TaW}}]]
-  elseif name == "Sprachen" then
-    return "Sprachen & Schriften", nil, 2, 6.8, 4, -1,
-        [[|x{0.9cm}|y{0.55cm}@{\hskip 0.1cm}]],
+  elseif name == "SprachenUndSchriften" then
+    return "Sprachen & Schriften", nil, 3, 6.3, 4, -1,
+        [[|x{0.4cm}|x{0.9cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{Komp} & \multicolumn{1}{c}{\Th{TaW}}]]
   end
   local spalte = data:tgruppe_schwierigkeit(name)

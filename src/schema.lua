@@ -23,7 +23,7 @@ local Talentliste = d.MixedList("Talentliste", "Sonderfertigkeiten & Talente. De
   d.Number("Gesellschaft", "Zeilen für Gesellschaftstalente", 0, 100),
   d.Number("Natur", "Zeilen für Naturtalente", 0, 100),
   d.Number("Wissen", "Zeilen für Wissenstalente", 0, 100),
-  d.Number("Sprachen", "Zeilen für Sprachen & Schriften", 0, 100),
+  d.Number("SprachenUndSchriften", "Zeilen für Sprachen & Schriften", 0, 100),
   d.Number("Handwerk", "Zeilen für Handwerkstalente", 0, 100)
 )
 
@@ -109,7 +109,7 @@ d:singleton(d.Record, "Held", [[Grundlegende Daten des Helden.]],
   {"Titel", Multiline, ""},
   {"Aussehen", Multiline, ""})
 
-local Talentgruppe = d.Matching("Talentgruppe", "Eine der existierenden Talentgruppen", "Kampf", "Nahkampf", "Fernkampf", "Koerper", "Gesellschaft", "Natur", "Wissen", "Sprachen", "Handwerk")
+local Talentgruppe = d.Matching("Talentgruppe", "Eine der existierenden Talentgruppen", "Kampf", "Nahkampf", "Fernkampf", "Koerper", "Gesellschaft", "Natur", "Wissen", "SprachenUndSchriften", "Handwerk")
 
 local Element = d.Matching("Element", "Name eines Elements, oder 'gesamt'.", "gesamt", "Eis", "Humus", "Feuer", "Wasser", "Luft", "Erz")
 local Elementar = d.MixedList("Elementar", "Spezifikation elementarer Merkmale.", Element)
@@ -200,7 +200,17 @@ d.HeterogeneousList("Fern", "Ein Fernkampf-Talent.",
 d.HeterogeneousList("KoerperTalent", "Ein Talent aus der Gruppe der Körperlichen Talente.", {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
 d.HeterogeneousList("Talent", "Ein allgemeines Talent.",
   {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
-d.HeterogeneousList("Sprache", "Eine Sprache oder ein Schrift.", {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
+
+d.FixedList("Sprachfamilie", "Liste von Sprachen in einer Sprachfamilie.", String, nil)
+d.HeterogeneousList("Muttersprache", "Die Muttersprache und Sprachfamilie des Helden. Die erste der gegebenen Sprachen ist die Muttersprache, die weiteren Sprachen sind die aus derselben Sprachfamilie (relevant nur für die Berechnung der Steigerungskosten, werden nicht in den Bogen geschrieben).",
+  {"Familie", schema.Sprachfamilie, {}}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierung, {}})
+d.HeterogeneousList("Zweitsprache", "Eine Zweitsprache, für die die Grund-Steigerungsschwierigkeit gilt.",
+  {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierung, {}})
+schema.Lehrsprache = schema.Zweitsprache
+d.HeterogeneousList("Sprache", "Eine Fremdsprache. Steigerungsschwierigkeit hängt ab davon, ob sie in der Sprachfamilie der Muttersprache enthalten ist.",
+  {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierung, {}})
+d.HeterogeneousList("Schrift", "Eine Schrift. Es sollte die Steigerungsschwierigkeit gemäß WdS angegeben werden; der Bogen modifiziert sie automatisch im Falle einer Begabung oder Unfähigkeit.",
+  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""})
 
 schema.Talente = {
   Begabungen = d:singleton(d.MixedList, "Talente.Begabungen", "Liste übernatürlicher Begabungen.", schema.Talent) {},
@@ -239,7 +249,7 @@ schema.Talente = {
     {"Rechnen",                   "KL", "KL", "IN", ""},
     {"Sagen / Legenden",          "KL", "IN", "CH", ""},
   },
-  Sprachen = d:singleton(d.MixedList, "Talente.Sprachen", "Liste von Sprachen & Schriften.", schema.Sprache) {
+  SprachenUndSchriften = d:singleton(d.MixedList, "Talente.SprachenUndSchriften", "Liste von Sprachen & Schriften.", schema.Muttersprache, schema.Zweitsprache, schema.Sprache, schema.Schrift) {
     {"Muttersprache: ", "", ""},
   },
   Handwerk = d:singleton(d.MixedList, "Talente.Handwerk", "Liste von Handwerkstalenten.", schema.Talent) {

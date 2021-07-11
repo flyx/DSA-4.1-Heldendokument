@@ -8,7 +8,7 @@ Layout {
     Gesellschaft(9),
     Natur(7),
     Wissen(17),
-    Sprachen(10),
+    SprachenUndSchriften(10),
     Handwerk(15)
   },
   Kampfbogen {},
@@ -54,8 +54,8 @@ Talente.Wissen {
   {"Sagen / Legenden",          "KL", "IN", "CH", ""},
 }
 
-Talente.Sprachen {
-  {"Muttersprache: ", "", ""},
+Talente.SprachenUndSchriften {
+  Muttersprache {{}, "", ""},
 }
 
 Talente.Handwerk {
