@@ -93,9 +93,11 @@
     <vn name="Astralmacht" magisch="1"/>
     <vn name="Ausdauernder Zauberer" magisch="1"/>
     <vn name="Autoritätsgläubig" nachteil="1"/>
-    <vn name="Begabung für [Merkmal]" magisch="1" liste="1"/>
-    <vn name="Begabung für [Ritual]" magisch="1"/>
-    <vn name="Begabung für [Zauber]" magisch="1" liste="1"/>
+    <vn name="Begabung für [Merkmal]" magisch="1" merkmale="1" id="BegabungFuerMerkmal"/>
+    <vn name="Begabung für [Ritual]" magisch="1" liste="1"/>
+    <vn name="Begabung für [Zauber]" magisch="1" liste="1" id="BegabungFuerZauber"/>
+    <vn name="Begabung für [Talentgruppe]" liste="1" id="BegabungFuerTalentgruppe"/>
+    <vn name="Begabung für [Talent]" liste="1" id="BegabungFuerTalent"/>
     <vn name="Behäbig" nachteil="1"/>
     <vn name="Blutdurst" nachteil="1"/>
     <vn name="Blutrausch" nachteil="1"/>
@@ -200,12 +202,11 @@
     <vn name="Unangenehme Stimme" nachteil="1"/>
     <vn name="Unansehnlich" nachteil="1"/>
     <vn name="Unbeschwertes Zaubern" magisch="1"/>
-    <vn name="Unfähigkeit für [Merkmal]" nachteil="1" magisch="1"/>
-    <vn name="Unfähigkeit für [Talentgruppe]" nachteil="1"/>
-    <vn name="Unfähigkeit für [Talent]" nachteil="1"/>
+    <vn name="Unfähigkeit für [Merkmal]" nachteil="1" magisch="1" merkmale="1" id="UnfaehigkeitFuerMerkmal"/>
+    <vn name="Unfähigkeit für [Talentgruppe]" nachteil="1" liste="1" id="UnfaehigkeitFuerTalentgruppe"/>
+    <vn name="Unfähigkeit für [Talent]" nachteil="1" liste="1" id="UnfaehigkeitFuerTalent"/>
     <vn name="Unfrei" nachteil="1"/>
     <vn name="Ungebildet" nachteil="1"/>
-    <vn name="Unstet" nachteil="1"/>
     <vn name="Unverträglichkeit mit verarbeitetem Metall" nachteil="1"/>
     <vn name="Vergesslichkeit" nachteil="1"/>
     <vn name="Verhüllte Aura" magisch="1"/>

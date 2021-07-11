@@ -62,8 +62,8 @@ end
 
 function common.padded_values(t, max_items, name)
   local items = {unpack(t, 1, max_items)}
-  if #items + #t.magisch <= max_items then
-    for i,v in ipairs(t.magisch) do
+  if #items + #t.Magisch <= max_items then
+    for i,v in ipairs(t.Magisch) do
       table.insert(items, v)
     end
   end
@@ -304,6 +304,43 @@ function common.render_delta(input)
   end
 end
 
+function common.merkmalliste(input, zauber)
+  local first = true
+  local ret = ""
+  if zauber ~= nil then
+    for _, v in ipairs(zauber) do
+      if first then
+        first = false
+      else
+        ret = ret .. ", "
+      end
+      ret = ret .. v
+    end
+  end
+  for _, v in ipairs(input) do
+    if first then
+      first = false
+    else
+      ret = ret .. ", "
+    end
+    ret = ret .. v
+  end
+  for k, label in pairs({Daemonisch="Dämonisch", Elementar="Elementar"}) do
+    local vals = input[k]
+    if vals ~= nil then
+      for _, item in ipairs(vals) do
+        if first then
+          first = false
+        else
+          ret = ret .. ", "
+        end
+        ret = ret .. label .. " (" .. item .. ")"
+      end
+    end
+  end
+  return ret
+end
+
 function common.list_known(input, known)
   local ret = {}
   for k,n in pairs(known) do
@@ -313,8 +350,23 @@ function common.list_known(input, known)
         if v then
           table.insert(ret, n)
         end
-      else
-        table.insert(ret, n .. " " .. tostring(v()))
+      elseif #v > 0 then
+        local mt = getmetatable(v)
+        if mt.__call then
+          table.insert(ret, n .. " " .. tostring(v()))
+        elseif mt.name == "BegabungFuerMerkmal" or mt.name == "UnfaehigkeitFuerMerkmal" then
+          table.insert(ret, n .. " (" .. common.merkmalliste(v) .. ")")
+        else
+          local str = n .. " ("
+          for i,x in ipairs(v) do
+            if i > 1 then
+              str = str .. ", "
+            end
+            str = str .. x()
+          end
+          str = str .. ")"
+          table.insert(ret, str)
+        end
       end
     end
   end

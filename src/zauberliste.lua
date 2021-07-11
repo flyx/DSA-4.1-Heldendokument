@@ -70,43 +70,6 @@ local zauberliste = {
   repraesentationen = repraesentationen
 }
 
-function zauberliste.merkmalliste(input, zauber)
-  local first = true
-  if zauber ~= nil then
-    for _, v in ipairs(zauber) do
-      if first then
-        first = false
-      else
-        tex.sprint(-2, ", ")
-      end
-      tex.sprint(-2, v)
-    end
-  end
-  for _, v in ipairs(input) do
-    if first then
-      first = false
-    else
-      tex.sprint(-2, ", ")
-    end
-    tex.sprint(-2, v)
-  end
-  for k, label in pairs({Daemonisch="Dämonisch", Elementar="Elementar"}) do
-    local vals = input[k]
-    if vals ~= nil then
-      for _, item in ipairs(vals) do
-        if first then
-          first = false
-        else
-          tex.sprint(-2, ", ")
-        end
-        tex.sprint(-2, label .. " (")
-        tex.sprint(-2, item)
-        tex.sprint(-2, ")")
-      end
-    end
-  end
-end
-
 function zauberliste.seite(start)
   local zauber = data.Magie.Zauber
   for i=start,start+48 do

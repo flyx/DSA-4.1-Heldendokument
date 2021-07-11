@@ -241,26 +241,33 @@ Vorteile {
   </xsl:text><xsl:apply-templates select="vorteil" mode="filter-id"/><xsl:text>
 }
 
-Vorteile.magisch {
-  </xsl:text>
-    <xsl:apply-templates select="vorteil" mode="filter">
-      <xsl:with-param name="magisch" select="true()"/>
-    </xsl:apply-templates><xsl:text>
+Vorteile.Magisch {
+  </xsl:text><xsl:apply-templates select="vorteil" mode="filter">
+    <xsl:with-param name="magisch" select="true()"/>
+  </xsl:apply-templates><xsl:text>
+  </xsl:text><xsl:apply-templates select="vorteil" mode="filter-id">
+    <xsl:with-param name="magisch" select="true()"/>
+  </xsl:apply-templates><xsl:text>
 }
 
 Nachteile {
-  </xsl:text>
-  <xsl:apply-templates select="vorteil" mode="filter">
+  </xsl:text><xsl:apply-templates select="vorteil" mode="filter">
+    <xsl:with-param name="nachteil" select="true()"/>
+  </xsl:apply-templates><xsl:text>
+  </xsl:text><xsl:apply-templates select="vorteil" mode="filter-id">
     <xsl:with-param name="nachteil" select="true()"/>
   </xsl:apply-templates><xsl:text>
 }
 
-Nachteile.magisch {
-  </xsl:text>
-    <xsl:apply-templates select="vorteil" mode="filter">
-      <xsl:with-param name="nachteil" select="true()"/>
-      <xsl:with-param name="magisch" select="true()"/>
-    </xsl:apply-templates><xsl:text>
+Nachteile.Magisch {
+  </xsl:text><xsl:apply-templates select="vorteil" mode="filter">
+    <xsl:with-param name="nachteil" select="true()"/>
+    <xsl:with-param name="magisch" select="true()"/>
+  </xsl:apply-templates><xsl:text>
+  </xsl:text><xsl:apply-templates select="vorteil" mode="filter-id">
+    <xsl:with-param name="nachteil" select="true()"/>
+    <xsl:with-param name="magisch" select="true()"/>
+  </xsl:apply-templates><xsl:text>
 }
 </xsl:text>
   </xsl:template>
@@ -294,8 +301,25 @@ Nachteile.magisch {
     <xsl:param name="nachteil" as="xs:boolean" select="false()"/>
     <xsl:variable name="name" select="@name"/>
     <xsl:variable name="def" select="$vorUndNachteile/vn[@name=$name]"/>
-    <xsl:if test="($def/@nachteil = '1') = $nachteil and ($def/@magisch = '1') = $magisch and $def/@id">
-      <xsl:value-of select="concat($def/@id, '(', @value, '),')"/>
+    <xsl:if test="($def/@nachteil = '1') = $nachteil and ($def/@magisch = '1') = $magisch and $def/@id and not($def/@liste and ./preceding-sibling::vorteil[starts-with(@name, $name)])">
+      <xsl:choose>
+        <xsl:when test="$def/@numbered">
+          <xsl:value-of select="concat($def/@id, '(', @value, '), ')"/>
+        </xsl:when>
+        <xsl:when test="$def/@liste">
+          <xsl:value-of select="concat($def/@id, ' {')"/>
+          <xsl:for-each select=".|./following-sibling::vorteil[starts-with(@name, $name)]">
+            <xsl:if test="position() &gt; 1">
+              <xsl:text>, </xsl:text>
+            </xsl:if>
+            <xsl:value-of select="dsa:stringVal(@value)"/>
+          </xsl:for-each>
+          <xsl:text>}, </xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="concat($def/@id, '(', dsa:stringVal(@value), '), ')"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:if>
   </xsl:template>
 

@@ -109,26 +109,54 @@ d:singleton(d.Record, "Held", [[Grundlegende Daten des Helden.]],
   {"Titel", Multiline, ""},
   {"Aussehen", Multiline, ""})
 
+local Talentgruppe = d.Matching("Talentgruppe", "Eine der existierenden Talentgruppen", "Kampf", "Nahkampf", "Fernkampf", "Koerper", "Gesellschaft", "Natur", "Wissen", "Sprachen", "Handwerk")
+
+local Element = d.Matching("Element", "Name eines Elements, oder 'gesamt'.", "gesamt", "Eis", "Humus", "Feuer", "Wasser", "Luft", "Erz")
+local Elementar = d.MixedList("Elementar", "Spezifikation elementarer Merkmale.", Element)
+local Domaene = d.Matching("Domaene", "Name einer Domäne, oder 'gesamt'", "gesamt", "Blakharaz", "Belhalhar", "Charyptoroth", "Lolgramoth", "Thargunitoth", "Amazeroth", "Belshirash", "Asfaloth", "Tasfarelel", "Belzhorash", "Agrimoth", "Belkelel")
+local Daemonisch = d.MixedList("Daemonisch", "Spezifikation dämonischer Merkmale.", Domaene)
+
 d:singleton(d.ListWithKnown, "Vorteile", "Liste von nicht-magischen Vorteilen.", {
   Flink = d.Number("Flink", "Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen.", 1, 2),
-  Eisern = "Eisern"
+  Eisern = "Eisern",
+  BegabungFuerTalentgruppe = d.FixedList("BegabungFuerTalentgruppe", "Begabung für eine oder mehrere Talentgruppen", Talentgruppe, nil),
+  BegabungFuerTalent = d.FixedList("BegabungFuerTalent", "Begabung für ein oder mehrere Talente", String, nil),
 }, { -- optional
   Flink = true
 })
 
-schema.Vorteile.magisch = d:singleton(d.ListWithKnown, "Vorteile.magisch", "Liste von magischen Vorteilen.", {
+schema.Vorteile.Magisch = d:singleton(d.ListWithKnown, "Vorteile.Magisch", "Liste von magischen Vorteilen.", {
   -- TODO: Astrale Regeneration
+  BegabungFuerMerkmal = d.ListWithKnown("BegabungFuerMerkmal", "Begabung für ein oder mehrere Merkmale.", {
+    Elementar = Elementar,
+    Daemonisch = Daemonisch
+  }, { -- optional
+    Elementar = true,
+    Daemonisch = true,
+  }),
+  BegabungFuerRitual = d.FixedList("BegabungFuerRitual", "Begabung für ein oder mehrere Rituale", String, nil),
+  BegabungFuerZauber = d.FixedList("BegabungFuerZauber", "Begabung für einen oder mehrere Zauber", String, nil),
 }) {}
 
 d:singleton(d.ListWithKnown, "Nachteile", "Liste von nicht-magischen Nachteilen", {
   Glasknochen = "Glasknochen",
   ["Behäbig"] = "Behaebig",
   ["Kleinwüchsig"] = "Kleinwuechsig",
-  Zwergenwuchs = "Zwergenwuchs"
+  Zwergenwuchs = "Zwergenwuchs",
+  UnfaehigkeitFuerTalentgruppe = d.FixedList("UnfaehigkeitFuerTalentgruppe", "Unfähigkeit für eine oder mehrere Talentgruppen", Talentgruppe, nil),
+  UnfaehigkeitFuerTalent = d.FixedList("UnfaehigkeitFuerTalent", "Unfähigkeit für ein oder mehrere bestimmte Talente", String, nil),
+  Unstet = "Unstet",
 })
 
-schema.Nachteile.magisch = d:singleton(d.ListWithKnown, "Nachteile.magisch", "Liste von magischen Nachteilen.", {
+schema.Nachteile.Magisch = d:singleton(d.ListWithKnown, "Nachteile.Magisch", "Liste von magischen Nachteilen.", {
   -- TODO: Schwache Ausstrahlung
+  UnfaehigkeitFuerMerkmal = d.ListWithKnown("UnfaehigkeitFuerMerkmal", "Unfähigkeit für ein oder mehrere Merkmale.", {
+    Elementar = Elementar,
+    Daemonisch = Daemonisch
+  }, { -- optional
+    Elementar = true,
+    Daemonisch = true,
+  }),
 }) {}
 
 -- TODO: nicht-Ganzzahlen erkennen und Fehler werfen
@@ -296,10 +324,6 @@ d:singleton(d.HeterogeneousList, "Liturgiekenntnis", "Liturgiekenntnis.", {"Gott
 
 d:singleton(d.MixedList, "Liturgien", "Liste von Liturgien.", d.HeterogeneousList("Liturgie", "Eine Liturgie.", {"Seite", Simple, ""}, {"Name", String}, {"Grad", String, ""}))
 
-local Element = d.Matching("Element", "Name eines Elements, oder 'gesamt'.", "gesamt", "Eis", "Humus", "Feuer", "Wasser", "Luft", "Erz")
-local Elementar = d.MixedList("Elementar", "Spezifikation elementarer Merkmale.", Element)
-local Domaene = d.Matching("Domaene", "Name einer Domäne, oder 'gesamt'", "gesamt", "Blakharaz", "Belhalhar", "Charyptoroth", "Lolgramoth", "Thargunitoth", "Amazeroth", "Belshirash", "Asfaloth", "Tasfarelel", "Belzhorash", "Agrimoth", "Belkelel")
-local Daemonisch = d.MixedList("Daemonisch", "Spezifikation dämonischer Merkmale.", Domaene)
 local Merkmale = d.ListWithKnown("Merkmale", "Liste von Merkmalen eines Zaubers.", {
   Elementar = Elementar,
   Daemonisch = Daemonisch
@@ -328,10 +352,6 @@ schema.Magie = {
   Notizen = d:singleton(d.Multivalue, "Magie.Notizen", "Notizen auf dem Zauberdokument.") {},
   Repraesentationen = d:singleton(d.MixedList, "Magie.Repraesentationen", "Liste beherrschter Repräsentationen.", Repraesentation) {},
   Merkmalskenntnis = merkmale("Magie.Merkmalskenntnis", "Liste gelernter Merkmalskenntnisse"),
-  Begabungen = d:singleton(d.Record, "Magie.Begabungen", "Begabungen für Zauber und Merkmale",
-    {"Merkmale", Merkmale, {}}, {"Zauber", d.ListWithKnown("ZauberBegabungen", "Liste von Zaubern, für die eine Begabung vorliegt", {}), {}}
-  ) {},
-  Unfaehigkeiten = merkmale("Magie.Unfaehigkeiten", "Liste von Unfähigkeiten für Merkmale"),
   Zauber = d:singleton(d.MixedList, "Magie.Zauber", "Liste von gelernten Zaubern.", d.HeterogeneousList("Zauber", "Ein Zauber.", {"Seite", Simple, ""}, {"Name", String}, {"Probe1", Eigenschaft}, {"Probe2", Eigenschaft}, {"Probe3", Eigenschaft}, {"TaW", Simple, ""}, {"Spalte", SteigSpalte}, {"Merkmale", Merkmale, {}}, {"Repraesentation", Repraesentation, ""}, {"Hauszauber", schema.Boolean, false}, {"Spezialisierung", Spezialisierung, {}})) {}
 }
 

@@ -61,9 +61,9 @@ local values = {
   Ereignisse = {},
 }
 
-values.Vorteile.magisch = schema.Vorteile.magisch:instance()
-values.Vorteile.magisch.asp = #values.Vorteile.magisch > 0
-values.Nachteile.magisch = schema.Nachteile.magisch:instance()
+values.Vorteile.Magisch = schema.Vorteile.Magisch:instance()
+values.Vorteile.Magisch.asp = #values.Vorteile.Magisch > 0
+values.Nachteile.Magisch = schema.Nachteile.Magisch:instance()
 for k,v in pairs(schema.Talente) do
   values.Talente[k] = v:instance()
 end
@@ -94,7 +94,7 @@ local getter_map = {
     LE = function() return {"KO", "KO", "KK", div=2} end,
     AU = function() return {"MU", "KO", "GE", div=2} end,
     AE = function()
-      if data.Vorteile.magisch.asp then
+      if data.Vorteile.Magisch.asp then
         if data.sf.Magisch.GefaessDerSterne then
           return {"MU", "IN", "CH", "CH", div=2}
         else
@@ -323,15 +323,15 @@ function values:lernschwierigkeit(zaubername, komp, merkmale, repr, haus)
   index = skt.spalte:num(komp)
   for i, merkmal in ipairs(merkmale) do
     index = index + merkmal_mod_from(merkmal, self.Magie.Merkmalskenntnis, -1)
-    index = index + merkmal_mod_from(merkmal, self.Magie.Begabungen.Merkmale, -1)
-    index = index + merkmal_mod_from(merkmal, self.Magie.Unfaehigkeiten, 1)
+    index = index + merkmal_mod_from(merkmal, self.Vorteile.Magisch.BegabungFuerMerkmal, -1)
+    index = index + merkmal_mod_from(merkmal, self.Nachteile.Magisch.UnfaehigkeitFuerMerkmal, 1)
   end
   for _, name in ipairs({"Elementar", "Daemonisch"}) do
     index = index + merkmal_submod_from(name, merkmale[name], self.Magie.Merkmalskenntnis[name], -1)
-    index = index + merkmal_submod_from(name, merkmale[name], self.Magie.Begabungen[name], -1)
-    index = index + merkmal_submod_from(name, merkmale[name], self.Magie.Unfaehigkeiten[name], 1)
+    index = index + merkmal_submod_from(name, merkmale[name], self.Vorteile.Magisch.BegabungFuerMerkmal[name], -1)
+    index = index + merkmal_submod_from(name, merkmale[name], self.Nachteile.Magisch.UnfaehigkeitFuerMerkmal[name], 1)
   end
-  for _, name in ipairs(self.Magie.Begabungen.Zauber) do
+  for _, name in ipairs(self.Vorteile.Magisch.BegabungFuerZauber) do
     if name == zaubername then
       index = index - 1
       break

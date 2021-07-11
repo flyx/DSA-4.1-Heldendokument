@@ -441,7 +441,11 @@ d.FixedList = Type("table",
     return {inner = inner, length = length}
   end,
   function(self, value)
-    for i=1,self.length do
+    local length = self.length
+    if length == nil then
+      length = #value
+    end
+    for i=1,length do
       if #value == i - 1 then
         self:err("zu wenige Werte, %d erwartet, bekam %d", self.length, #v)
         errors = true
@@ -461,7 +465,7 @@ d.FixedList = Type("table",
         d.context:pop()
       end
     end
-    if #value > self.length then
+    if #value > length then
       self:err("zu viele Werte, %d erwartet, bekam %d", self.length, #v)
       errors = true
     end
@@ -474,11 +478,17 @@ d.FixedList = Type("table",
     return errors and d.Poison or value
   end,
   function(self, printer)
-    for i=1,self.length do
-      if i > 1 then
-        printer:sym(", ")
+    if self.length ~= nil then
+      for i=1,self.length do
+        if i > 1 then
+          printer:sym(", ")
+        end
+        self.inner:print_syntax(printer)
       end
+    else
       self.inner:print_syntax(printer)
+      printer:sym(", ")
+      printer:meta("...")
     end
   end
 )
