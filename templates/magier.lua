@@ -18,11 +18,11 @@ Layout {
 }
 
 Talente.Kampf {
-  {"Dolche",                "D", "BE-1", "", "", ""},
-  {"Hiebwaffen",            "D", "BE-4", "", "", ""},
-  {"Raufen",                "C", "BE",   "", "", ""},
-  {"Ringen",                "D", "BE",   "", "", ""},
-  {"Wurfmesser",            "C", "BE-3", "", "", ""}
+  Nah {"Dolche",                "D", "BE-1", "", "", ""},
+  Nah {"Hiebwaffen",            "D", "BE-4", "", "", ""},
+  Nah {"Raufen",                "C", "BE",   "", "", ""},
+  Nah {"Ringen",                "D", "BE",   "", "", ""},
+  Fern {"Wurfmesser",           "C", "BE-3", ""},
 }
 
 Talente.Koerper {

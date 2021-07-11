@@ -73,42 +73,58 @@ function gruppe.render(self, g, start_white)
   tex.sprint(headers)
 
   tex.sprint([[\\ \hline]])
-  while #data.Talente[name] < g() do
-    table.insert(data.Talente[name], {})
-  end
   for i, v in ipairs(data.Talente[name]) do
-    local vals = {}
-    for j = 1,#v-1 do
-      local w = v[j]
-      local input = w()
-      if j == 1 then
-        local spez = v.Spezialisierung
-        if #spez > 0 then
-          input = input .. " ("
-          for k, s in ipairs(spez) do
-            if k > 1 then
-              input = input .. ", "
-            end
-            input = input .. s
+    local mt = getmetatable(v)
+    for j = 1,(num_items == 1 and 1 or num_items - 1) do
+      if j >= 4 and (mt.name == "NahAT" or mt.name == "Fern") then
+        if j == 4 then
+          tex.sprint([[& \multicolumn{2}{c|}{]])
+          if mt.name == "Fern" then
+            tex.sprint([[\faAngleDoubleRight]])
+          else
+            tex.sprint([[\faBahai]])
           end
-          input = input .. ")"
+          tex.sprint([[}]])
+        elseif j == 6 then
+          tex.sprint(" & ")
+          tex.sprint(-2, v[4]())
         end
-      elseif j == be_col then
-        if input == "-" then
-          input = "–"
-        else
-          input = string.gsub(string.gsub(input, "x", "×"), "-", "−")
+      else
+        if num_items > 1 or j > 1 then
+          tex.sprint([[& ]])
         end
+        local content = v[j]()
+        if j == 1 then
+          local spez = v.Spezialisierung
+          if #spez > 0 then
+            content = content .. " ("
+            for k, s in ipairs(spez) do
+              if k > 1 then
+                content = content .. ", "
+              end
+              content = content .. s
+            end
+            content = content .. ")"
+          end
+        elseif j == be_col then
+          if content == "-" then
+            content = "–"
+          else
+            content = string.gsub(string.gsub(content, "x", "×"), "-", "−")
+          end
+        end
+        tex.sprint(-2, content)
       end
-      table.insert(vals, input)
-    end
-    if num_items == 1 then
-      common.row(vals)
-    else
-      common.fixed_length_row(num_items, true)(vals)
     end
     tex.sprint([[\\ \hline]])
   end
+  for i = #data.Talente[name] + 1, g() do
+    for j=2,num_items do
+      tex.sprint("&")
+    end
+    tex.sprint([[\\ \hline]])
+  end
+
   tex.print([[\end{NiceTabular}]])
   tex.print("")
   tex.print([[\vspace{1.9pt}]])

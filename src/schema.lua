@@ -191,8 +191,12 @@ local Behinderung = d.Matching("Behinderung", "Behinderung.", "%-", "BE", "BE%-[
 local Eigenschaft = d.Matching("Eigenschaft", "Referenz auf einen Eigenschaftsnamen.", "%*%*", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK")
 local Spezialisierung = d.Multivalue("Spezialisierung", "Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden.")
 
-d.HeterogeneousList("KampfTalent", "Ein Talent aus der Gruppe der Kampftalene.",
+d.HeterogeneousList("Nah", "Ein Nahkampf-Talent mit AT/PA Verteilung.",
   {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"AT", Simple, ""}, {"PA", Simple, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
+d.HeterogeneousList("NahAT", "Ein Nahkampf-Talent, dessen Wert ausschließlich zur Attacke dient und das keine AT/PA Verteilung hat.",
+  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
+d.HeterogeneousList("Fern", "Ein Fernkampf-Talent.",
+  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
 d.HeterogeneousList("KoerperTalent", "Ein Talent aus der Gruppe der Körperlichen Talente.", {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
 d.HeterogeneousList("Talent", "Ein allgemeines Talent.",
   {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
@@ -201,12 +205,12 @@ d.HeterogeneousList("Sprache", "Eine Sprache oder ein Schrift.", {"Name", String
 schema.Talente = {
   Begabungen = d:singleton(d.MixedList, "Talente.Begabungen", "Liste übernatürlicher Begabungen.", schema.Talent) {},
   Gaben = d:singleton(d.MixedList, "Talente.Gaben", "Liste von Gaben.", schema.Talent) {},
-  Kampf = d:singleton(d.MixedList, "Talente.Kampf", "Liste von Kampftalenten.", schema.KampfTalent) {
-    {"Dolche",                "D", "BE-1", "", "", ""},
-    {"Hiebwaffen",            "D", "BE-4", "", "", ""},
-    {"Raufen",                "C", "BE",   "", "", ""},
-    {"Ringen",                "D", "BE",   "", "", ""},
-    {"Wurfmesser",            "C", "BE-3", "", "", ""},
+  Kampf = d:singleton(d.MixedList, "Talente.Kampf", "Liste von Kampftalenten.", "Kampftalent", schema.Nah, schema.NahAT, schema.Fern) {
+    schema.Nah {"Dolche",                "D", "BE-1", "", "", ""},
+    schema.Nah {"Hiebwaffen",            "D", "BE-4", "", "", ""},
+    schema.Nah {"Raufen",                "C", "BE",   "", "", ""},
+    schema.Nah {"Ringen",                "D", "BE",   "", "", ""},
+    schema.Fern {"Wurfmesser",            "C", "BE-3", ""},
   },
   Koerper = d:singleton(d.MixedList, "Talente.Koerper", "Liste von körperlichen Talenten.", schema.KoerperTalent) {
     {"Athletik",           "GE", "KO", "KK", "BEx2", ""},

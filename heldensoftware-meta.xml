@@ -232,35 +232,35 @@
 
   <talente>
     <kampf>
-      <!-- Die Kampftalente werden für die Steigerungsschwierigkeit und die BE
-           benötigt. -->
-      <t name="Anderthalbhänder" steigern="E" be="BE-2"/>
-      <t name="Armbrust" steigern="C" be="BE-5"/>
-      <t name="Belagerungswaffen" steigern="D" be="-"/>
-      <t name="Blasrohr" steigern="D" be="BE-5"/>
-      <t name="Bogen" steigern="E" be="BE-3"/>
-      <t name="Diskus" steigern="D" be="BE-2"/>
-      <t name="Dolche" steigern="D" be="BE-1"/>
-      <t name="Fechtwaffen" steigern="E" be="BE-1"/>
-      <t name="Hiebwaffen" steigern="D" be="BE-4"/>
-      <t name="Infanteriewaffen" steigern="D" be="BE-3"/>
-      <t name="Kettenstäbe" steigern="E" be="BE-1"/>
-      <t name="Kettenwaffen" steigern="D" be="BE-3"/>
-      <t name="Lanzenreiten" steigern="E" be="-"/>
-      <t name="Peitsche" steigern="E" be="BE-1"/>
-      <t name="Raufen" steigern="C" be="BE"/>
-      <t name="Ringen" steigern="D" be="BE"/>
-      <t name="Säbel" steigern="D" be="BE-2"/>
-      <t name="Schleuder" steigern="E" be="BE-2"/>
-      <t name="Schwerter" steigern="E" be="BE-2"/>
-      <t name="Speere" steigern="D" be="BE-3"/>
-      <t name="Stäbe" steigern="D" be="BE-3"/>
-      <t name="Wurfbeile" steigern="D" be="BE-2"/>
-      <t name="Wurfmesser" steigern="C" be="BE-3"/>
-      <t name="Wurfspeere" steigern="C" be="BE-2"/>
-      <t name="Zweihandflegel" steigern="D" be="BE-3"/>
-      <t name="Zweihandhiebwaffen" steigern="D" be="BE-3"/>
-      <t name="Zweihandschwerter/-säbel" steigern="E" be="BE-2"/>
+      <!-- Die Kampftalente werden für Unterscheidung Nah/Fern, die
+          Steigerungsschwierigkeit und die BE benötigt. -->
+      <t name="Anderthalbhänder" steigern="E" be="BE-2" typ="Nah"/>
+      <t name="Armbrust" steigern="C" be="BE-5" typ="Fern"/>
+      <t name="Belagerungswaffen" steigern="D" be="-" typ="Fern"/>
+      <t name="Blasrohr" steigern="D" be="BE-5" typ="Fern"/>
+      <t name="Bogen" steigern="E" be="BE-3" typ="Fern"/>
+      <t name="Diskus" steigern="D" be="BE-2" typ="Fern"/>
+      <t name="Dolche" steigern="D" be="BE-1" typ="Nah"/>
+      <t name="Fechtwaffen" steigern="E" be="BE-1" typ="Nah"/>
+      <t name="Hiebwaffen" steigern="D" be="BE-4" typ="Nah"/>
+      <t name="Infanteriewaffen" steigern="D" be="BE-3" typ="Nah"/>
+      <t name="Kettenstäbe" steigern="E" be="BE-1" typ="Nah"/>
+      <t name="Kettenwaffen" steigern="D" be="BE-3" typ="Nah"/>
+      <t name="Lanzenreiten" steigern="E" be="-" typ="NahAT"/>
+      <t name="Peitsche" steigern="E" be="BE-1" typ="NahAT"/>
+      <t name="Raufen" steigern="C" be="BE" typ="Nah"/>
+      <t name="Ringen" steigern="D" be="BE" typ="Nah"/>
+      <t name="Säbel" steigern="D" be="BE-2" typ="Nah"/>
+      <t name="Schleuder" steigern="E" be="BE-2" typ="Fern"/>
+      <t name="Schwerter" steigern="E" be="BE-2" typ="Nah"/>
+      <t name="Speere" steigern="D" be="BE-3" typ="Nah"/>
+      <t name="Stäbe" steigern="D" be="BE-3" typ="Nah"/>
+      <t name="Wurfbeile" steigern="D" be="BE-2" typ="Fern"/>
+      <t name="Wurfmesser" steigern="C" be="BE-3" typ="Fern"/>
+      <t name="Wurfspeere" steigern="C" be="BE-2" typ="Fern"/>
+      <t name="Zweihandflegel" steigern="D" be="BE-3" typ="Nah"/>
+      <t name="Zweihandhiebwaffen" steigern="D" be="BE-3" typ="Nah"/>
+      <t name="Zweihandschwerter/-säbel" steigern="E" be="BE-2" typ="Nah"/>
     </kampf>
     <natur>
       <!-- Die Naturtalente werden benötigt, weil im Held-XML alle Talente als
