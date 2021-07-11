@@ -282,6 +282,76 @@
       <t name="Wettervorhersage"/>
       <t name="Wildnisleben"/>
     </natur>
+    <sprachen>
+      <familie>
+        <sprache>Garethi</sprache>
+        <sprache>Bosparano</sprache>
+        <sprache>Aureliani</sprache>
+        <sprache>Zyklopäisch</sprache>
+        <schrift komp="A">Kusliker Zeichen</schrift>
+        <schrift komp="A">Imperiale Zeichen</schrift>
+      </familie>
+      <familie>
+        <sprache>Tulamidya</sprache>
+        <sprache>Ur-Tulamidya</sprache>
+        <sprache>Zelemja</sprache>
+        <sprache>Alaani</sprache>
+        <sprache>Zhulchammaqra</sprache>
+        <sprache>Ferkina</sprache>
+        <sprache>Ruuz</sprache>
+        <sprache>Altes Kemi</sprache>
+        <sprache>Rabensprache</sprache>
+        <schrift komp="A">Tulamidya</schrift>
+        <schrift komp="A">Geheiligte Glyphen von Unau</schrift>
+        <schrift komp="A">Chrmk</schrift>
+        <schrift komp="A">Altes Alaani</schrift>
+        <schrift komp="A">Altes Kemi</schrift>
+      </familie>
+      <familie>
+        <sprache>Thorwalsch</sprache>
+        <sprache>Hjaldingsch</sprache>
+        <schrift komp="A">Thorwalsche Runen</schrift>
+        <schrift komp="A">Hjaldingsche Runen</schrift>
+        <schrift komp="A">Gjalskisch</schrift>
+      </familie>
+      <familie>
+        <sprache>Isdira</sprache>
+        <sprache>Asdharia</sprache>
+        <schrift komp="A">Isdira</schrift>
+        <schrift komp="A">Asdharia</schrift>
+      </familie>
+      <familie>
+        <sprache>Rogolan</sprache>
+        <sprache>Angram</sprache>
+        <schrift komp="A">Rogolan</schrift>
+        <schrift komp="A">Angram</schrift>
+      </familie>
+      <familie>
+        <sprache>Oloarkh</sprache>
+        <sprache>Ologhaijan</sprache>
+      </familie>
+      <familie>
+        <sprache>Trollisch</sprache>
+        <schrift komp="C">Trollische Raumbilderschrift</schrift>
+      </familie>
+      <familie>
+        <sprache>Mahrisch</sprache>
+        <sprache>Rissoal</sprache>
+        <schrift komp="B">Mahrische Glyphen</schrift>
+      </familie>
+      <familie>
+        <sprache>Koboldisch</sprache>
+        <sprache>Drachisch</sprache>
+        <schrift komp="B">Drakned-Glyphen</schrift>
+      </familie>
+      <schrift komp="A">Amulashtra</schrift>
+      <schrift komp="C">Arkanil</schrift>
+      <schrift komp="B">Chuchas</schrift>
+      <schrift komp="A">Drakhard-Zinken</schrift>
+      <schrift komp="A">Gimaril</schrift>
+      <schrift komp="A">Nanduria</schrift>
+      <schrift komp="A">Zhayad</schrift>
+    </sprachen>
   </talente>
 
   <sonderfertigkeiten>

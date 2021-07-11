@@ -216,11 +216,11 @@ schema.Talente = {
   Begabungen = d:singleton(d.MixedList, "Talente.Begabungen", "Liste übernatürlicher Begabungen.", schema.Talent) {},
   Gaben = d:singleton(d.MixedList, "Talente.Gaben", "Liste von Gaben.", schema.Talent) {},
   Kampf = d:singleton(d.MixedList, "Talente.Kampf", "Liste von Kampftalenten.", "Kampftalent", schema.Nah, schema.NahAT, schema.Fern) {
-    schema.Nah {"Dolche",                "D", "BE-1", "", "", ""},
-    schema.Nah {"Hiebwaffen",            "D", "BE-4", "", "", ""},
-    schema.Nah {"Raufen",                "C", "BE",   "", "", ""},
-    schema.Nah {"Ringen",                "D", "BE",   "", "", ""},
-    schema.Fern {"Wurfmesser",            "C", "BE-3", ""},
+    schema.Nah {"Dolche",      "D", "BE-1", "", "", ""},
+    schema.Nah {"Hiebwaffen",  "D", "BE-4", "", "", ""},
+    schema.Nah {"Raufen",      "C", "BE",   "", "", ""},
+    schema.Nah {"Ringen",      "D", "BE",   "", "", ""},
+    schema.Fern {"Wurfmesser", "C", "BE-3", ""},
   },
   Koerper = d:singleton(d.MixedList, "Talente.Koerper", "Liste von körperlichen Talenten.", schema.KoerperTalent) {
     {"Athletik",           "GE", "KO", "KK", "BEx2", ""},

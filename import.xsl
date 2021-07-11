@@ -26,6 +26,7 @@
   <xsl:variable name="vorUndNachteile" select="$meta/vorUndNachteile"/>
   <xsl:variable name="kampfTalente" select="$meta/talente/kampf"/>
   <xsl:variable name="naturTalente" select="$meta/talente/natur"/>
+  <xsl:variable name="sprachen" select="$meta/talente/sprachen"/>
   <xsl:variable name="sonderfertigkeiten" select="$meta/sonderfertigkeiten"/>
   <xsl:variable name="kampfstile" select="$meta/kampfstile"/>
   <xsl:variable name="ausruestung" select="$meta/ausruestung"/>
@@ -543,15 +544,21 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
 
   <xsl:template match="talent" mode="sprachen-schriften">
     <xsl:param name="kind" select="'Sprache'"/>
+    <xsl:variable name="name" select="substring(@name, 17)"/>
     <xsl:text>
   </xsl:text>
     <xsl:choose>
       <xsl:when test="starts-with(@name, 'Lesen/Schreiben')">
-        <!-- TODO: Schrift komplexität -->
-        <xsl:value-of select="concat('Schrift {', dsa:stringVal(substring(@name, 17)), ', &quot;A&quot;, ')"/>
-      </xsl:when>
-      <xsl:when test="$kind = 'Muttersprache'">
-        <xsl:value-of select="concat('Muttersprache {{', dsa:stringVal(substring(@name, 17)), '}, ')"/>
+        <xsl:variable name="schrift" select="$sprachen//schrift[text() = $name]"/>
+        <xsl:variable name="komp">
+          <xsl:choose>
+            <xsl:when test="$schrift">
+              <xsl:value-of select="$schrift/@komp"/>
+            </xsl:when>
+            <xsl:otherwise>A</xsl:otherwise>
+          </xsl:choose>
+        </xsl:variable>
+        <xsl:value-of select="concat('Schrift {', dsa:stringVal($name), ', ', dsa:stringVal($komp), ', ')"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="concat($kind, ' {', dsa:stringVal(substring(@name, 17)), ', ')"/>
@@ -561,6 +568,24 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
     <xsl:value-of select="concat(@k, ', ', @value)"/>
     <xsl:if test="not(starts-with(@name, 'Lesen/Schreiben'))">
       <xsl:apply-templates select="." mode="spezialisierungen"/>
+    </xsl:if>
+    <xsl:if test="$kind = 'Muttersprache'">
+      <xsl:variable name="familie" select="$sprachen/familie[sprache[text() = $name]]"/>
+      <xsl:text>, {</xsl:text>
+      <xsl:for-each select="$familie/sprache[text() != $name]">
+        <xsl:if test="position() &gt; 1">
+          <xsl:text>, </xsl:text>
+        </xsl:if>
+        <xsl:value-of select="dsa:stringVal(text())"/>
+      </xsl:for-each>
+      <xsl:text>}, {</xsl:text>
+      <xsl:for-each select="$familie/schrift">
+        <xsl:if test="position() &gt; 1">
+          <xsl:text>, </xsl:text>
+        </xsl:if>
+        <xsl:value-of select="dsa:stringVal(text())"/>
+      </xsl:for-each>
+      <xsl:text>}</xsl:text>
     </xsl:if>
     <xsl:text>},</xsl:text>
   </xsl:template>

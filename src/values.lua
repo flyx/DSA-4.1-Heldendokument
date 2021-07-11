@@ -387,6 +387,35 @@ function values:tgruppe_schwierigkeit(gruppe)
   return skt.spalte:name(val)
 end
 
+function values:talent_schwierigkeit_mod(talent)
+  local name = talent[1]()
+  local val = 0
+  for _,n in ipairs(self.Vorteile.BegabungFuerTalent) do
+    if n() == name then
+      val = val - 1
+      break
+    end
+  end
+  for _, n in ipairs(self.Nachteile.UnfaehigkeitFuerTalent) do
+    if n() == name then
+      val = val + 1
+      break
+    end
+  end
+  return val
+end
+
+function values:kampf_schwierigkeit(kampftalent)
+  local x = skt.spalte:num(kampftalent[2]())
+  if getmetatable(kampftalent).name == "Fern" then
+    x = x + self:tgruppe_schwierigkeit_mod("Fernkampf")
+  else
+    x = x + self:tgruppe_schwierigkeit_mod("Nahkampf")
+  end
+  x = x + self:talent_schwierigkeit_mod(kampftalent)
+  return skt.spalte:name(x)
+end
+
 function values:sprache_schwierigkeit(sprache)
   local mt = getmetatable(sprache)
   local name = sprache[1]()

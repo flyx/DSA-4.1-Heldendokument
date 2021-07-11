@@ -9,7 +9,7 @@ function talent.render(value)
     talent.nah(value)
   elseif mt.name == "NahAT" or mt.name == "Fern" then
     talent.fern(value, mt.name == "Fern" and [[\faAngleDoubleRight]] or [[\faBahai]])
-  elseif mt.name == "Koerper" then
+  elseif mt.name == "KoerperTalent" then
     talent.koerper(value)
   elseif mt.name == "Muttersprache" then
     talent.sprache(value, "Muttersprache: ")
@@ -54,6 +54,8 @@ function talent.nah(v)
     local content = v[j]()
     if j == 1 then
       content = content .. talent.spez(v.Spezialisierung)
+    elseif j == 2 then
+      content = data:kampf_schwierigkeit(v)
     elseif j == 3 then
       content = talent.be(content)
     end
@@ -67,6 +69,8 @@ function talent.fern(v, filler)
     local content = v[j]()
     if j == 1 then
       content = content .. talent.spez(v.Spezialisierung)
+    elseif j == 2 then
+      content = data:kampf_schwierigkeit(v)
     elseif j == 3 then
       content = talent.be(content)
     end
