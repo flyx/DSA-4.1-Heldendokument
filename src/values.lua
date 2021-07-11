@@ -343,13 +343,31 @@ function values:lernschwierigkeit(zaubername, komp, merkmale, repr, haus)
 end
 
 function values:tgruppe_schwierigkeit(gruppe)
-  if gruppe == "Gaben" then
+  if gruppe == "Gaben" or gruppe == "Begabungen" then
     return "F"
-  elseif gruppe == "Koerper" then
-    return "D"
-  else
-    return "B"
   end
+  local val
+  if gruppe == "Koerper" then
+    val = skt.spalte:num("D")
+  else
+    val = skt.spalte:num("B")
+  end
+  for _,n in ipairs(self.Vorteile.BegabungFuerTalentgruppe) do
+    if n() == gruppe then
+      val = val - 1
+      break
+    end
+  end
+  for _, n in ipairs(self.Nachteile.UnfaehigkeitFuerTalentgruppe) do
+    if n() == gruppe then
+      val = val + 1
+      break
+    end
+  end
+  if self.Nachteile.Unstet and (gruppe == "Wissen" or gruppe == "Handwerk") then
+    val = val + 1
+  end
+  return skt.spalte:name(val)
 end
 
 -- Ereignisse auf Charakter applizieren

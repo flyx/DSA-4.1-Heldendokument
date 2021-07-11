@@ -258,7 +258,7 @@ d.MixedList = Type("table",
           value[i] = v
         else
           local e = "("
-          for i,t in ipairs(self) do
+          for j,t in ipairs(self) do
             if j > 1 then
               e = e .. ","
             end

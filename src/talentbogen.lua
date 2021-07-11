@@ -15,21 +15,23 @@ local gruppe = {
 
 function gruppe.spec(self, name)
   if name == "Sonderfertigkeiten" then
-    return "Sonderfertigkeiten (außer Kampf)", 1, 0, 1, -1, "", ""
+    return "Sonderfertigkeiten (außer Kampf)", nil, 1, 0, 1, -1, "", ""
   elseif name == "Kampf" then
-    return "Kampftechniken", 3, 4.542, 7, 3,
+    return "Kampftechniken", nil, 3, 4.542, 7, 3,
         [[|x{0.4cm}|x{1cm}|x{0.65cm}@{\dotsep}x{0.65cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{BE} & \Th{AT} & \Th{PA} & \multicolumn{1}{c}{\Th{TaW}}]]
-  elseif name == "Koerper" then
-    return "Körperliche Talente", 5, 4.6, 7, 5,
-        [[|x{0.55cm}@{\dotsep}x{0.55cm}@{\dotsep}x{0.55cm}|x{1.0cm}|y{0.55cm}@{\hskip 0.1cm}]],
-        [[& \Th{BE} & \multicolumn{1}{c}{\Th{TaW}}]]
   elseif name == "Sprachen" then
-    return "Sprachen & Schriften", 2, 6.8, 4, -1,
+    return "Sprachen & Schriften", nil, 2, 6.8, 4, -1,
         [[|x{0.9cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{Komp} & \multicolumn{1}{c}{\Th{TaW}}]]
+  end
+  local spalte = data:tgruppe_schwierigkeit(name)
+  if name == "Koerper" then
+    return "Körperliche Talente", spalte, 5, 4.6, 7, 5,
+        [[|x{0.55cm}@{\dotsep}x{0.55cm}@{\dotsep}x{0.55cm}|x{1.0cm}|y{0.55cm}@{\hskip 0.1cm}]],
+        [[& \Th{BE} & \multicolumn{1}{c}{\Th{TaW}}]]
   else
-    return self.labels[name], 5, 5.92, 6, -1,
+    return self.labels[name], spalte, 5, 5.92, 6, -1,
         [[|x{0.5cm}@{\dotsep}x{0.5cm}@{\dotsep}x{0.5cm}|y{0.55cm}@{\hskip 0.1cm}]],
         [[& \multicolumn{1}{c}{\Th{TaW}}]]
   end
@@ -41,7 +43,7 @@ function gruppe.render(self, g, start_white)
     return
   end
 
-  label, title_col_len, item_name_len, num_items, be_col, col_spec, headers = self:spec(name)
+  label, spalte, title_col_len, item_name_len, num_items, be_col, col_spec, headers = self:spec(name)
   if data.m_spalte and item_name_len > 0 then
     item_name_len = item_name_len - 0.4
     col_spec = col_spec .. "|x{0.4cm}"
@@ -62,11 +64,18 @@ function gruppe.render(self, g, start_white)
   end
 
   tex.sprint([[\setarstrut{\scriptsize}\multicolumn{]])
-  tex.sprint(num_items)
+  tex.sprint(spalte == nil and num_items or title_col_len - 1)
   tex.sprint([[}{l}{\multirow{2}{*}{\Large \textmansontt{\bfseries ]])
   tex.sprint(-2, label)
-  tex.sprint([[}}} \\ \restorearstrut]])
-
+  tex.sprint([[}}}]])
+  if spalte ~= nil then
+    tex.sprint([[ & \multicolumn{]])
+    tex.sprint(num_items - title_col_len + 1)
+    tex.sprint([[}{l}{\multirow{2}{*}{\raisebox{-.5em}{\color{gray}\normalsize\bfseries ]])
+    tex.sprint(-2, spalte)
+    tex.sprint([[}}}]])
+  end
+  tex.sprint([[ \\ \restorearstrut]])
   tex.sprint([[\multicolumn{]])
   tex.sprint(title_col_len)
   tex.sprint("}{l|}{}")
