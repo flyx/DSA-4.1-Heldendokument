@@ -53,7 +53,7 @@ function talent.nah(v)
     tex.sprint([[& ]])
     local content = v[j]()
     if j == 1 then
-      content = content .. talent.spez(v.Spezialisierung)
+      content = content .. talent.spez(v.Spezialisierungen)
     elseif j == 2 then
       content = data:kampf_schwierigkeit(v)
     elseif j == 3 then
@@ -68,7 +68,7 @@ function talent.fern(v, filler)
     tex.sprint([[& ]])
     local content = v[j]()
     if j == 1 then
-      content = content .. talent.spez(v.Spezialisierung)
+      content = content .. talent.spez(v.Spezialisierungen)
     elseif j == 2 then
       content = data:kampf_schwierigkeit(v)
     elseif j == 3 then
@@ -85,7 +85,7 @@ function talent.koerper(v)
     tex.sprint([[& ]])
     local content = v[j]()
     if j == 1 then
-      content = content .. talent.spez(v.Spezialisierung)
+      content = content .. talent.spez(v.Spezialisierungen)
     elseif j == 5 then
       content = talent.be(content)
     end
@@ -117,6 +117,9 @@ function talent.sonstige(v)
   for i=1,5 do
     tex.sprint(" & ")
     tex.sprint(-2, v[i]())
+    if i == 1 then
+      tex.sprint(-2, talent.spez(v.Spezialisierungen))
+    end
   end
 end
 

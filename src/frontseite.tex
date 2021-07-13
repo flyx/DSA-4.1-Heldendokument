@@ -51,6 +51,7 @@
                     Eisern = "Eisern", Flink = "Flink",
                     BegabungFuerTalentgruppe = "Begabung für [Talentgruppe]",
                     BegabungFuerTalent = "Begabung für [Talent]",
+                    AkademischeAusbildung = "Akademische Ausbildung",
                 })
                 local fixed_m = common.list_known(data.Vorteile.Magisch, {
                     BegabungFuerMerkmal = "Begabung für [Merkmal]",
@@ -60,7 +61,7 @@
                 common.multiline_content({
                     name="Vorteile", rows=common.current_page.Vorteile(),
                     baselinestretch=1.35
-                }, data.Vorteile, fixed, fixed_m)
+                }, data.Vorteile, fixed, data.Vorteile.Magisch, fixed_m)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -84,7 +85,7 @@
                 common.multiline_content({
                     name="Nachteile", rows=common.current_page.Nachteile(),
                     baselinestretch=1.35
-                }, data.Nachteile, fixed, fixed_m)
+                }, data.Nachteile, fixed, data.Nachteile.Magisch, fixed_m)
             }
         \end{tabular}
     \end{dsaSheetBox}

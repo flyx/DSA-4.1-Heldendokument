@@ -82,9 +82,9 @@ function zauberliste.seite(start)
       tex.sprint(-2, z.Seite)
       tex.sprint("&")
       tex.sprint(-2, z.Name)
-      if #z.Spezialisierung > 0 then
+      if #z.Spezialisierungen > 0 then
         tex.sprint(-2, " (")
-        for j, s in ipairs(z.Spezialisierung) do
+        for j, s in ipairs(z.Spezialisierungen) do
           if j > 1 then
             tex.sprint(-2, ", ")
           end

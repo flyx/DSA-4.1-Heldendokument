@@ -248,6 +248,7 @@ d.MixedList = Type("table",
   end,
   function(self, value)
     local errors = false
+    local ret = {}
     for i,v in ipairs(value) do
       local mt = getmetatable(v)
       d.context:push(" [" .. tostring(i) .. "]")
@@ -255,7 +256,6 @@ d.MixedList = Type("table",
         if #self == 1 then
           v = self[1](v)
           mt = getmetatable(v)
-          value[i] = v
         else
           local e = "("
           for j,t in ipairs(self) do
@@ -290,8 +290,9 @@ d.MixedList = Type("table",
         end
       end
       d.context:pop()
+      table.insert(ret, v)
     end
-    return errors and d.Poison or value
+    return errors and d.Poison or ret
   end,
   function(self, printer)
     if #self > 1 then
@@ -322,6 +323,7 @@ d.Record = Type("table",
   end,
   function(self, value)
     local errors = false
+    local ret = {}
     for k,v in pairs(value) do
       local mt = getmetatable(v)
       local expected = self.defs[k]
@@ -333,7 +335,6 @@ d.Record = Type("table",
         if mt == nil or mt == string_metatable then
           v = expected[1](v)
           mt = getmetatable(v)
-          value[k] = v
         end
         if mt ~= d.Poison and mt ~= expected[1] then
           self:err("falscher Typ: erwartete %s, bekam %s", expected[1].name, mt.name)
@@ -341,16 +342,14 @@ d.Record = Type("table",
         end
       end
       d.context:pop()
+      ret[k] = v
     end
     for k,v in pairs(self.defs) do
-      if value[k] == nil then
-        if v[1] == nil then
-          io.write("XXX name=" .. self.name .. ", k=" .. k .. "\n")
-        end
-        value[k] = v[1](v[2])
+      if ret[k] == nil then
+        ret[k] = v[1](v[2])
       end
     end
-    return errors and d.Poison or value
+    return errors and d.Poison or ret
   end,
   function(self, printer)
     local first = true
@@ -384,7 +383,9 @@ d.ListWithKnown = Type("table",
           return self:err("string in Liste erwartet, bekam %s", type(v))
         else
           local def = self.known[mt.name]
-          if type(def) == "string" then
+          if def == nil then
+            return self:err("string in Liste erwartet, bekam %s", mt.name)
+          elseif type(def) == "string" then
             return self:err("string in Liste erwartet, bekam %s", type(v))
           elseif def ~= mt then
             return self:err("%s erwartet, bekam %s", def.name, mt.name)
@@ -442,12 +443,20 @@ d.FixedList = Type("table",
   end,
   function(self, value)
     local length = self.length
+    local sparse = false
     if length == nil then
       length = #value
+    elseif length < 0 then
+      length = -1 * length
+      sparse = true
     end
+    local ret = {}
     for i=1,length do
       if #value == i - 1 then
-        self:err("zu wenige Werte, %d erwartet, bekam %d", self.length, #v)
+        if sparse then
+          break
+        end
+        self:err("zu wenige Werte, %d erwartet, bekam %d", self.length, #value)
         errors = true
       elseif i <= #value then
         local v = value[i]
@@ -456,13 +465,13 @@ d.FixedList = Type("table",
         if mt == nil or mt == string_metatable then
           v = self.inner(v)
           mt = getmetatable(v)
-          value[i] = v
         end
         if mt ~= d.Poison and mt ~= self.inner then
           self:err("falscher Typ: erwartete %s, bekam %s", self.inner.name, mt.name)
           errors = true
         end
         d.context:pop()
+        table.insert(ret, v)
       end
     end
     if #value > length then
@@ -475,7 +484,7 @@ d.FixedList = Type("table",
         errors = true
       end
     end
-    return errors and d.Poison or value
+    return errors and d.Poison or ret
   end,
   function(self, printer)
     if self.length ~= nil then
@@ -526,13 +535,7 @@ d.HeterogeneousList = Type("table",
     return ret
   end,
   function(self, value)
-    while #value < #self do
-      local def = self[#value + 1]
-      if def[3] == nil then
-        return self:err("Wert #%d (%s) fehlt", #value + 1, def[1])
-      end
-      table.insert(value, def[2](def[3]))
-    end
+    local ret = {}
     if #value > #self then
       return self:err("zu viele Werte, %d erwartet, bekam %d", #self, #value)
     end
@@ -544,15 +547,22 @@ d.HeterogeneousList = Type("table",
       if mt == nil or mt == string_metatable then
         v = def[2](v)
         mt = getmetatable(v)
-        value[i] = v
       end
       if mt ~= d.Poison and mt ~= def[2] then
         self:err("falscher Typ: erwartete %s, bekam %s", def[2].name, mt.name)
         errors = true
       end
       d.context:pop()
+      table.insert(ret, v)
     end
-    return errors and d.Poison or value
+    for i=#value+1,#self do
+      local def = self[i]
+      if def[3] == nil then
+        return self:err("Wert #%d (%s) fehlt", i, def[1])
+      end
+      table.insert(ret, def[2](def[3]))
+    end
+    return errors and d.Poison or ret
   end,
   function(self, printer)
     for i,v in ipairs(self) do
@@ -606,6 +616,7 @@ d.MapToFixed = Type("table",
     return {...}
   end,
   function(self, value)
+    local ret = {}
     local errors = false
     for k,v in pairs(value) do
       d.context:push(self.name .. "->" .. k)
@@ -628,8 +639,9 @@ d.MapToFixed = Type("table",
         errors = true
       end
       d.context:pop()
+      ret[k] = v
     end
-    return errors and d.Poison or value
+    return errors and d.Poison or ret
   end,
   function(self, printer)
     printer:sym("[ ")
@@ -738,6 +750,7 @@ d.Multivalue = Type(nil,
     if type(value) == "string" then
       return {value}
     elseif type(value) == "table" then
+      local ret = {}
       for k,v in pairs(value) do
         if type(k) ~= "number" then
           return self:err("unbekannter Wert in table: %s", k)
@@ -749,8 +762,9 @@ d.Multivalue = Type(nil,
         elseif type(v) ~= "string" then
           return self:err("string oder {} in Liste erwartet, bekam %s", type(v))
         end
+        ret[k] = v
       end
-      return value
+      return ret
     else
       return self:err("string oder table als Argument erwartet, bekam %s", type(value))
     end

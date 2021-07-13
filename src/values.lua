@@ -390,16 +390,16 @@ end
 function values:tgruppe_faktor(gruppe)
   if gruppe == "SprachenUndSchriften" or gruppe == "Zauber" then
     if self.Vorteile.EidetischesGedaechtnis then
-      return skt.faktor[1]
+      return skt.faktor["1/2"]
     elseif self.Vorteile.GutesGedaechtnis then
-      return skt.faktor[3]
+      return skt.faktor["3/4"]
     else
-      return skt.faktor[4]
+      return skt.faktor["1"]
     end
   elseif gruppe == "Wissen" and self.Vorteile.EidetischesGedaechtnis then
-    return skt.faktor[1]
+    return skt.faktor["1/2"]
   else
-    return skt.faktor[4]
+    return skt.faktor["1"]
   end
 end
 
@@ -543,6 +543,80 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
       end
     end
     tex.error("\n[ZfW] unbekannter Zauber: '" .. e.Name .. "'")
+  elseif mt.name == "Spezialisierung" then
+    local ziel = nil
+    local faktor = skt.faktor["1"]
+    local spalte = nil
+    for _, w in ipairs(values.Talente.Kampf) do
+      if w.Name == e.Fertigkeit then
+        ziel = w
+        spalte = values:kampf_schwierigkeit(w)
+        if values.Vorteile.AkademischeAusbildung[1] == "Krieger" or
+            values.Vorteile.AkademischeAusbildung[1] == "Kriegerin" then
+          faktor = skt.faktor["3/4"]
+        end
+        event[1] = "Waffenspezialisierung ("
+        break
+      end
+    end
+    if ziel == nil then
+      for _, g in ipairs({"Gaben", "Koerper", "Gesellschaft", "Natur", "Wissen", "Handwerk"}) do
+        for _, t in ipairs(values.Talente[g]) do
+          if t.Name == e.Fertigkeit then
+            ziel = t
+            spalte = values:talent_schwierigkeit(t, g)
+            if g == "Wissen" then
+              if values.Vorteile.EidetischesGedaechtnis then
+                faktor = skt.faktor["1/2"]
+              elseif values.Vorteile.GutesGedaechtnis then
+                faktor = skt.faktor["3/4"]
+              end
+            end
+            event[1] = "Talentspezialisierung ("
+            goto talentfund
+          end
+        end
+      end
+      ::talentfund::
+    end
+    if ziel == nil then
+      for _, z in ipairs(values.Magie.Zauber) do
+        if z.Name == e.Fertigkeit then
+          ziel = z
+          spalte = values:lernschwierigkeit(z)
+          if values.Vorteile.AkademischeAusbildung[1] == "Magier" or
+              values.Vorteile.AkademischeAusbildung[1] == "Magierin" then
+            if values.Vorteile.EidetischesGedaechtnis then
+              faktor = skt.faktor["3/8"]
+            elseif values.Vorteile.GutesGedaechtnis then
+              faktor = skt.faktor["9/16"]
+            else
+              faktor = skt.faktor["3/4"]
+            end
+          elseif values.Vorteile.EidetischesGedaechtnis then
+            faktor = skt.faktor["1/2"]
+          elseif values.Vorteile.GutesGedaechtnis then
+            faktor = skt.faktor["3/4"]
+          end
+          event[1] = "Zauberspezialisierung ("
+          break
+        end
+      end
+    end
+    if ziel == nil then
+      tex.error("\n[Spezialisierung] unbekannte Fertigkeit: '" .. e.Fertigkeit .. "'")
+    end
+    event[1] = event[1] .. e.Fertigkeit .. ", " .. e.Methode .. "): " .. e.Name
+    table.insert(ziel.Spezialisierungen, e.Name)
+    local ap = #ziel.Spezialisierungen * 20 * math.floor(skt.spalte[skt.spalte:num(spalte)].f + 0.5)
+    if e.Methode == "SE" then
+      ap = math.floor(ap / 2 + 0.5)
+    end
+    event[2] = -1 * ap
+    event[3] = faktor
+    local kosten = faktor:apply(ap)
+    event[4] = -1 * kosten
+    event[5] = values:ap_mod(kosten)
   else
     tex.error("\n[Ereignisse] unbekannter Ereignistyp: '" .. mt.name .. "'")
   end

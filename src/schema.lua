@@ -115,6 +115,7 @@ local Element = d.Matching("Element", "Name eines Elements, oder 'gesamt'.", "ge
 local Elementar = d.MixedList("Elementar", "Spezifikation elementarer Merkmale.", Element)
 local Domaene = d.Matching("Domaene", "Name einer Domäne, oder 'gesamt'", "gesamt", "Blakharaz", "Belhalhar", "Charyptoroth", "Lolgramoth", "Thargunitoth", "Amazeroth", "Belshirash", "Asfaloth", "Tasfarelel", "Belzhorash", "Agrimoth", "Belkelel")
 local Daemonisch = d.MixedList("Daemonisch", "Spezifikation dämonischer Merkmale.", Domaene)
+local Ausbildungsname = d.Matching("Ausbildungsname", "Gelehrter?", "Magier", "Magierin", "Krieger", "Kriegerin")
 
 d:singleton(d.ListWithKnown, "Vorteile", "Liste von nicht-magischen Vorteilen.", {
   Flink = d.Number("Flink", "Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen.", 1, 2),
@@ -123,6 +124,7 @@ d:singleton(d.ListWithKnown, "Vorteile", "Liste von nicht-magischen Vorteilen.",
   ["Eidetisches Gedächtnis"] = "EidetischesGedaechtnis",
   BegabungFuerTalentgruppe = d.FixedList("BegabungFuerTalentgruppe", "Begabung für eine oder mehrere Talentgruppen", Talentgruppe, nil),
   BegabungFuerTalent = d.FixedList("BegabungFuerTalent", "Begabung für ein oder mehrere Talente", String, nil),
+  AkademischeAusbildung = d.FixedList("AkademischeAusbildung", "Akademische Ausbildung", Ausbildungsname, -1),
 }, { -- optional
   Flink = true
 })
@@ -191,26 +193,26 @@ d:singleton(d.Record, "AP", "Abenteuerpunkte.",
 local SteigSpalte = d.Matching("SteigSpalte", "Eine Steigerungsspalte.", "A%*?", "B", "C", "D", "E", "F", "G", "H")
 local Behinderung = d.Matching("Behinderung", "Behinderung.", "%-", "BE", "BE%-[1-9]", "BEx[2-9]")
 local Eigenschaft = d.Matching("Eigenschaft", "Referenz auf einen Eigenschaftsnamen.", "%*%*", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK")
-local Spezialisierung = d.Multivalue("Spezialisierung", "Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden.")
+local Spezialisierungen = d.Multivalue("Spezialisierungen", "Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden.")
 
 d.HeterogeneousList("Nah", "Ein Nahkampf-Talent mit AT/PA Verteilung.",
-  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"AT", Simple, ""}, {"PA", Simple, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
+  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"AT", Simple, ""}, {"PA", Simple, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
 d.HeterogeneousList("NahAT", "Ein Nahkampf-Talent, dessen Wert ausschließlich zur Attacke dient und das keine AT/PA Verteilung hat.",
-  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
+  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
 d.HeterogeneousList("Fern", "Ein Fernkampf-Talent.",
-  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
-d.HeterogeneousList("KoerperTalent", "Ein Talent aus der Gruppe der Körperlichen Talente.", {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
+  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
+d.HeterogeneousList("KoerperTalent", "Ein Talent aus der Gruppe der Körperlichen Talente.", {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
 d.HeterogeneousList("Talent", "Ein allgemeines Talent.",
-  {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"TaW", Simple, ""}, {"Spezialisierung", Spezialisierung, {}})
+  {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
 
 d.FixedList("Familie", "Liste von Sprachen oder Schriften in einer Familie.", String, nil)
 d.HeterogeneousList("Muttersprache", "Die Muttersprache des Helden. Anders als andere Sprachen definiert eine Muttersprache Listen der verwandten Sprachen und Schriften, welche nicht ausgegeben werden, sondern nur zur Berechnung der Steigerungsschwierigkeit anderer Sprachen und Schriften dienen.",
-  {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierung, {}}, {"Sprachfamilie", schema.Familie, {}}, {"Schriftfamilie", schema.Familie, {}})
+  {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierungen, {}}, {"Sprachfamilie", schema.Familie, {}}, {"Schriftfamilie", schema.Familie, {}})
 d.HeterogeneousList("Zweitsprache", "Eine Zweitsprache, für die die Grund-Steigerungsschwierigkeit gilt.",
-  {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierung, {}})
+  {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierungen, {}})
 schema.Lehrsprache = schema.Zweitsprache
 d.HeterogeneousList("Sprache", "Eine Fremdsprache. Steigerungsschwierigkeit hängt ab davon, ob sie in der Sprachfamilie der Muttersprache enthalten ist.",
-  {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierung, {}})
+  {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierungen, {}})
 d.HeterogeneousList("Schrift", "Eine Schrift. Es sollte die Steigerungsschwierigkeit gemäß WdS angegeben werden; der Bogen modifiziert sie automatisch im Falle einer Begabung oder Unfähigkeit.",
   {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""})
 
@@ -368,10 +370,11 @@ schema.Magie = {
   Notizen = d:singleton(d.Multivalue, "Magie.Notizen", "Notizen auf dem Zauberdokument.") {},
   Repraesentationen = d:singleton(d.MixedList, "Magie.Repraesentationen", "Liste beherrschter Repräsentationen.", Repraesentation) {},
   Merkmalskenntnis = merkmale("Magie.Merkmalskenntnis", "Liste gelernter Merkmalskenntnisse"),
-  Zauber = d:singleton(d.MixedList, "Magie.Zauber", "Liste von gelernten Zaubern.", d.HeterogeneousList("Zauber", "Ein Zauber.", {"Seite", Simple, ""}, {"Name", String}, {"Probe1", Eigenschaft}, {"Probe2", Eigenschaft}, {"Probe3", Eigenschaft}, {"ZfW", Simple, ""}, {"Komplexitaet", SteigSpalte}, {"Merkmale", Merkmale, {}}, {"Repraesentation", Repraesentation, ""}, {"Hauszauber", schema.Boolean, false}, {"Spezialisierung", Spezialisierung, {}})) {}
+  Zauber = d:singleton(d.MixedList, "Magie.Zauber", "Liste von gelernten Zaubern.", d.HeterogeneousList("Zauber", "Ein Zauber.", {"Seite", Simple, ""}, {"Name", String}, {"Probe1", Eigenschaft}, {"Probe2", Eigenschaft}, {"Probe3", Eigenschaft}, {"ZfW", Simple, ""}, {"Komplexitaet", SteigSpalte}, {"Merkmale", Merkmale, {}}, {"Repraesentation", Repraesentation, ""}, {"Hauszauber", schema.Boolean, false}, {"Spezialisierungen", Spezialisierungen, {}})) {}
 }
 
 local SteigerMethode = d.Matching("SteigerMethode", "Steigerungsmethode", "SE", "Lehrmeister", "Gegenseitig", "Selbststudium")
+local SFLernmethode = d.Matching("SFLernmethode", "Lernmethode für eine Sonderfertigkeit", "SE", "Lehrmeister")
 
 local TaW = d.HeterogeneousList("TaW", "Steigerung eines Talentwerts",
   {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"})
@@ -379,6 +382,9 @@ local TaW = d.HeterogeneousList("TaW", "Steigerung eines Talentwerts",
 local ZfW = d.HeterogeneousList("ZfW", "Steigerung eines Zauberfertigkeitwerts",
   {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"})
 
-d:singleton(d.MixedList, "Ereignisse", "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", "Ereignis", TaW, ZfW) {}
+local Spezialisierung = d.HeterogeneousList("Spezialisierung", "Erlernen einer Talent- oder Zauberspezialisierung",
+  {"Fertigkeit", String}, {"Name", String}, {"Methode", SFLernmethode, "Lehrmeister"})
+
+d:singleton(d.MixedList, "Ereignisse", "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", "Ereignis", TaW, ZfW, Spezialisierung) {}
 
 return schema

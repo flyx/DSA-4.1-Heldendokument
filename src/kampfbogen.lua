@@ -234,14 +234,14 @@ nahkampf_render[11]= {false, function(v, talent, ebe)
   if talent == nil or #talent < 4 or atb == "" or #v < 8 then
     return
   end
-  tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent.AT, v["TP/KK Schwelle"], v["TP/KK Schritt"], v["WM AT"], art(v), talent.Spezialisierung))
+  tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent.AT, v["TP/KK Schwelle"], v["TP/KK Schritt"], v["WM AT"], art(v), talent.Spezialisierungen))
 end}
 nahkampf_render[12]= {false, function(v, talent, ebe)
   local pab = data:cur("PA")
   if talent == nil or #talent < 5 or pab == "" or #v < 9 then
     return
   end
-  tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent.PA, v["TP/KK Schwelle"], v["TP/KK Schritt"], v["WM PA"], art(v), talent.Spezialisierung))
+  tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent.PA, v["TP/KK Schwelle"], v["TP/KK Schritt"], v["WM PA"], art(v), talent.Spezialisierungen))
 end}
 nahkampf_render[13]= {false, function(v, talent, ebe)
   if #v < 6 then
@@ -281,7 +281,7 @@ local fernkampf_render = {
     end
     local fk = talent.TaW - ebe
     local a = art(v)
-    for _, s in ipairs(talent.Spezialisierung) do
+    for _, s in ipairs(talent.Spezialisierungen) do
       if s == a then
         fk = fk + 2
         break

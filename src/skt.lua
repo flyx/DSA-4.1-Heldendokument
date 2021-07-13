@@ -11,6 +11,19 @@ local skt = {
   },
 }
 
+setmetatable(skt.faktor, {
+  __index = function(self, key)
+    if type(key) == "string" then
+      for _, v in ipairs(self) do
+        if key == v[2] then
+          return v
+        end
+      end
+    end
+    return rawget(self, key)
+  end
+})
+
 function skt.spalte:num(name)
   for i=1,#self do
     if self[i].n == name then
