@@ -73,44 +73,41 @@ local zauberliste = {
 function zauberliste.seite(start)
   local zauber = data.Magie.Zauber
   for i=start,start+48 do
-    if zauber[i] == nil then
+    local z = zauber[i]
+    if z == nil then
       for j=1,9 do
         tex.sprint("&")
       end
     else
-      local z = {}
-      for j =1,10 do
-        local v = zauber[i][j]
-        if j == 8 then
-          z[8] = v
-        else
-          z[j] = v()
-          local spez = zauber[i].Spezialisierung
-          if j == 2 and #spez > 0 then
-            z[2] = z[2] .. " ("
-            for k, s in ipairs(spez) do
-              if k > 1 then
-                z[2] = z[2] .. ", "
-              end
-              z[2] = z[2] .. s
-            end
-            z[2] = z[2] .. ")"
+      tex.sprint(-2, z.Seite)
+      tex.sprint("&")
+      tex.sprint(-2, z.Name)
+      if #z.Spezialisierung > 0 then
+        tex.sprint(-2, " (")
+        for j, s in ipairs(z.Spezialisierung) do
+          if j > 1 then
+            tex.sprint(-2, ", ")
           end
+          tex.sprint(-2, s)
         end
+        tex.sprint(-2, ")")
       end
-      for j=1,7 do
+      tex.sprint("&")
+      for j=3,7 do
         tex.sprint(-2, z[j])
         tex.sprint("&")
       end
-      for j, m in ipairs(z[8]) do
-        if j ~= 1 then
+      local first = true
+      for j, m in ipairs(z.Merkmale) do
+        if first then
+          first = false
+        else
           tex.sprint(-2, ", ")
         end
         tex.sprint(-2, merkmale.kurz(m))
       end
-      local first = #z[8] == 0
       for k, label in pairs({Daemonisch="Dämon", Elementar="Element"}) do
-        local sub = z[8][k]
+        local sub = z.Merkmale[k]
         if sub ~= nil then
           if first then
             first = false
@@ -127,10 +124,10 @@ function zauberliste.seite(start)
         end
       end
       tex.sprint("&")
-      tex.sprint(-2, z[9])
+      tex.sprint(-2, z.Repraesentation)
       tex.sprint("&")
-      tex.sprint(-2, data:lernschwierigkeit(z[2], z[7], z[8], z[9], z[10]))
-      if z[10] then
+      tex.sprint(-2, data:lernschwierigkeit(z))
+      if z.Hauszauber then
         tex.sprint([[\hfill\faHome]])
       end
     end

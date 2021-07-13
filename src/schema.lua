@@ -368,14 +368,17 @@ schema.Magie = {
   Notizen = d:singleton(d.Multivalue, "Magie.Notizen", "Notizen auf dem Zauberdokument.") {},
   Repraesentationen = d:singleton(d.MixedList, "Magie.Repraesentationen", "Liste beherrschter Repräsentationen.", Repraesentation) {},
   Merkmalskenntnis = merkmale("Magie.Merkmalskenntnis", "Liste gelernter Merkmalskenntnisse"),
-  Zauber = d:singleton(d.MixedList, "Magie.Zauber", "Liste von gelernten Zaubern.", d.HeterogeneousList("Zauber", "Ein Zauber.", {"Seite", Simple, ""}, {"Name", String}, {"Probe1", Eigenschaft}, {"Probe2", Eigenschaft}, {"Probe3", Eigenschaft}, {"TaW", Simple, ""}, {"Spalte", SteigSpalte}, {"Merkmale", Merkmale, {}}, {"Repraesentation", Repraesentation, ""}, {"Hauszauber", schema.Boolean, false}, {"Spezialisierung", Spezialisierung, {}})) {}
+  Zauber = d:singleton(d.MixedList, "Magie.Zauber", "Liste von gelernten Zaubern.", d.HeterogeneousList("Zauber", "Ein Zauber.", {"Seite", Simple, ""}, {"Name", String}, {"Probe1", Eigenschaft}, {"Probe2", Eigenschaft}, {"Probe3", Eigenschaft}, {"ZfW", Simple, ""}, {"Komplexitaet", SteigSpalte}, {"Merkmale", Merkmale, {}}, {"Repraesentation", Repraesentation, ""}, {"Hauszauber", schema.Boolean, false}, {"Spezialisierung", Spezialisierung, {}})) {}
 }
 
 local SteigerMethode = d.Matching("SteigerMethode", "Steigerungsmethode", "SE", "Lehrmeister", "Gegenseitig", "Selbststudium")
 
-local SteigerTalent = d.HeterogeneousList("SteigerTalent", "Steigerung eines Talents",
-  {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"}, {"SE", schema.Boolean, false})
+local TaW = d.HeterogeneousList("TaW", "Steigerung eines Talentwerts",
+  {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"})
 
-d:singleton(d.MixedList, "Ereignisse", "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", SteigerTalent) {}
+local ZfW = d.HeterogeneousList("ZfW", "Steigerung eines Zauberfertigkeitwerts",
+  {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"})
+
+d:singleton(d.MixedList, "Ereignisse", "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", "Ereignis", TaW, ZfW) {}
 
 return schema

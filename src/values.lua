@@ -325,29 +325,29 @@ local function repr_malus(repr, known)
   return min
 end
 
-function values:lernschwierigkeit(zaubername, komp, merkmale, repr, haus)
-  if math.min(string.len(komp), string.len(repr)) == 0 then
+function values:lernschwierigkeit(z)
+  if math.min(string.len(z.Komplexitaet), string.len(z.Repraesentation)) == 0 then
     return ""
   end
-  index = skt.spalte:num(komp)
-  for i, merkmal in ipairs(merkmale) do
+  local index = skt.spalte:num(z.Komplexitaet)
+  for i, merkmal in ipairs(z.Merkmale) do
     index = index + merkmal_mod_from(merkmal, self.Magie.Merkmalskenntnis, -1)
     index = index + merkmal_mod_from(merkmal, self.Vorteile.Magisch.BegabungFuerMerkmal, -1)
     index = index + merkmal_mod_from(merkmal, self.Nachteile.Magisch.UnfaehigkeitFuerMerkmal, 1)
   end
   for _, name in ipairs({"Elementar", "Daemonisch"}) do
-    index = index + merkmal_submod_from(name, merkmale[name], self.Magie.Merkmalskenntnis[name], -1)
-    index = index + merkmal_submod_from(name, merkmale[name], self.Vorteile.Magisch.BegabungFuerMerkmal[name], -1)
-    index = index + merkmal_submod_from(name, merkmale[name], self.Nachteile.Magisch.UnfaehigkeitFuerMerkmal[name], 1)
+    index = index + merkmal_submod_from(name, z.Merkmale[name], self.Magie.Merkmalskenntnis[name], -1)
+    index = index + merkmal_submod_from(name, z.Merkmale[name], self.Vorteile.Magisch.BegabungFuerMerkmal[name], -1)
+    index = index + merkmal_submod_from(name, z.Merkmale[name], self.Nachteile.Magisch.UnfaehigkeitFuerMerkmal[name], 1)
   end
   for _, name in ipairs(self.Vorteile.Magisch.BegabungFuerZauber) do
-    if name == zaubername then
+    if name == z.Name then
       index = index - 1
       break
     end
   end
-  index = index + (haus and -1 or 0)
-  index = index + repr_malus(repr, data.Magie.Repraesentationen)
+  index = index + (z.Hauszauber and -1 or 0)
+  index = index + repr_malus(z.Repraesentation, self.Magie.Repraesentationen)
   return skt.spalte:name(index)
 end
 
@@ -388,7 +388,7 @@ function values:tgruppe_schwierigkeit(gruppe)
 end
 
 function values:tgruppe_faktor(gruppe)
-  if gruppe == "SprachenUndSchriften" then
+  if gruppe == "SprachenUndSchriften" or gruppe == "Zauber" then
     if self.Vorteile.EidetischesGedaechtnis then
       return skt.faktor[1]
     elseif self.Vorteile.GutesGedaechtnis then
@@ -464,18 +464,30 @@ function values:schrift_schwierigkeit(schrift)
   return skt.spalte:name(x + self:tgruppe_schwierigkeit_mod("SprachenUndSchriften"))
 end
 
+function values:ap_mod(kosten)
+  if type(self.AP.Eingesetzt()) == "number" then
+    self.AP.Eingesetzt[1] = self.AP.Eingesetzt() + kosten
+  end
+  if type(self.AP.Guthaben()) == "number" then
+    self.AP.Guthaben[1] = self.AP.Guthaben() - kosten
+    return self.AP.Guthaben()
+  else
+    return ""
+  end
+end
+
 -- Ereignisse auf Charakter applizieren
 
 for _, e in ipairs(schema.Ereignisse:instance()) do
   local mt = getmetatable(e)
   local event = {""}
-  if mt.name == "SteigerTalent" then
+  if mt.name == "TaW" then
     event[1] = "Talentsteigerung (" .. e.Name .. ", " .. e.Methode .. ") von "
     for _, g in ipairs({"Gaben", "Kampf", "Koerper", "Gesellschaft", "Natur", "Wissen", "SprachenUndSchriften", "Handwerk"}) do
       for _, t in ipairs(values.Talente[g]) do
         if t.Name == e.Name then
           if type(t.TaW) ~= "number" then
-            tex.error("\n[SteigerTalent] Kann '" .. e.Name .. "' nicht steigern: hat keinen Zahlenwert, sondern " .. type(t.TaW))
+            tex.error("\n[TaW] Kann '" .. e.Name .. "' nicht steigern: hat keinen Zahlenwert, sondern " .. type(t.TaW))
           end
           local mt = getmetatable(t)
           event[1] = event[1] .. tonumber(t.TaW) .. " auf " .. tonumber(e.Zielwert)
@@ -499,25 +511,42 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
           end
           event[2] = -1 * ap
           event[3] = faktor
-          event[4] = -1 * faktor:apply(ap)
-          if type(values.AP.Eingesetzt()) == "number" then
-            values.AP.Eingesetzt[1] = values.AP.Eingesetzt() - event[4]
-          end
-          if type(values.AP.Guthaben()) == "number" then
-            values.AP.Guthaben[1] = values.AP.Guthaben() + event[4]
-            event[5] = values.AP.Guthaben()
-          else
-            event[5] = ""
-          end
+          local kosten = faktor:apply(ap)
+          event[4] = -1 * kosten
+          event[5] = values:ap_mod(kosten)
           goto found
         end
       end
     end
-    tex.error("\n[SteigerTalent] unbekanntes Talent: '" .. e.Name .. "'")
-    ::found::
+    tex.error("\n[TaW] unbekanntes Talent: '" .. e.Name .. "'")
+  elseif mt.name == "ZfW" then
+    event[1] = "Zaubersteigerung (" .. e.Name .. ", " .. e.Methode .. ") von "
+    for _, z in ipairs(values.Magie.Zauber) do
+      if z.Name == e.Name then
+        if type(z.ZfW) ~= "number" then
+          tex.error("\n[ZfW] Kann '" .. e.Name .. "' nicht steigern: hat keinen Zahlenwert, sondern " .. type(z.ZfW))
+        end
+        event[1] = event[1] .. tonumber(z.ZfW) .. " auf " .. tonumber(e.Zielwert)
+        local spalte = values:lernschwierigkeit(z)
+        local faktor = values:tgruppe_faktor("Zauber")
+        local ap = 0
+        while z.ZfW < e.Zielwert do
+          z.ZfW = z.ZfW + 1
+          ap = ap + skt:kosten(skt.spalte:effektiv(spalte, z.ZfW, e.Methode), z.ZfW)
+        end
+        event[2] = -1 * ap
+        event[3] = faktor
+        local kosten = faktor:apply(ap)
+        event[4] = -1 * kosten
+        event[5] = values:ap_mod(kosten)
+        goto found
+      end
+    end
+    tex.error("\n[ZfW] unbekannter Zauber: '" .. e.Name .. "'")
   else
     tex.error("\n[Ereignisse] unbekannter Ereignistyp: '" .. mt.name .. "'")
   end
+  ::found::
   table.insert(values.Ereignisse, event)
 end
 
