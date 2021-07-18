@@ -274,8 +274,9 @@ function talentbogen.gruppen()
       end
       tex.sprint([[\setarstrut{\scriptsize}\multicolumn{1}{l}{\multirow{2}{*}{\Large \textmansontt{\bfseries Sonderfertigkeiten}}} \\ \restorearstrut]])
       tex.sprint([[\\ \hline]])
+      local fixed = common.list_known(data.sf.Allgemein, {Kulturkunde = "Kulturkunde", Ortskenntnis = "Ortskenntnis"})
       common.multiline_content({
-        name="Sonderfertigkeiten", rows=rows_to_print - 2, baselinestretch=1.033}, data.sf.Allgemein)
+        name="Sonderfertigkeiten", rows=rows_to_print - 2, baselinestretch=1.033}, data.sf.Allgemein, fixed)
       tex.print([[\hline\end{NiceTabular}]])
       tex.print("")
       tex.print([[\vspace{1.9pt}]])

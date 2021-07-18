@@ -773,10 +773,28 @@ SF.Magisch {
             <xsl:value-of select="concat(dsa:stringVal(concat($name, ' (', substring-after(@name, ': '), ')')), ', ')"/>
           </xsl:for-each>
         </xsl:when>
-        <xsl:when test="$kind = 'sub'">
+        <xsl:when test="$kind = 'sub' and $def/@container">
+          <xsl:value-of select="concat($def/@container, ' {')"/>
           <xsl:for-each select="(.|./following-sibling::sonderfertigkeit[starts-with(@name, $name)])/*[local-name() = $def/@sub]">
-            <xsl:value-of select="concat(dsa:stringVal(concat($name, ' (', @name, ')')), ', ')"/>
+            <xsl:if test="position() &gt; 1">
+              <xsl:text>, </xsl:text>
+            </xsl:if>
+            <xsl:value-of select="dsa:stringVal(@name)"/>
           </xsl:for-each>
+          <xsl:text>}, </xsl:text>
+        </xsl:when>
+        <xsl:when test="$kind = 'sub'">
+          <xsl:variable name="text">
+            <xsl:value-of select="concat($name, ' (')"/>
+            <xsl:for-each select="(.|./following-sibling::sonderfertigkeit[starts-with(@name, $name)])/*[local-name() = $def/@sub]">
+              <xsl:if test="position() &gt; 1">
+                <xsl:text>, </xsl:text>
+              </xsl:if>
+              <xsl:value-of select="@name"/>
+            </xsl:for-each>
+            <xsl:text>)</xsl:text>
+          </xsl:variable>
+          <xsl:value-of select="concat(dsa:stringVal($text), ', ')"/>
         </xsl:when>
         <xsl:when test="$kind = 'simple'">
           <xsl:value-of select="concat(dsa:stringVal($name), ', ')"/>

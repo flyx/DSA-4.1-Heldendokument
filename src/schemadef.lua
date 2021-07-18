@@ -642,7 +642,6 @@ function d.ListWithKnown:getfield(key)
 end
 
 function d.ListWithKnown:iterate()
-  io.write("ListWithKnown[" .. self.name .. "]:iterate\n")
   return next, self.value, nil
 end
 
@@ -857,6 +856,7 @@ d.MapToFixed = TypeClass.new({
 
 function d.MapToFixed:init(...)
   self.target_set = {...}
+  self.__pairs = d.MapToFixed.iterate
 end
 
 function d.MapToFixed:pre_construct()
@@ -881,7 +881,11 @@ function d.MapToFixed:put(key, v)
     end
     return string.format("Unbekannter Wert '%s', erwartete %s')", v, l)
   end
-  self.value[k] = v
+  self.value[key] = v
+end
+
+function d.MapToFixed:iterate()
+  return next, self.value, nil
 end
 
 function d.MapToFixed:print_syntax(printer)

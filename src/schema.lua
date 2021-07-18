@@ -273,7 +273,10 @@ schema.Talente = {
   },
 }
 
-d:singleton(d.ListWithKnown, {name = "SF", documentation = "Sonderfertigkeiten (außer Kampf & magischen)"}, {})
+d:singleton(d.ListWithKnown, {name = "SF", documentation = "Sonderfertigkeiten (außer Kampf & magischen)"}, {
+  Kulturkunde = d.Multivalue:def({name = "Kulturkunde", documentation = "Liste von Kulturen, für die Kulturkunde besteht."}),
+  Ortskenntnis = d.Multivalue:def({name = "Ortskenntnis", documentation = "Liste von Orten, für die Ortskenntnis besteht."}),
+})
 
 schema.SF.Nahkampf = d:singleton(d.ListWithKnown, {name = "SF.Nahkampf", documentation = "Liste von Nahkampf-Sonderfertigkeiten."}, {
   Ausweichen = d.Numbered:def({name = "Ausweichen", documentation = "Die SF Ausweichen, unterteilt in I, II und III."}, 3),

@@ -347,20 +347,23 @@ function common.list_known(input, known)
         if v then
           table.insert(ret, n)
         end
-      elseif #v > 0 then
-        local mt = getmetatable(v)
-        if mt.name == "BegabungFuerMerkmal" or mt.name == "UnfaehigkeitFuerMerkmal" then
-          table.insert(ret, n .. " (" .. common.merkmalliste(v) .. ")")
-        else
-          local str = n .. " ("
-          for i,x in ipairs(v) do
-            if i > 1 then
-              str = str .. ", "
+      else
+        local t = type(v) == "table" and v or {v}
+        if #t > 0 then
+          local mt = getmetatable(t)
+          if mt ~= nil and (mt.name == "BegabungFuerMerkmal" or mt.name == "UnfaehigkeitFuerMerkmal") then
+            table.insert(ret, n .. " (" .. common.merkmalliste(v) .. ")")
+          else
+            local str = n .. " ("
+            for i,x in ipairs(t) do
+              if i > 1 then
+                str = str .. ", "
+              end
+              str = str .. x
             end
-            str = str .. x
+            str = str .. ")"
+            table.insert(ret, str)
           end
-          str = str .. ")"
-          table.insert(ret, str)
         end
       end
     end
