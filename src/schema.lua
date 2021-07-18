@@ -410,6 +410,9 @@ local NahkampfSF = d.HeterogeneousList:def({name = "NahkampfSF", documentation =
 local FernkampfSF = d.HeterogeneousList:def({name = "FernkampfSF", documentation = "Erlernen einer Fernkampf-Sonderfertigkeit."},
   {"SF", nil}, {"Kosten", Ganzzahl}, {"Methode", SFLernmethode, "Lehrmeister"})
 
-d:singleton(d.MixedList, {name = "Ereignisse", documentation = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"}, TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF) {}
+local WaffenlosSF = d.HeterogeneousList:def({name = "WaffenlosSF", documentation = "Erlernen einer Waffenlosen Sonderfertigkeit."},
+  {"SF", nil}, {"Kosten", Ganzzahl}, {"Methode", SFLernmethode, "Lehrmeister"})
+
+d:singleton(d.MixedList, {name = "Ereignisse", documentation = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"}, TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF) {}
 
 return schema

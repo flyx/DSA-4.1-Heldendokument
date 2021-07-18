@@ -703,6 +703,8 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
     event = values:steigerSF("NahkampfSF", e, {{{"AkademischeAusbildung", "Krieger", "Kriegerin"}, "3/4"}, {{"AkademischeAusbildung", "Magier", "Magierin"}, "3/2", {"Ruestungsgewoehnung"}}}, values.SF.Nahkampf)
   elseif mt.name == "FernkampfSF" then
     event = values:steigerSF("FernkampfSF", e, {{{"AkademischeAusbildung", "Krieger", "Kriegerin"}, "3/4"}}, values.SF.Fernkampf)
+  elseif mt.name == "WaffenlosSF" then
+    event = values:steigerSF("WaffenlosSF", e, {{{"AkademischeAusbildung", "Krieger", "Kriegerin"}, "3/4"}}, values.SF.Waffenlos)
   else
     tex.error("\n[Ereignisse] unbekannter Ereignistyp: '" .. mt.name .. "'")
   end

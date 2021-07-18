@@ -916,6 +916,15 @@ function d.MapToFixed:iterate()
   return next, self.value, nil
 end
 
+function d.MapToFixed:merge(v)
+  for k,v in pairs(v.value) do
+    local msg = self:put(k, v)
+    if msg ~= nil then
+      return msg
+    end
+  end
+end
+
 function d.MapToFixed:print_syntax(printer)
   printer:sym("[ ")
   printer:ref(d.schema.String, "Kampfstil")
