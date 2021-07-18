@@ -46,7 +46,7 @@
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
         \directlua{
             common.multiline_content({
-                name="Nahkampf-SF", rows=common.current_page.Nahkampf.SF(),
+                name="Nahkampf-SF", rows=common.current_page.Nahkampf.SF,
                 preamble="\noexpand\\footnotesize Sonderfertigkeiten",
                 baselinestretch=1.04, hspace="5pt", fontsize={8,12}
             }, data.sf.Nahkampf)
@@ -73,7 +73,7 @@
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
         \directlua{
             common.multiline_content({
-                name="Fernkampf-SF", rows=common.current_page.Fernkampf.SF(),
+                name="Fernkampf-SF", rows=common.current_page.Fernkampf.SF,
                 preamble="\noexpand\\footnotesize Sonderfertigkeiten",
                 baselinestretch=1.04, hspace="5pt", fontsize={8,12}
             }, data.sf.Fernkampf)
@@ -104,7 +104,7 @@
                     table.insert(stile, "Kampfstil " .. k)
                 end
                 common.multiline_content({
-                  name="Waffenlos-SF", rows=common.current_page.Waffenlos.SF(),
+                  name="Waffenlos-SF", rows=common.current_page.Waffenlos.SF,
                   preamble="\noexpand\\footnotesize Sonderfertigkeiten",
                   baselinestretch=1.04, hspace="5pt", fontsize={8,12}
                 }, stile, data.sf.Waffenlos)

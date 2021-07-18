@@ -144,17 +144,17 @@ end
 --  render => table: index => {bool, function}
 --      false => function aufgerufen mit Talentzeile, Waffenzeile und eBE,
 --      true  => function aufgerufen mit iteriertem Wert aus der Waffenzeile
-local function kampfwerte(rows, render, typ_index, num_values)
+local function kampfwerte(items, render, typ_index, num_values, num_rows)
   typ_index = typ_index or 1
-  for i,v in ipairs(rows) do
+  for i,v in ipairs(items) do
     if i ~= 1 then
       tex.sprint([[\\\hline]])
     end
     local input_index = 1
     local talent = nil
     local ebe = 0
-    if #v >= 1 and typ_index > 0 then
-      local pattern = "^" .. v[typ_index]()
+    if typ_index > 0 then
+      local pattern = "^" .. v[typ_index]
       for i,t in ipairs(data.Talente.Kampf) do
         if #t >= 1 then
           found, _ = string.find(t.Name, pattern)
@@ -182,17 +182,23 @@ local function kampfwerte(rows, render, typ_index, num_values)
       end
       if single_value then
         local val = v[input_index]
-        if val ~= nil then
-          if render == nil then
-            tex.sprint(-2, val())
-          else
-            render(val())
-          end
+        if render == nil then
+          tex.sprint(-2, val)
+        else
+          render(val)
         end
         input_index = input_index + 1
       elseif talent ~= false or typ_index <= 0 then
         render(v, talent, ebe)
       end
+    end
+  end
+  for i=#items+1,num_rows do
+    if i ~= 1 then
+      tex.sprint([[\\\hline]])
+    end
+    for j=2,num_values do
+      tex.sprint("&")
     end
   end
 end
@@ -258,10 +264,7 @@ for i=14,15 do
 end
 
 function kampfbogen.nahkampf()
-  while #data.Waffen.N < common.current_page.Nahkampf.Waffen() do
-    table.insert(data.Waffen.N, {})
-  end
-  kampfwerte(data.Waffen.N, nahkampf_render, 2, 15)
+  kampfwerte(data.Waffen.N, nahkampf_render, 2, 15, common.current_page.Nahkampf.Waffen)
 end
 
 local fernkampf_render = {
@@ -296,10 +299,7 @@ for i=10,14 do
 end
 
 function kampfbogen.fernkampf()
-  while #data.Waffen.F < common.current_page.Fernkampf.Waffen() do
-    table.insert(data.Waffen.F, {})
-  end
-  kampfwerte(data.Waffen.F, fernkampf_render, 2, 18)
+  kampfwerte(data.Waffen.F, fernkampf_render, 2, 18, common.current_page.Fernkampf.Waffen)
 end
 
 local waffenlos_render = {
@@ -337,10 +337,12 @@ local waffenlos_render = {
 
 function kampfbogen.waffenlos()
   local Ganzzahl = schema.Ganzzahl
-  kampfwerte(schemadef.MixedList("Waffenlos", "", schemadef.HeterogeneousList("Kampftalent", "", {"Name", schema.String}, {"TP/KK Schwelle", schema.Ganzzahl}, {"TP/KK Schritt", schema.Ganzzahl}, {"INI", schema.Ganzzahl})) {
+  kampfwerte(schemadef.MixedList:def({name = "Waffenlos", documentation = ""},
+    schemadef.HeterogeneousList:def({name = "Kampftalent", documentation = ""},
+      {"Name", schema.String}, {"TP/KK Schwelle", schema.Ganzzahl}, {"TP/KK Schritt", schema.Ganzzahl}, {"INI", schema.Ganzzahl})) {
     {"Raufen", 10, 3, 0},
     {"Ringen", 10, 3, 0}
-  }, waffenlos_render, 1, 7)
+  }, waffenlos_render, 1, 7, 2)
 end
 
 local schilde_render = {
@@ -384,14 +386,11 @@ local schilde_render = {
 }
 
 function kampfbogen.schilde()
-  while #data.Waffen.S < common.current_page.Schilde() do
-    table.insert(data.Waffen.S, {})
-  end
-  kampfwerte(data.Waffen.S, schilde_render, 0, 8)
+  kampfwerte(data.Waffen.S, schilde_render, 0, 8, common.current_page.Schilde)
 end
 
 function kampfbogen.ruestungsteile()
-  common.inner_rows(data.Waffen.R, 3, common.current_page.Ruestung())
+  common.inner_rows(data.Waffen.R, 3, common.current_page.Ruestung)
 end
 
 function kampfbogen.ruestung(name)
@@ -401,9 +400,9 @@ function kampfbogen.ruestung(name)
     local item = v[name]
     if item ~= nil then
       if value == nil then
-        value = item()
+        value = item
       else
-        value = value + item()
+        value = value + item
       end
     end
   end

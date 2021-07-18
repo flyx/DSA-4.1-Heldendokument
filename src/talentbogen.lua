@@ -51,7 +51,7 @@ end
 function talent.nah(v)
   for j = 1,6 do
     tex.sprint([[& ]])
-    local content = v[j]()
+    local content = v[j]
     if j == 1 then
       content = content .. talent.spez(v.Spezialisierungen)
     elseif j == 2 then
@@ -66,7 +66,7 @@ end
 function talent.fern(v, filler)
   for j = 1,3 do
     tex.sprint([[& ]])
-    local content = v[j]()
+    local content = v[j]
     if j == 1 then
       content = content .. talent.spez(v.Spezialisierungen)
     elseif j == 2 then
@@ -77,13 +77,13 @@ function talent.fern(v, filler)
     tex.sprint(-2, content)
   end
   tex.sprint([[& \multicolumn{2}{c|}{]] .. filler .. "} & ")
-  tex.sprint(-2, v[4]())
+  tex.sprint(-2, v[4])
 end
 
 function talent.koerper(v)
   for j = 1,6 do
     tex.sprint([[& ]])
-    local content = v[j]()
+    local content = v[j]
     if j == 1 then
       content = content .. talent.spez(v.Spezialisierungen)
     elseif j == 5 then
@@ -95,28 +95,28 @@ end
 
 function talent.sprache(v, prefix)
   tex.sprint([[& \faComments{} ]] .. prefix)
-  tex.sprint(-2, v[1]() .. talent.spez(v.Dialekt))
+  tex.sprint(-2, v[1] .. talent.spez(v.Dialekt))
   tex.sprint(" & " .. data:sprache_schwierigkeit(v))
   for i=2,3 do
     tex.sprint("& ")
-    tex.sprint(-2, v[i]())
+    tex.sprint(-2, v[i])
   end
 end
 
 function talent.schrift(v, mod)
   tex.sprint([[& \faBookOpen{} ]])
-  tex.sprint(-2, v[1]())
+  tex.sprint(-2, v[1])
   tex.sprint(" & " .. data:schrift_schwierigkeit(v))
   for i=3,4 do
     tex.sprint("& ")
-    tex.sprint(-2, v[i]())
+    tex.sprint(-2, v[i])
   end
 end
 
 function talent.sonstige(v)
   for i=1,5 do
     tex.sprint(" & ")
-    tex.sprint(-2, v[i]())
+    tex.sprint(-2, v[i])
     if i == 1 then
       tex.sprint(-2, talent.spez(v.Spezialisierungen))
     end
@@ -160,7 +160,8 @@ end
 
 function gruppe.render(self, g, start_white)
   local name = getmetatable(g).name
-  if #(data.Talente[name]) == 0 and g() == 0 then
+  g = g:get()
+  if #(data.Talente[name]) == 0 and g == 0 then
     return
   end
 
@@ -211,7 +212,7 @@ function gruppe.render(self, g, start_white)
     end
     tex.sprint([[\\ \hline]])
   end
-  for i = #data.Talente[name] + 1, g() do
+  for i = #data.Talente[name] + 1, g do
     for j=2,num_items do
       tex.sprint("&")
     end
@@ -226,7 +227,7 @@ end
 local talentbogen = {}
 
 function talentbogen.num_rows(g)
-  local ret = g()
+  local ret = g:get()
   local name = getmetatable(g).name
   if name ~= "Sonderfertigkeiten" then
     if #data.Talente[name] > ret then
@@ -238,7 +239,8 @@ end
 
 function talentbogen.gruppen()
   local total_rows = 0
-  for i, g in ipairs(common.current_page) do
+  for i=1,#common.current_page.value do
+    local g = common.current_page.value[i]
     local v = talentbogen.num_rows(g)
     if v > 0 then
       total_rows = total_rows + v + 2
@@ -248,7 +250,9 @@ function talentbogen.gruppen()
   local total_printed_rows = 0
   local start_white = true
   local swapped = false
-  for i, g in ipairs(common.current_page) do
+  for i=1,#common.current_page.value do
+    local g = common.current_page.value[i]
+    local gruppe_id = getmetatable(g).name
     local rows_to_print = talentbogen.num_rows(g)
     --  size of heading
     if rows_to_print > 0 then
@@ -260,8 +264,6 @@ function talentbogen.gruppen()
       start_white = true
       swapped = true
     end
-
-    local gruppe_id = getmetatable(g).name
 
     if gruppe_id == "Sonderfertigkeiten" then
       tex.print([[\begin{NiceTabular}{p{.5\textwidth-.5\columnsep-.5\fboxsep-1pt}}]])

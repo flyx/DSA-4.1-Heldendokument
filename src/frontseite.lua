@@ -108,7 +108,7 @@ function eigenschaften.links(self)
       if j == 3 then
         tex.sprint([[\cellcolor{white}]])
       end
-      local val = data.eig[e][j]()
+      local val = data.eig[e][j]
       if j == 1 then
         tex.sprint(-2, eigenschaften.render_mod(val))
       elseif j == 2 and i ~= 9 then
@@ -225,13 +225,13 @@ function eigenschaften.rechts(self)
       else
         if j == 1 then
           if i == 6 then
-            tex.sprint(-2, eigenschaften.render_mod(data.eig[e]()))
+            tex.sprint(-2, eigenschaften.render_mod(data.eig[e]))
           else
-            tex.sprint(-2, eigenschaften.render_mod(data.eig[e][1]()))
+            tex.sprint(-2, eigenschaften.render_mod(data.eig[e][1]))
           end
         elseif j == 3 then
           tex.sprint([[\begin{minipage}[t][0.49em][b]{0.8cm}\centering\small]])
-          val, label = self.max[e]()
+          local val, label = self.max[e]()
           if val == "" then
             tex.sprint([[\ ]])
           else
@@ -243,7 +243,7 @@ function eigenschaften.rechts(self)
           tex.print()
           tex.print([[\vspace{1pt}\end{minipage}]])
         else
-          tex.sprint(-2, data.sparse(data.eig[e][j < 3 and j or j - 1]()))
+          tex.sprint(-2, data.sparse(data.eig[e][j < 3 and j or j - 1]))
         end
       end
     end

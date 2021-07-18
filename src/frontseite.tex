@@ -33,7 +33,7 @@
 \begin{dsaSheetBox}[\textwidth]
     \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
         \directlua{common.multiline_content({
-            name="Aussehen", rows=common.current_page.Aussehen(),
+            name="Aussehen", rows=common.current_page.Aussehen,
             baselinestretch=1.35, preamble="Aussehen",
             hspace="10pt"}, data.Held.Aussehen)
         }
@@ -59,7 +59,7 @@
                     BegabungFuerZauber = "Begabung für [Zauber]",
                 })
                 common.multiline_content({
-                    name="Vorteile", rows=common.current_page.Vorteile(),
+                    name="Vorteile", rows=common.current_page.Vorteile,
                     baselinestretch=1.35
                 }, data.Vorteile, fixed, data.Vorteile.Magisch, fixed_m)
             }
@@ -83,7 +83,7 @@
                     UnfaehigkeitFuerMerkmal = "Unfähigkeit für [Merkmal]",
                 })
                 common.multiline_content({
-                    name="Nachteile", rows=common.current_page.Nachteile(),
+                    name="Nachteile", rows=common.current_page.Nachteile,
                     baselinestretch=1.35
                 }, data.Nachteile, fixed, data.Nachteile.Magisch, fixed_m)
             }

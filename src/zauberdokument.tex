@@ -25,7 +25,7 @@
     \Body
         \scriptsize\textbf{Ritualname} & \multicolumn{3}{c|}{\scriptsize \textbf{Probe}} & \scriptsize\textbf{Dauer} & \scriptsize\textbf{Kosten} & \scriptsize\textbf{Wirkung / Anmerkung} \\ \hline
         \directlua{
-            common.inner_rows(data.Magie.Rituale, 7, common.current_page.Rituale())
+            common.inner_rows(data.Magie.Rituale, 7, common.current_page.Rituale)
         }
     \end{NiceTabular}
     \vspace{2pt}
@@ -38,7 +38,7 @@
 
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \directlua{
-            common.kenntnis("Ritualkenntnis", data.Magie.Ritualkenntnis, common.current_page.Ritualkenntnis())
+            common.kenntnis("Ritualkenntnis", data.Magie.Ritualkenntnis, common.current_page.Ritualkenntnis)
         }
 	\end{dsaSheetBox}
 
@@ -52,7 +52,7 @@
             \directlua{
                 common.multiline_content({
                     name="Magische Vor- und Nachteile",
-                    rows=common.current_page.VorUndNachteile(),
+                    rows=common.current_page.VorUndNachteile,
                     baselinestretch=1.033, fontsize={8,12}
                 }, data.Vorteile.Magisch, data.Nachteile.Magisch)
             }
@@ -68,7 +68,7 @@
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
                 common.multiline_content({
-                    name="Magische SF", rows=common.current_page.Sonderfertigkeiten(),
+                    name="Magische SF", rows=common.current_page.Sonderfertigkeiten,
                     baselinestretch=1.033, fontsize={8,12}
                 }, data.sf.Magisch)
             } \hline
@@ -87,7 +87,7 @@
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
                 common.multiline_content({
-                    name="Artefakte", rows=common.current_page.Artefakte(),
+                    name="Artefakte", rows=common.current_page.Artefakte,
                     baselinestretch=1.033, fontsize={8,12}
                 }, data.Magie.Artefakte)
             }
@@ -104,7 +104,7 @@
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
                 common.multiline_content({
-                    name="Notizen", rows=common.current_page.Notizen(),
+                    name="Notizen", rows=common.current_page.Notizen,
                     baselinestretch=1.033, fontsize={8,12}
                 }, data.Magie.Notizen)
             }

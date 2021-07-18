@@ -136,8 +136,7 @@ function common.multiline_content(spec, ...)
   local seen_empty = false
   for _, values in ipairs {...} do
     if type(values) == "table" then
-      for i=1,#values do
-        local v = values[i]
+      for i,v in ipairs(values) do
         if type(v) == "table" then
           if #v ~= 0 then
             tex.error("nested table in '" .. spec.name .. "' is not empty!")
@@ -208,16 +207,14 @@ end
 
 function common.kenntnis(name, items, count)
   tex.sprint([[{\normalfont\normalsize\begin{tabular}{p{3.7cm}@{(}x{3.7cm}@{):\hspace{1pt}}x{0.7cm}}]])
-  io.write(name .. " count: " .. tostring(#items))
-  for i=1,count do
-    local item = items[i]
-    local vals
-    if item == nil then
-      vals = {"", ""}
-    else
-      vals = {item[1](), item[2]()}
+  for i,v in ipairs(items) do
+    tex.sprint(string.format([[\large\mansontt\bfseries %s & %s & \cellcolor{white}%s \\]], name, v.Name, v.Wert))
+    if i ~= count then
+      tex.sprint([[\multicolumn{3}{c}{}\\[-9pt] ]])
     end
-    tex.sprint(string.format([[\large\mansontt\bfseries %s & %s & \cellcolor{white}%s \\]], name, vals[1], vals[2]))
+  end
+  for i=#items+1,count do
+    tex.sprint(string.format([[\large\mansontt\bfseries %s & & \cellcolor{white} \\]], name))
     if i ~= count then
       tex.sprint([[\multicolumn{3}{c}{}\\[-9pt] ]])
     end
@@ -229,9 +226,9 @@ local value_line = {
   labels = {
     AT = "AT-Basiswert", PA = "PA-Basiswert", FK = "FK-Basiswert",
     INI = "Initiative-Basiswert", BE = {"BE", data:cur("BE")},
-    AP_Gesamt = {"Gesamt", data.AP.Gesamt()},
-    AP_Eingesetzt = {"Eingesetzt", data.AP.Eingesetzt()},
-    AP_Guthaben = {"Guthaben", data.AP.Guthaben()}
+    AP_Gesamt = {"Gesamt", data.AP.Gesamt},
+    AP_Eingesetzt = {"Eingesetzt", data.AP.Eingesetzt},
+    AP_Guthaben = {"Guthaben", data.AP.Guthaben}
   }
 }
 
@@ -284,7 +281,7 @@ local pages_source = {
 }
 
 function common.pages()
-  for i,p in ipairs(data.Layout) do
+  for i,p in ipairs(data.Layout.value) do
     local pKind = getmetatable(p).name
     tex.print([[\directlua{common.current_page = data.Layout[]] .. tostring(i) .. "]}")
     tex.print("\\input{" .. pages_source[pKind] .. "}")
@@ -352,9 +349,7 @@ function common.list_known(input, known)
         end
       elseif #v > 0 then
         local mt = getmetatable(v)
-        if mt.__call then
-          table.insert(ret, n .. " " .. tostring(v()))
-        elseif mt.name == "BegabungFuerMerkmal" or mt.name == "UnfaehigkeitFuerMerkmal" then
+        if mt.name == "BegabungFuerMerkmal" or mt.name == "UnfaehigkeitFuerMerkmal" then
           table.insert(ret, n .. " (" .. common.merkmalliste(v) .. ")")
         else
           local str = n .. " ("
@@ -362,7 +357,7 @@ function common.list_known(input, known)
             if i > 1 then
               str = str .. ", "
             end
-            str = str .. x()
+            str = str .. x
           end
           str = str .. ")"
           table.insert(ret, str)
@@ -385,7 +380,7 @@ end
 
 function common.proviant_vermoegen()
   local content = {}
-  for i=1,common.current_page.ProviantVermoegen.Gezaehlt() do
+  for i=1,common.current_page.ProviantVermoegen.Gezaehlt do
       local l = {}
       merge(l, data.Proviant[i])
       merge(l, data.Vermoegen[i])

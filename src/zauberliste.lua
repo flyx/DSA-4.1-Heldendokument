@@ -35,7 +35,7 @@ function repraesentationen.render(self, list)
     if i ~= 1 then
       tex.sprint(-2, ", ")
     end
-    tex.sprint(-2, self.label(item()))
+    tex.sprint(-2, self.label(item))
   end
 end
 

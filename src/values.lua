@@ -78,7 +78,7 @@ for _,v in ipairs(values.Talente.SprachenUndSchriften) do
   end
 end
 if values.Talente.SprachenUndSchriften.Muttersprache == nil then
-  tex.error("[Talente.SprachenUndSchriften] Muttersprache fehlt.")
+  tex.error("[Talente.SprachenUndSchriften] Muttersprache fehlt")
 end
 
 local function sum_and_round(items, pos)
@@ -172,9 +172,9 @@ setmetatable(getter_map.calc, {
     for i,v in ipairs(vals) do
       local x = 0
       if v == "KE" then
-        x = data.eig.KE[1]()
+        x = data.eig.KE[1]
       else
-        x = data.eig[v][3]()
+        x = data.eig[v][3]
       end
       if x == 0 then
         return ""
@@ -187,7 +187,7 @@ setmetatable(getter_map.calc, {
     end
 
     if name == "INI" then
-      val = val + data.eig["INI"]()
+      val = val + data.eig.INI
       if data.sf.kampfreflexe then
         val = val + 4
       end
@@ -198,7 +198,7 @@ setmetatable(getter_map.calc, {
       local others = data.eig[name]
       if others then
         -- Modifikator, Zugekauft, Permanent
-        val = val + others[1]() + others[2]() - others[3]()
+        val = val + others[1] + others[2] - others[3]
       end
     end
     return getter_map.sparse(val)
@@ -209,7 +209,7 @@ function values:cur(name, div)
   div = div or 1
   local kind = getter_map[name]
   if kind == "basic" then
-    return getter_map.sparse(self.eig[name][3](), div)
+    return getter_map.sparse(self.eig[name][3], div)
   elseif kind == "calculated" then
     return getter_map.calc(self, name)
   elseif kind == "gs_mod" then
@@ -222,7 +222,7 @@ function values:cur(name, div)
         end
       end
       if self.Vorteile.Flink then
-        gsmod = gsmod + self.Vorteile.Flink()
+        gsmod = gsmod + self.Vorteile.Flink
       end
       if ge < 10 then
         gsmod = gsmod - 1
@@ -320,7 +320,7 @@ end
 local function repr_malus(repr, known)
   local min = 3
   for i,v in ipairs(known) do
-    min = math.min(min, repr_malus_between(repr, v()))
+    min = math.min(min, repr_malus_between(repr, v))
   end
   return min
 end
@@ -353,14 +353,17 @@ end
 
 function values:tgruppe_schwierigkeit_mod(gruppe)
   local val = 0
+  if self.Vorteile.BegabungFuerTalentgruppe == nil then
+    tex.error("is nil: BegabungFuerTalentgruppe")
+  end
   for _,n in ipairs(self.Vorteile.BegabungFuerTalentgruppe) do
-    if n() == gruppe then
+    if n == gruppe then
       val = val - 1
       break
     end
   end
   for _, n in ipairs(self.Nachteile.UnfaehigkeitFuerTalentgruppe) do
-    if n() == gruppe then
+    if n == gruppe then
       val = val + 1
       break
     end
@@ -404,16 +407,16 @@ function values:tgruppe_faktor(gruppe)
 end
 
 function values:talent_schwierigkeit_mod(talent)
-  local name = talent[1]()
+  local name = talent[1]
   local val = 0
   for _,n in ipairs(self.Vorteile.BegabungFuerTalent) do
-    if n() == name then
+    if n == name then
       val = val - 1
       break
     end
   end
   for _, n in ipairs(self.Nachteile.UnfaehigkeitFuerTalent) do
-    if n() == name then
+    if n == name then
       val = val + 1
       break
     end
@@ -426,7 +429,7 @@ function values:talent_schwierigkeit(talent, gruppe)
 end
 
 function values:kampf_schwierigkeit(kampftalent)
-  local x = skt.spalte:num(kampftalent[2]())
+  local x = skt.spalte:num(kampftalent[2])
   if getmetatable(kampftalent).name == "Fern" then
     x = x + self:tgruppe_schwierigkeit_mod("Fernkampf")
   else
@@ -438,12 +441,12 @@ end
 
 function values:sprache_schwierigkeit(sprache)
   local mt = getmetatable(sprache)
-  local name = sprache[1]()
+  local name = sprache.Name
   local x = name == "Asdharia" and 3 or 2
   if mt.name == "Sprache" and name ~= "Atak" and name ~= "Füchsisch" then
     x = x + 1
     for _,s in ipairs(self.Talente.SprachenUndSchriften.Muttersprache.Sprachfamilie) do
-      if s() == name then
+      if s == name then
         x = x - 1
         break
       end
@@ -453,10 +456,10 @@ function values:sprache_schwierigkeit(sprache)
 end
 
 function values:schrift_schwierigkeit(schrift)
-  local x = skt.spalte:num(schrift[2]()) + 1
-  local name = schrift[1]()
+  local x = skt.spalte:num(schrift.Steigerungsspalte) + 1
+  local name = schrift.Name
   for _, s in ipairs(self.Talente.SprachenUndSchriften.Muttersprache.Schriftfamilie) do
-    if s() == name then
+    if s == name then
       x = x - 1
       break
     end
@@ -465,12 +468,12 @@ function values:schrift_schwierigkeit(schrift)
 end
 
 function values:ap_mod(kosten)
-  if type(self.AP.Eingesetzt()) == "number" then
-    self.AP.Eingesetzt[1] = self.AP.Eingesetzt() + kosten
+  if type(self.AP.Eingesetzt) == "number" then
+    self.AP.Eingesetzt = self.AP.Eingesetzt + kosten
   end
-  if type(self.AP.Guthaben()) == "number" then
-    self.AP.Guthaben[1] = self.AP.Guthaben() - kosten
-    return self.AP.Guthaben()
+  if type(self.AP.Guthaben) == "number" then
+    self.AP.Guthaben = self.AP.Guthaben - kosten
+    return self.AP.Guthaben
   else
     return ""
   end
@@ -617,6 +620,31 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
     local kosten = faktor:apply(ap)
     event[4] = -1 * kosten
     event[5] = values:ap_mod(kosten)
+  elseif mt.name == "ProfaneSF" then
+    local faktor = skt.faktor["1"]
+    local possible = nil
+    if values.Vorteile.EidetischesGedaechtnis then
+      possible = faktor["1/2"]
+    elseif values.Vorteile.GutesGedaechtnis then
+      possible = faktor["3/4"]
+    end
+    if possible ~= nil then
+      for _, v in ipairs({"Dschungelkundig", "Eiskundig", "Gebirgskundig", "Höhlenkundig", "Maraskankundig", "Meereskundig", "Steppenkundig", "Sumpfkundig", "Waldkundig, Wüstenkundig", "Kulturkunde", "Nandusgefälliges Wissen", "Ortskenntnis"}) do
+        if e.Name:sub(1, #v) == v then
+          faktor = possible
+          break
+        end
+      end
+    end
+    table.insert(values.SF, e.Name)
+    event[1] = "Sonderfertigkeit (" .. e.Methode .. "): " .. e.Name
+    event[2] = -1 * e.Kosten
+    event[3] = faktor
+    local kosten = faktor:apply(e.Kosten)
+    event[4] = -1 * kosten
+    event[5] = values:ap_mod(kosten)
+  elseif mt.name == "NahkampfSF" then
+    tex.error("\n[NahkampfSF] nicht implementiert.")
   else
     tex.error("\n[Ereignisse] unbekannter Ereignistyp: '" .. mt.name .. "'")
   end
