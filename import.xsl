@@ -1134,7 +1134,17 @@ Magie.Ritualkenntnis {</xsl:text>
   <xsl:template match="talent" mode="ritualkenntnis">
     <xsl:text>
   {</xsl:text>
-    <xsl:value-of select="concat(dsa:stringVal(substring-after(@name, ': ')), ', ', @value, '},')"/>
+    <xsl:variable name="steiger">
+      <xsl:choose>
+        <xsl:when test="@value = 'Alchimist' or @value = 'Scharlatan'">
+          <xsl:text>D</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>E</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:value-of select="concat(dsa:stringVal(substring-after(@name, ': ')), ', ', dsa:stringVal($steiger), ', ', @value, '},')"/>
   </xsl:template>
 
   <xsl:template match="sf" mode="repraesentationen">

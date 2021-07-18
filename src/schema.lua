@@ -384,7 +384,7 @@ schema.Magie = {
   Rituale = d:singleton(d.MixedList, {name = "Magie.Rituale", documentation = "Liste von Ritualen."}, d.HeterogeneousList:def({name = "Ritual", documentation = "Ein Ritual."},
     {"Name", String}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""}, {"Dauer", Simple, ""}, {"Kosten", Simple, ""}, {"Wirkung", Simple, ""})) {},
   Ritualkenntnis = d:singleton(d.MixedList, {name = "Magie.Ritualkenntnis", documentation = "Liste von Ritualkenntnissen."}, d.HeterogeneousList:def({name = "RK-Wert", documentation = "Ein Ritualkenntnis-Wert."},
-    {"Name", String}, {"Wert", Simple, ""})) {},
+    {"Name", String}, {"Steigerung", SteigSpalte, "E"}, {"Wert", Simple, ""})) {},
   Regeneration = d:singleton(d.Simple, {name = "Magie.Regeneration", documentation = "AsP-Regeneration pro Phase."}) "",
   Artefakte = d:singleton(d.Multivalue, {name = "Magie.Artefakte", documentation = "Artefakte."}) {},
   Notizen = d:singleton(d.Multivalue, {name = "Magie.Notizen", documentation = "Notizen auf dem Zauberdokument."}) {},
@@ -421,7 +421,13 @@ local WaffenlosSF = d.HeterogeneousList:def({name = "WaffenlosSF", documentation
 local Eigenschaft = d.HeterogeneousList:def({name = "Eigenschaft", documentation = "Steigern einer Basis-Eigenschaft oder Zukauf von Punkten zu einer abgeleiteten Eigenschaft."},
   {"Eigenschaft", EigName}, {"Zielwert", Ganzzahl}, {"Methode", EigSteigerMethode, "Standard"})
 
+local RkW = d.HeterogeneousList:def({name = "RkW", documentation = "Steigerung eines Ritualkenntniswerts."},
+  {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"})
+
+local LkW = d.HeterogeneousList:def({name = "LkW", documentation = "Steigerung des Liturgiekenntniswerts."},
+  {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"})
+
 d:singleton(d.MixedList, {name = "Ereignisse", documentation = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"},
-  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft) {}
+  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW) {}
 
 return schema

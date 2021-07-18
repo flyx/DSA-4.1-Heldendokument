@@ -205,16 +205,16 @@ function common.round(v, down)
   return tonumber(string.format("%.0f", v + delta))
 end
 
-function common.kenntnis(name, items, count)
-  tex.sprint([[{\normalfont\normalsize\begin{tabular}{p{3.7cm}@{(}x{3.7cm}@{):\hspace{1pt}}x{0.7cm}}]])
+function common.ritualkenntnis(items, count)
+  tex.sprint([[{\normalfont\normalsize\begin{tabular}{p{3.7cm}@{(}x{3.6cm}@{):\hspace{2pt}}x{0.7cm}x{0.5cm}}]])
   for i,v in ipairs(items) do
-    tex.sprint(string.format([[\large\mansontt\bfseries %s & %s & \cellcolor{white}%s \\]], name, v.Name, v.Wert))
+    tex.sprint(string.format([[\large\mansontt\bfseries Ritualkenntnis & %s & \cellcolor{white}%s & \color{gray}\bfseries %s \\]], v.Name, v.Wert, v.Steigerung))
     if i ~= count then
       tex.sprint([[\multicolumn{3}{c}{}\\[-9pt] ]])
     end
   end
   for i=#items+1,count do
-    tex.sprint(string.format([[\large\mansontt\bfseries %s & & \cellcolor{white} \\]], name))
+    tex.sprint([[\large\mansontt\bfseries Ritualkenntnis & & \cellcolor{white} & \\]])
     if i ~= count then
       tex.sprint([[\multicolumn{3}{c}{}\\[-9pt] ]])
     end

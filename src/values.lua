@@ -737,6 +737,53 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
     event[3] = skt.faktor["1"]
     event[4] = -1 * ap
     event[5] = values:ap_mod(ap)
+  elseif mt.name == "RkW" then
+    local r = nil
+    for _, v in ipairs(values.Magie.Ritualkenntnis) do
+      if v.Name == e.Name then
+        r = v
+        break
+      end
+    end
+    if r == nil then
+      tex.error("[RkW] unbekannter Name: " .. e.Name)
+    end
+    local faktor = skt.faktor["1"]
+    if values.Vorteile.EidetischesGedaechtnis then
+      faktor = skt.faktor["1/2"]
+    elseif values.Vorteile.GutesGedaechtnis then
+      faktor = skt.faktor["3/4"]
+    end
+    local ap = 0
+    event[1] = "Ritualkenntnis (" .. e.Name .. ", " .. e.Methode .. ") von " .. tostring(r.Wert) .. " auf " .. e.Zielwert
+    while r.Wert < e.Zielwert do
+      r.Wert = r.Wert + 1
+      ap = ap + skt:kosten(skt.spalte:effektiv(r.Steigerung, r.Wert, e.Methode), r.Wert)
+    end
+    event[2] = -1 * ap
+    event[3] = faktor
+    local kosten = faktor:apply(ap)
+    event[4] = -1 * kosten
+    event[5] = values:ap_mod(kosten)
+  elseif mt.name == "LkW" then
+    local r = values.Liturgiekenntnis
+    local faktor = skt.faktor["1"]
+    if values.Vorteile.EidetischesGedaechtnis then
+      faktor = skt.faktor["1/2"]
+    elseif values.Vorteile.GutesGedaechtnis then
+      faktor = skt.faktor["3/4"]
+    end
+    local ap = 0
+    event[1] = "Liturgiekenntnis (" .. r.Name .. ", " .. e.Methode .. ") von " .. tostring(r.Wert) .. " auf " .. e.Zielwert
+    while r.Wert < e.Zielwert do
+      r.Wert = r.Wert + 1
+      ap = ap + skt:kosten(skt.spalte:effektiv("F", r.Wert, e.Methode), r.Wert)
+    end
+    event[2] = -1 * ap
+    event[3] = faktor
+    local kosten = faktor:apply(ap)
+    event[4] = -1 * kosten
+    event[5] = values:ap_mod(kosten)
   else
     tex.error("\n[Ereignisse] unbekannter Ereignistyp: '" .. mt.name .. "'")
   end

@@ -173,9 +173,10 @@
 
 \newcommand{\Liturgien}{%
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
-        \directlua{
-            common.kenntnis("Liturgiekenntnis", {data.Liturgiekenntnis}, 1)
-        }
+        {\normalfont\normalsize%
+        \begin{tabular}{p{3.7cm}@{(}x{3.7cm}@{):\hspace{1pt}}x{0.7cm}}
+            \large\mansontt\bfseries Liturgiekenntnis & \directlua{data.Liturgiekenntnis.Name} & \cellcolor{white}\directlua{data.Liturgiekenntnis.Wert} \\
+        \end{tabular}}
 
         \vspace{13.5pt}
         \renewcommand{\arraystretch}{1}
