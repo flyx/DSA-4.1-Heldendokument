@@ -123,20 +123,24 @@ local Domaene = d.Matching:def({name = "Domaene", documentation = "Name einer Do
 local Daemonisch = d.MixedList:def({name = "Daemonisch", documentation = "Spezifikation dämonischer Merkmale."}, Domaene)
 local Ausbildungsname = d.Matching:def({name = "Ausbildungsname", documentation = "Name einer akademischen Ausbildung"}, "Gelehrter?", "Magier", "Magierin", "Krieger", "Kriegerin")
 
+local EigName = d.Matching:def({name = "EigName", documentation = "Name einer steigerbaren Eigenschaft"}, "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "LE", "AU", "AE", "MR")
+
 d:singleton(d.ListWithKnown, {name = "Vorteile", documentation = "Liste von nicht-magischen Vorteilen."}, {
-  Flink = d.Number:def({name = "Flink", documentation = "Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen."}, 1, 2, 0),
-  Eisern = "Eisern",
-  ["Gutes Gedächtnis"] = "GutesGedaechtnis",
-  ["Eidetisches Gedächtnis"] = "EidetischesGedaechtnis",
-  BegabungFuerTalentgruppe = d.FixedList:def({name = "BegabungFuerTalentgruppe", documentation = "Begabung für eine oder mehrere Talentgruppen"}, Talentgruppe),
-  BegabungFuerTalent = d.FixedList:def({name = "BegabungFuerTalent", documentation = "Begabung für ein oder mehrere Talente"}, String),
   AkademischeAusbildung = d.FixedList:def({name = "AkademischeAusbildung", documentation = "Akademische Ausbildung"}, Ausbildungsname, 0, 1),
+  BegabungFuerEigenschaft = d.FixedList:def({name = "BegabungFuerEigenschaft", documentation = "Begabung für eine oder mehrere Eigenschaften. Üblicherweise nicht frei wählbar, kommt aber etwa in 7G vor."}, EigName),
+  BegabungFuerTalent = d.FixedList:def({name = "BegabungFuerTalent", documentation = "Begabung für ein oder mehrere Talente"}, String),
+  BegabungFuerTalentgruppe = d.FixedList:def({name = "BegabungFuerTalentgruppe", documentation = "Begabung für eine oder mehrere Talentgruppen."}, Talentgruppe),
+  ["Eidetisches Gedächtnis"] = "EidetischesGedaechtnis",
+  Eisern = "Eisern",
+  Flink = d.Number:def({name = "Flink", documentation = "Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen."}, 1, 2, 0),
+  ["Gutes Gedächtnis"] = "GutesGedaechtnis",
 }, { -- optional
   Flink = true
 })
 
 schema.Vorteile.Magisch = d:singleton(d.ListWithKnown, {name = "Vorteile.Magisch", documentation = "Liste von magischen Vorteilen."}, {
   -- TODO: Astrale Regeneration
+  Eigeboren = "Eigeboren",
   BegabungFuerMerkmal = d.ListWithKnown:def({name = "BegabungFuerMerkmal", documentation = "Begabung für ein oder mehrere Merkmale."}, {
     Elementar = Elementar,
     Daemonisch = Daemonisch
@@ -198,7 +202,7 @@ d:singleton(d.Record, {name = "AP", documentation = "Abenteuerpunkte."},
 
 local SteigSpalte = d.Matching:def({name = "SteigSpalte", documentation = "Eine Steigerungsspalte."}, "A%*?", "B", "C", "D", "E", "F", "G", "H")
 local Behinderung = d.Matching:def({name = "Behinderung", documentation = "Behinderung."}, "%-", "BE", "BE%-[1-9]", "BEx[2-9]")
-local Eigenschaft = d.Matching:def({name = "Eigenschaft", documentation = "Referenz auf einen Eigenschaftsnamen."}, "%*%*", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK")
+local BasisEig = d.Matching:def({name = "BasisEig", documentation = "Name einer Basis-Eigenschaft, oder ** in seltenen Fällen."}, "%*%*", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK")
 local Spezialisierungen = d.Multivalue:def({name = "Spezialisierungen", documentation = "Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden."})
 
 d.HeterogeneousList:def({name = "Nah", documentation = "Ein Nahkampf-Talent mit AT/PA Verteilung."},
@@ -208,9 +212,9 @@ d.HeterogeneousList:def({name = "NahAT", documentation = "Ein Nahkampf-Talent, d
 d.HeterogeneousList:def({name = "Fern", documentation = "Ein Fernkampf-Talent."},
   {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
 d.HeterogeneousList:def({name = "KoerperTalent", documentation = "Ein Talent aus der Gruppe der Körperlichen Talente."},
-  {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
+  {"Name", String, ""}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
 d.HeterogeneousList:def({name = "Talent", documentation = "Ein allgemeines Talent."},
-  {"Name", String, ""}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
+  {"Name", String, ""}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
 
 d.FixedList:def({name = "Familie", documentation = "Liste von Sprachen oder Schriften in einer Familie."}, String)
 d.HeterogeneousList:def({name = "Muttersprache", documentation = "Die Muttersprache des Helden. Anders als andere Sprachen definiert eine Muttersprache Listen der verwandten Sprachen und Schriften, welche nicht ausgegeben werden, sondern nur zur Berechnung der Steigerungsschwierigkeit anderer Sprachen und Schriften dienen."},
@@ -378,7 +382,7 @@ local Repraesentation = d.Matching:def({name = "Repraesentation", documentation 
 
 schema.Magie = {
   Rituale = d:singleton(d.MixedList, {name = "Magie.Rituale", documentation = "Liste von Ritualen."}, d.HeterogeneousList:def({name = "Ritual", documentation = "Ein Ritual."},
-    {"Name", String}, {"Probe1", Eigenschaft, ""}, {"Probe2", Eigenschaft, ""}, {"Probe3", Eigenschaft, ""}, {"Dauer", Simple, ""}, {"Kosten", Simple, ""}, {"Wirkung", Simple, ""})) {},
+    {"Name", String}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""}, {"Dauer", Simple, ""}, {"Kosten", Simple, ""}, {"Wirkung", Simple, ""})) {},
   Ritualkenntnis = d:singleton(d.MixedList, {name = "Magie.Ritualkenntnis", documentation = "Liste von Ritualkenntnissen."}, d.HeterogeneousList:def({name = "RK-Wert", documentation = "Ein Ritualkenntnis-Wert."},
     {"Name", String}, {"Wert", Simple, ""})) {},
   Regeneration = d:singleton(d.Simple, {name = "Magie.Regeneration", documentation = "AsP-Regeneration pro Phase."}) "",
@@ -386,11 +390,12 @@ schema.Magie = {
   Notizen = d:singleton(d.Multivalue, {name = "Magie.Notizen", documentation = "Notizen auf dem Zauberdokument."}) {},
   Repraesentationen = d:singleton(d.MixedList, {name = "Magie.Repraesentationen", documentation = "Liste beherrschter Repräsentationen."}, Repraesentation) {},
   Merkmalskenntnis = merkmale("Magie.Merkmalskenntnis", "Liste gelernter Merkmalskenntnisse"),
-  Zauber = d:singleton(d.MixedList, {name = "Magie.Zauber", documentation = "Liste von gelernten Zaubern."}, d.HeterogeneousList:def({name = "Zauber", documentation = "Ein Zauber."}, {"Seite", Simple, ""}, {"Name", String}, {"Probe1", Eigenschaft}, {"Probe2", Eigenschaft}, {"Probe3", Eigenschaft}, {"ZfW", Simple, ""}, {"Komplexitaet", SteigSpalte}, {"Merkmale", Merkmale, {}}, {"Repraesentation", Repraesentation, ""}, {"Hauszauber", schema.Boolean, false}, {"Spezialisierungen", Spezialisierungen, {}})) {}
+  Zauber = d:singleton(d.MixedList, {name = "Magie.Zauber", documentation = "Liste von gelernten Zaubern."}, d.HeterogeneousList:def({name = "Zauber", documentation = "Ein Zauber."}, {"Seite", Simple, ""}, {"Name", String}, {"Probe1", BasisEig}, {"Probe2", BasisEig}, {"Probe3", BasisEig}, {"ZfW", Simple, ""}, {"Komplexitaet", SteigSpalte}, {"Merkmale", Merkmale, {}}, {"Repraesentation", Repraesentation, ""}, {"Hauszauber", schema.Boolean, false}, {"Spezialisierungen", Spezialisierungen, {}})) {}
 }
 
 local SteigerMethode = d.Matching:def({name = "SteigerMethode", documentation = "Steigerungsmethode"}, "SE", "Lehrmeister", "Gegenseitig", "Selbststudium")
 local SFLernmethode = d.Matching:def({name = "SFLernmethode", documentation = "Lernmethode für eine Sonderfertigkeit"}, "SE", "Lehrmeister")
+local EigSteigerMethode = d.Matching:def({name = "EigSteigerMethode", documentation = "Steigerungsmethode für Eigenschaften"}, "SE", "Standard")
 
 local TaW = d.HeterogeneousList:def({name = "TaW", documentation = "Steigerung eines Talentwerts"},
   {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"})
@@ -413,6 +418,10 @@ local FernkampfSF = d.HeterogeneousList:def({name = "FernkampfSF", documentation
 local WaffenlosSF = d.HeterogeneousList:def({name = "WaffenlosSF", documentation = "Erlernen einer Waffenlosen Sonderfertigkeit."},
   {"SF", nil}, {"Kosten", Ganzzahl}, {"Methode", SFLernmethode, "Lehrmeister"})
 
-d:singleton(d.MixedList, {name = "Ereignisse", documentation = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"}, TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF) {}
+local Eigenschaft = d.HeterogeneousList:def({name = "Eigenschaft", documentation = "Steigern einer Basis-Eigenschaft oder Zukauf von Punkten zu einer abgeleiteten Eigenschaft."},
+  {"Eigenschaft", EigName}, {"Zielwert", Ganzzahl}, {"Methode", EigSteigerMethode, "Standard"})
+
+d:singleton(d.MixedList, {name = "Ereignisse", documentation = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"},
+  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft) {}
 
 return schema

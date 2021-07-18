@@ -705,6 +705,38 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
     event = values:steigerSF("FernkampfSF", e, {{{"AkademischeAusbildung", "Krieger", "Kriegerin"}, "3/4"}}, values.SF.Fernkampf)
   elseif mt.name == "WaffenlosSF" then
     event = values:steigerSF("WaffenlosSF", e, {{{"AkademischeAusbildung", "Krieger", "Kriegerin"}, "3/4"}}, values.SF.Waffenlos)
+  elseif mt.name == "Eigenschaft" then
+    local spalte = skt.spalte:num("H")
+    for _, n in ipairs(values.Vorteile.BegabungFuerEigenschaft) do
+      if n == e.Eigenschaft then
+        spalte = spalte - 1
+        break
+      end
+    end
+    if values.Vorteile.Eigeboren and e.Eigenschaft == "CH" then
+      spalte = spalte - 1
+    end
+    if e.Methode == "SE" then
+      spalte = spalte - 1
+    end
+    local ap = 0
+    local index = 3
+    if e.Eigenschaft == "LE" or e.Eigenschaft == "AU" or e.Eigenschaft == "AE" or e.Eigenschaft == "MR" then
+      index = 2
+      event[1] = "Zukauf ("
+    else
+      event[1] = "Eigenschaft ("
+    end
+    local target = values.eig[e.Eigenschaft]
+    event[1] = event[1] .. e.Eigenschaft .. ", " .. e.Methode .. ") von " .. tostring(target[index]) .. " auf " .. tostring(e.Zielwert)
+    while target[index] < e.Zielwert do
+      target[index] = target[index] + 1
+      ap = ap + skt:kosten(skt.spalte:name(spalte), target[index])
+    end
+    event[2] = -1 * ap
+    event[3] = skt.faktor["1"]
+    event[4] = -1 * ap
+    event[5] = values:ap_mod(ap)
   else
     tex.error("\n[Ereignisse] unbekannter Ereignistyp: '" .. mt.name .. "'")
   end
