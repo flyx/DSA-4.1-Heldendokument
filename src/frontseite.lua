@@ -168,15 +168,15 @@ function eigenschaften.rechts(self)
             common.p([[\multicolumn{3}{l}{
               \hspace{0.1cm}\tiny\normalfont\raisebox{2pt}{
               \begin{minipage}{3cm}
-                \directlua{common.checkbox(data.sf.Magisch.GefaessDerSterne)} Gefäß der Sterne (AE: CH×2) \\[1.5pt]
+                \directlua{common.checkbox(data.SF.Magisch.GefaessDerSterne)} Gefäß der Sterne (AE: CH×2) \\[1.5pt]
               \end{minipage}
             }}]])
           else
             common.p([[\multicolumn{3}{l}{
               \hspace{0.1cm}\tiny\normalfont\raisebox{2pt}{
               \begin{minipage}{2.5cm}
-                  \directlua{common.checkbox(data.sf.Nahkampf.Kampfreflexe)} Kampfreflexe (INI+4) \\[1.5pt]
-                  \directlua{common.checkbox(data.sf.Nahkampf.Kampfgespuer)} Kampfgespür (INI+2)
+                  \directlua{common.checkbox(data.SF.Nahkampf.Kampfreflexe)} Kampfreflexe (INI+4) \\[1.5pt]
+                  \directlua{common.checkbox(data.SF.Nahkampf.Kampfgespuer)} Kampfgespür (INI+2)
               \end{minipage}
             }}]])
           end

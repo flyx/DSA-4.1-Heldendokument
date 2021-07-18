@@ -288,7 +288,11 @@ schema.SF.Nahkampf = d:singleton(d.ListWithKnown, {name = "SF.Nahkampf", documen
   Schildkampf = d.Numbered:def({name = "Schildkampf", documentation = "Die SF Schildkampf, unterteilt in I und II."}, 2)
 }) {}
 
-schema.SF.Fernkampf = d:singleton(d.ListWithKnown, {name = "SF.Fernkampf", documentation = "Liste von Fernkampf-Sonderfertigkeiten."}, {}) {}
+schema.SF.Fernkampf = d:singleton(d.ListWithKnown, {name = "SF.Fernkampf", documentation = "Liste von Fernkampf-Sonderfertigkeiten."}, {
+  Scharfschuetze = d.Multivalue:def({name = "Scharfschuetze", documentation = "Liste von Talenten, für die Scharfschütze gilt."}),
+  Meisterschuetze = d.Multivalue:def({name = "Meisterschuetze", documentation = "Liste von Talenten, für die Meisterschütze gilt."}),
+  Schnellladen = d.Multivalue:def({name = "Schnellladen", documentation = "Liste von Talenten, für die Schnellladen gilt."}),
+}) {}
 
 schema.SF.Waffenlos = d:singleton(d.ListWithKnown, {name = "SF.Waffenlos", documentation = "Listen waffenloser Sonderfertigkeiten."}, {
   Kampfstile = d.MapToFixed:def({name = "Kampfstile", documentation = "Liste bekannter Kampfstile"}, "Raufen", "Ringen")
@@ -398,11 +402,14 @@ local Spezialisierung = d.HeterogeneousList:def({name = "Spezialisierung", docum
   {"Fertigkeit", String}, {"Name", String}, {"Methode", SFLernmethode, "Lehrmeister"})
 
 local ProfaneSF = d.HeterogeneousList:def({name = "ProfaneSF", documentation = "Erlernen einer Sonderfertigkeit, die nicht Kampf und nicht magisch ist."},
-  {"Name", String}, {"Kosten", Ganzzahl}, {"Methode", SFLernmethode, "Lehrmeister"})
+  {"SF", nil}, {"Kosten", Ganzzahl}, {"Methode", SFLernmethode, "Lehrmeister"})
 
 local NahkampfSF = d.HeterogeneousList:def({name = "NahkampfSF", documentation = "Erlernen einer Nahkampf-Sonderfertigkeit."},
   {"SF", nil}, {"Kosten", Ganzzahl}, {"Methode", SFLernmethode, "Lehrmeister"})
 
-d:singleton(d.MixedList, {name = "Ereignisse", documentation = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"}, TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF) {}
+local FernkampfSF = d.HeterogeneousList:def({name = "FernkampfSF", documentation = "Erlernen einer Fernkampf-Sonderfertigkeit."},
+  {"SF", nil}, {"Kosten", Ganzzahl}, {"Methode", SFLernmethode, "Lehrmeister"})
+
+d:singleton(d.MixedList, {name = "Ereignisse", documentation = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"}, TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF) {}
 
 return schema

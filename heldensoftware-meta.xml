@@ -480,7 +480,7 @@
     <sf name="Meisterliche Zauberkontrolle" art="magisch" roman="2"/>
     <sf name="Meisterliches Entwaffnen" art="nahkampf"/>
     <sf name="Meisterparade" art="nahkampf"/>
-    <sf name="Meisterschütze" art="fernkampf" sub="talent"/>
+    <sf name="Meisterschütze" art="fernkampf" sub="talent" container="Meisterschuetze"/>
     <sf name="Merkmalskenntnis" art="ignore" named="1"/>
     <sf name="Niederringen" art="waffenlos"/>
     <sf name="Niederwerfen" art="nahkampf"/>
@@ -494,13 +494,13 @@
     <sf name="Ritualkenntnis" art="ignore" named="1"/>
     <sf name="Runenkunde" art="magisch"/>
     <sf name="Rüstungsgewöhnung" art="nahkampf" id="Ruestungsgewoehnung" roman="3"/>
-    <sf name="Scharfschütze" art="fernkampf" sub="talent"/>
+    <sf name="Scharfschütze" art="fernkampf" sub="talent" container="Scharfschuetze"/>
     <sf name="Schildkampf" art="nahkampf" id="Schildkampf" roman="2"/>
     <sf name="Schildspalter" art="nahkampf"/>
     <sf name="Schlangenring-Zauber" art="ritual" named="1"/>
     <sf name="Schmetterschlag" art="waffenlos"/>
     <sf name="Schmutzige Tricks" art="waffenlos"/>
-    <sf name="Schnellladen" art="fernkampf" sub="talent"/>
+    <sf name="Schnellladen" art="fernkampf" sub="talent" container="Schnellladen"/>
     <sf name="Schnellziehen" art="nahkampf"/>
     <sf name="Schwanzfeger" art="waffenlos"/>
     <sf name="Schwanzschlag" art="waffenlos"/>

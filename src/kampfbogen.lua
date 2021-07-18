@@ -264,7 +264,7 @@ for i=14,15 do
 end
 
 function kampfbogen.nahkampf()
-  kampfwerte(data.Waffen.N, nahkampf_render, 2, 15, common.current_page.Nahkampf.Waffen)
+  kampfwerte(data.Waffen.Nahkampf, nahkampf_render, 2, 15, common.current_page.Nahkampf.Waffen)
 end
 
 local fernkampf_render = {
@@ -299,7 +299,7 @@ for i=10,14 do
 end
 
 function kampfbogen.fernkampf()
-  kampfwerte(data.Waffen.F, fernkampf_render, 2, 18, common.current_page.Fernkampf.Waffen)
+  kampfwerte(data.Waffen.Fernkampf, fernkampf_render, 2, 18, common.current_page.Fernkampf.Waffen)
 end
 
 local waffenlos_render = {
@@ -308,7 +308,7 @@ local waffenlos_render = {
     if talent == nil or #talent < 4 or atb == "" or #v < 3 then
       return
     end
-    for _, t in pairs(data.sf.Waffenlos.Kampfstile) do
+    for _, t in pairs(data.SF.Waffenlos.Kampfstile) do
       if v.Name == t then
         atb = atb + 1
       end
@@ -320,7 +320,7 @@ local waffenlos_render = {
     if talent == nil or #talent < 4 or pab == "" or #v < 3 then
       return
     end
-    for _, t in pairs(data.sf.Waffenlos.Kampfstile) do
+    for _, t in pairs(data.SF.Waffenlos.Kampfstile) do
       if v.Name == t then
         pab = pab + 1
       end
@@ -358,20 +358,20 @@ local schilde_render = {
       if val == "" then
         return
       end
-      if data.sf.Nahkampf.Linkhand then
+      if data.SF.Nahkampf.Linkhand then
         val = val + 1
       end
       for i=1,2 do
-        if data.sf.Nahkampf.Schildkampf[i] then
+        if data.SF.Nahkampf.Schildkampf[i] then
           val = val + 2
         end
       end
       tex.sprint(-2, val + v["WM PA"])
     elseif v.Typ == "Parierwaffe" then
       local val = v["WM PA"]
-      if data.sf.Nahkampf.Parierwaffen[2] then
+      if data.SF.Nahkampf.Parierwaffen[2] then
         val = val + 2
-      elseif data.sf.Nahkampf.Parierwaffen[1] then
+      elseif data.SF.Nahkampf.Parierwaffen[1] then
         val = val - 1
       else
         val = val - 4
@@ -386,17 +386,17 @@ local schilde_render = {
 }
 
 function kampfbogen.schilde()
-  kampfwerte(data.Waffen.S, schilde_render, 0, 8, common.current_page.Schilde)
+  kampfwerte(data.Waffen.Schilde, schilde_render, 0, 8, common.current_page.Schilde)
 end
 
 function kampfbogen.ruestungsteile()
-  common.inner_rows(data.Waffen.R, 3, common.current_page.Ruestung)
+  common.inner_rows(data.Waffen.Ruestung, 3, common.current_page.Ruestung)
 end
 
 function kampfbogen.ruestung(name)
   local value = nil
 
-  for i,v in ipairs(data.Waffen.R) do
+  for i,v in ipairs(data.Waffen.Ruestung) do
     local item = v[name]
     if item ~= nil then
       if value == nil then
@@ -421,7 +421,7 @@ function kampfbogen.ausweichen()
     val = val - be
   end
   for i=1,3 do
-    if data.sf.Nahkampf.Ausweichen[i] then
+    if data.SF.Nahkampf.Ausweichen[i] then
       val = val + 3
     end
   end

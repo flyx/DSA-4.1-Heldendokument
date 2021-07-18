@@ -611,7 +611,14 @@ function d.ListWithKnown:append(v)
       elseif def ~= mt then
         return string.format("%s erwartet, bekam %s", def.name, mt.name)
       else
-        self.value[mt.name] = v
+        local cur = self.value[mt.name]
+        if cur == nil then
+          self.value[mt.name] = v
+        elseif cur.merge ~= nil then
+          cur:merge(v)
+        else
+          return string.format("%s: Doppelt, kann nur einmal gegeben werden", mt.name)
+        end
       end
     end
   end
@@ -735,12 +742,13 @@ function d.HeterogeneousList:put(key, v)
     if def[1] == key then
       local mt = getmetatable(v)
       if mt == nil or mt == string_metatable then
-        v = def[2](v)
-        mt = getmetatable(v)
+        if def[2] ~= nil then
+          v = def[2](v)
+          mt = getmetatable(v)
+        end
       end
-      if mt ~= d.Poison and mt ~= def[2] then
-        self:err("falscher Typ: erwartete %s, bekam %s", def[2].name, mt.name)
-        errors = true
+      if mt ~= d.Poison and def[2] ~= nil and mt ~= def[2] then
+        return string.format("falscher Typ: erwartete %s, bekam %s", def[2].name, mt.name)
       end
       self.value[i] = v
       return
@@ -772,7 +780,10 @@ function d.HeterogeneousList:getfield(key)
       if fields ~= nil then
         for i, f in ipairs(fields) do
           if f[1] == key then
-            v = self.value[i]:get()
+            v = self.value[i]
+            if f[2] ~= nil then
+              v = v:get()
+            end
             break
           end
         end
@@ -820,6 +831,7 @@ d.Numbered = TypeClass.new({
 
 function d.Numbered:init(max)
   self.max_items = max
+  self.__index = d.Numbered.getfield
 end
 
 function d.Numbered:pre_construct()
@@ -836,6 +848,22 @@ function d.Numbered:append(v)
     return string.format("Wert %d außerhalb des erlaubten Bereichs 1..%d", v, self.max_items)
   else
     self.value[v] = true
+  end
+end
+
+function d.Numbered:getfield(key)
+  if type(key) == "number" then
+    return self.value[key]
+  else
+    return getmetatable(self)[key]
+  end
+end
+
+function d.Numbered:merge(v)
+  for i=1,self.max_items do
+    if v.value[i] then
+      self.value[i] = true
+    end
   end
 end
 
@@ -1054,6 +1082,15 @@ function d.Multivalue:append(v)
     return string.format("string oder {} in Liste erwartet, bekam %s", type(v))
   end
   table.insert(self.value, v)
+end
+
+function d.Multivalue:merge(v)
+  for _, item in ipairs(v) do
+    local msg = self:append(item)
+    if msg ~= nil then
+      return msg
+    end
+  end
 end
 
 function d.Multivalue:getfield(key)

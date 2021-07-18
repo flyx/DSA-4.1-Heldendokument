@@ -35,7 +35,7 @@ local values = {
   eig = schema.Eigenschaften:instance(),
   AP = schema.AP:instance(),
   Talente = {},
-  sf = {
+  SF = {
     Allgemein = schema.SF:instance(),
     Nahkampf = schema.SF.Nahkampf:instance(),
     Fernkampf = schema.SF.Fernkampf:instance(),
@@ -43,10 +43,10 @@ local values = {
     Magisch = schema.SF.Magisch:instance(),
   },
   Waffen = {
-    N = schema.Waffen.Nahkampf:instance(),
-    F = schema.Waffen.Fernkampf:instance(),
-    S = schema.Waffen.Schilde:instance(),
-    R = schema.Waffen.Ruestung:instance(),
+    Nahkampf = schema.Waffen.Nahkampf:instance(),
+    Fernkampf = schema.Waffen.Fernkampf:instance(),
+    Schilde = schema.Waffen.Schilde:instance(),
+    Ruestung = schema.Waffen.Ruestung:instance(),
   },
   Kleidung = schema.Kleidung:instance(),
   Ausruestung = schema.Ausruestung:instance(),
@@ -104,7 +104,7 @@ local getter_map = {
     AU = function() return {"MU", "KO", "GE", div=2} end,
     AE = function()
       if data.Vorteile.Magisch.asp then
-        if data.sf.Magisch.GefaessDerSterne then
+        if data.SF.Magisch.GefaessDerSterne then
           return {"MU", "IN", "CH", "CH", div=2}
         else
           return {"MU", "IN", "CH", div=2}
@@ -188,10 +188,10 @@ setmetatable(getter_map.calc, {
 
     if name == "INI" then
       val = val + data.eig.INI
-      if data.sf.kampfreflexe then
+      if data.SF.Nahkampf.Kampfreflexe then
         val = val + 4
       end
-      if data.sf.kampfgespuer then
+      if data.SF.Nahkampf.Kampfgespuer then
         val = val + 2
       end
     else
@@ -240,16 +240,16 @@ function values:cur(name, div)
     end
     return 8 + gsmod
   elseif kind == "rs" then
-    return sum_and_round(self.Waffen.R, 2)
+    return sum_and_round(self.Waffen.Ruestung, 2)
   elseif kind == "be" or kind == "be_voll" then
-    local val = sum_and_round(self.Waffen.R, 3)
+    local val = sum_and_round(self.Waffen.Ruestung, 3)
     if val == "" then
       return val
     end
     if kind == "be" then
-      if self.sf.Nahkampf.Ruestungsgewoehnung[3] then
+      if self.SF.Nahkampf.Ruestungsgewoehnung[3] then
         val = val - 2
-      elseif self.sf.Nahkampf.Ruestungsgewoehnung[1] then
+      elseif self.SF.Nahkampf.Ruestungsgewoehnung[1] then
         val = val - 1
       end
       if val < 0 then
@@ -479,6 +479,81 @@ function values:ap_mod(kosten)
   end
 end
 
+function values:steigerSF(tname, e, faktorMod, target)
+  local name = e.SF
+  local descr = name
+  if type(name) == "table" then
+    name = getmetatable(name).name
+    descr = name .. " ("
+    local first = true
+    for i,v in ipairs(e.SF) do
+      local append = nil
+      if getmetatable(getmetatable(e.SF)) == d.Numbered then
+        if v then
+          append = tostring(i)
+        end
+      else
+        append = v
+      end
+      if append ~= nil then
+        if first then
+          first = false
+        else
+          descr = descr .. ", "
+        end
+        descr = descr .. append
+      end
+    end
+    descr = descr .. ")"
+  end
+
+  local faktor = skt.faktor["1"]
+  local possible = nil
+  local subset = nil
+  for _, m in ipairs(faktorMod) do
+    if type(m[1]) == "table" then
+      local l = self.Vorteile[m[1][1]]
+      for i=2,#m[1] do
+        for _, item in ipairs(l) do
+          if item == m[1][i] then
+            possible = skt.faktor[m[2]]
+            subset = m[3]
+            goto foundmod
+          end
+        end
+      end
+    else
+      if self.Vorteile[m[1]] then
+        possible = skt.faktor[m[2]]
+        subset = m[3]
+        break
+      end
+    end
+  end
+  ::foundmod::
+  if possible ~= nil then
+    if subset == nil then
+      faktor = possible
+    else
+      for _, v in ipairs(subset) do
+        if name:sub(1, #v) == v then
+          faktor = possible
+          break
+        end
+      end
+    end
+  end
+  local msg = target:append(e.SF)
+  if msg ~= nil then
+    tex.error("\n[" .. tname .. "] " .. name .. ": " .. msg)
+  end
+  local kosten = faktor:apply(e.Kosten)
+  return {
+    "Sonderfertigkeit (" .. e.Methode .. "): " .. descr,
+    -1 * e.Kosten, faktor, -1 * kosten, self:ap_mod(kosten)
+  }
+end
+
 -- Ereignisse auf Charakter applizieren
 
 for _, e in ipairs(schema.Ereignisse:instance()) do
@@ -621,30 +696,13 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
     event[4] = -1 * kosten
     event[5] = values:ap_mod(kosten)
   elseif mt.name == "ProfaneSF" then
-    local faktor = skt.faktor["1"]
-    local possible = nil
-    if values.Vorteile.EidetischesGedaechtnis then
-      possible = faktor["1/2"]
-    elseif values.Vorteile.GutesGedaechtnis then
-      possible = faktor["3/4"]
-    end
-    if possible ~= nil then
-      for _, v in ipairs({"Dschungelkundig", "Eiskundig", "Gebirgskundig", "Höhlenkundig", "Maraskankundig", "Meereskundig", "Steppenkundig", "Sumpfkundig", "Waldkundig, Wüstenkundig", "Kulturkunde", "Nandusgefälliges Wissen", "Ortskenntnis"}) do
-        if e.Name:sub(1, #v) == v then
-          faktor = possible
-          break
-        end
-      end
-    end
-    table.insert(values.SF, e.Name)
-    event[1] = "Sonderfertigkeit (" .. e.Methode .. "): " .. e.Name
-    event[2] = -1 * e.Kosten
-    event[3] = faktor
-    local kosten = faktor:apply(e.Kosten)
-    event[4] = -1 * kosten
-    event[5] = values:ap_mod(kosten)
+    local verbilligt = {"Dschungelkundig", "Eiskundig", "Gebirgskundig", "Höhlenkundig", "Maraskankundig", "Meereskundig", "Steppenkundig", "Sumpfkundig", "Waldkundig, Wüstenkundig", "Kulturkunde", "Nandusgefälliges Wissen", "Ortskenntnis"}
+    event = values:steigerSF("ProfaneSF", e, {{"EidetischesGedächtnis", "1/2", verbilligt}, {"GutesGedaechtnis", "3/4", verbilligt}},
+      values.SF.Allgemein)
   elseif mt.name == "NahkampfSF" then
-    tex.error("\n[NahkampfSF] nicht implementiert.")
+    event = values:steigerSF("NahkampfSF", e, {{{"AkademischeAusbildung", "Krieger", "Kriegerin"}, "3/4"}, {{"AkademischeAusbildung", "Magier", "Magierin"}, "3/2", {"Ruestungsgewoehnung"}}}, values.SF.Nahkampf)
+  elseif mt.name == "FernkampfSF" then
+    event = values:steigerSF("FernkampfSF", e, {{{"AkademischeAusbildung", "Krieger", "Kriegerin"}, "3/4"}}, values.SF.Fernkampf)
   else
     tex.error("\n[Ereignisse] unbekannter Ereignistyp: '" .. mt.name .. "'")
   end
