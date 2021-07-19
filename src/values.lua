@@ -784,6 +784,95 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
     local kosten = faktor:apply(ap)
     event[4] = -1 * kosten
     event[5] = values:ap_mod(kosten)
+  elseif mt.name == "Aktiviere" then
+    local smt = getmetatable(e.Subjekt)
+    if smt == nil or smt == string_metatable then
+      tex.error("\n[Aktiviere] Subjekt muss explizit typisiert sein.")
+    end
+    local ap
+    local faktor = skt.faktor["1"]
+    if smt.name == "Nah" or smt.name == "NahAT" or smt.name == "Fern" then
+      e.Subjekt.TaW = 0
+      ap = skt:kosten(skt.spalte:effektiv(values:kampf_schwierigkeit(e.Subjekt), 0, e.Methode), 0)
+      values.Talente.Kampf:append(e.Subjekt, e.Sortierung)
+      event[1] = "Talentaktivierung ("
+    elseif smt.name == "KoerperTalent" then
+      e.Subjekt.TaW = 0
+      ap = skt:kosten(skt.spalte:effektiv(values:talent_schwierigkeit(e.Subjekt, "Koerper"), 0, e.Methode), 0)
+      values.Talente.Koerper:append(e.Subject, e.Sortierung)
+      event[1] = "Talentaktivierung ("
+    elseif smt.name == "Zweitsprache" or smt.name == "Sprache" then
+      e.Subjekt.TaW = 0
+      ap = skt:kosten(skt.spalte:effektiv(values:sprache_schwierigkeit(e.Subjekt), 0, e.Methode), 0)
+      faktor = values:tgruppe_faktor("SprachenUndSchriften")
+      values.Talente.SprachenUndSchriften:append(e.Subjekt, e.Sortierung)
+      event[1] = "Talentaktivierung ("
+    elseif smt.name == "Schrift" then
+      e.Subjekt.TaW = 0
+      ap = skt:kosten(skt.spalte:effektiv(values:schrift_schwierigkeit(e.Subjekt), 0, e.Methode), 0)
+      faktor = values:tgruppe_faktor("SprachenUndSchriften")
+      values.Talente.SprachenUndSchriften:append(e.Subjekt, e.Sortierung)
+      event[1] = "Talentaktivierung ("
+    elseif smt.name == "Talent" then
+      e.Subjekt.TaW = 0
+      if e.Talentgruppe == "" then
+        tex.error("\n[Aktiviere] für Talent {…} muss eine Talentgruppe angegeben werden.")
+      elseif e.Talentgruppe ~= "Gesellschaft" and e.Talentgruppe ~= "Natur" and e.Talentgruppe ~= "Wissen" and e.Talentgruppe ~= "Handwerk" then
+        tex.error("\n[Aktiviere] unbekannte Talentgruppe: " .. e.Talentgruppe)
+      end
+      ap = skt:kosten(skt.spalte:effektiv(values:talent_schwierigkeit(e.Subjekt, e.Talentgruppe), 0, e.Methode), 0)
+      faktor = values:tgruppe_faktor(e.Talentgruppe)
+      values.Talente[e.Talentgruppe]:append(e.Subjekt, e.Sortierung)
+      event[1] = "Talentaktivierung ("
+    elseif smt.name == "Zauber" then
+      e.Subjekt.ZfW = 0
+      ap = skt:kosten(skt.spalte:effektiv(values:lernschwierigkeit(e.Subjekt), 0, e.Methode), 0)
+      faktor = values:tgruppe_faktor("Zauber")
+      values.Magie.Zauber:append(e.Subjekt, e.Sortierung)
+      event[1] = "Zauberaktivierung ("
+    elseif smt.name == "Ritual" then
+      ap = e.Subjekt.Lernkosten
+      if e.Methode == "SE" then
+        ap = math.floor((ap / 2) + 0.51)
+      end
+      faktor = values:tgruppe_faktor("Zauber")
+      values.Magie.Rituale:append(e.Subjekt, e.Sortierung)
+      event[1] = "Ritual ("
+    elseif smt.name == "Liturgie" then
+      local base = 50
+      if e.Methode == "SE" then
+        base = 25
+      end
+      ap = base * e.Subjekt.Grad
+      if values.Vorteile.EidetischesGedaechtnis then
+        return skt.faktor["1/2"]
+      elseif values.Vorteile.GutesGedaechtnis then
+        return skt.faktor["3/4"]
+      end
+      values.Liturgien:append(e.Subjekt, e.Sortierung)
+      event[1] = "Liturgie ("
+    end
+    event[1] = event[1] .. e.Subjekt.Name .. ", " .. e.Methode .. ")"
+    event[2] = -1 * ap
+    event[3] = faktor
+    local kosten = faktor:apply(ap)
+    event[4] = -1 * kosten
+    event[5] = values:ap_mod(kosten)
+  elseif mt.name == "Zugewinn" then
+    event[1] = e.Text
+    event[2] = e.AP
+    event[3] = skt.faktor["1"]
+    event[4] = e.AP
+    if type(values.AP.Gesamt) == "number" then
+      values.AP.Gesamt = values.AP.Gesamt + e.AP
+    end
+    if type(values.AP.Guthaben) == "number" then
+      values.AP.Guthaben = values.AP.Guthaben + e.AP
+      event[5] = values.AP.Guthaben
+    else
+      event[5] = ""
+    end
+    event[6] = e.Fett
   else
     tex.error("\n[Ereignisse] unbekannter Ereignistyp: '" .. mt.name .. "'")
   end

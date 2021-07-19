@@ -430,7 +430,7 @@ function d.MixedList:pre_construct()
   self.value = {}
 end
 
-function d.MixedList:append(v)
+function d.MixedList:append(v, sort)
   local mt = getmetatable(v)
   if (mt == nil or mt == string_metatable) and #self.items == 1 then
     v = self.items[1](v)
@@ -467,7 +467,25 @@ function d.MixedList:append(v)
     end
     return string.format("unerwarteter Inhalt: %s. Erlaubt sind: %s)", mt.name, e)
   end
-  table.insert(self.value, v)
+  if sort == nil then sort = {} end
+  local index = #self.value
+  while index >= 1 do
+    local si = 1
+    while si <= #sort do
+      local cur = self.value[index][sort[si]]
+      if cur < v[sort[si]] then
+        goto sorted
+      elseif cur > v[sort[si]] then
+        break
+      end
+    end
+    if si > #sort then
+      break
+    end
+    index = index - 1
+  end
+  ::sorted::
+  table.insert(self.value, index + 1, v)
 end
 
 function d.MixedList:getfield(key)

@@ -22,6 +22,9 @@ function ereignisse.seite(start)
         tex.sprint("&")
       end
     else
+      if items[i][6] then
+        tex.sprint([[\bfseries]])
+      end
       tex.sprint(-2, items[i][1])
       tex.sprint([[&]])
       delta(items[i][2])

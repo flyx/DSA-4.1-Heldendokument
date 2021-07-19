@@ -358,7 +358,8 @@ d:singleton(d.HeterogeneousList, {name = "Liturgiekenntnis", documentation = "Li
   "", ""
 }
 
-d:singleton(d.MixedList, {name = "Liturgien", documentation = "Liste von Liturgien."}, d.HeterogeneousList:def({name = "Liturgie", documentation = "Eine Liturgie."}, {"Seite", Simple, ""}, {"Name", String}, {"Grad", String, ""}))
+d:singleton(d.MixedList, {name = "Liturgien", documentation = "Liste von Liturgien."}, d.HeterogeneousList:def({name = "Liturgie", documentation = "Eine Liturgie."},
+  {"Seite", Simple, ""}, {"Name", String}, {"Grad", Ganzzahl, 1}))
 
 local Merkmale = d.ListWithKnown:def({name = "Merkmale", documentation = "Liste von Merkmalen eines Zaubers."}, {
   Elementar = Elementar,
@@ -382,7 +383,7 @@ local Repraesentation = d.Matching:def({name = "Repraesentation", documentation 
 
 schema.Magie = {
   Rituale = d:singleton(d.MixedList, {name = "Magie.Rituale", documentation = "Liste von Ritualen."}, d.HeterogeneousList:def({name = "Ritual", documentation = "Ein Ritual."},
-    {"Name", String}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""}, {"Dauer", Simple, ""}, {"Kosten", Simple, ""}, {"Wirkung", Simple, ""})) {},
+    {"Name", String}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""}, {"Dauer", Simple, ""}, {"Kosten", Simple, ""}, {"Wirkung", Simple, ""}, {"Lernkosten", Ganzzahl, 0})) {},
   Ritualkenntnis = d:singleton(d.MixedList, {name = "Magie.Ritualkenntnis", documentation = "Liste von Ritualkenntnissen."}, d.HeterogeneousList:def({name = "RK-Wert", documentation = "Ein Ritualkenntnis-Wert."},
     {"Name", String}, {"Steigerung", SteigSpalte, "E"}, {"Wert", Simple, ""})) {},
   Regeneration = d:singleton(d.Simple, {name = "Magie.Regeneration", documentation = "AsP-Regeneration pro Phase."}) "",
@@ -427,7 +428,15 @@ local RkW = d.HeterogeneousList:def({name = "RkW", documentation = "Steigerung e
 local LkW = d.HeterogeneousList:def({name = "LkW", documentation = "Steigerung des Liturgiekenntniswerts."},
   {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"})
 
+local Sortiere = d.Multivalue:def({name = "Sortiere", documentation = "Definiert, wie eine neu aktivierte Fähigkeit (Talent, Zauber, …) in die bestehende Liste einsortiert wird. Ein leerer Wert sortiert am Ende der Liste ein, ansonsten wird zuerst nach der Spalte, die vom ersten Wert gegeben wird, sortiert, dann nach der vom zweiten Wert etc."})
+
+local Aktiviere = d.HeterogeneousList:def({name = "Aktiviere", documentation = "Aktiviert ein Talent, einen Zauber, eine Liturgie oder ein Ritual. Ist der gegebene Wert des Talents oder des Zaubers größer 0, wird anschließend eine Steigerung durchgeführt. Für Gesellschafts-, Natur-, Wissens- und Handwerkstalente muss die Talentgruppe angegeben werden; in allen anderen Fällen wird sie ignoriert."},
+  {"Subjekt", nil}, {"Methode", SteigerMethode, "Lehrmeister"}, {"Sortierung", Sortiere, "Name"}, {"Talentgruppe", String, ""})
+
+local Zugewinn = d.HeterogeneousList:def({name = "Zugewinn", documentation = "Zugewinn von AP. Kann als Überschrift (fett) formatiert werden."},
+  {"Text", String}, {"AP", Ganzzahl}, {"Fett", schema.Boolean, false})
+
 d:singleton(d.MixedList, {name = "Ereignisse", documentation = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"},
-  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW) {}
+  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, Zugewinn) {}
 
 return schema
