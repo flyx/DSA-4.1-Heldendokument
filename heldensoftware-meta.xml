@@ -1198,12 +1198,19 @@
     <z n="Zwingtanz" m="Herrschaft"/>
   </zauber>
   <liturgien>
+    <g>I</g>
+    <g>II</g>
+    <g>III</g>
+    <g>IV</g>
+    <g>V</g>
+    <g>VI</g>
     <l n="Aller Welt Freund" g="IV" s="260"/>
     <l n="Allmacht der Lohe" g="II" s="89"/>
     <l n="Alte Schuppen" g="III" s="90"/>
     <l n="Anathema" g="V" s="91"/>
     <l n="Angroschs Opfergabe" g="II" s="92"/>
     <l n="Anrufung der Erdkraft" g="II" s="93"/>
+    <l n="Anrufug der Erdkraft" orig="Anrufung der Erdkraft" g="II" s="93"/> <!-- wohl Tippfehler in der Heldensoftware -->
     <l n="Anrufung der Winde" g="II" s="94"/>
     <l n="Anrufung Nuiannas" g="III" s="95"/>
     <l n="Arcanum Interdictum" g="VI" s="96"/>
@@ -1237,7 +1244,7 @@
     <l n="Des Einen bezaubernder Sphärenklang" g="III" s="127"/>
     <l n="Die goldene Hand" g="I" s="128"/>
     <l n="Dorlens Verbrüderung" g="VI" s="129"/>
-    <l n="Dreifacher Saatsege" g="III" s="130"/>
+    <l n="Dreifacher Saatsegen" g="III" s="130"/>
     <l n="Efferdsegen" g="III" s="131"/>
     <l n="Eherne Kraft - Lodernder Zorn" g="IV" s="132"/>
     <l n="Ehrenhafter Zweikampf" g="II" s="133"/>
@@ -1291,7 +1298,7 @@
     <l n="Großer Weihesegen der Waffe" g="VI" s="176"/>
     <l n="Gruß der Versunkenen" g="IV" s="177"/>
     <l n="Handwerkssegen" g="II" s="178"/>
-    <l n="Harmoniesegen" g="I" s="80"/>
+    <l n="Harmoniesegen" zw="Rahja" g="I" s="80"/>
     <l n="Hashnabiths Flehen" g="II" s="179"/>
     <l n="Hauch Borons" g="III" s="180"/>
     <l n="Hausfrieden" g="III" s="181"/>
@@ -1429,7 +1436,7 @@
     <l n="Travinians Segen der Schwelle" g="III" s="309"/>
     <l n="Trophäe erhalten" g="II" s="310"/>
     <l n="Tsas ewige Jugend" g="VI" s="311"/>
-    <l n="Tsas heiliges Lebensgeschenk" g="V" s="312"/>
+    <l n="Tsas Heiliges Lebensgeschenk" g="V" s="312"/>
     <l n="Tsas Lebensschutz" g="IV" s="313"/>
     <l n="Tsas segensreicher Neuanfang" g="II" s="314"/>
     <l n="Tsas wunderbare Erneuerung" g="V" s="315"/>

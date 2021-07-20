@@ -175,14 +175,27 @@
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         {\normalfont\normalsize%
         \begin{tabular}{p{3.7cm}@{(}x{3.7cm}@{):\hspace{1pt}}x{0.7cm}}
-            \large\mansontt\bfseries Liturgiekenntnis & \directlua{data.Liturgiekenntnis.Name} & \cellcolor{white}\directlua{data.Liturgiekenntnis.Wert} \\
+            \large\mansontt\bfseries Liturgiekenntnis & \directlua{tex.sprint(-2, data.Mirakel.Liturgiekenntnis.Name)} & \cellcolor{white}\directlua{tex.sprint(-2, data.Mirakel.Liturgiekenntnis.Wert)} \\
         \end{tabular}}
 
         \vspace{13.5pt}
         \renewcommand{\arraystretch}{1}
         \setlength{\tabcolsep}{2pt}
         \normalfont\fontsize{8}{12}\selectfont
-        \begin{NiceTabular}{y{0.7cm}|p{7cm}|x{0.8cm}}
+        \begin{NiceTabular}{p{8.808cm}}
+        \CodeBefore
+            \rowcolors{2}{gray!30}{white}
+        \Body
+            \directlua{common.header_row("scriptsize", "dsaSH", "Zwölf kleine Segnungen (Grad 0/I), mit Seitenzahl")}
+            \Xhline{2\arrayrulewidth}
+
+            \multirow[t]{3}{=}{\renewcommand{\baselinestretch}{1.033}\normalfont
+                \directlua{common.segnungen(data.Mirakel.Liturgien)}
+            } \\ \hline \\ \hline \\ \hline
+        \end{NiceTabular}
+
+        \vspace{1.08pt}
+        \begin{NiceTabular}{y{0.7cm}|p{6.5cm}|x{1.3cm}}
         \CodeBefore
             \rowcolors{2}{white}{gray!30}
         \Body
@@ -191,7 +204,7 @@
                     {1, "c|", "Seite"}, "Liturgie", "Grad")
             } \Xhline{2\arrayrulewidth}
             \directlua{
-                common.inner_rows(data.Liturgien, 3, common.current_page.Liturgien)
+                common.liturgien(data.Mirakel.Liturgien, common.current_page.Liturgien)
             }
         \end{NiceTabular}
     \end{dsaSheetBox}

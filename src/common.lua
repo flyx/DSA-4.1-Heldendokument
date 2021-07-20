@@ -98,6 +98,61 @@ function common.inner_rows(v, num_items, num_rows)
   end
 end
 
+function common.segnungen(items)
+  local first = true
+  for _, s in ipairs(items) do
+    if getmetatable(s).name == "Segnung" then
+      if first then
+        first = false
+      else
+        tex.sprint(-2, ", ")
+      end
+      tex.sprint(-2, s.Name)
+      if s.Seite ~= "" then
+        tex.sprint([[ {\tiny ]])
+        tex.sprint(-2, tostring(s.Seite))
+        tex.sprint("}")
+      end
+    end
+  end
+end
+
+local grad_disp = {"0", "I", "II", "III", "IV", "V", "VI"}
+
+function common.liturgien(items, num_rows)
+  local actual_rows = 0
+  for _, l in ipairs(items) do
+    if getmetatable(l).name == "Liturgie" then
+      actual_rows = actual_rows + 1
+    end
+  end
+
+  local printed = 0
+  for _, l in ipairs(items) do
+    if getmetatable(l).name ~= "Liturgie" then
+      goto continue
+    end
+    printed = printed + 1
+    tex.sprint(-2, l.Seite)
+    tex.sprint("&")
+    tex.sprint(-2, l.Name)
+    tex.sprint("&")
+    for j, g in ipairs(l.Grade) do
+      if j > 1 then
+        tex.sprint(-2, ", ")
+      end
+      tex.sprint(-2, grad_disp[g + 1])
+    end
+    if printed ~= actual_rows then
+      tex.sprint([[\\ \hline]])
+    end
+    ::continue::
+  end
+  for i = actual_rows + 1, num_rows do
+    tex.sprint([[\\ \hline &&]])
+  end
+end
+
 -- spec = {
 --   name="whatev", rows = 23, cols = 42, col="", baselinestretch=1.35,
 --   preamble="", hspace="10pt", fontsize={8,12}

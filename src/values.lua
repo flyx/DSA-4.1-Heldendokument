@@ -55,8 +55,7 @@ local values = {
   Verbindungen = schema.Verbindungen:instance(),
   Notizen = schema.Notizen:instance(),
   Tiere = schema.Tiere:instance(),
-  Liturgiekenntnis = schema.Liturgiekenntnis:instance(),
-  Liturgien = schema.Liturgien:instance(),
+  Mirakel = {},
   Magie = {},
   Ereignisse = {},
 }
@@ -69,6 +68,9 @@ for k,v in pairs(schema.Talente) do
 end
 for k,v in pairs(schema.Magie) do
   values.Magie[k] = v:instance()
+end
+for k,v in pairs(schema.Mirakel) do
+  values.Mirakel[k] = v:instance()
 end
 values.Vermoegen.Sonstiges = schema.Vermoegen.Sonstiges:instance()
 for _,v in ipairs(values.Talente.SprachenUndSchriften) do
@@ -839,18 +841,62 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
       values.Magie.Rituale:append(e.Subjekt, e.Sortierung)
       event[1] = "Ritual ("
     elseif smt.name == "Liturgie" then
+      local existing = nil
+      local von_grad = 0
+      for _, l in ipairs(values.Mirakel.Liturgien) do
+        if getmetatable(l).name == "Liturgie" and l.Name == e.Subjekt.Name then
+          existing = l
+          for _, g in ipairs(l.Grade) do
+            if g > von_grad then
+              von_grad = g
+            end
+          end
+          break
+        end
+      end
       local base = 50
       if e.Methode == "SE" then
         base = 25
       end
-      ap = base * e.Subjekt.Grad
-      if values.Vorteile.EidetischesGedaechtnis then
-        return skt.faktor["1/2"]
-      elseif values.Vorteile.GutesGedaechtnis then
-        return skt.faktor["3/4"]
+      local nach_grad = 0
+      for _, g in ipairs(e.Subjekt.Grad) do
+        if nach_grad < g then
+          nach_grad = g
+        end
       end
-      values.Liturgien:append(e.Subjekt, e.Sortierung)
-      event[1] = "Liturgie ("
+      ap = base * (nach_grad - von_grad)
+      if ap < 0 then
+        ap = 0
+      end
+      if values.Vorteile.EidetischesGedaechtnis then
+        faktor = skt.faktor["1/2"]
+      elseif values.Vorteile.GutesGedaechtnis then
+        faktor = skt.faktor["3/4"]
+      end
+      if existing == nil then
+        values.Liturgien:append(e.Subjekt, e.Sortierung)
+      else
+        for _, g in ipairs(e.Subjekt.Grade) do
+          local found = false
+          for _, e in ipairs(existing.Grade) do
+            if e == g then
+              found = true
+              break
+            end
+          end
+          if found == false then
+            existing.Grade:append(g)
+          end
+        end
+      end
+      event[1] = "Liturgie Grad "
+      for i, g in ipairs(e.Subjekt.Grade) do
+        if i > 1 then
+          event[1] = event[1] .. ", "
+        end
+        event[1] = event[1] .. tostring(g)
+      end
+      event[1] = event[1] .. " ("
     end
     event[1] = event[1] .. e.Subjekt.Name .. ", " .. e.Methode .. ")"
     event[2] = -1 * ap

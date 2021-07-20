@@ -1009,14 +1009,14 @@ Waffen.Ruestung {</xsl:text>
 
   <xsl:template match="talent" mode="liturgiekenntnis">
     <xsl:text>
-Liturgiekenntnis {</xsl:text>
+Mirakel.Liturgiekenntnis {</xsl:text>
     <xsl:value-of select="dsa:stringVal(substring-before(substring-after(@name, '('), ')'))"/>
     <xsl:value-of select="concat(', ', @value, '}')"/>
   </xsl:template>
 
   <xsl:template match="sf" mode="liturgien">
     <xsl:text>
-Liturgien {</xsl:text>
+Mirakel.Liturgien {</xsl:text>
     <xsl:apply-templates select="sonderfertigkeit[starts-with(@name, 'Liturgie: ')]" mode="liturgien-klseg"/>
     <xsl:apply-templates select="sonderfertigkeit[starts-with(@name, 'Liturgie: ')]" mode="liturgien-sonst"/>
     <xsl:text>
@@ -1028,7 +1028,7 @@ Liturgien {</xsl:text>
     <xsl:param name="base"/>
     <func:result>
       <xsl:choose>
-        <xsl:when test="contains($base, '(')">
+        <xsl:when test="contains($base, ' (')">
           <xsl:value-of select="substring-before($base, ' (')"/>
         </xsl:when>
         <xsl:otherwise>
@@ -1040,15 +1040,46 @@ Liturgien {</xsl:text>
 
   <func:function name="dsa:litorigname">
     <xsl:param name="base"/>
-    <func:result>
+    <xsl:variable name="tmp">
+      <xsl:for-each select="$liturgien/g">
+        <xsl:variable name="suffix" select="concat(' (', text(), ')')"/>
+        <xsl:if test="contains($base, $suffix)">
+          <xsl:value-of select="substring-before($base, $suffix)"/>
+        </xsl:if>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="ohneGrad">
       <xsl:choose>
-        <xsl:when test="contains($base, '(')">
-          <xsl:value-of select="substring-before(substring-after($base, '('), ')')"/>
+        <xsl:when test="string-length($tmp) = 0">
+          <xsl:value-of select="$base"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="dsa:litname($base)"/>
+          <xsl:value-of select="$tmp"/>
         </xsl:otherwise>
       </xsl:choose>
+    </xsl:variable>
+
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="contains($ohneGrad, ' (')">
+          <xsl:value-of select="substring-before(substring-after($ohneGrad, '('), ')')"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="$ohneGrad"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+
+  <func:function name="dsa:litgrad">
+    <xsl:param name="base"/>
+    <func:result>
+      <xsl:for-each select="$liturgien/g">
+        <xsl:variable name="suffix" select="concat(' (', text(), ')')"/>
+        <xsl:if test="contains($base, $suffix)">
+          <xsl:value-of select="text()"/>
+        </xsl:if>
+      </xsl:for-each>
     </func:result>
   </func:function>
 
@@ -1056,9 +1087,9 @@ Liturgien {</xsl:text>
     <xsl:variable name="base" select="substring(@name, string-length('Liturgie: ') + 1)"/>
     <xsl:variable name="name" select="dsa:litname($base)"/>
     <xsl:variable name="def" select="$liturgien/l[@n=dsa:litorigname($base)]"/>
-    <xsl:if test="$def/@zw">
+    <xsl:variable name="grad" select="dsa:litgrad($base)"/>
+    <xsl:if test="$def/@zw and string-length($grad) = 0">
       <xsl:apply-templates select="." mode="liturgien">
-        <xsl:with-param name="base" select="$base"/>
         <xsl:with-param name="name" select="$name"/>
         <xsl:with-param name="def" select="$def"/>
       </xsl:apply-templates>
@@ -1069,9 +1100,9 @@ Liturgien {</xsl:text>
     <xsl:variable name="base" select="substring(@name, string-length('Liturgie: ') + 1)"/>
     <xsl:variable name="name" select="dsa:litname($base)"/>
     <xsl:variable name="def" select="$liturgien/l[@n=dsa:litorigname($base)]"/>
-    <xsl:if test="not($def/@zw)">
+    <xsl:variable name="grad" select="dsa:litgrad($base)"/>
+    <xsl:if test="not($def/@zw) and string-length($grad) = 0">
       <xsl:apply-templates select="." mode="liturgien">
-        <xsl:with-param name="base" select="$base"/>
         <xsl:with-param name="name" select="$name"/>
         <xsl:with-param name="def" select="$def"/>
       </xsl:apply-templates>
@@ -1079,11 +1110,19 @@ Liturgien {</xsl:text>
   </xsl:template>
 
   <xsl:template match="sonderfertigkeit" mode="liturgien">
-    <xsl:param name="base"/>
     <xsl:param name="name"/>
     <xsl:param name="def"/>
-    <xsl:text>
-    {</xsl:text>
+    <xsl:variable name="full" select="@name"/>
+    <xsl:choose>
+      <xsl:when test="$def/@zw">
+        <xsl:text>
+    Segnung {</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>
+    Liturgie {</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:choose>
       <xsl:when test="$def">
         <xsl:value-of select="$def/@s"/>
@@ -1092,17 +1131,31 @@ Liturgien {</xsl:text>
         <xsl:text>""</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:variable name="text" as="xs:string">
-      <xsl:value-of select="$name"/>
-      <xsl:if test="contains($base, '(')">
-        <xsl:value-of select="concat(' (', substring-before(substring-after($base, '('), ')'), ')')"/>
-      </xsl:if>
-    </xsl:variable>
-    <xsl:value-of select="concat(', ', dsa:stringVal($text), ', &quot;')"/>
-    <xsl:if test="$def">
-      <xsl:value-of select="$def/@g"/>
-    </xsl:if>
-    <xsl:text>"},</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$def/@orig">
+        <xsl:value-of select="concat(', ', dsa:stringVal($def/@orig))"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="concat(', ', dsa:stringVal($name))"/>
+      </xsl:otherwise>
+    </xsl:choose>
+
+    <xsl:if test="not($def/@zw)">
+      <xsl:text>, {</xsl:text>
+      <xsl:choose>
+        <xsl:when test="$def">
+          <xsl:value-of select="$def/@g"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>I</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+      <xsl:for-each select="following-sibling::*[starts-with(@name, $full)]">
+        <xsl:value-of select="concat(', ', dsa:litgrad(@name))"/>
+      </xsl:for-each>
+      <xsl:text>}</xsl:text>
+     </xsl:if>
+    <xsl:text>},</xsl:text>
   </xsl:template>
 
   <func:function name="dsa:isRitual">

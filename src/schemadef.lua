@@ -1092,8 +1092,12 @@ d.Multivalue = TypeClass.new({
   input_kind = "unnamed"
 })
 
-function d.Multivalue:init()
+function d.Multivalue:init(inner)
+  if inner == nil then
+    self:err("Multivalue ohne `inner` Wert!\n")
+  end
   self.__index = d.Multivalue.getfield
+  self.inner = inner
 end
 
 function d.Multivalue:pre_construct()
@@ -1102,11 +1106,16 @@ end
 
 function d.Multivalue:append(v)
   if type(v) == "table" then
-    for l,w in pairs(v) do
-      return string.format("string oder {} in Liste erwartet, bekam nicht-leere table")
+    local mt = getmetatable(v)
+    if mt == nil then
+      for l,w in pairs(v) do
+        return string.format("%s oder {} in Liste erwartet, bekam nicht-leere table", self.inner.name)
+      end
+    elseif mt ~= self.inner then
+      return string.format("%s oder {} in Liste erwartet, bekam %s", self.inner.name, mt.name)
     end
-  elseif type(v) ~= "string" then
-    return string.format("string oder {} in Liste erwartet, bekam %s", type(v))
+  else
+    v = self.inner(v)
   end
   table.insert(self.value, v)
 end
@@ -1122,7 +1131,11 @@ end
 
 function d.Multivalue:getfield(key)
   if type(key) == "number" then
-    return self.value[key]
+    local v = self.value[key]
+    if v ~= nil then
+      v = v:get()
+    end
+    return v
   else
     return getmetatable(self)[key]
   end
@@ -1130,11 +1143,11 @@ end
 
 function d.Multivalue:print_syntax(printer)
   printer:meta("[ ")
-  d.String:print_syntax(printer)
+  printer:ref(self.inner)
   printer:meta(" | ")
   printer:sym("{ ")
   printer:meta("[ ")
-  d.String:print_syntax(printer)
+  printer:ref(self.inner)
   printer:meta(" | ")
   printer:sym("{}")
   printer:meta(" ]")
@@ -1145,7 +1158,7 @@ function d.Multivalue:print_syntax(printer)
 end
 
 function d.Multivalue:documentation(printer)
-  printer:p("Text oder Liste von Text.")
+  printer:p(string.format("Ein einzelner oder eine Liste von %s-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.", self.inner.name))
 end
 
 d.Boolean = TypeClass.new({
@@ -1268,7 +1281,7 @@ setmetatable(d, {
     self.schema.Boolean = self.Boolean:def({name = "Boolean"})
     self.schema.String = self.String:def({name = "String"})
     self.schema.Simple = self.Simple:def({name = "Simple"})
-    self.schema.Multiline = self.Multivalue:def({name = "Multiline"})
+    self.schema.Multiline = self.Multivalue:def({name = "Multiline"}, self.schema.String)
     if docgen then
       self.typelist = {}
     end
