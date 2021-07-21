@@ -368,7 +368,7 @@ schema.Mirakel = {
     "", ""
   },
   Plus = d:singleton(d.MixedList, {name = "Mirakel.Plus", documentation = "Der Gottheit wohlgefällige Talente"}, String) {},
-  Minus = d:singleton(d.MixedList, {name = "Mirakel.Minus", documentation = "Talente, die der Gottheit zuwider sind", String}) {},
+  Minus = d:singleton(d.MixedList, {name = "Mirakel.Minus", documentation = "Talente, die der Gottheit zuwider sind"}, String) {},
   Liturgien = d:singleton(d.MixedList, {name = "Mirakel.Liturgien", documentation = "Liste von Liturgien.", item_name = "Liturgie"}, Segnung, Liturgie) {},
 }
 

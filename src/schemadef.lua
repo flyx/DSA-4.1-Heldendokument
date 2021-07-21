@@ -44,17 +44,21 @@ function doc_printer:ph(name)
   io.write([[&gt;</span>]])
 end
 
-function doc_printer:ref(target, name)
+function doc_printer:ref(target, name, force_named)
+  if target == nil then
+    print(debug.traceback())
+    io.write("ERROR: target nil!\n")
+  end
   if self.known[target] == nil then
     local found = false
     for _,v in ipairs(self.refs) do
-      if v == target then
+      if v.target == target then
         found = true
         break
       end
     end
     if not found then
-      table.insert(self.refs, target)
+      table.insert(self.refs, {target = target, named = force_named == true})
     end
   end
   if name ~= nil then
@@ -64,7 +68,7 @@ function doc_printer:ref(target, name)
     io.write([[<a href="#]] .. target.name .. [[">]])
   end
   if name == nil then
-    io.write([["&lt;]])
+    io.write([[&lt;]])
   end
   if target == nil then
     io.write("Any")
@@ -127,7 +131,7 @@ function doc_printer:close()
 end
 
 function doc_printer:h(depth, id, label)
-  io.write("<h" .. tostring(depth + 2) .. ">")
+  io.write("<h" .. tostring(depth + 2) .. " id=\"" .. label .. "\">")
   io.write(label)
   io.write("</h" .. tostring(depth + 2) .. ">")
 end
@@ -387,6 +391,7 @@ end
 
 --  Called on a type to generate the HTML documentation
 function TypeClass:print_documentation(printer, depth, named)
+  printer.known[self] = true
   printer:h(depth, self.name, self.name)
   io.write("\n\n<pre><code>")
   if self.input_kind == "scalar" then
@@ -501,18 +506,21 @@ function d.MixedList:getfield(key)
 end
 
 function d.MixedList:print_syntax(printer)
+  if #self.items == 0 then
+    io.write("EMPTY MIXEDLIST: " .. self.name .. "\n")
+  end
   if #self.items > 1 then
     printer:meta("&lt;" .. self.item_name .. ': [ ')
     for i,t in ipairs(self.items) do
       if i > 1 then
         printer:meta(" | ")
       end
-      printer:ref(t)
+      printer:ref(t, nil, true)
     end
     printer:meta(" ]&gt;")
     printer:sym(", ...")
   else
-    printer:ref(self.items[1])
+    printer:ref(self.items[1], nil, false)
     printer:sym(", ...")
   end
 end
@@ -837,9 +845,12 @@ function d.HeterogeneousList:print_syntax(printer)
       printer:sym(", ")
     end
     if v[2] == nil then
-      io.write("HL[" .. self.name .. "]:ps(): " .. v[1] .. " is nil!\n")
+      printer:meta("&lt;" .. v[1] .. ":")
+      io.write("Any")
+      printer:meta("&gt;")
+    else
+      printer:ref(v[2], v[1])
     end
-    printer:ref(v[2], v[1])
   end
 end
 
@@ -1269,8 +1280,7 @@ function d:gendocs()
       if #refs[depth] == 0 then
         table.remove(refs)
       end
-      doc_printer.known[cur] = true
-      cur:print_documentation(doc_printer, depth, false)
+      cur.target:print_documentation(doc_printer, depth, cur.named)
     end
   end
   io.write("</section></article>")
