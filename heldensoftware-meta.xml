@@ -152,7 +152,7 @@
     <vn name="Madas Fluch" nachteil="1" magisch="1"/>
     <vn name="Medium" nachteil="1"/>
     <vn name="Meeresangst" nachteil="1"/>
-    <vn name="Meisterhandwerk" magisch="1"/>
+    <vn name="Meisterhandwerk" id="Meisterhandwerk" magisch="1" liste="1"/>
     <vn name="Miserable Eigenschaft" nachteil="1"/>
     <vn name="Mondsüchtig" nachteil="1"/>
     <vn name="Moralkodex" nachteil="1"/>
