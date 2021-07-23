@@ -565,7 +565,7 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
     event[1] = "Talentsteigerung (" .. e.Name .. ", " .. e.Methode .. ") von "
     for _, g in ipairs({"Gaben", "Kampf", "Koerper", "Gesellschaft", "Natur", "Wissen", "SprachenUndSchriften", "Handwerk"}) do
       for _, t in ipairs(values.Talente[g]) do
-        if t.Name == e.Name then
+        if t.Name == e.Name and (e.Typ == nil or getmetatable(t).name == e.Typ.name) then
           if type(t.TaW) ~= "number" then
             tex.error("\n[TaW] Kann '" .. e.Name .. "' nicht steigern: hat keinen Zahlenwert, sondern " .. type(t.TaW))
           end

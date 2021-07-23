@@ -74,7 +74,7 @@
 
 <h3 id="Ganzzahl">Ganzzahl</h3>
 
-<pre><code><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span></code></pre>
+<pre><code><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span></code></pre>
 
 <p>Eine Zahl in Dezimalschreibweise.</p>
 
@@ -319,10 +319,10 @@ einzelnen Seiten beschrieben.</p>
 <pre><code><span class="id">Vorteile</span> <span class="sym">{</span>
   <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
   <span class="metasym">(optional) </span><span class="id">BegabungFuerTalentgruppe </span><span class="sym">"</span><span class="metasym">[ </span><span class="id">Kampf</span><span class="metasym"> | </span><span class="id">Nahkampf</span><span class="metasym"> | </span><span class="id">Fernkampf</span><span class="metasym"> | </span><span class="id">Koerper</span><span class="metasym"> | </span><span class="id">Gesellschaft</span><span class="metasym"> | </span><span class="id">Natur</span><span class="metasym"> | </span><span class="id">Wissen</span><span class="metasym"> | </span><span class="id">SprachenUndSchriften</span><span class="metasym"> | </span><span class="id">Handwerk</span><span class="metasym"> ]</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Flink </span><span class="metasym">[</span><span class="num">1</span><span class="metasym">..</span><span class="num">2</span><span class="metasym">]</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">BegabungFuerEigenschaft </span><span class="sym">"</span><span class="metasym">[ </span><span class="id">MU</span><span class="metasym"> | </span><span class="id">KL</span><span class="metasym"> | </span><span class="id">IN</span><span class="metasym"> | </span><span class="id">CH</span><span class="metasym"> | </span><span class="id">FF</span><span class="metasym"> | </span><span class="id">GE</span><span class="metasym"> | </span><span class="id">KO</span><span class="metasym"> | </span><span class="id">KK</span><span class="metasym"> | </span><span class="id">LE</span><span class="metasym"> | </span><span class="id">AU</span><span class="metasym"> | </span><span class="id">AE</span><span class="metasym"> | </span><span class="id">MR</span><span class="metasym"> ]</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
   <span class="metasym">(optional) </span><span class="id">AkademischeAusbildung </span><span class="sym">"</span><span class="metasym">[ </span><span class="id">Gelehrter?</span><span class="metasym"> | </span><span class="id">Magier</span><span class="metasym"> | </span><span class="id">Magierin</span><span class="metasym"> | </span><span class="id">Krieger</span><span class="metasym"> | </span><span class="id">Kriegerin</span><span class="metasym"> ]</span><span class="sym">"</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">BegabungFuerTalent </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">BegabungFuerEigenschaft </span><span class="sym">"</span><span class="metasym">[ </span><span class="id">MU</span><span class="metasym"> | </span><span class="id">KL</span><span class="metasym"> | </span><span class="id">IN</span><span class="metasym"> | </span><span class="id">CH</span><span class="metasym"> | </span><span class="id">FF</span><span class="metasym"> | </span><span class="id">GE</span><span class="metasym"> | </span><span class="id">KO</span><span class="metasym"> | </span><span class="id">KK</span><span class="metasym"> | </span><span class="id">LE</span><span class="metasym"> | </span><span class="id">AU</span><span class="metasym"> | </span><span class="id">AE</span><span class="metasym"> | </span><span class="id">MR</span><span class="metasym"> ]</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+  <span class="metasym">(optional) </span><span class="id">Flink </span><span class="metasym">[</span><span class="num">1</span><span class="metasym">..</span><span class="num">2</span><span class="metasym">]</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">BegabungFuerTalent </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
 <p>Liste von nicht-magischen Vorteilen.</p>
@@ -331,11 +331,12 @@ einzelnen Seiten beschrieben.</p>
 
 <pre><code><span class="id">Vorteile.Magisch</span> <span class="sym">{</span>
   <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">BegabungFuerZauber </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
   <span class="metasym">(optional) </span><span class="id">BegabungFuerMerkmal </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
   <span class="metasym">(optional) </span><span class="id">Daemonisch </span><a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span><span class="sym">,</span>
   <span class="metasym">(optional) </span><span class="id">Elementar </span><a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">BegabungFuerZauber </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">BegabungFuerRitual </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+  <span class="metasym">(optional) </span><span class="id">BegabungFuerRitual </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Meisterhandwerk </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
 <p>Liste von magischen Vorteilen.</p>
@@ -396,13 +397,13 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="BasisEig">BasisEig</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span><span class="sym">}</span></code></pre>
 
 <p>Eine Basiseigenschaft mit Modifikator, Startwert und aktuellem Wert.</p>
 
 <h3 id="AbgeleiteteEig">AbgeleiteteEig</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-1000</span><span class="metasym">..</span><span class="num">1000</span><span class="metasym">]</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span><span class="sym">}</span></code></pre>
 
 <p>Eine abgeleitete Eigenschaft mit Modifikator, zugekauften Punkten und permanent verlorenen Punkten.</p>
 
@@ -600,10 +601,10 @@ einzelnen Seiten beschrieben.</p>
 
 <pre><code><span class="id">SF.Nahkampf</span> <span class="sym">{</span>
   <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Schildkampf </span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span><span class="sym">,</span>
   <span class="metasym">(optional) </span><span class="id">Ruestungsgewoehnung </span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Ausweichen </span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">,</span>
   <span class="metasym">(optional) </span><span class="id">Parierwaffen </span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Ausweichen </span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span>
+  <span class="metasym">(optional) </span><span class="id">Schildkampf </span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span>
 <span class="sym">}</span></code></pre>
 
 <p>Liste von Nahkampf-Sonderfertigkeiten.</p>
@@ -612,9 +613,9 @@ einzelnen Seiten beschrieben.</p>
 
 <pre><code><span class="id">SF.Fernkampf</span> <span class="sym">{</span>
   <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Meisterschuetze </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span><span class="sym">,</span>
+  <span class="metasym">(optional) </span><span class="id">Scharfschuetze </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span><span class="sym">,</span>
   <span class="metasym">(optional) </span><span class="id">Schnellladen </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Scharfschuetze </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span>
+  <span class="metasym">(optional) </span><span class="id">Meisterschuetze </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span>
 <span class="sym">}</span></code></pre>
 
 <p>Liste von Fernkampf-Sonderfertigkeiten.</p>
@@ -969,10 +970,10 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="TaW">TaW</h3>
 
 <pre><code><span class="id">TaW</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Typ:</span>Any<span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
-<p>Steigerung eines Talentwerts</p>
+<p>Steigerung eines Talentwerts. Heißen verschiedene Talente gleich, kann der Typ angegeben werden (z.B. Sprache Tuladimya vs Schrift Tulamidya).</p>
 
 <h4 id="SteigerMethode">SteigerMethode</h4>
 
@@ -1082,7 +1083,7 @@ einzelnen Seiten beschrieben.</p>
 
 <pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span><span class="sym">}</span></code></pre>
 
-<p>Definiert, wie eine neu aktivierte Fähigkeit (Talent, Zauber, …) in die bestehende Liste einsortiert wird. Ein leerer Wert sortiert am Ende der Liste ein, ansonsten wird zuerst nach der Spalte, die vom ersten Wert gegeben wird, sortiert, dann nach der vom zweiten Wert etc.</p>
+<p>Definiert, wie eine neu aktivierte Fähigkeit (Talent, Zauber, …) in die bestehende Liste einsortiert wird. Ein leerer Wert sortiert am Ende der Liste ein, ansonsten wird zuerst nach der Spalte, die vom ersten Wert gegeben wird, sortiert, dann nach der vom zweiten Wert etc. Wenn in der Liste der erste Wert ein leerer String ist, dann wird das Talent in der letzten Gruppe gleichartiger Talente einsortiert (um z.B. Sprachen von Schriften zu trennen).</p>
 
 <h3 id="Zugewinn">Zugewinn</h3>
 

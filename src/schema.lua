@@ -175,7 +175,7 @@ schema.Nachteile.Magisch = d:singleton(d.ListWithKnown, {name = "Nachteile.Magis
 }) {}
 
 -- TODO: nicht-Ganzzahlen erkennen und Fehler werfen
-local Ganzzahl = d.Number:def({name = "Ganzzahl", documentation = "Eine Zahl in Dezimalschreibweise."}, -1000, 1000, 0)
+local Ganzzahl = d.Number:def({name = "Ganzzahl", documentation = "Eine Zahl in Dezimalschreibweise."}, -9999999, 9999999, 0)
 
 local BasisEig = d.FixedList:def({name = "BasisEig", documentation = "Eine Basiseigenschaft mit Modifikator, Startwert und aktuellem Wert."}, Ganzzahl, 3, 3)
 local AbgeleiteteEig = d.FixedList:def({name = "AbgeleiteteEig", documentation = "Eine abgeleitete Eigenschaft mit Modifikator, zugekauften Punkten und permanent verlorenen Punkten."}, Ganzzahl, 3, 3)
@@ -410,8 +410,8 @@ local SteigerMethode = d.Matching:def({name = "SteigerMethode", documentation = 
 local SFLernmethode = d.Matching:def({name = "SFLernmethode", documentation = "Lernmethode für eine Sonderfertigkeit"}, "SE", "Lehrmeister")
 local EigSteigerMethode = d.Matching:def({name = "EigSteigerMethode", documentation = "Steigerungsmethode für Eigenschaften"}, "SE", "Standard")
 
-local TaW = d.HeterogeneousList:def({name = "TaW", documentation = "Steigerung eines Talentwerts"},
-  {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"})
+local TaW = d.HeterogeneousList:def({name = "TaW", documentation = "Steigerung eines Talentwerts. Heißen verschiedene Talente gleich, kann der Typ angegeben werden (z.B. Sprache Tuladimya vs Schrift Tulamidya)."},
+  {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"}, {"Typ", nil, {}})
 
 local ZfW = d.HeterogeneousList:def({name = "ZfW", documentation = "Steigerung eines Zauberfertigkeitwerts"},
   {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"})
@@ -440,7 +440,7 @@ local RkW = d.HeterogeneousList:def({name = "RkW", documentation = "Steigerung e
 local LkW = d.HeterogeneousList:def({name = "LkW", documentation = "Steigerung des Liturgiekenntniswerts."},
   {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"})
 
-local Sortiere = d.Multivalue:def({name = "Sortiere", documentation = "Definiert, wie eine neu aktivierte Fähigkeit (Talent, Zauber, …) in die bestehende Liste einsortiert wird. Ein leerer Wert sortiert am Ende der Liste ein, ansonsten wird zuerst nach der Spalte, die vom ersten Wert gegeben wird, sortiert, dann nach der vom zweiten Wert etc."}, String)
+local Sortiere = d.Multivalue:def({name = "Sortiere", documentation = "Definiert, wie eine neu aktivierte Fähigkeit (Talent, Zauber, …) in die bestehende Liste einsortiert wird. Ein leerer Wert sortiert am Ende der Liste ein, ansonsten wird zuerst nach der Spalte, die vom ersten Wert gegeben wird, sortiert, dann nach der vom zweiten Wert etc. Wenn in der Liste der erste Wert ein leerer String ist, dann wird das Talent in der letzten Gruppe gleichartiger Talente einsortiert (um z.B. Sprachen von Schriften zu trennen)."}, String)
 
 local Aktiviere = d.HeterogeneousList:def({name = "Aktiviere", documentation = "Aktiviert ein Talent, einen Zauber, eine Liturgie oder ein Ritual. Ist der gegebene Wert des Talents oder des Zaubers größer 0, wird anschließend eine Steigerung durchgeführt. Für Gesellschafts-, Natur-, Wissens- und Handwerkstalente muss die Talentgruppe angegeben werden; in allen anderen Fällen wird sie ignoriert."},
   {"Subjekt", nil}, {"Methode", SteigerMethode, "Lehrmeister"}, {"Sortierung", Sortiere, "Name"}, {"Talentgruppe", String, ""})

@@ -474,8 +474,32 @@ function d.MixedList:append(v, sort)
   end
   if sort == nil then sort = {} end
   local index = #self.value
-  while index >= 1 do
-    local si = 1
+  local min = 0
+  local sistart = 1
+  if #sort > 0 and sort[1] == "" then
+    sistart = 2
+    while index >= 1 do
+      if getmetatable(self.value[index]).name == mt.name then
+        break
+      end
+      index = index - 1
+    end
+    if index == 0 then
+      min = #self.value
+      index = #self.value
+    else
+      min = index - 1
+      while min > 0 do
+        if getmetatable(self.value[min]).name ~= mt.name then
+          break
+        end
+        min = min - 1
+      end
+    end
+  end
+
+  while index > min do
+    local si = sistart
     while si <= #sort do
       local cur = self.value[index][sort[si]]
       if cur < v[sort[si]] then
@@ -483,6 +507,7 @@ function d.MixedList:append(v, sort)
       elseif cur > v[sort[si]] then
         break
       end
+      si = si + 1
     end
     if si > #sort then
       break
@@ -789,6 +814,10 @@ function d.HeterogeneousList:post_construct()
       local def = self.fields[i]
       if def[3] == nil then
         self:err("Wert #%d (%s) fehlt", i, def[1])
+      elseif def[2] == nil then
+        if getmetatable(def[3]) ~= nil then
+          self.value[i] = def[3]
+        end
       else
         self.value[i] = def[2](def[3])
       end
