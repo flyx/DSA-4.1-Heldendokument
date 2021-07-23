@@ -24,27 +24,46 @@ function talent.render(value)
   end
 end
 
-function talent.spez(l)
-  if #l > 0 then
-    local ret = " ("
-    for k, s in ipairs(l) do
+function talent.namecol(name, spez)
+  tex.sprint(-2, name)
+  if #spez > 0 then
+    tex.sprint(-2, " (")
+    for k, s in ipairs(spez) do
       if k > 1 then
-        ret = ret .. ", "
+        tex.sprint(-2, ", ")
       end
-      ret = ret .. s
+      tex.sprint(-2, s)
     end
-    ret = ret .. ")"
-    return ret
-  else
-    return ""
+    tex.sprint(-2, ")")
+  end
+  tex.sprint([[\hfill]])
+  for _, v in ipairs(data.Vorteile.Magisch.Meisterhandwerk) do
+    if v == name then
+      tex.sprint([[\faHandSparkles]])
+      break
+    end
+  end
+  for _, v in ipairs(data.Mirakel.Plus) do
+    if v == name then
+      tex.sprint([[\faPlusCircle]])
+      break
+    end
+  end
+  for _, v in ipairs(data.Mirakel.Minus) do
+    if v == name then
+      tex.sprint([[\faMinusCircle]])
+      break
+    end
   end
 end
 
 function talent.be(value)
-  if value == "-" then
+  if value == "-" or value == "" then
     return "–"
   else
-    return string.gsub(string.gsub(value, "x", "×"), "-", "−")
+    --  must use local, dumps second return value
+    local s = string.gsub(string.gsub(value, "x", "×"), "-", "−")
+    return s
   end
 end
 
@@ -53,13 +72,14 @@ function talent.nah(v)
     tex.sprint([[& ]])
     local content = v[j]
     if j == 1 then
-      content = content .. talent.spez(v.Spezialisierungen)
+      talent.namecol(content, v.Spezialisierungen)
     elseif j == 2 then
-      content = data:kampf_schwierigkeit(v)
+      tex.sprint(-2, data:kampf_schwierigkeit(v))
     elseif j == 3 then
-      content = talent.be(content)
+      tex.sprint(-2, talent.be(content))
+    else
+      tex.sprint(-2, content)
     end
-    tex.sprint(-2, content)
   end
 end
 
@@ -68,13 +88,14 @@ function talent.fern(v, filler)
     tex.sprint([[& ]])
     local content = v[j]
     if j == 1 then
-      content = content .. talent.spez(v.Spezialisierungen)
+      talent.namecol(content, v.Spezialisierungen)
     elseif j == 2 then
-      content = data:kampf_schwierigkeit(v)
+      tex.sprint(-2, data:kampf_schwierigkeit(v))
     elseif j == 3 then
-      content = talent.be(content)
+      tex.sprint(-2, talent.be(content))
+    else
+      tex.sprint(-2, content)
     end
-    tex.sprint(-2, content)
   end
   tex.sprint([[& \multicolumn{2}{c|}{]] .. filler .. "} & ")
   tex.sprint(-2, v[4])
@@ -85,17 +106,18 @@ function talent.koerper(v)
     tex.sprint([[& ]])
     local content = v[j]
     if j == 1 then
-      content = content .. talent.spez(v.Spezialisierungen)
+      talent.namecol(content, v.Spezialisierungen)
     elseif j == 5 then
-      content = talent.be(content)
+      tex.sprint(-2, talent.be(content))
+    else
+      tex.sprint(-2, content)
     end
-    tex.sprint(-2, content)
   end
 end
 
 function talent.sprache(v, prefix)
   tex.sprint([[& \faComments{} ]] .. prefix)
-  tex.sprint(-2, v[1] .. talent.spez(v.Dialekt))
+  talent.namecol(v.Name, v.Dialekt)
   tex.sprint(" & " .. data:sprache_schwierigkeit(v))
   for i=2,3 do
     tex.sprint("& ")
@@ -116,9 +138,10 @@ end
 function talent.sonstige(v)
   for i=1,5 do
     tex.sprint(" & ")
-    tex.sprint(-2, v[i])
     if i == 1 then
-      tex.sprint(-2, talent.spez(v.Spezialisierungen))
+      talent.namecol(v.Name, v.Spezialisierungen)
+    else
+      tex.sprint(-2, v[i])
     end
   end
 end
@@ -165,13 +188,7 @@ function gruppe.render(self, g, start_white)
     return
   end
 
-  label, spalte, title_col_len, item_name_len, num_items, col_spec, headers = self:spec(name)
-  if data.m_spalte and item_name_len > 0 then
-    item_name_len = item_name_len - 0.4
-    col_spec = col_spec .. "|x{0.4cm}"
-    headers = headers .. [[ & \multicolumn{1}{|c}{\Th{M}}]]
-    num_items = num_items + 1
-  end
+  local label, spalte, title_col_len, item_name_len, num_items, col_spec, headers = self:spec(name)
 
   tex.sprint([[\begin{NiceTabular}{p{0.2cm}|p{]])
   tex.sprint(item_name_len .. "cm")
@@ -207,9 +224,6 @@ function gruppe.render(self, g, start_white)
 
   for i, v in ipairs(data.Talente[name]) do
     talent.render(v)
-    if data.m_spalte and item_name_len > 0 then
-      tex.sprint("&")
-    end
     tex.sprint([[\\ \hline]])
   end
   for i = #data.Talente[name] + 1, g do

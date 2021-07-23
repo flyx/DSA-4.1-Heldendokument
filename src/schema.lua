@@ -150,6 +150,7 @@ schema.Vorteile.Magisch = d:singleton(d.ListWithKnown, {name = "Vorteile.Magisch
   }),
   BegabungFuerRitual = d.FixedList:def({name = "BegabungFuerRitual", documentation = "Begabung für ein oder mehrere Rituale"}, String),
   BegabungFuerZauber = d.FixedList:def({name = "BegabungFuerZauber", documentation = "Begabung für einen oder mehrere Zauber"}, String),
+  Meisterhandwerk = d.FixedList:def({name = "Meisterhandwerk", documentation = "Liste von Talenten, für die ein Meisterhandwerk existiert."}, String),
 }) {}
 
 d:singleton(d.ListWithKnown, {name = "Nachteile", documentation = "Liste von nicht-magischen Nachteilen"}, {
