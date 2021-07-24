@@ -558,145 +558,404 @@ end
 
 -- Ereignisse auf Charakter applizieren
 
-for _, e in ipairs(schema.Ereignisse:instance()) do
-  local mt = getmetatable(e)
-  local event = {""}
-  if mt.name == "TaW" then
-    event[1] = "Talentsteigerung (" .. e.Name .. ", " .. e.Methode .. ") von "
-    for _, g in ipairs({"Gaben", "Kampf", "Koerper", "Gesellschaft", "Natur", "Wissen", "SprachenUndSchriften", "Handwerk"}) do
-      for _, t in ipairs(values.Talente[g]) do
-        if t.Name == e.Name and (e.Typ == nil or getmetatable(t).name == e.Typ.name) then
-          if type(t.TaW) ~= "number" then
-            tex.error("\n[TaW] Kann '" .. e.Name .. "' nicht steigern: hat keinen Zahlenwert, sondern " .. type(t.TaW))
-          end
-          local mt = getmetatable(t)
-          event[1] = event[1] .. tonumber(t.TaW) .. " auf " .. tonumber(e.Zielwert)
-          local spalte
-          if g == "Kampf" then
-            spalte = values:kampf_schwierigkeit(t)
-          elseif g == "SprachenUndSchriften" then
-            if mt.name == "Schrift" then
-              spalte = values:schrift_schwierigkeit(t)
-            else
-              spalte = values:sprache_schwierigkeit(t)
-            end
+function values:talentsteigerung(e)
+  local event = {"Talentsteigerung (" .. e.Name .. ", " .. e.Methode .. ") von "}
+  for _, g in ipairs({"Gaben", "Kampf", "Koerper", "Gesellschaft", "Natur", "Wissen", "SprachenUndSchriften", "Handwerk"}) do
+    for _, t in ipairs(self.Talente[g]) do
+      if t.Name == e.Name and (e.Typ == nil or getmetatable(t).name == e.Typ.name) then
+        if type(t.TaW) ~= "number" then
+          tex.error("\n[TaW] Kann '" .. e.Name .. "' nicht steigern: hat keinen Zahlenwert, sondern " .. type(t.TaW))
+        end
+        local mt = getmetatable(t)
+        event[1] = event[1] .. tonumber(t.TaW) .. " auf " .. tonumber(e.Zielwert)
+        local spalte
+        if g == "Kampf" then
+          spalte = self:kampf_schwierigkeit(t)
+        elseif g == "SprachenUndSchriften" then
+          if mt.name == "Schrift" then
+            spalte = self:schrift_schwierigkeit(t)
           else
-            spalte = values:talent_schwierigkeit(t, g)
+            spalte = self:sprache_schwierigkeit(t)
           end
-          local faktor = values:tgruppe_faktor(g)
-          local ap = 0
-          while t.TaW < e.Zielwert do
-            t.TaW = t.TaW + 1
-            ap = ap + skt:kosten(skt.spalte:effektiv(spalte, t.TaW, e.Methode), t.TaW)
-          end
-          event[2] = -1 * ap
-          event[3] = faktor
-          local kosten = faktor:apply(ap)
-          event[4] = -1 * kosten
-          event[5] = values:ap_mod(kosten)
-          goto found
+        else
+          spalte = self:talent_schwierigkeit(t, g)
         end
-      end
-    end
-    tex.error("\n[TaW] unbekanntes Talent: '" .. e.Name .. "'")
-  elseif mt.name == "ZfW" then
-    event[1] = "Zaubersteigerung (" .. e.Name .. ", " .. e.Methode .. ") von "
-    for _, z in ipairs(values.Magie.Zauber) do
-      if z.Name == e.Name then
-        if type(z.ZfW) ~= "number" then
-          tex.error("\n[ZfW] Kann '" .. e.Name .. "' nicht steigern: hat keinen Zahlenwert, sondern " .. type(z.ZfW))
-        end
-        event[1] = event[1] .. tonumber(z.ZfW) .. " auf " .. tonumber(e.Zielwert)
-        local spalte = values:lernschwierigkeit(z)
-        local faktor = values:tgruppe_faktor("Zauber")
+        local faktor = self:tgruppe_faktor(g)
         local ap = 0
-        while z.ZfW < e.Zielwert do
-          z.ZfW = z.ZfW + 1
-          ap = ap + skt:kosten(skt.spalte:effektiv(spalte, z.ZfW, e.Methode), z.ZfW)
+        while t.TaW < e.Zielwert do
+          t.TaW = t.TaW + 1
+          ap = ap + skt:kosten(skt.spalte:effektiv(spalte, t.TaW, e.Methode), t.TaW)
         end
         event[2] = -1 * ap
         event[3] = faktor
         local kosten = faktor:apply(ap)
         event[4] = -1 * kosten
         event[5] = values:ap_mod(kosten)
-        goto found
+        return event
       end
     end
-    tex.error("\n[ZfW] unbekannter Zauber: '" .. e.Name .. "'")
-  elseif mt.name == "Spezialisierung" then
-    local ziel = nil
-    local faktor = skt.faktor["1"]
-    local spalte = nil
-    for _, w in ipairs(values.Talente.Kampf) do
-      if w.Name == e.Fertigkeit then
-        ziel = w
-        spalte = values:kampf_schwierigkeit(w)
-        if values.Vorteile.AkademischeAusbildung[1] == "Krieger" or
-            values.Vorteile.AkademischeAusbildung[1] == "Kriegerin" then
+  end
+  tex.error("\n[TaW] unbekanntes Talent: '" .. e.Name .. "'")
+end
+
+function values:zaubersteigerung(e)
+  local event = {"Zaubersteigerung (" .. e.Name .. ", " .. e.Methode .. ") von "}
+  for _, z in ipairs(self.Magie.Zauber) do
+    if z.Name == e.Name then
+      if type(z.ZfW) ~= "number" then
+        tex.error("\n[ZfW] Kann '" .. e.Name .. "' nicht steigern: hat keinen Zahlenwert, sondern " .. type(z.ZfW))
+      end
+      event[1] = event[1] .. tonumber(z.ZfW) .. " auf " .. tonumber(e.Zielwert)
+      local spalte = self:lernschwierigkeit(z)
+      local faktor = self:tgruppe_faktor("Zauber")
+      local ap = 0
+      while z.ZfW < e.Zielwert do
+        z.ZfW = z.ZfW + 1
+        ap = ap + skt:kosten(skt.spalte:effektiv(spalte, z.ZfW, e.Methode), z.ZfW)
+      end
+      event[2] = -1 * ap
+      event[3] = faktor
+      local kosten = faktor:apply(ap)
+      event[4] = -1 * kosten
+      event[5] = self:ap_mod(kosten)
+      return event
+    end
+  end
+  tex.error("\n[ZfW] unbekannter Zauber: '" .. e.Name .. "'")
+end
+
+function values:spezialisierung(e)
+  local event = {}
+  local ziel = nil
+  local faktor = skt.faktor["1"]
+  local spalte = nil
+  for _, w in ipairs(self.Talente.Kampf) do
+    if w.Name == e.Fertigkeit then
+      ziel = w
+      spalte = self:kampf_schwierigkeit(w)
+      if self.Vorteile.AkademischeAusbildung[1] == "Krieger" or
+          self.Vorteile.AkademischeAusbildung[1] == "Kriegerin" then
+        faktor = skt.faktor["3/4"]
+      end
+      event[1] = "Waffenspezialisierung ("
+      break
+    end
+  end
+  if ziel == nil then
+    for _, g in ipairs({"Gaben", "Koerper", "Gesellschaft", "Natur", "Wissen", "Handwerk"}) do
+      for _, t in ipairs(self.Talente[g]) do
+        if t.Name == e.Fertigkeit then
+          ziel = t
+          spalte = self:talent_schwierigkeit(t, g)
+          if g == "Wissen" then
+            if self.Vorteile.EidetischesGedaechtnis then
+              faktor = skt.faktor["1/2"]
+            elseif self.Vorteile.GutesGedaechtnis then
+              faktor = skt.faktor["3/4"]
+            end
+          end
+          event[1] = "Talentspezialisierung ("
+          goto talentfound
+        end
+      end
+    end
+    ::talentfound::
+  end
+  if ziel == nil then
+    for _, z in ipairs(self.Magie.Zauber) do
+      if z.Name == e.Fertigkeit then
+        ziel = z
+        spalte = self:lernschwierigkeit(z)
+        if self.Vorteile.AkademischeAusbildung[1] == "Magier" or
+            self.Vorteile.AkademischeAusbildung[1] == "Magierin" then
+          if self.Vorteile.EidetischesGedaechtnis then
+            faktor = skt.faktor["3/8"]
+          elseif self.Vorteile.GutesGedaechtnis then
+            faktor = skt.faktor["9/16"]
+          else
+            faktor = skt.faktor["3/4"]
+          end
+        elseif self.Vorteile.EidetischesGedaechtnis then
+          faktor = skt.faktor["1/2"]
+        elseif self.Vorteile.GutesGedaechtnis then
           faktor = skt.faktor["3/4"]
         end
-        event[1] = "Waffenspezialisierung ("
+        event[1] = "Zauberspezialisierung ("
         break
       end
     end
-    if ziel == nil then
-      for _, g in ipairs({"Gaben", "Koerper", "Gesellschaft", "Natur", "Wissen", "Handwerk"}) do
-        for _, t in ipairs(values.Talente[g]) do
-          if t.Name == e.Fertigkeit then
-            ziel = t
-            spalte = values:talent_schwierigkeit(t, g)
-            if g == "Wissen" then
-              if values.Vorteile.EidetischesGedaechtnis then
-                faktor = skt.faktor["1/2"]
-              elseif values.Vorteile.GutesGedaechtnis then
-                faktor = skt.faktor["3/4"]
-              end
-            end
-            event[1] = "Talentspezialisierung ("
-            goto talentfund
-          end
-        end
-      end
-      ::talentfund::
+  end
+  if ziel == nil then
+    tex.error("\n[Spezialisierung] unbekannte Fertigkeit: '" .. e.Fertigkeit .. "'")
+  end
+  event[1] = event[1] .. e.Fertigkeit .. ", " .. e.Methode .. "): " .. e.Name
+  ziel.Spezialisierungen:append(e.Name)
+  local ap = #ziel.Spezialisierungen * 20 * math.floor(skt.spalte[skt.spalte:num(spalte)].f + 0.5)
+  if e.Methode == "SE" then
+    ap = math.floor(ap / 2 + 0.5)
+  end
+  event[2] = -1 * ap
+  event[3] = faktor
+  local kosten = faktor:apply(ap)
+  event[4] = -1 * kosten
+  event[5] = self:ap_mod(kosten)
+  return event
+end
+
+function values:eig_steigerung(e)
+  local event = {}
+  local spalte = skt.spalte:num("H")
+  for _, n in ipairs(self.Vorteile.BegabungFuerEigenschaft) do
+    if n == e.Eigenschaft then
+      spalte = spalte - 1
+      break
     end
-    if ziel == nil then
-      for _, z in ipairs(values.Magie.Zauber) do
-        if z.Name == e.Fertigkeit then
-          ziel = z
-          spalte = values:lernschwierigkeit(z)
-          if values.Vorteile.AkademischeAusbildung[1] == "Magier" or
-              values.Vorteile.AkademischeAusbildung[1] == "Magierin" then
-            if values.Vorteile.EidetischesGedaechtnis then
-              faktor = skt.faktor["3/8"]
-            elseif values.Vorteile.GutesGedaechtnis then
-              faktor = skt.faktor["9/16"]
-            else
-              faktor = skt.faktor["3/4"]
-            end
-          elseif values.Vorteile.EidetischesGedaechtnis then
-            faktor = skt.faktor["1/2"]
-          elseif values.Vorteile.GutesGedaechtnis then
-            faktor = skt.faktor["3/4"]
-          end
-          event[1] = "Zauberspezialisierung ("
-          break
-        end
-      end
+  end
+  if self.Vorteile.Eigeboren and e.Eigenschaft == "CH" then
+    spalte = spalte - 1
+  end
+  if e.Methode == "SE" then
+    spalte = spalte - 1
+  end
+  local ap = 0
+  local index = 3
+  if e.Eigenschaft == "LE" or e.Eigenschaft == "AU" or e.Eigenschaft == "AE" or e.Eigenschaft == "MR" then
+    index = 2
+    event[1] = "Zukauf ("
+  else
+    event[1] = "Eigenschaft ("
+  end
+  local target = self.eig[e.Eigenschaft]
+  event[1] = event[1] .. e.Eigenschaft .. ", " .. e.Methode .. ") von " .. tostring(target[index]) .. " auf " .. tostring(e.Zielwert)
+  while target[index] < e.Zielwert do
+    target[index] = target[index] + 1
+    ap = ap + skt:kosten(skt.spalte:name(spalte), target[index])
+  end
+  event[2] = -1 * ap
+  event[3] = skt.faktor["1"]
+  event[4] = -1 * ap
+  event[5] = self:ap_mod(ap)
+  return event
+end
+
+function values:rkw_steigerung(e)
+  local r = nil
+  for _, v in ipairs(self.Magie.Ritualkenntnis) do
+    if v.Name == e.Name then
+      r = v
+      break
     end
-    if ziel == nil then
-      tex.error("\n[Spezialisierung] unbekannte Fertigkeit: '" .. e.Fertigkeit .. "'")
+  end
+  if r == nil then
+    tex.error("[RkW] unbekannter Name: " .. e.Name)
+  end
+  local faktor = skt.faktor["1"]
+  if self.Vorteile.EidetischesGedaechtnis then
+    faktor = skt.faktor["1/2"]
+  elseif self.Vorteile.GutesGedaechtnis then
+    faktor = skt.faktor["3/4"]
+  end
+  local ap = 0
+  local event = {"Ritualkenntnis (" .. e.Name .. ", " .. e.Methode .. ") von " .. tostring(r.Wert) .. " auf " .. e.Zielwert}
+  while r.Wert < e.Zielwert do
+    r.Wert = r.Wert + 1
+    ap = ap + skt:kosten(skt.spalte:effektiv(r.Steigerung, r.Wert, e.Methode), r.Wert)
+  end
+  event[2] = -1 * ap
+  event[3] = faktor
+  local kosten = faktor:apply(ap)
+  event[4] = -1 * kosten
+  event[5] = self:ap_mod(kosten)
+  return event
+end
+
+function values:lkw_steigerung(e)
+  local r = self.Mirakel.Liturgiekenntnis
+  local faktor = skt.faktor["1"]
+  if self.Vorteile.EidetischesGedaechtnis then
+    faktor = skt.faktor["1/2"]
+  elseif self.Vorteile.GutesGedaechtnis then
+    faktor = skt.faktor["3/4"]
+  end
+  local ap = 0
+  local event = {"Liturgiekenntnis (" .. r.Name .. ", " .. e.Methode .. ") von " .. tostring(r.Wert) .. " auf " .. e.Zielwert}
+  while r.Wert < e.Zielwert do
+    r.Wert = r.Wert + 1
+    ap = ap + skt:kosten(skt.spalte:effektiv("F", r.Wert, e.Methode), r.Wert)
+  end
+  event[2] = -1 * ap
+  event[3] = faktor
+  local kosten = faktor:apply(ap)
+  event[4] = -1 * kosten
+  event[5] = self:ap_mod(kosten)
+  return event
+end
+
+function values:aktiviere(e)
+  local smt = getmetatable(e.Subjekt)
+  if smt == nil or smt == string_metatable then
+    tex.error("\n[Aktiviere] Subjekt muss explizit typisiert sein.")
+  end
+  local ap
+  local faktor = skt.faktor["1"]
+  local event = {}
+  local ziel_taw = 0
+  local ziel_zfw = 0
+  if smt.name == "Nah" or smt.name == "NahAT" or smt.name == "Fern" then
+    ziel_taw = e.Subjekt.TaW
+    e.Subjekt.TaW = 0
+    ap = skt:kosten(skt.spalte:effektiv(self:kampf_schwierigkeit(e.Subjekt), 0, e.Methode), 0)
+    self.Talente.Kampf:append(e.Subjekt, e.Sortierung)
+    event[1] = "Talentaktivierung ("
+  elseif smt.name == "KoerperTalent" then
+    ziel_taw = e.Subjekt.TaW
+    e.Subjekt.TaW = 0
+    ap = skt:kosten(skt.spalte:effektiv(self:talent_schwierigkeit(e.Subjekt, "Koerper"), 0, e.Methode), 0)
+    self.Talente.Koerper:append(e.Subject, e.Sortierung)
+    event[1] = "Talentaktivierung ("
+  elseif smt.name == "Zweitsprache" or smt.name == "Sprache" then
+    ziel_taw = e.Subjekt.TaW
+    e.Subjekt.TaW = 0
+    ap = skt:kosten(skt.spalte:effektiv(self:sprache_schwierigkeit(e.Subjekt), 0, e.Methode), 0)
+    faktor = self:tgruppe_faktor("SprachenUndSchriften")
+    self.Talente.SprachenUndSchriften:append(e.Subjekt, e.Sortierung)
+    event[1] = "Talentaktivierung ("
+  elseif smt.name == "Schrift" then
+    ziel_taw = e.Subjekt.TaW
+    e.Subjekt.TaW = 0
+    ap = skt:kosten(skt.spalte:effektiv(self:schrift_schwierigkeit(e.Subjekt), 0, e.Methode), 0)
+    faktor = self:tgruppe_faktor("SprachenUndSchriften")
+    self.Talente.SprachenUndSchriften:append(e.Subjekt, e.Sortierung)
+    event[1] = "Talentaktivierung ("
+  elseif smt.name == "Talent" then
+    ziel_taw = e.Subjekt.TaW
+    e.Subjekt.TaW = 0
+    if e.Talentgruppe == "" then
+      tex.error("\n[Aktiviere] für Talent {…} muss eine Talentgruppe angegeben werden.")
+    elseif e.Talentgruppe ~= "Gesellschaft" and e.Talentgruppe ~= "Natur" and e.Talentgruppe ~= "Wissen" and e.Talentgruppe ~= "Handwerk" then
+      tex.error("\n[Aktiviere] unbekannte Talentgruppe: " .. e.Talentgruppe)
     end
-    event[1] = event[1] .. e.Fertigkeit .. ", " .. e.Methode .. "): " .. e.Name
-    table.insert(ziel.Spezialisierungen, e.Name)
-    local ap = #ziel.Spezialisierungen * 20 * math.floor(skt.spalte[skt.spalte:num(spalte)].f + 0.5)
+    ap = skt:kosten(skt.spalte:effektiv(self:talent_schwierigkeit(e.Subjekt, e.Talentgruppe), 0, e.Methode), 0)
+    faktor = self:tgruppe_faktor(e.Talentgruppe)
+    self.Talente[e.Talentgruppe]:append(e.Subjekt, e.Sortierung)
+    event[1] = "Talentaktivierung ("
+  elseif smt.name == "Zauber" then
+    ziel_zfw = e.Subjekt.ZfW
+    e.Subjekt.ZfW = 0
+    if e.Komplexitaet == "" then
+      tex.error("[Aktiviere] " .. e.Name .. ": Zauber muss Komplexität haben!\n")
+    elseif e.Repraesentation == "" then
+      tex.error("[Aktiviere] " .. e.Name .. ": Zauber muss Repräsentation haben!\n")
+    end
+    ap = skt:kosten(skt.spalte:effektiv(self:lernschwierigkeit(e.Subjekt), 0, e.Methode), 0)
+    faktor = self:tgruppe_faktor("Zauber")
+    self.Magie.Zauber:append(e.Subjekt, e.Sortierung)
+    event[1] = "Zauberaktivierung ("
+  elseif smt.name == "Ritual" then
+    ap = e.Subjekt.Lernkosten
     if e.Methode == "SE" then
-      ap = math.floor(ap / 2 + 0.5)
+      ap = math.floor((ap / 2) + 0.51)
     end
-    event[2] = -1 * ap
-    event[3] = faktor
-    local kosten = faktor:apply(ap)
-    event[4] = -1 * kosten
-    event[5] = values:ap_mod(kosten)
+    faktor = self:tgruppe_faktor("Zauber")
+    self.Magie.Rituale:append(e.Subjekt, e.Sortierung)
+    event[1] = "Ritual ("
+  elseif smt.name == "Liturgie" then
+    local existing = nil
+    local von_grad = 0
+    for _, l in ipairs(self.Mirakel.Liturgien) do
+      if getmetatable(l).name == "Liturgie" and l.Name == e.Subjekt.Name then
+        existing = l
+        for _, g in ipairs(l.Grade) do
+          if g > von_grad then
+            von_grad = g
+          end
+        end
+        break
+      end
+    end
+    local base = 50
+    if e.Methode == "SE" then
+      base = 25
+    end
+    local nach_grad = 0
+    for _, g in ipairs(e.Subjekt.Grad) do
+      if nach_grad < g then
+        nach_grad = g
+      end
+    end
+    ap = base * (nach_grad - von_grad)
+    if ap < 0 then
+      ap = 0
+    end
+    if self.Vorteile.EidetischesGedaechtnis then
+      faktor = skt.faktor["1/2"]
+    elseif self.Vorteile.GutesGedaechtnis then
+      faktor = skt.faktor["3/4"]
+    end
+    if existing == nil then
+      self.Mirakel.Liturgien:append(e.Subjekt, e.Sortierung)
+    else
+      for _, g in ipairs(e.Subjekt.Grade) do
+        local found = false
+        for _, e in ipairs(existing.Grade) do
+          if e == g then
+            found = true
+            break
+          end
+        end
+        if found == false then
+          existing.Grade:append(g)
+        end
+      end
+    end
+    event[1] = "Liturgie Grad "
+    for i, g in ipairs(e.Subjekt.Grade) do
+      if i > 1 then
+        event[1] = event[1] .. ", "
+      end
+      event[1] = event[1] .. tostring(g)
+    end
+    event[1] = event[1] .. " ("
+  end
+  event[1] = event[1] .. e.Subjekt.Name .. ", " .. e.Methode .. ")"
+  event[2] = -1 * ap
+  event[3] = faktor
+  local kosten = faktor:apply(ap)
+  event[4] = -1 * kosten
+  event[5] = self:ap_mod(kosten)
+  local insta_steiger = nil
+  if ziel_taw > 0 then
+    insta_steiger = schema.TaW {e.Subjekt.Name, ziel_taw, e.Methode, getmetatable(e.Subjekt)}
+  elseif ziel_zfw > 0 then
+    insta_steiger = schema.ZfW {e.Subjekt.Name, ziel_zfw, e.Methode}
+  end
+  return event, insta_steiger
+end
+
+function values:zugewinn(e)
+  local event = {e.Text, e.AP, skt.faktor["1"], e.AP}
+  if type(self.AP.Gesamt) == "number" then
+    self.AP.Gesamt = self.AP.Gesamt + e.AP
+  end
+  if type(self.AP.Guthaben) == "number" then
+    self.AP.Guthaben = self.AP.Guthaben + e.AP
+    event[5] = self.AP.Guthaben
+  else
+    event[5] = ""
+  end
+  event[6] = e.Fett
+  return event
+end
+
+for _, e in ipairs(schema.Ereignisse:instance()) do
+  local mt = getmetatable(e)
+  local event
+  if mt.name == "TaW" then
+    event = values:talentsteigerung(e)
+  elseif mt.name == "ZfW" then
+    event = values:zaubersteigerung(e)
+  elseif mt.name == "Spezialisierung" then
+    event = values:spezialisierung(e)
   elseif mt.name == "ProfaneSF" then
     local verbilligt = {"Dschungelkundig", "Eiskundig", "Gebirgskundig", "Höhlenkundig", "Maraskankundig", "Meereskundig", "Steppenkundig", "Sumpfkundig", "Waldkundig, Wüstenkundig", "Kulturkunde", "Nandusgefälliges Wissen", "Ortskenntnis"}
     event = values:steigerSF("ProfaneSF", e, {{"EidetischesGedächtnis", "1/2", verbilligt}, {"GutesGedaechtnis", "3/4", verbilligt}},
@@ -708,221 +967,29 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
   elseif mt.name == "WaffenlosSF" then
     event = values:steigerSF("WaffenlosSF", e, {{{"AkademischeAusbildung", "Krieger", "Kriegerin"}, "3/4"}}, values.SF.Waffenlos)
   elseif mt.name == "Eigenschaft" then
-    local spalte = skt.spalte:num("H")
-    for _, n in ipairs(values.Vorteile.BegabungFuerEigenschaft) do
-      if n == e.Eigenschaft then
-        spalte = spalte - 1
-        break
-      end
-    end
-    if values.Vorteile.Eigeboren and e.Eigenschaft == "CH" then
-      spalte = spalte - 1
-    end
-    if e.Methode == "SE" then
-      spalte = spalte - 1
-    end
-    local ap = 0
-    local index = 3
-    if e.Eigenschaft == "LE" or e.Eigenschaft == "AU" or e.Eigenschaft == "AE" or e.Eigenschaft == "MR" then
-      index = 2
-      event[1] = "Zukauf ("
-    else
-      event[1] = "Eigenschaft ("
-    end
-    local target = values.eig[e.Eigenschaft]
-    event[1] = event[1] .. e.Eigenschaft .. ", " .. e.Methode .. ") von " .. tostring(target[index]) .. " auf " .. tostring(e.Zielwert)
-    while target[index] < e.Zielwert do
-      target[index] = target[index] + 1
-      ap = ap + skt:kosten(skt.spalte:name(spalte), target[index])
-    end
-    event[2] = -1 * ap
-    event[3] = skt.faktor["1"]
-    event[4] = -1 * ap
-    event[5] = values:ap_mod(ap)
+    event = values:eig_steigerung(e)
   elseif mt.name == "RkW" then
-    local r = nil
-    for _, v in ipairs(values.Magie.Ritualkenntnis) do
-      if v.Name == e.Name then
-        r = v
-        break
-      end
-    end
-    if r == nil then
-      tex.error("[RkW] unbekannter Name: " .. e.Name)
-    end
-    local faktor = skt.faktor["1"]
-    if values.Vorteile.EidetischesGedaechtnis then
-      faktor = skt.faktor["1/2"]
-    elseif values.Vorteile.GutesGedaechtnis then
-      faktor = skt.faktor["3/4"]
-    end
-    local ap = 0
-    event[1] = "Ritualkenntnis (" .. e.Name .. ", " .. e.Methode .. ") von " .. tostring(r.Wert) .. " auf " .. e.Zielwert
-    while r.Wert < e.Zielwert do
-      r.Wert = r.Wert + 1
-      ap = ap + skt:kosten(skt.spalte:effektiv(r.Steigerung, r.Wert, e.Methode), r.Wert)
-    end
-    event[2] = -1 * ap
-    event[3] = faktor
-    local kosten = faktor:apply(ap)
-    event[4] = -1 * kosten
-    event[5] = values:ap_mod(kosten)
+    event = values:rkw_steigerung(e)
   elseif mt.name == "LkW" then
-    local r = values.Liturgiekenntnis
-    local faktor = skt.faktor["1"]
-    if values.Vorteile.EidetischesGedaechtnis then
-      faktor = skt.faktor["1/2"]
-    elseif values.Vorteile.GutesGedaechtnis then
-      faktor = skt.faktor["3/4"]
-    end
-    local ap = 0
-    event[1] = "Liturgiekenntnis (" .. r.Name .. ", " .. e.Methode .. ") von " .. tostring(r.Wert) .. " auf " .. e.Zielwert
-    while r.Wert < e.Zielwert do
-      r.Wert = r.Wert + 1
-      ap = ap + skt:kosten(skt.spalte:effektiv("F", r.Wert, e.Methode), r.Wert)
-    end
-    event[2] = -1 * ap
-    event[3] = faktor
-    local kosten = faktor:apply(ap)
-    event[4] = -1 * kosten
-    event[5] = values:ap_mod(kosten)
+    event = values:lkw_steigerung(e)
   elseif mt.name == "Aktiviere" then
-    local smt = getmetatable(e.Subjekt)
-    if smt == nil or smt == string_metatable then
-      tex.error("\n[Aktiviere] Subjekt muss explizit typisiert sein.")
-    end
-    local ap
-    local faktor = skt.faktor["1"]
-    if smt.name == "Nah" or smt.name == "NahAT" or smt.name == "Fern" then
-      e.Subjekt.TaW = 0
-      ap = skt:kosten(skt.spalte:effektiv(values:kampf_schwierigkeit(e.Subjekt), 0, e.Methode), 0)
-      values.Talente.Kampf:append(e.Subjekt, e.Sortierung)
-      event[1] = "Talentaktivierung ("
-    elseif smt.name == "KoerperTalent" then
-      e.Subjekt.TaW = 0
-      ap = skt:kosten(skt.spalte:effektiv(values:talent_schwierigkeit(e.Subjekt, "Koerper"), 0, e.Methode), 0)
-      values.Talente.Koerper:append(e.Subject, e.Sortierung)
-      event[1] = "Talentaktivierung ("
-    elseif smt.name == "Zweitsprache" or smt.name == "Sprache" then
-      e.Subjekt.TaW = 0
-      ap = skt:kosten(skt.spalte:effektiv(values:sprache_schwierigkeit(e.Subjekt), 0, e.Methode), 0)
-      faktor = values:tgruppe_faktor("SprachenUndSchriften")
-      values.Talente.SprachenUndSchriften:append(e.Subjekt, e.Sortierung)
-      event[1] = "Talentaktivierung ("
-    elseif smt.name == "Schrift" then
-      e.Subjekt.TaW = 0
-      ap = skt:kosten(skt.spalte:effektiv(values:schrift_schwierigkeit(e.Subjekt), 0, e.Methode), 0)
-      faktor = values:tgruppe_faktor("SprachenUndSchriften")
-      values.Talente.SprachenUndSchriften:append(e.Subjekt, e.Sortierung)
-      event[1] = "Talentaktivierung ("
-    elseif smt.name == "Talent" then
-      e.Subjekt.TaW = 0
-      if e.Talentgruppe == "" then
-        tex.error("\n[Aktiviere] für Talent {…} muss eine Talentgruppe angegeben werden.")
-      elseif e.Talentgruppe ~= "Gesellschaft" and e.Talentgruppe ~= "Natur" and e.Talentgruppe ~= "Wissen" and e.Talentgruppe ~= "Handwerk" then
-        tex.error("\n[Aktiviere] unbekannte Talentgruppe: " .. e.Talentgruppe)
-      end
-      ap = skt:kosten(skt.spalte:effektiv(values:talent_schwierigkeit(e.Subjekt, e.Talentgruppe), 0, e.Methode), 0)
-      faktor = values:tgruppe_faktor(e.Talentgruppe)
-      values.Talente[e.Talentgruppe]:append(e.Subjekt, e.Sortierung)
-      event[1] = "Talentaktivierung ("
-    elseif smt.name == "Zauber" then
-      e.Subjekt.ZfW = 0
-      ap = skt:kosten(skt.spalte:effektiv(values:lernschwierigkeit(e.Subjekt), 0, e.Methode), 0)
-      faktor = values:tgruppe_faktor("Zauber")
-      values.Magie.Zauber:append(e.Subjekt, e.Sortierung)
-      event[1] = "Zauberaktivierung ("
-    elseif smt.name == "Ritual" then
-      ap = e.Subjekt.Lernkosten
-      if e.Methode == "SE" then
-        ap = math.floor((ap / 2) + 0.51)
-      end
-      faktor = values:tgruppe_faktor("Zauber")
-      values.Magie.Rituale:append(e.Subjekt, e.Sortierung)
-      event[1] = "Ritual ("
-    elseif smt.name == "Liturgie" then
-      local existing = nil
-      local von_grad = 0
-      for _, l in ipairs(values.Mirakel.Liturgien) do
-        if getmetatable(l).name == "Liturgie" and l.Name == e.Subjekt.Name then
-          existing = l
-          for _, g in ipairs(l.Grade) do
-            if g > von_grad then
-              von_grad = g
-            end
-          end
-          break
-        end
-      end
-      local base = 50
-      if e.Methode == "SE" then
-        base = 25
-      end
-      local nach_grad = 0
-      for _, g in ipairs(e.Subjekt.Grad) do
-        if nach_grad < g then
-          nach_grad = g
-        end
-      end
-      ap = base * (nach_grad - von_grad)
-      if ap < 0 then
-        ap = 0
-      end
-      if values.Vorteile.EidetischesGedaechtnis then
-        faktor = skt.faktor["1/2"]
-      elseif values.Vorteile.GutesGedaechtnis then
-        faktor = skt.faktor["3/4"]
-      end
-      if existing == nil then
-        values.Liturgien:append(e.Subjekt, e.Sortierung)
+    event, insta_steiger = values:aktiviere(e)
+    if insta_steiger ~= nil then
+      table.insert(values.Ereignisse, event)
+      local imt = getmetatable(insta_steiger)
+      if imt.name == "TaW" then
+        event = values:talentsteigerung(insta_steiger)
+      elseif imt.name == "ZfW" then
+        event = values:zaubersteigerung(insta_steiger)
       else
-        for _, g in ipairs(e.Subjekt.Grade) do
-          local found = false
-          for _, e in ipairs(existing.Grade) do
-            if e == g then
-              found = true
-              break
-            end
-          end
-          if found == false then
-            existing.Grade:append(g)
-          end
-        end
+        tex.error("illegal insta_steiger: " .. imt.name)
       end
-      event[1] = "Liturgie Grad "
-      for i, g in ipairs(e.Subjekt.Grade) do
-        if i > 1 then
-          event[1] = event[1] .. ", "
-        end
-        event[1] = event[1] .. tostring(g)
-      end
-      event[1] = event[1] .. " ("
     end
-    event[1] = event[1] .. e.Subjekt.Name .. ", " .. e.Methode .. ")"
-    event[2] = -1 * ap
-    event[3] = faktor
-    local kosten = faktor:apply(ap)
-    event[4] = -1 * kosten
-    event[5] = values:ap_mod(kosten)
   elseif mt.name == "Zugewinn" then
-    event[1] = e.Text
-    event[2] = e.AP
-    event[3] = skt.faktor["1"]
-    event[4] = e.AP
-    if type(values.AP.Gesamt) == "number" then
-      values.AP.Gesamt = values.AP.Gesamt + e.AP
-    end
-    if type(values.AP.Guthaben) == "number" then
-      values.AP.Guthaben = values.AP.Guthaben + e.AP
-      event[5] = values.AP.Guthaben
-    else
-      event[5] = ""
-    end
-    event[6] = e.Fett
+    event = values:zugewinn(e)
   else
     tex.error("\n[Ereignisse] unbekannter Ereignistyp: '" .. mt.name .. "'")
   end
-  ::found::
   table.insert(values.Ereignisse, event)
 end
 
