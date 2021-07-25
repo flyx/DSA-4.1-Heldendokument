@@ -308,7 +308,7 @@ local waffenlos_render = {
     if talent == nil or #talent < 4 or atb == "" or #v < 3 then
       return
     end
-    for _, t in pairs(data.SF.Waffenlos.Kampfstile) do
+    for _, t in pairs(data.SF.Waffenlos:getlist("Kampfstile")) do
       if v.Name == t then
         atb = atb + 1
       end
@@ -320,7 +320,7 @@ local waffenlos_render = {
     if talent == nil or #talent < 4 or pab == "" or #v < 3 then
       return
     end
-    for _, t in pairs(data.SF.Waffenlos.Kampfstile) do
+    for _, t in pairs(data.SF.Waffenlos:getlist("Kampfstile")) do
       if v.Name == t then
         pab = pab + 1
       end
@@ -367,16 +367,16 @@ local schilde_render = {
         val = val + 1
       end
       for i=1,2 do
-        if data.SF.Nahkampf.Schildkampf[i] then
+        if data.SF.Nahkampf:getlist("Schildkampf")[i] then
           val = val + 2
         end
       end
       tex.sprint(-2, val + v["WM PA"])
     else
       local val = v["WM PA"]
-      if data.SF.Nahkampf.Parierwaffen[2] then
+      if data.SF.Nahkampf:getlist("Parierwaffen")[2] then
         val = val + 2
-      elseif data.SF.Nahkampf.Parierwaffen[1] then
+      elseif data.SF.Nahkampf:getlist("Parierwaffen")[1] then
         val = val - 1
       else
         val = val - 4
@@ -424,13 +424,12 @@ function kampfbogen.ausweichen()
     val = val - be
   end
   for i=1,3 do
-    if data.SF.Nahkampf.Ausweichen[i] then
+    if data.SF.Nahkampf:getlist("Ausweichen")[i] then
       val = val + 3
     end
   end
-  if data.Vorteile.Flink then
-    val = val + 1
-  end
+  local flink = data.Vorteile.Flink or 0
+  val = val + flink
   if data.Nachteile.Behaebig then
     val = val - 1
   end

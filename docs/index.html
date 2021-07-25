@@ -35,7 +35,7 @@
 <a href="#SF.Magisch">SF.Magisch</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
 <a href="#Waffen.Nahkampf">Waffen.Nahkampf</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
 <a href="#Waffen.Fernkampf">Waffen.Fernkampf</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
-<a href="#Waffen.Schilde">Waffen.Schilde</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+<a href="#Waffen.SchildeUndParierwaffen">Waffen.SchildeUndParierwaffen</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
 <a href="#Waffen.Ruestung">Waffen.Ruestung</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
 <a href="#Kleidung">Kleidung</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
 <a href="#Ausruestung">Ausruestung</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
@@ -92,7 +92,7 @@
 
 <h3 id="Multiline">Multiline</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre>
 
 <p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
@@ -317,62 +317,174 @@ einzelnen Seiten beschrieben.</p>
 </section><section><h2 id="Vorteile">Vorteile</h2>
 
 <pre><code><span class="id">Vorteile</span> <span class="sym">{</span>
-  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">BegabungFuerTalentgruppe </span><span class="sym">"</span><span class="metasym">[ </span><span class="id">Kampf</span><span class="metasym"> | </span><span class="id">Nahkampf</span><span class="metasym"> | </span><span class="id">Fernkampf</span><span class="metasym"> | </span><span class="id">Koerper</span><span class="metasym"> | </span><span class="id">Gesellschaft</span><span class="metasym"> | </span><span class="id">Natur</span><span class="metasym"> | </span><span class="id">Wissen</span><span class="metasym"> | </span><span class="id">SprachenUndSchriften</span><span class="metasym"> | </span><span class="id">Handwerk</span><span class="metasym"> ]</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">BegabungFuerEigenschaft </span><span class="sym">"</span><span class="metasym">[ </span><span class="id">MU</span><span class="metasym"> | </span><span class="id">KL</span><span class="metasym"> | </span><span class="id">IN</span><span class="metasym"> | </span><span class="id">CH</span><span class="metasym"> | </span><span class="id">FF</span><span class="metasym"> | </span><span class="id">GE</span><span class="metasym"> | </span><span class="id">KO</span><span class="metasym"> | </span><span class="id">KK</span><span class="metasym"> | </span><span class="id">LE</span><span class="metasym"> | </span><span class="id">AU</span><span class="metasym"> | </span><span class="id">AE</span><span class="metasym"> | </span><span class="id">MR</span><span class="metasym"> ]</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">AkademischeAusbildung </span><span class="sym">"</span><span class="metasym">[ </span><span class="id">Gelehrter?</span><span class="metasym"> | </span><span class="id">Magier</span><span class="metasym"> | </span><span class="id">Magierin</span><span class="metasym"> | </span><span class="id">Krieger</span><span class="metasym"> | </span><span class="id">Kriegerin</span><span class="metasym"> ]</span><span class="sym">"</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Flink </span><span class="metasym">[</span><span class="num">1</span><span class="metasym">..</span><span class="num">2</span><span class="metasym">]</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">BegabungFuerTalent </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#AkademischeAusbildung">&lt;AkademischeAusbildung&gt;</a><span class="metasym"> | </span><a href="#BegabungFuerTalentgruppe">&lt;BegabungFuerTalentgruppe&gt;</a><span class="metasym"> | </span><a href="#BegabungFuerTalent">&lt;BegabungFuerTalent&gt;</a><span class="metasym"> | </span><a href="#Flink">&lt;Flink&gt;</a><span class="metasym"> | </span><a href="#BegabungFuerEigenschaft">&lt;BegabungFuerEigenschaft&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Liste von nicht-magischen Vorteilen.</p>
+<p>Liste von nicht-magischen Vorteilen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+
+<h3 id="AkademischeAusbildung">AkademischeAusbildung</h3>
+
+<pre><code><span class="id">AkademischeAusbildung</span> <span class="sym">{</span>
+  <a href="#Ausbildungsname">&lt;Ausbildungsname&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Akademische Ausbildung</p>
+
+<h4 id="Ausbildungsname">Ausbildungsname</h4>
+
+<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">Gelehrter?</span><span class="metasym"> | </span><span class="id">Magier</span><span class="metasym"> | </span><span class="id">Magierin</span><span class="metasym"> | </span><span class="id">Krieger</span><span class="metasym"> | </span><span class="id">Kriegerin</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+
+<p>Name einer akademischen Ausbildung</p>
+
+<h3 id="BegabungFuerTalentgruppe">BegabungFuerTalentgruppe</h3>
+
+<pre><code><span class="id">BegabungFuerTalentgruppe</span> <span class="sym">{</span>
+  <a href="#Talentgruppe">&lt;Talentgruppe&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Begabung für eine oder mehrere Talentgruppen.</p>
+
+<h4 id="Talentgruppe">Talentgruppe</h4>
+
+<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">Kampf</span><span class="metasym"> | </span><span class="id">Nahkampf</span><span class="metasym"> | </span><span class="id">Fernkampf</span><span class="metasym"> | </span><span class="id">Koerper</span><span class="metasym"> | </span><span class="id">Gesellschaft</span><span class="metasym"> | </span><span class="id">Natur</span><span class="metasym"> | </span><span class="id">Wissen</span><span class="metasym"> | </span><span class="id">SprachenUndSchriften</span><span class="metasym"> | </span><span class="id">Handwerk</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+
+<p>Eine der existierenden Talentgruppen</p>
+
+<h3 id="BegabungFuerTalent">BegabungFuerTalent</h3>
+
+<pre><code><span class="id">BegabungFuerTalent</span> <span class="sym">{</span>
+  <a href="#String">&lt;String&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Begabung für ein oder mehrere Talente</p>
+
+<h3 id="Flink">Flink</h3>
+
+<pre><code><span class="id">Flink</span><span class="sym">(</span><span class="metasym">[</span><span class="num">1</span><span class="metasym">..</span><span class="num">2</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+
+<p>Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen.</p>
+
+<h3 id="BegabungFuerEigenschaft">BegabungFuerEigenschaft</h3>
+
+<pre><code><span class="id">BegabungFuerEigenschaft</span> <span class="sym">{</span>
+  <a href="#EigName">&lt;EigName&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Begabung für eine oder mehrere Eigenschaften. Üblicherweise nicht frei wählbar, kommt aber etwa in 7G vor.</p>
+
+<h3 id="EigName">EigName</h3>
+
+<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">MU</span><span class="metasym"> | </span><span class="id">KL</span><span class="metasym"> | </span><span class="id">IN</span><span class="metasym"> | </span><span class="id">CH</span><span class="metasym"> | </span><span class="id">FF</span><span class="metasym"> | </span><span class="id">GE</span><span class="metasym"> | </span><span class="id">KO</span><span class="metasym"> | </span><span class="id">KK</span><span class="metasym"> | </span><span class="id">LE</span><span class="metasym"> | </span><span class="id">AU</span><span class="metasym"> | </span><span class="id">AE</span><span class="metasym"> | </span><span class="id">MR</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+
+<p>Name einer steigerbaren Eigenschaft</p>
 
 </section><section><h2 id="Vorteile.Magisch">Vorteile.Magisch</h2>
 
 <pre><code><span class="id">Vorteile.Magisch</span> <span class="sym">{</span>
-  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">BegabungFuerZauber </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">BegabungFuerMerkmal </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Daemonisch </span><a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Elementar </span><a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">BegabungFuerRitual </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Meisterhandwerk </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#BegabungFuerRitual">&lt;BegabungFuerRitual&gt;</a><span class="metasym"> | </span><a href="#BegabungFuerMerkmal">&lt;BegabungFuerMerkmal&gt;</a><span class="metasym"> | </span><a href="#Meisterhandwerk">&lt;Meisterhandwerk&gt;</a><span class="metasym"> | </span><a href="#BegabungFuerZauber">&lt;BegabungFuerZauber&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Liste von magischen Vorteilen.</p>
+<p>Liste von magischen Vorteilen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
-<h3 id="Domaene">Domaene</h3>
+<h3 id="BegabungFuerRitual">BegabungFuerRitual</h3>
 
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">gesamt</span><span class="metasym"> | </span><span class="id">Blakharaz</span><span class="metasym"> | </span><span class="id">Belhalhar</span><span class="metasym"> | </span><span class="id">Charyptoroth</span><span class="metasym"> | </span><span class="id">Lolgramoth</span><span class="metasym"> | </span><span class="id">Thargunitoth</span><span class="metasym"> | </span><span class="id">Amazeroth</span><span class="metasym"> | </span><span class="id">Belshirash</span><span class="metasym"> | </span><span class="id">Asfaloth</span><span class="metasym"> | </span><span class="id">Tasfarelel</span><span class="metasym"> | </span><span class="id">Belzhorash</span><span class="metasym"> | </span><span class="id">Agrimoth</span><span class="metasym"> | </span><span class="id">Belkelel</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<pre><code><span class="id">BegabungFuerRitual</span> <span class="sym">{</span>
+  <a href="#String">&lt;String&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
 
-<p>Name einer Domäne, oder 'gesamt'</p>
+<p>Begabung für ein oder mehrere Rituale</p>
 
-<h3 id="Element">Element</h3>
+<h3 id="BegabungFuerMerkmal">BegabungFuerMerkmal</h3>
+
+<pre><code><span class="id">BegabungFuerMerkmal</span> <span class="sym">{</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Elementar">&lt;Elementar&gt;</a><span class="metasym"> | </span><a href="#Daemonisch">&lt;Daemonisch&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Begabung für ein oder mehrere Merkmale.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+
+<h4 id="Elementar">Elementar</h4>
+
+<pre><code><span class="id">Elementar</span> <span class="sym">{</span>
+  <a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Spezifikation elementarer Merkmale.</p>
+
+<h5 id="Element">Element</h5>
 
 <pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">gesamt</span><span class="metasym"> | </span><span class="id">Eis</span><span class="metasym"> | </span><span class="id">Humus</span><span class="metasym"> | </span><span class="id">Feuer</span><span class="metasym"> | </span><span class="id">Wasser</span><span class="metasym"> | </span><span class="id">Luft</span><span class="metasym"> | </span><span class="id">Erz</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
 
 <p>Name eines Elements, oder 'gesamt'.</p>
 
+<h4 id="Daemonisch">Daemonisch</h4>
+
+<pre><code><span class="id">Daemonisch</span> <span class="sym">{</span>
+  <a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Spezifikation dämonischer Merkmale.</p>
+
+<h4 id="Domaene">Domaene</h4>
+
+<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">gesamt</span><span class="metasym"> | </span><span class="id">Blakharaz</span><span class="metasym"> | </span><span class="id">Belhalhar</span><span class="metasym"> | </span><span class="id">Charyptoroth</span><span class="metasym"> | </span><span class="id">Lolgramoth</span><span class="metasym"> | </span><span class="id">Thargunitoth</span><span class="metasym"> | </span><span class="id">Amazeroth</span><span class="metasym"> | </span><span class="id">Belshirash</span><span class="metasym"> | </span><span class="id">Asfaloth</span><span class="metasym"> | </span><span class="id">Tasfarelel</span><span class="metasym"> | </span><span class="id">Belzhorash</span><span class="metasym"> | </span><span class="id">Agrimoth</span><span class="metasym"> | </span><span class="id">Belkelel</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+
+<p>Name einer Domäne, oder 'gesamt'</p>
+
+<h3 id="Meisterhandwerk">Meisterhandwerk</h3>
+
+<pre><code><span class="id">Meisterhandwerk</span> <span class="sym">{</span>
+  <a href="#String">&lt;String&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Talenten, für die ein Meisterhandwerk existiert.</p>
+
+<h3 id="BegabungFuerZauber">BegabungFuerZauber</h3>
+
+<pre><code><span class="id">BegabungFuerZauber</span> <span class="sym">{</span>
+  <a href="#String">&lt;String&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Begabung für einen oder mehrere Zauber</p>
+
 </section><section><h2 id="Nachteile">Nachteile</h2>
 
 <pre><code><span class="id">Nachteile</span> <span class="sym">{</span>
-  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">UnfaehigkeitFuerTalentgruppe </span><span class="sym">"</span><span class="metasym">[ </span><span class="id">Kampf</span><span class="metasym"> | </span><span class="id">Nahkampf</span><span class="metasym"> | </span><span class="id">Fernkampf</span><span class="metasym"> | </span><span class="id">Koerper</span><span class="metasym"> | </span><span class="id">Gesellschaft</span><span class="metasym"> | </span><span class="id">Natur</span><span class="metasym"> | </span><span class="id">Wissen</span><span class="metasym"> | </span><span class="id">SprachenUndSchriften</span><span class="metasym"> | </span><span class="id">Handwerk</span><span class="metasym"> ]</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">UnfaehigkeitFuerTalent </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#UnfaehigkeitFuerTalentgruppe">&lt;UnfaehigkeitFuerTalentgruppe&gt;</a><span class="metasym"> | </span><a href="#UnfaehigkeitFuerTalent">&lt;UnfaehigkeitFuerTalent&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Liste von nicht-magischen Nachteilen</p>
+<p>Liste von nicht-magischen Nachteilen</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+
+<h3 id="UnfaehigkeitFuerTalentgruppe">UnfaehigkeitFuerTalentgruppe</h3>
+
+<pre><code><span class="id">UnfaehigkeitFuerTalentgruppe</span> <span class="sym">{</span>
+  <a href="#Talentgruppe">&lt;Talentgruppe&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Unfähigkeit für eine oder mehrere Talentgruppen</p>
+
+<h3 id="UnfaehigkeitFuerTalent">UnfaehigkeitFuerTalent</h3>
+
+<pre><code><span class="id">UnfaehigkeitFuerTalent</span> <span class="sym">{</span>
+  <a href="#String">&lt;String&gt;</a><span class="sym">, ...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Unfähigkeit für ein oder mehrere bestimmte Talente</p>
 
 </section><section><h2 id="Nachteile.Magisch">Nachteile.Magisch</h2>
 
 <pre><code><span class="id">Nachteile.Magisch</span> <span class="sym">{</span>
-  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">UnfaehigkeitFuerMerkmal </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Daemonisch </span><a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Elementar </span><a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#UnfaehigkeitFuerMerkmal">&lt;UnfaehigkeitFuerMerkmal&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Liste von magischen Nachteilen.</p>
+<p>Liste von magischen Nachteilen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+
+<h3 id="UnfaehigkeitFuerMerkmal">UnfaehigkeitFuerMerkmal</h3>
+
+<pre><code><span class="id">UnfaehigkeitFuerMerkmal</span> <span class="sym">{</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Elementar">&lt;Elementar&gt;</a><span class="metasym"> | </span><a href="#Daemonisch">&lt;Daemonisch&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Unfähigkeit für ein oder mehrere Merkmale.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="Eigenschaften">Eigenschaften</h2>
 
@@ -397,13 +509,13 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="BasisEig">BasisEig</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">, ...</span><span class="sym">}</span></code></pre>
 
 <p>Eine Basiseigenschaft mit Modifikator, Startwert und aktuellem Wert.</p>
 
 <h3 id="AbgeleiteteEig">AbgeleiteteEig</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span><span class="sym">, </span><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">, ...</span><span class="sym">}</span></code></pre>
 
 <p>Eine abgeleitete Eigenschaft mit Modifikator, zugekauften Punkten und permanent verlorenen Punkten.</p>
 
@@ -427,7 +539,7 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="Talent">Talent</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe1:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe2:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe3:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe1:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe2:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe3:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
 <p>Ein allgemeines Talent.</p>
 
@@ -439,9 +551,9 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="Spezialisierungen">Spezialisierungen</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre>
 
-<p>Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden.</p>
+<p>Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="Talente.Gaben">Talente.Gaben</h2>
 
@@ -462,7 +574,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="Nah">Nah</h3>
 
 <pre><code><span class="id">Nah</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;AT:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;PA:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;AT:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;PA:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Ein Nahkampf-Talent mit AT/PA Verteilung.</p>
@@ -482,7 +594,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="NahAT">NahAT</h3>
 
 <pre><code><span class="id">NahAT</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Ein Nahkampf-Talent, dessen Wert ausschließlich zur Attacke dient und das keine AT/PA Verteilung hat.</p>
@@ -490,7 +602,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="Fern">Fern</h3>
 
 <pre><code><span class="id">Fern</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Ein Fernkampf-Talent.</p>
@@ -505,7 +617,7 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="KoerperTalent">KoerperTalent</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe1:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe2:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe3:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe1:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe2:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe3:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
 <p>Ein Talent aus der Gruppe der Körperlichen Talente.</p>
 
@@ -544,21 +656,21 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="Muttersprache">Muttersprache</h3>
 
 <pre><code><span class="id">Muttersprache</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Dialekt:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Sprachfamilie:</span><a href="#Familie">Familie</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Schriftfamilie:</span><a href="#Familie">Familie</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Dialekt:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Sprachfamilie:</span><a href="#Familie">Familie</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Schriftfamilie:</span><a href="#Familie">Familie</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Die Muttersprache des Helden. Anders als andere Sprachen definiert eine Muttersprache Listen der verwandten Sprachen und Schriften, welche nicht ausgegeben werden, sondern nur zur Berechnung der Steigerungsschwierigkeit anderer Sprachen und Schriften dienen.</p>
 
 <h4 id="Familie">Familie</h4>
 
-<pre><code><span class="sym">{</span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><a href="#String">&lt;String&gt;</a><span class="sym">, ...</span><span class="sym">}</span></code></pre>
 
 <p>Liste von Sprachen oder Schriften in einer Familie.</p>
 
 <h3 id="Zweitsprache">Zweitsprache</h3>
 
 <pre><code><span class="id">Zweitsprache</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Dialekt:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Dialekt:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Eine Zweitsprache, für die die Grund-Steigerungsschwierigkeit gilt.</p>
@@ -566,7 +678,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="Sprache">Sprache</h3>
 
 <pre><code><span class="id">Sprache</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Dialekt:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Dialekt:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Eine Fremdsprache. Steigerungsschwierigkeit hängt ab davon, ob sie in der Sprachfamilie der Muttersprache enthalten ist.</p>
@@ -574,7 +686,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="Schrift">Schrift</h3>
 
 <pre><code><span class="id">Schrift</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Eine Schrift. Es sollte die Steigerungsschwierigkeit gemäß WdS angegeben werden; der Bogen modifiziert sie automatisch im Falle einer Begabung oder Unfähigkeit.</p>
@@ -590,52 +702,122 @@ einzelnen Seiten beschrieben.</p>
 </section><section><h2 id="SF">SF</h2>
 
 <pre><code><span class="id">SF</span> <span class="sym">{</span>
-  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Ortskenntnis </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Kulturkunde </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Kulturkunde">&lt;Kulturkunde&gt;</a><span class="metasym"> | </span><a href="#Ortskenntnis">&lt;Ortskenntnis&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Sonderfertigkeiten (außer Kampf & magischen)</p>
+<p>Sonderfertigkeiten (außer Kampf & magischen)</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+
+<h3 id="Kulturkunde">Kulturkunde</h3>
+
+<pre><code><span class="id">Kulturkunde</span> <span class="sym">{</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Kulturen, für die Kulturkunde besteht.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+
+<h3 id="Ortskenntnis">Ortskenntnis</h3>
+
+<pre><code><span class="id">Ortskenntnis</span> <span class="sym">{</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Orten, für die Ortskenntnis besteht.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="SF.Nahkampf">SF.Nahkampf</h2>
 
 <pre><code><span class="id">SF.Nahkampf</span> <span class="sym">{</span>
-  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Ruestungsgewoehnung </span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Ausweichen </span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Parierwaffen </span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Schildkampf </span><span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Ausweichen">&lt;Ausweichen&gt;</a><span class="metasym"> | </span><a href="#Schildkampf">&lt;Schildkampf&gt;</a><span class="metasym"> | </span><a href="#Ruestungsgewoehnung">&lt;Ruestungsgewoehnung&gt;</a><span class="metasym"> | </span><a href="#Parierwaffen">&lt;Parierwaffen&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Liste von Nahkampf-Sonderfertigkeiten.</p>
+<p>Liste von Nahkampf-Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+
+<h3 id="Ausweichen">Ausweichen</h3>
+
+<pre><code><span class="id">Ausweichen</span> <span class="sym">{</span>
+  <span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Die SF Ausweichen, unterteilt in I, II und III.</p>
+
+<h3 id="Schildkampf">Schildkampf</h3>
+
+<pre><code><span class="id">Schildkampf</span> <span class="sym">{</span>
+  <span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Die SF Schildkampf, unterteilt in I und II.</p>
+
+<h3 id="Ruestungsgewoehnung">Ruestungsgewoehnung</h3>
+
+<pre><code><span class="id">Ruestungsgewoehnung</span> <span class="sym">{</span>
+  <span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Die SF Rüstungsgewöhnung, unterteilt in I, II und III.</p>
+
+<h3 id="Parierwaffen">Parierwaffen</h3>
+
+<pre><code><span class="id">Parierwaffen</span> <span class="sym">{</span>
+  <span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Die SF Parierwaffen, unterteilt in I und II.</p>
 
 </section><section><h2 id="SF.Fernkampf">SF.Fernkampf</h2>
 
 <pre><code><span class="id">SF.Fernkampf</span> <span class="sym">{</span>
-  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Scharfschuetze </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Schnellladen </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Meisterschuetze </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Schnellladen">&lt;Schnellladen&gt;</a><span class="metasym"> | </span><a href="#Meisterschuetze">&lt;Meisterschuetze&gt;</a><span class="metasym"> | </span><a href="#Scharfschuetze">&lt;Scharfschuetze&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Liste von Fernkampf-Sonderfertigkeiten.</p>
+<p>Liste von Fernkampf-Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+
+<h3 id="Schnellladen">Schnellladen</h3>
+
+<pre><code><span class="id">Schnellladen</span> <span class="sym">{</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Talenten, für die Schnellladen gilt.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+
+<h3 id="Meisterschuetze">Meisterschuetze</h3>
+
+<pre><code><span class="id">Meisterschuetze</span> <span class="sym">{</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Talenten, für die Meisterschütze gilt.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+
+<h3 id="Scharfschuetze">Scharfschuetze</h3>
+
+<pre><code><span class="id">Scharfschuetze</span> <span class="sym">{</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste von Talenten, für die Scharfschütze gilt.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="SF.Waffenlos">SF.Waffenlos</h2>
 
 <pre><code><span class="id">SF.Waffenlos</span> <span class="sym">{</span>
-  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Kampfstile </span><span class="sym">[ </span><span class="metasym">&lt;Kampfstil:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym"> ] = </span><span class="metasym">&lt;VerbessertesTalent:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">...</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Kampfstile">&lt;Kampfstile&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Listen waffenloser Sonderfertigkeiten.</p>
+<p>Listen waffenloser Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+
+<h3 id="Kampfstile">Kampfstile</h3>
+
+<pre><code><span class="id">Kampfstile</span> <span class="sym">{</span>
+  <span class="sym">[ </span><span class="metasym">&lt;Kampfstil:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym"> ] = </span><span class="metasym">&lt;VerbessertesTalent:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">...</span>
+<span class="sym">}</span></code></pre>
+
+<p>Liste bekannter Kampfstile</p>
 
 </section><section><h2 id="SF.Magisch">SF.Magisch</h2>
 
 <pre><code><span class="id">SF.Magisch</span> <span class="sym">{</span>
-  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Liste magischer Sonderfertigkeiten</p>
+<p>Liste magischer Sonderfertigkeiten</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="Waffen.Nahkampf">Waffen.Nahkampf</h2>
 
@@ -647,7 +829,7 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="Nahkampfwaffe">Nahkampfwaffe</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Talent:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;DK:</span><a href="#Distanzklasse">Distanzklasse</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP:</span><a href="#Schaden">Schaden</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/KK Schwelle:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/KK Schritt:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;INI:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM AT:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM PA:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BF1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BF2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">(opt) </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Talent:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;DK:</span><a href="#Distanzklasse">Distanzklasse</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP:</span><a href="#Schaden">Schaden</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/KK Schwelle:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/KK Schritt:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;INI:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;WM AT:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;WM PA:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BF1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BF2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
 <p>Eine Nahkampfwaffe.</p>
 
@@ -673,23 +855,33 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="Fernkampfwaffe">Fernkampfwaffe</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Talent:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP:</span><a href="#Schaden">Schaden</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Entfernung1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Entfernung2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Entfernung3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Entfernung4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Entfernung5:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/Entfernung1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/Entfernung2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/Entfernung3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/Entfernung4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP/Entfernung5:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Geschosse1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Geschosse2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Geschosse3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">(opt) </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Talent:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP:</span><a href="#Schaden">Schaden</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Entfernung1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Entfernung2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Entfernung3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Entfernung4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Entfernung5:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/Entfernung1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/Entfernung2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/Entfernung3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/Entfernung4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/Entfernung5:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Geschosse1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Geschosse2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Geschosse3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
 <p>Eine Fernkampfwaffe.</p>
 
-</section><section><h2 id="Waffen.Schilde">Waffen.Schilde</h2>
+</section><section><h2 id="Waffen.SchildeUndParierwaffen">Waffen.SchildeUndParierwaffen</h2>
 
-<pre><code><span class="id">Waffen.Schilde</span> <span class="sym">{</span>
-  <a href="#Schild">&lt;Schild&gt;</a><span class="sym">, ...</span>
+<pre><code><span class="id">Waffen.SchildeUndParierwaffen</span> <span class="sym">{</span>
+  <span class="metasym">&lt;Eintrag: [ </span><a href="#Schild">&lt;Schild&gt;</a><span class="metasym"> | </span><a href="#Parierwaffe">&lt;Parierwaffe&gt;</a><span class="metasym"> ]&gt;</span><span class="sym">, ...</span>
 <span class="sym">}</span></code></pre>
 
 <p>Liste von Schilden und Parierwaffen.</p>
 
 <h3 id="Schild">Schild</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Typ:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;INI:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM AT:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM PA:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BF1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;BF2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<pre><code><span class="id">Schild</span> <span class="sym">{</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;INI:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM AT:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM PA:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BF1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BF2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span>
+<span class="sym">}</span></code></pre>
 
-<p>Ein Schild oder eine Parierwaffe.</p>
+<p>Ein Schild.</p>
+
+<h3 id="Parierwaffe">Parierwaffe</h3>
+
+<pre><code><span class="id">Parierwaffe</span> <span class="sym">{</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;INI:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM AT:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM PA:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BF1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BF2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span>
+<span class="sym">}</span></code></pre>
+
+<p>Eine Parierwaffe.</p>
 
 </section><section><h2 id="Waffen.Ruestung">Waffen.Ruestung</h2>
 
@@ -701,27 +893,23 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="Ruestungsteil">Ruestungsteil</h3>
 
-<pre><code><span class="sym">{</span><span class="id">1</span><span class="sym"> = </span><a href="#String">&lt;String&gt;</a><span class="sym">,</span>
-  <span class="id">2</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
-  <span class="id">3</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
-  <span class="id">Kopf</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
-  <span class="id">Brust</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
-  <span class="id">Ruecken</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
-  <span class="id">LArm</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
-  <span class="id">RArm</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
-  <span class="id">Bauch</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
-  <span class="id">LBein</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">,</span>
-  <span class="id">RBein</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;gRS:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;gBE:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Kopf:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Brust:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Ruecken:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;LArm:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;RArm:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Bauch:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;LBein:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;RBein:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
 <p>Ein Rüstungsteil.</p>
+
+<h3 id="Zonenruestung">Zonenruestung</h3>
+
+<pre><code><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span></code></pre>
+
+<p>Zonenrüstungswert eines Rüstungsteils mit bis zu zwei Dezimalstellen</p>
 
 </section><section><h2 id="Kleidung">Kleidung</h2>
 
 <pre><code><span class="id">Kleidung</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Mehrzeiliger Text für den Kleidungs-Kasten auf dem Ausrüstungsbogen.</p>
+<p>Mehrzeiliger Text für den Kleidungs-Kasten auf dem Ausrüstungsbogen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="Ausruestung">Ausruestung</h2>
 
@@ -733,7 +921,7 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="Gegenstand">Gegenstand</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Gewicht:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Getragen:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Gewicht:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Getragen:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
 <p>Ein Ausrüstungsgegenstand.</p>
 
@@ -747,7 +935,7 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="Rationen">Rationen</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Ration1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Ration2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Ration3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Ration4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Ration1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Ration2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Ration3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Ration4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
 <p>Proviant oder Trank mit Rationen.</p>
 
@@ -761,33 +949,33 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="Muenzen">Muenzen</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert5:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert6:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert7:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert8:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">(opt) </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert5:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert6:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert7:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert8:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
 <p>Eine Münzenart mit mehreren Werten.</p>
 
 </section><section><h2 id="Vermoegen.Sonstiges">Vermoegen.Sonstiges</h2>
 
 <pre><code><span class="id">Vermoegen.Sonstiges</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Sonstiges Vermögen.</p>
+<p>Sonstiges Vermögen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="Verbindungen">Verbindungen</h2>
 
 <pre><code><span class="id">Verbindungen</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Verbindungen.</p>
+<p>Verbindungen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="Notizen">Notizen</h2>
 
 <pre><code><span class="id">Notizen</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Notizen auf dem Ausrüstungs / Liturgienbogen.</p>
+<p>Notizen auf dem Ausrüstungs / Liturgienbogen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="Tiere">Tiere</h2>
 
@@ -799,14 +987,14 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="Tier">Tier</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;INI:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;AT:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;PA:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TP:</span><a href="#Schaden">Schaden</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;LE:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;RS:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;KO:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;KO:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;GS:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;AU:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;MR:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;LO:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;TK:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;ZK:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;INI:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;AT:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;PA:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP:</span><a href="#Schaden">Schaden</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;LE:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;RS:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;KO:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;KO:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;GS:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;AU:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;MR:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;LO:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TK:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;ZK:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
 <p>Werte eines Tiers.</p>
 
 </section><section><h2 id="Mirakel.Liturgiekenntnis">Mirakel.Liturgiekenntnis</h2>
 
 <pre><code><span class="id">Mirakel.Liturgiekenntnis</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span>
+  <span class="metasym">(opt) </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Liturgiekenntnis.</p>
@@ -838,7 +1026,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="Segnung">Segnung</h3>
 
 <pre><code><span class="id">Segnung</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Seite:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span>
+  <span class="metasym">(opt) </span><span class="metasym">&lt;Seite:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Eine der zwölf kleinen Segnungen</p>
@@ -846,16 +1034,16 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="Liturgie">Liturgie</h3>
 
 <pre><code><span class="id">Liturgie</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Seite:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Grade:</span><a href="#Grade">Grade</a><span class="metasym">&gt;</span>
+  <span class="metasym">(opt) </span><span class="metasym">&lt;Seite:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Grade:</span><a href="#Grade">Grade</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Eine Liturgie, die keine der zwölf kleinen Segnungen ist.</p>
 
 <h3 id="Grade">Grade</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#Grad">&lt;Grad&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#Grad">&lt;Grad&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#Grad">&lt;Grad&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre>
 
-<p>Liste von Graden einer Liturgie</p>
+<p>Liste von Graden einer Liturgie</p><p>Ein einzelner oder eine Liste von Grad-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 <h3 id="Grad">Grad</h3>
 
@@ -873,45 +1061,45 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="Ritual">Ritual</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe1:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe2:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe3:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Dauer:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wirkung:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Lernkosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe1:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe2:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe3:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Dauer:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Kosten:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wirkung:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Lernkosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
 <p>Ein Ritual.</p>
 
 </section><section><h2 id="Magie.Ritualkenntnis">Magie.Ritualkenntnis</h2>
 
 <pre><code><span class="id">Magie.Ritualkenntnis</span> <span class="sym">{</span>
-  <a href="#RK-Wert">&lt;RK-Wert&gt;</a><span class="sym">, ...</span>
+  <a href="#Ritualkenntnis">&lt;Ritualkenntnis&gt;</a><span class="sym">, ...</span>
 <span class="sym">}</span></code></pre>
 
 <p>Liste von Ritualkenntnissen.</p>
 
-<h3 id="RK-Wert">RK-Wert</h3>
+<h3 id="Ritualkenntnis">Ritualkenntnis</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Steigerung:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Steigerung:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
-<p>Ein Ritualkenntnis-Wert.</p>
+<p>Ein Ritualkenntnis-Wert einer bestimmten Tradition.</p>
 
 </section><section><h2 id="Magie.Regeneration">Magie.Regeneration</h2>
 
 <pre><code><span class="id">Magie.Regeneration</span><span class="sym">(</span><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | &lt;Zahl&gt; ]</span><span class="sym">)</span></code></pre>
 
-<p>AsP-Regeneration pro Phase.</p>
+<p>AsP-Regeneration pro Phase.</p><p>Zahl oder Text (letzter primär, um ein leeres Feld zu bekommen).</p>
 
 </section><section><h2 id="Magie.Artefakte">Magie.Artefakte</h2>
 
 <pre><code><span class="id">Magie.Artefakte</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Artefakte.</p>
+<p>Artefakte.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="Magie.Notizen">Magie.Notizen</h2>
 
 <pre><code><span class="id">Magie.Notizen</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Notizen auf dem Zauberdokument.</p>
+<p>Notizen auf dem Zauberdokument.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="Magie.Repraesentationen">Magie.Repraesentationen</h2>
 
@@ -930,12 +1118,10 @@ einzelnen Seiten beschrieben.</p>
 </section><section><h2 id="Magie.Merkmalskenntnis">Magie.Merkmalskenntnis</h2>
 
 <pre><code><span class="id">Magie.Merkmalskenntnis</span> <span class="sym">{</span>
-  <span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Daemonisch </span><a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Elementar </span><a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span>
+  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Elementar">&lt;Elementar&gt;</a><span class="metasym"> | </span><a href="#Daemonisch">&lt;Daemonisch&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
 <span class="sym">}</span></code></pre>
 
-<p>Liste gelernter Merkmalskenntnisse</p>
+<p>Liste gelernter Merkmalskenntnisse</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="Magie.Zauber">Magie.Zauber</h2>
 
@@ -947,17 +1133,15 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="Zauber">Zauber</h3>
 
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Seite:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe1:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe2:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe3:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;ZfW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Komplexitaet:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Merkmale:</span><a href="#Merkmale">Merkmale</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Repraesentation:</span><a href="#Repraesentation">Repraesentation</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Hauszauber:</span><a href="#Boolean">Boolean</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">(opt) </span><span class="metasym">&lt;Seite:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe1:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe2:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe3:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;ZfW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Komplexitaet:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Merkmale:</span><a href="#Merkmale">Merkmale</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Repraesentation:</span><a href="#Repraesentation">Repraesentation</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Hauszauber:</span><a href="#Boolean">Boolean</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
 
 <p>Ein Zauber.</p>
 
 <h3 id="Merkmale">Merkmale</h3>
 
-<pre><code><span class="sym">{</span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Daemonisch </span><a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span><span class="sym">,</span>
-  <span class="metasym">(optional) </span><span class="id">Elementar </span><a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Elementar">&lt;Elementar&gt;</a><span class="metasym"> | </span><a href="#Daemonisch">&lt;Daemonisch&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre>
 
-<p>Liste von Merkmalen eines Zaubers.</p>
+<p>Liste von Merkmalen eines Zaubers.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 </section><section><h2 id="Ereignisse">Ereignisse</h2>
 
@@ -970,7 +1154,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="TaW">TaW</h3>
 
 <pre><code><span class="id">TaW</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Typ:</span>Any<span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Typ:</span>Any<span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Steigerung eines Talentwerts. Heißen verschiedene Talente gleich, kann der Typ angegeben werden (z.B. Sprache Tuladimya vs Schrift Tulamidya).</p>
@@ -984,7 +1168,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="ZfW">ZfW</h3>
 
 <pre><code><span class="id">ZfW</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Steigerung eines Zauberfertigkeitwerts</p>
@@ -992,7 +1176,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="Spezialisierung">Spezialisierung</h3>
 
 <pre><code><span class="id">Spezialisierung</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Fertigkeit:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Fertigkeit:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Erlernen einer Talent- oder Zauberspezialisierung</p>
@@ -1006,7 +1190,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="ProfaneSF">ProfaneSF</h3>
 
 <pre><code><span class="id">ProfaneSF</span> <span class="sym">{</span>
-  <span class="metasym">&lt;SF:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;SF:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Erlernen einer Sonderfertigkeit, die nicht Kampf und nicht magisch ist.</p>
@@ -1014,7 +1198,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="NahkampfSF">NahkampfSF</h3>
 
 <pre><code><span class="id">NahkampfSF</span> <span class="sym">{</span>
-  <span class="metasym">&lt;SF:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;SF:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Erlernen einer Nahkampf-Sonderfertigkeit.</p>
@@ -1022,7 +1206,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="FernkampfSF">FernkampfSF</h3>
 
 <pre><code><span class="id">FernkampfSF</span> <span class="sym">{</span>
-  <span class="metasym">&lt;SF:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;SF:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Erlernen einer Fernkampf-Sonderfertigkeit.</p>
@@ -1030,7 +1214,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="WaffenlosSF">WaffenlosSF</h3>
 
 <pre><code><span class="id">WaffenlosSF</span> <span class="sym">{</span>
-  <span class="metasym">&lt;SF:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;SF:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Erlernen einer Waffenlosen Sonderfertigkeit.</p>
@@ -1038,16 +1222,10 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="Eigenschaft">Eigenschaft</h3>
 
 <pre><code><span class="id">Eigenschaft</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Eigenschaft:</span><a href="#EigName">EigName</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#EigSteigerMethode">EigSteigerMethode</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Eigenschaft:</span><a href="#EigName">EigName</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#EigSteigerMethode">EigSteigerMethode</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Steigern einer Basis-Eigenschaft oder Zukauf von Punkten zu einer abgeleiteten Eigenschaft.</p>
-
-<h4 id="EigName">EigName</h4>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">MU</span><span class="metasym"> | </span><span class="id">KL</span><span class="metasym"> | </span><span class="id">IN</span><span class="metasym"> | </span><span class="id">CH</span><span class="metasym"> | </span><span class="id">FF</span><span class="metasym"> | </span><span class="id">GE</span><span class="metasym"> | </span><span class="id">KO</span><span class="metasym"> | </span><span class="id">KK</span><span class="metasym"> | </span><span class="id">LE</span><span class="metasym"> | </span><span class="id">AU</span><span class="metasym"> | </span><span class="id">AE</span><span class="metasym"> | </span><span class="id">MR</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
-
-<p>Name einer steigerbaren Eigenschaft</p>
 
 <h4 id="EigSteigerMethode">EigSteigerMethode</h4>
 
@@ -1058,7 +1236,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="RkW">RkW</h3>
 
 <pre><code><span class="id">RkW</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Steigerung eines Ritualkenntniswerts.</p>
@@ -1066,7 +1244,7 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="LkW">LkW</h3>
 
 <pre><code><span class="id">LkW</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Steigerung des Liturgiekenntniswerts.</p>
@@ -1074,21 +1252,21 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="Aktiviere">Aktiviere</h3>
 
 <pre><code><span class="id">Aktiviere</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Subjekt:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Sortierung:</span><a href="#Sortiere">Sortiere</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Talentgruppe:</span><a href="#String">String</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Subjekt:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Sortierung:</span><a href="#Sortiere">Sortiere</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Talentgruppe:</span><a href="#String">String</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Aktiviert ein Talent, einen Zauber, eine Liturgie oder ein Ritual. Ist der gegebene Wert des Talents oder des Zaubers größer 0, wird anschließend eine Steigerung durchgeführt. Für Gesellschafts-, Natur-, Wissens- und Handwerkstalente muss die Talentgruppe angegeben werden; in allen anderen Fällen wird sie ignoriert.</p>
 
 <h4 id="Sortiere">Sortiere</h4>
 
-<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{ </span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym"> }</span><span class="metasym"> ]</span><span class="sym">}</span></code></pre>
+<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre>
 
-<p>Definiert, wie eine neu aktivierte Fähigkeit (Talent, Zauber, …) in die bestehende Liste einsortiert wird. Ein leerer Wert sortiert am Ende der Liste ein, ansonsten wird zuerst nach der Spalte, die vom ersten Wert gegeben wird, sortiert, dann nach der vom zweiten Wert etc. Wenn in der Liste der erste Wert ein leerer String ist, dann wird das Talent in der letzten Gruppe gleichartiger Talente einsortiert (um z.B. Sprachen von Schriften zu trennen).</p>
+<p>Definiert, wie eine neu aktivierte Fähigkeit (Talent, Zauber, …) in die bestehende Liste einsortiert wird. Ein leerer Wert sortiert am Ende der Liste ein, ansonsten wird zuerst nach der Spalte, die vom ersten Wert gegeben wird, sortiert, dann nach der vom zweiten Wert etc. Wenn in der Liste der erste Wert ein leerer String ist, dann wird das Talent in der letzten Gruppe gleichartiger Talente einsortiert (um z.B. Sprachen von Schriften zu trennen).</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
 <h3 id="Zugewinn">Zugewinn</h3>
 
 <pre><code><span class="id">Zugewinn</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Text:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;AP:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Fett:</span><a href="#Boolean">Boolean</a><span class="metasym">&gt;</span>
+  <span class="metasym">&lt;Text:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;AP:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Fett:</span><a href="#Boolean">Boolean</a><span class="metasym">&gt;</span>
 <span class="sym">}</span></code></pre>
 
 <p>Zugewinn von AP. Kann als Überschrift (fett) formatiert werden.</p>

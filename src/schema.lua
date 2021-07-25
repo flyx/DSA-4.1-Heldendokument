@@ -125,52 +125,44 @@ local Ausbildungsname = d.Matching:def({name = "Ausbildungsname", description = 
 
 local EigName = d.Matching:def({name = "EigName", description = "Name einer steigerbaren Eigenschaft"}, "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK", "LE", "AU", "AE", "MR")
 
-d:singleton(d.ListWithKnown, {name = "Vorteile", description = "Liste von nicht-magischen Vorteilen."}, {
-  AkademischeAusbildung = d.List:def({name = "AkademischeAusbildung", description = "Akademische Ausbildung"}, {Ausbildungsname}, 0, 1),
-  BegabungFuerEigenschaft = d.List:def({name = "BegabungFuerEigenschaft", description = "Begabung für eine oder mehrere Eigenschaften. Üblicherweise nicht frei wählbar, kommt aber etwa in 7G vor."}, {EigName}),
-  BegabungFuerTalent = d.List:def({name = "BegabungFuerTalent", description = "Begabung für ein oder mehrere Talente"}, {String}),
-  BegabungFuerTalentgruppe = d.List:def({name = "BegabungFuerTalentgruppe", description = "Begabung für eine oder mehrere Talentgruppen."}, {Talentgruppe}),
-  ["Eidetisches Gedächtnis"] = "EidetischesGedaechtnis",
+d:singleton(d.Multivalue, {name = "Vorteile", description = "Liste von nicht-magischen Vorteilen."}, String, {
+  AkademischeAusbildung = d.List:def({name = "AkademischeAusbildung", description = "Akademische Ausbildung", label = "Akademische Ausbildung"}, {Ausbildungsname}, 0, 1),
+  BegabungFuerEigenschaft = d.List:def({name = "BegabungFuerEigenschaft", description = "Begabung für eine oder mehrere Eigenschaften. Üblicherweise nicht frei wählbar, kommt aber etwa in 7G vor.", label = "Begabung für Eigenschaft"}, {EigName}),
+  BegabungFuerTalent = d.List:def({name = "BegabungFuerTalent", description = "Begabung für ein oder mehrere Talente", label = "Begabung für Talent"}, {String}),
+  BegabungFuerTalentgruppe = d.List:def({name = "BegabungFuerTalentgruppe", description = "Begabung für eine oder mehrere Talentgruppen.", label = "Begabung für Talentgruppe"}, {Talentgruppe}),
+  EidetischesGedaechtnis = "Eidetisches Gedächtnis",
   Eisern = "Eisern",
   Flink = d.Number:def({name = "Flink", description = "Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen."}, 1, 2, 0),
-  ["Gutes Gedächtnis"] = "GutesGedaechtnis",
-}, { -- optional
-  Flink = true
+  GutesGedaechtnis = "Gutes Gedächtnis",
 })
 
-schema.Vorteile.Magisch = d:singleton(d.ListWithKnown, {name = "Vorteile.Magisch", description = "Liste von magischen Vorteilen."}, {
+schema.Vorteile.Magisch = d:singleton(d.Multivalue, {name = "Vorteile.Magisch", description = "Liste von magischen Vorteilen."}, String, {
   -- TODO: Astrale Regeneration
   Eigeboren = "Eigeboren",
-  BegabungFuerMerkmal = d.ListWithKnown:def({name = "BegabungFuerMerkmal", description = "Begabung für ein oder mehrere Merkmale."}, {
+  BegabungFuerMerkmal = d.Multivalue:def({name = "BegabungFuerMerkmal", description = "Begabung für ein oder mehrere Merkmale.", label = "Begabung für Merkmal"}, String, {
     Elementar = Elementar,
     Daemonisch = Daemonisch
-  }, { -- optional
-    Elementar = true,
-    Daemonisch = true,
   }),
-  BegabungFuerRitual = d.List:def({name = "BegabungFuerRitual", description = "Begabung für ein oder mehrere Rituale"}, {String}),
-  BegabungFuerZauber = d.List:def({name = "BegabungFuerZauber", description = "Begabung für einen oder mehrere Zauber"}, {String}),
+  BegabungFuerRitual = d.List:def({name = "BegabungFuerRitual", description = "Begabung für ein oder mehrere Rituale", label = "Begabung für Ritual"}, {String}),
+  BegabungFuerZauber = d.List:def({name = "BegabungFuerZauber", description = "Begabung für einen oder mehrere Zauber", label = "Begabung für Zauber"}, {String}),
   Meisterhandwerk = d.List:def({name = "Meisterhandwerk", description = "Liste von Talenten, für die ein Meisterhandwerk existiert."}, {String}),
 }) {}
 
-d:singleton(d.ListWithKnown, {name = "Nachteile", description = "Liste von nicht-magischen Nachteilen"}, {
+d:singleton(d.Multivalue, {name = "Nachteile", description = "Liste von nicht-magischen Nachteilen"}, String, {
   Glasknochen = "Glasknochen",
-  ["Behäbig"] = "Behaebig",
-  ["Kleinwüchsig"] = "Kleinwuechsig",
+  Behaebig = "Behäbig",
+  Kleinwuechsig = "Kleinwüchsig",
   Zwergenwuchs = "Zwergenwuchs",
-  UnfaehigkeitFuerTalentgruppe = d.List:def({name = "UnfaehigkeitFuerTalentgruppe", description = "Unfähigkeit für eine oder mehrere Talentgruppen"}, {Talentgruppe}),
-  UnfaehigkeitFuerTalent = d.List:def({name = "UnfaehigkeitFuerTalent", description = "Unfähigkeit für ein oder mehrere bestimmte Talente"}, {String}),
+  UnfaehigkeitFuerTalentgruppe = d.List:def({name = "UnfaehigkeitFuerTalentgruppe", description = "Unfähigkeit für eine oder mehrere Talentgruppen", label = "Unfähigkeit für Talentgruppe"}, {Talentgruppe}),
+  UnfaehigkeitFuerTalent = d.List:def({name = "UnfaehigkeitFuerTalent", description = "Unfähigkeit für ein oder mehrere bestimmte Talente", label = "Unfähigkeit für Talent"}, {String}),
   Unstet = "Unstet",
 })
 
-schema.Nachteile.Magisch = d:singleton(d.ListWithKnown, {name = "Nachteile.Magisch", description = "Liste von magischen Nachteilen."}, {
+schema.Nachteile.Magisch = d:singleton(d.Multivalue, {name = "Nachteile.Magisch", description = "Liste von magischen Nachteilen."}, String, {
   -- TODO: Schwache Ausstrahlung
-  UnfaehigkeitFuerMerkmal = d.ListWithKnown:def({name = "UnfaehigkeitFuerMerkmal", description = "Unfähigkeit für ein oder mehrere Merkmale."}, {
+  UnfaehigkeitFuerMerkmal = d.Multivalue:def({name = "UnfaehigkeitFuerMerkmal", description = "Unfähigkeit für ein oder mehrere Merkmale.", label = "Unfähigkeit für Merkmal"}, String, {
     Elementar = Elementar,
     Daemonisch = Daemonisch
-  }, { -- optional
-    Elementar = true,
-    Daemonisch = true,
   }),
 }) {}
 
@@ -207,26 +199,26 @@ local BasisEig = d.Matching:def({name = "BasisEig", description = "Name einer Ba
 local Spezialisierungen = d.Multivalue:def({name = "Spezialisierungen", description = "Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden."}, String)
 
 d.Row:def({name = "Nah", description = "Ein Nahkampf-Talent mit AT/PA Verteilung."},
-  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"AT", Simple, ""}, {"PA", Simple, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
+  {"Name", String}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"AT", Simple, ""}, {"PA", Simple, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
 d.Row:def({name = "NahAT", description = "Ein Nahkampf-Talent, dessen Wert ausschließlich zur Attacke dient und das keine AT/PA Verteilung hat."},
-  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
+  {"Name", String}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
 d.Row:def({name = "Fern", description = "Ein Fernkampf-Talent."},
-  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
+  {"Name", String}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
 d.Row:def({name = "KoerperTalent", description = "Ein Talent aus der Gruppe der Körperlichen Talente."},
-  {"Name", String, ""}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
+  {"Name", String}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""}, {"BE", Behinderung, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
 d.Row:def({name = "Talent", description = "Ein allgemeines Talent."},
-  {"Name", String, ""}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
+  {"Name", String}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""}, {"TaW", Simple, ""}, {"Spezialisierungen", Spezialisierungen, {}})
 
 d.List:def({name = "Familie", description = "Liste von Sprachen oder Schriften in einer Familie."}, {String})
 d.Row:def({name = "Muttersprache", description = "Die Muttersprache des Helden. Anders als andere Sprachen definiert eine Muttersprache Listen der verwandten Sprachen und Schriften, welche nicht ausgegeben werden, sondern nur zur Berechnung der Steigerungsschwierigkeit anderer Sprachen und Schriften dienen."},
-  {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierungen, {}}, {"Sprachfamilie", schema.Familie, {}}, {"Schriftfamilie", schema.Familie, {}})
+  {"Name", String}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierungen, {}}, {"Sprachfamilie", schema.Familie, {}}, {"Schriftfamilie", schema.Familie, {}})
 d.Row:def({name = "Zweitsprache", description = "Eine Zweitsprache, für die die Grund-Steigerungsschwierigkeit gilt."},
-  {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierungen, {}})
+  {"Name", String}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierungen, {}})
 schema.Lehrsprache = schema.Zweitsprache
 d.Row:def({name = "Sprache", description = "Eine Fremdsprache. Steigerungsschwierigkeit hängt ab davon, ob sie in der Sprachfamilie der Muttersprache enthalten ist."},
-  {"Name", String, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierungen, {}})
+  {"Name", String}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""}, {"Dialekt", Spezialisierungen, {}})
 d.Row:def({name = "Schrift", description = "Eine Schrift. Es sollte die Steigerungsschwierigkeit gemäß WdS angegeben werden; der Bogen modifiziert sie automatisch im Falle einer Begabung oder Unfähigkeit."},
-  {"Name", String, ""}, {"Steigerungsspalte", SteigSpalte, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""})
+  {"Name", String}, {"Steigerungsspalte", SteigSpalte, ""}, {"Komplexität", Simple, ""}, {"TaW", Simple, ""})
 
 schema.Talente = {
   Begabungen = d:singleton(d.List, {name = "Talente.Begabungen", description = "Liste übernatürlicher Begabungen."}, {schema.Talent}) {},
@@ -280,33 +272,46 @@ schema.Talente = {
   },
 }
 
-d:singleton(d.ListWithKnown, {name = "SF", description = "Sonderfertigkeiten (außer Kampf & magischen)"}, {
+d:singleton(d.Multivalue, {name = "SF", description = "Sonderfertigkeiten (außer Kampf & magischen)"}, String, {
   Kulturkunde = d.Multivalue:def({name = "Kulturkunde", description = "Liste von Kulturen, für die Kulturkunde besteht."}, String),
   Ortskenntnis = d.Multivalue:def({name = "Ortskenntnis", description = "Liste von Orten, für die Ortskenntnis besteht."}, String),
 })
 
-schema.SF.Nahkampf = d:singleton(d.ListWithKnown, {name = "SF.Nahkampf", description = "Liste von Nahkampf-Sonderfertigkeiten."}, {
-  Ausweichen = d.Numbered:def({name = "Ausweichen", description = "Die SF Ausweichen, unterteilt in I, II und III."}, 3),
-  ["Kampfgespür"] = "Kampfgespuer",
+schema.SF.Nahkampf = d:singleton(d.Multivalue, {name = "SF.Nahkampf", description = "Liste von Nahkampf-Sonderfertigkeiten."}, String, {
+  Ausweichen = d.Numbered:def({name = "Ausweichen", description = "Die SF Ausweichen, unterteilt in I, II und III.", skip = true}, 3),
+  Kampfgespuer = "Kampfgespür",
   Kampfreflexe = "Kampfreflexe",
   Linkhand = "Linkhand",
-  Parierwaffen = d.Numbered:def({name = "Parierwaffen", description = "Die SF Parierwaffen, unterteilt in I und II."}, 2),
-  ["Ruestungsgewoehnung"] = d.Numbered:def({name = "Ruestungsgewoehnung", description = "Die SF Rüstungsgewöhnung, unterteilt in I, II und III."}, 3),
-  Schildkampf = d.Numbered:def({name = "Schildkampf", description = "Die SF Schildkampf, unterteilt in I und II."}, 2)
+  Parierwaffen = d.Numbered:def({name = "Parierwaffen", description = "Die SF Parierwaffen, unterteilt in I und II.", skip = true}, 2),
+  Ruestungsgewoehnung = d.Numbered:def({name = "Ruestungsgewoehnung", description = "Die SF Rüstungsgewöhnung, unterteilt in I, II und III.", label = "Rüstungsgewöhnung", skip = true}, 3),
+  Schildkampf = d.Numbered:def({name = "Schildkampf", description = "Die SF Schildkampf, unterteilt in I und II.", skip = true}, 2)
 }) {}
 
-schema.SF.Fernkampf = d:singleton(d.ListWithKnown, {name = "SF.Fernkampf", description = "Liste von Fernkampf-Sonderfertigkeiten."}, {
-  Scharfschuetze = d.Multivalue:def({name = "Scharfschuetze", description = "Liste von Talenten, für die Scharfschütze gilt."}, String),
-  Meisterschuetze = d.Multivalue:def({name = "Meisterschuetze", description = "Liste von Talenten, für die Meisterschütze gilt."}, String),
+schema.SF.Fernkampf = d:singleton(d.Multivalue, {name = "SF.Fernkampf", description = "Liste von Fernkampf-Sonderfertigkeiten."}, String, {
+  Scharfschuetze = d.Multivalue:def({name = "Scharfschuetze", description = "Liste von Talenten, für die Scharfschütze gilt.", label = "Scharfschütze"}, String),
+  Meisterschuetze = d.Multivalue:def({name = "Meisterschuetze", description = "Liste von Talenten, für die Meisterschütze gilt.", label = "Meisterschütze"}, String),
   Schnellladen = d.Multivalue:def({name = "Schnellladen", description = "Liste von Talenten, für die Schnellladen gilt."}, String),
 }) {}
 
-schema.SF.Waffenlos = d:singleton(d.ListWithKnown, {name = "SF.Waffenlos", description = "Listen waffenloser Sonderfertigkeiten."}, {
-  Kampfstile = d.MapToFixed:def({name = "Kampfstile", description = "Liste bekannter Kampfstile"}, "Raufen", "Ringen")
+local Kampfstile = d.MapToFixed:def({name = "Kampfstile", description = "Liste bekannter Kampfstile"}, "Raufen", "Ringen")
+
+function Kampfstile:__tostring()
+  local str = "Kampfstile ("
+  local first = true
+  for key,_ in pairs(self.value) do
+    if first then first = false else str = str .. ", " end
+    str = str .. key
+  end
+  str = str .. ")"
+  return str
+end
+
+schema.SF.Waffenlos = d:singleton(d.Multivalue, {name = "SF.Waffenlos", description = "Listen waffenloser Sonderfertigkeiten."}, String, {
+  Kampfstile = Kampfstile
 }) {}
 
-schema.SF.Magisch = d:singleton(d.ListWithKnown, {name = "SF.Magisch", description = "Liste magischer Sonderfertigkeiten"}, {
-  ["Gefäß der Sterne"] = "GefaessDerSterne"
+schema.SF.Magisch = d:singleton(d.Multivalue, {name = "SF.Magisch", description = "Liste magischer Sonderfertigkeiten"}, String, {
+  GefaessDerSterne = "Gefäß der Sterne"
 }) {}
 
 schema.I = 1
@@ -384,21 +389,15 @@ schema.Mirakel = {
   Liturgien = d:singleton(d.List, {name = "Mirakel.Liturgien", description = "Liste von Liturgien.", item_name = "Liturgie"}, {Segnung, Liturgie}) {},
 }
 
-local Merkmale = d.ListWithKnown:def({name = "Merkmale", description = "Liste von Merkmalen eines Zaubers."}, {
+local Merkmale = d.Multivalue:def({name = "Merkmale", description = "Liste von Merkmalen eines Zaubers."}, String, {
   Elementar = Elementar,
   Daemonisch = Daemonisch
-}, { -- optional
-  Elementar = true,
-  Daemonisch = true,
 })
 
 local function merkmale(name, doc)
-  return d:singleton(d.ListWithKnown, {name = name, description = doc}, {
+  return d:singleton(d.Multivalue, {name = name, description = doc}, String, {
     Elementar = Elementar,
     Daemonisch = Daemonisch
-  }, { -- optional
-    Elementar = true,
-    Daemonisch = true,
   }) {}
 end
 

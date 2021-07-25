@@ -191,8 +191,11 @@ function common.multiline_content(spec, ...)
   local seen_empty = false
   for _, values in ipairs {...} do
     if type(values) == "table" then
-      for i,v in ipairs(values) do
-        if type(v) == "table" then
+      for i,container in ipairs(values.value) do
+        local v = getmetatable(container) == nil and container or container:get()
+        local v = container:get()
+        local is_table = type(v) == "table"
+        if is_table and getmetatable(v) == nil then
           if #v ~= 0 then
             tex.error("nested table in '" .. spec.name .. "' is not empty!")
           end
@@ -201,7 +204,7 @@ function common.multiline_content(spec, ...)
           else
             seen_empty = true
           end
-        else
+        elseif (not is_table) or (not v.skip) then
           if not first then
             if seen_empty then
               tex.sprint([[\newline]])
@@ -211,7 +214,11 @@ function common.multiline_content(spec, ...)
           end
           first = (v == "")
           seen_empty = false
-          tex.sprint(-2, v)
+          if (not is_table) and getmetatable(container) ~= values.inner then
+            tex.sprint(-2, container.label or container.name)
+            tex.sprint(" ")
+          end
+          tex.sprint(-2, tostring(v))
         end
       end
     elseif values ~= nil then
@@ -387,39 +394,6 @@ function common.merkmalliste(input, zauber)
           ret = ret .. ", "
         end
         ret = ret .. label .. " (" .. item .. ")"
-      end
-    end
-  end
-  return ret
-end
-
-function common.list_known(input, known)
-  local ret = {}
-  for k,n in pairs(known) do
-    local v = input[k]
-    if v ~= nil then
-      if type(v) == "boolean" then
-        if v then
-          table.insert(ret, n)
-        end
-      else
-        local t = type(v) == "table" and v or {v}
-        if #t > 0 then
-          local mt = getmetatable(t)
-          if mt ~= nil and (mt.name == "BegabungFuerMerkmal" or mt.name == "UnfaehigkeitFuerMerkmal") then
-            table.insert(ret, n .. " (" .. common.merkmalliste(v) .. ")")
-          else
-            local str = n .. " ("
-            for i,x in ipairs(t) do
-              if i > 1 then
-                str = str .. ", "
-              end
-              str = str .. x
-            end
-            str = str .. ")"
-            table.insert(ret, str)
-          end
-        end
       end
     end
   end

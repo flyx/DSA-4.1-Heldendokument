@@ -37,7 +37,7 @@ function talent.namecol(name, spez)
     tex.sprint(-2, ")")
   end
   tex.sprint([[\hfill]])
-  for _, v in ipairs(data.Vorteile.Magisch.Meisterhandwerk) do
+  for _, v in ipairs(data.Vorteile.Magisch:getlist("Meisterhandwerk")) do
     if v == name then
       tex.sprint([[\faHandSparkles]])
       break
@@ -288,9 +288,8 @@ function talentbogen.gruppen()
       end
       tex.sprint([[\setarstrut{\scriptsize}\multicolumn{1}{l}{\multirow{2}{*}{\Large \textmansontt{\bfseries Sonderfertigkeiten}}} \\ \restorearstrut]])
       tex.sprint([[\\ \hline]])
-      local fixed = common.list_known(data.SF.Allgemein, {Kulturkunde = "Kulturkunde", Ortskenntnis = "Ortskenntnis"})
       common.multiline_content({
-        name="Sonderfertigkeiten", rows=rows_to_print - 2, baselinestretch=1.033}, data.SF.Allgemein, fixed)
+        name="Sonderfertigkeiten", rows=rows_to_print - 2, baselinestretch=1.033}, data.SF.Allgemein)
       tex.print([[\hline\end{NiceTabular}]])
       tex.print("")
       tex.print([[\vspace{1.9pt}]])

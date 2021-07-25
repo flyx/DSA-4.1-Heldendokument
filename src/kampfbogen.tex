@@ -72,15 +72,11 @@
     \vspace{2pt}
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
         \directlua{
-            local fixed = common.list_known(data.SF.Fernkampf, {
-                Scharfschuetze = "Scharfschütze",
-                Meisterschuetze = "Meisterschütze",
-                Schnellladen = "Schnellladen"})
             common.multiline_content({
                 name="Fernkampf-SF", rows=common.current_page.Fernkampf.SF,
                 preamble="\noexpand\\footnotesize Sonderfertigkeiten",
                 baselinestretch=1.04, hspace="5pt", fontsize={8,12}
-            }, data.SF.Fernkampf, fixed)
+            }, data.SF.Fernkampf)
         }
     \end{tabular}
 \end{dsaSheetBox}
@@ -103,15 +99,11 @@
         \vspace{2pt}
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
             \directlua{
-                local stile = {}
-                for k,v in pairs(data.SF.Waffenlos.Kampfstile) do
-                    table.insert(stile, "Kampfstil " .. k)
-                end
                 common.multiline_content({
                   name="Waffenlos-SF", rows=common.current_page.Waffenlos.SF,
                   preamble="\noexpand\\footnotesize Sonderfertigkeiten",
                   baselinestretch=1.04, hspace="5pt", fontsize={8,12}
-                }, stile, data.SF.Waffenlos)
+                }, data.SF.Waffenlos)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -141,8 +133,8 @@
             common.checkboxlist({
                 {"Linkhand (PA+1)", data.SF.Nahkampf.Linkhand},
                 {{"Schildkampf I (PA+2)", "II (PA+2)"},
-                    data.SF.Nahkampf.Schildkampf},
-                {{"Parierwaffen I", "II"}, data.SF.Nahkampf.Parierwaffen}
+                    data.SF.Nahkampf:getlist("Schildkampf")},
+                {{"Parierwaffen I", "II"}, data.SF.Nahkampf:getlist("Parierwaffen")}
             })
         }
     \end{dsaSheetBox}
@@ -169,7 +161,7 @@
                     \normalfont\scriptsize\bfseries Rüstungsgewöhnung
                     \directlua{
                         common.checkboxlist({
-                            {{"I", "II", "III"}, data.SF.Nahkampf.Ruestungsgewoehnung}
+                            {{"I", "II", "III"}, data.SF.Nahkampf:getlist("Ruestungsgewoehnung")}
                         })
                     }
 
@@ -194,7 +186,7 @@
                 \normalsize $+$ &
                 \begin{minipage}{2.5cm}
                     \centering
-                    \directlua{common.checkboxlist({{{"I", "II", "III"}, data.SF.Nahkampf.Ausweichen}})} \\
+                    \directlua{common.checkboxlist({{{"I", "II", "III"}, data.SF.Nahkampf:getlist("Ausweichen")}})} \\
                     jeweils +3 \\
                     Flink (+1) / Behäbig (-1)?
                 \end{minipage}

@@ -138,6 +138,9 @@ end
 
 function doc_printer:p(content)
   io.write("<p>")
+  if content == nil then
+    print(debug.traceback())
+  end
   io.write(content)
   io.write("</p>")
 end
@@ -282,6 +285,21 @@ function TypeClass:def(o, ...)
   return o
 end
 
+function TypeClass:tostring()
+  local str = self.label ~= nil and self.label or self.name
+  if #self > 0 then
+    str = str .. " ("
+    for i,v in ipairs(self) do
+      if i > 1 then
+        str = str .. ", "
+      end
+      str = str .. tostring(v)
+    end
+    str = str .. ")"
+  end
+  return str
+end
+
 --  Called on types iff they are defined as being singleton.
 --  Returns either the value given to the type, or the default value.
 function TypeClass:instance()
@@ -412,7 +430,7 @@ function TypeClass:print_documentation(printer, depth, named)
   end
   io.write("</code></pre>\n\n")
   if self.description ~= nil then
-    printer:p(self.documentation)
+    printer:p(self.description)
   end
   if self.documentation ~= nil then
     self:documentation(printer)
@@ -430,6 +448,7 @@ function d.List:init(items, min, max)
     self:err("List must have item_name defined if giving more than one type")
   end
   self.__index = d.List.getfield
+  self.__tostring = TypeClass.tostring
 end
 
 function d.List:pre_construct()
@@ -621,104 +640,6 @@ function d.Record:print_syntax(printer)
   end
 end
 
-d.ListWithKnown = TypeClass.new({
-  input_kind = "unnamed"
-})
-
-function d.ListWithKnown:init(known, optional)
-  self.optional = optional or {}
-  self.known = known
-  self.__index = d.ListWithKnown.getfield
-  self.__pairs = d.ListWithKnown.iterate
-end
-
-function d.ListWithKnown:pre_construct()
-  self.value = {}
-end
-
-function d.ListWithKnown:append(v)
-  if type(v) == "string" then
-    local name = self.known[v]
-    if name ~= nil then
-      if type(name) == "string" then
-        self.value[name] = true
-      elseif name.input_kind == "scalar" then
-        return string.format("der Wert %s muss mit einem Konstructor `%s(…)` angegeben werden.", v, v)
-      else
-        return string.format("der Wert %s muss mit einem Konstructor `%s {…}` angegeben werden.", v, v)
-      end
-    else
-      table.insert(self.value, v)
-    end
-  else
-    local mt = getmetatable(v)
-    if mt == nil then
-      return string.format("string in Liste erwartet, bekam %s", type(v))
-    else
-      local def = self.known[mt.name]
-      if def == nil then
-        return string.format("string in Liste erwartet, bekam %s", mt.name)
-      elseif type(def) == "string" then
-        return string.format("string in Liste erwartet, bekam %s", type(v))
-      elseif def ~= mt then
-        return string.format("%s erwartet, bekam %s", def.name, mt.name)
-      else
-        local cur = self.value[mt.name]
-        if cur == nil then
-          self.value[mt.name] = v
-        elseif cur.merge ~= nil then
-          cur:merge(v)
-        else
-          return string.format("%s: Doppelt, kann nur einmal gegeben werden", mt.name)
-        end
-      end
-    end
-  end
-end
-
-function d.ListWithKnown:post_construct()
-  for k,v in pairs(self.known) do
-    if not self.optional[k] then
-      if type(v) == "string" then
-        if self.value[v] == nil then
-          self.value[v] = false
-        end
-      elseif self.value[k] == nil then
-        self.value[k] = v {}
-      end
-    end
-  end
-end
-
-function d.ListWithKnown:getfield(key)
-  local v = self.value[key]
-  if v == nil then
-    v = getmetatable(self)[key]
-  elseif type(v) == "table" then
-    v = v:get()
-  end
-  return v
-end
-
-function d.ListWithKnown:iterate()
-  return next, self.value, nil
-end
-
-function d.ListWithKnown:print_syntax(printer)
-  d.String:print_syntax(printer)
-  printer:sym(", ")
-  printer:meta("...")
-  for k,v in pairs(self.known) do
-    if type(v) ~= "string" then
-      printer:sym(",")
-      printer:nl()
-      printer:meta("(opt) ")
-      printer:id(v.name .. " ")
-      v:print_syntax(printer)
-    end
-  end
-end
-
 d.Row = TypeClass.new({
   input_kind = "named"
 })
@@ -883,6 +804,8 @@ function d.Numbered:print_syntax(printer)
     printer:id(string.rep("I", i))
   end
   printer:meta(" ]")
+  printer:sym(", ")
+  printer:meta("...")
 end
 
 d.MapToFixed = TypeClass.new({
@@ -956,7 +879,7 @@ function d.Number:set(v)
     return string.format("Zahl %d außerhalb des erwarteten Bereichs %d..%s", v, self.min, self.max)
   else
     local x = v * 10 ^ self.decimals
-    if x ~= math.floor(x) then
+    if math.abs(x - math.floor(x)) > 0.00001 then
       return string.format("Zu viele Dezimalstellen (erlaubt sind maximal %d)", self.decimals)
     end
   end
@@ -1081,16 +1004,19 @@ d.Multivalue = TypeClass.new({
   input_kind = "unnamed"
 })
 
-function d.Multivalue:init(inner)
+function d.Multivalue:init(inner, known_items)
   if inner == nil then
     self:err("Multivalue ohne `inner` Wert!\n")
   end
   self.__index = d.Multivalue.getfield
+  self.__tostring = TypeClass.tostring
   self.inner = inner
+  self.known_items = known_items == nil and {} or known_items
 end
 
 function d.Multivalue:pre_construct()
   self.value = {}
+  self.named_index = {}
 end
 
 function d.Multivalue:append(v)
@@ -1101,9 +1027,26 @@ function d.Multivalue:append(v)
         return string.format("%s oder {} in Liste erwartet, bekam nicht-leere table", self.inner.name)
       end
     elseif mt ~= self.inner then
-      return string.format("%s oder {} in Liste erwartet, bekam %s", self.inner.name, mt.name)
+      for key,item in pairs(self.known_items) do
+        if mt == item then
+          if self.named_index[key] ~= nil then
+            self.named_index[key]:merge(v)
+          else
+            self.named_index[key] = v
+            table.insert(self.value, v)
+          end
+          return
+        end
+      end
+      return string.format("%s oder {} erwartet, bekam %s", self.inner.name, mt.name)
     end
   else
+    for key,item in pairs(self.known_items) do
+      if v == item then
+        self.named_index[key] = true
+        break
+      end
+    end
     v = self.inner(v)
   end
   table.insert(self.value, v)
@@ -1119,31 +1062,44 @@ function d.Multivalue:merge(v)
 end
 
 function d.Multivalue:getfield(key)
-  if type(key) == "number" then
+  local t = type(key)
+  if t == "number" then
     local v = self.value[key]
     if v ~= nil then
       v = v:get()
     end
     return v
-  else
-    return getmetatable(self)[key]
+  elseif t == "string" then
+    local v = self.named_index[key]
+    if v ~= nil then
+      if getmetatable(v) ~= nil then
+        v = v:get()
+      end
+      return v
+    end
   end
+  return getmetatable(self)[key]
+end
+
+function d.Multivalue:getlist(key)
+  local v = self.named_index[key]
+  return v == nil and {} or v
 end
 
 function d.Multivalue:print_syntax(printer)
   printer:meta("[ ")
   printer:ref(self.inner)
   printer:meta(" | ")
-  printer:sym("{ ")
-  printer:meta("[ ")
-  printer:ref(self.inner)
-  printer:meta(" | ")
   printer:sym("{}")
+  for k,v in pairs(self.known_items) do
+    if type(v) ~= "string" then
+      printer:meta(" | ")
+      printer:ref(v, nil, true)
+    end
+  end
   printer:meta(" ]")
   printer:sym(", ")
   printer:meta("...")
-  printer:sym(" }")
-  printer:meta(" ]")
 end
 
 function d.Multivalue:documentation(printer)

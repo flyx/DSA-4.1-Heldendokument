@@ -47,24 +47,10 @@
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
             \directlua{
-                local fixed = common.list_known(data.Vorteile, {
-                    Eisern = "Eisern", Flink = "Flink",
-                    BegabungFuerTalentgruppe = "Begabung für [Talentgruppe]",
-                    BegabungFuerTalent = "Begabung für [Talent]",
-                    AkademischeAusbildung = "Akademische Ausbildung",
-                    EidetischesGedaechtnis = "Eidetisches Gedächtnis",
-                    GutesGedaechtnis = "Gutes Gedächtnis",
-                })
-                local fixed_m = common.list_known(data.Vorteile.Magisch, {
-                    BegabungFuerMerkmal = "Begabung für [Merkmal]",
-                    BegabungFuerRitual = "Begabung für [Ritual]",
-                    BegabungFuerZauber = "Begabung für [Zauber]",
-                    Meisterhandwerk = "Meisterhandwerk",
-                })
                 common.multiline_content({
                     name="Vorteile", rows=common.current_page.Vorteile,
                     baselinestretch=1.35
-                }, data.Vorteile, fixed, data.Vorteile.Magisch, fixed_m)
+                }, data.Vorteile, data.Vorteile.Magisch)
             }
         \end{tabular}
     \end{dsaSheetBox}
@@ -76,19 +62,10 @@
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{tabular}{p{\dimexpr\textwidth-2\tabcolsep}}
             \directlua{
-                local fixed = common.list_known(data.Nachteile,
-                    {Glasknochen = "Glasknochen", Behaebig = "Behäbig",
-                     Kleinwuechsig = "Kleinwüchsig", Unstet = "Unstet",
-                     Zwergenwuchs = "Zwergenwuchs",
-                     UnfaehigkeitFuerTalentgruppe = "Unfähigkeit für [Talentgruppe]",
-                     UnfaehigkeitFuerTalent = "Unfähigkeit für [Talent]"})
-                local fixed_m = common.list_known(data.Nachteile.Magisch, {
-                    UnfaehigkeitFuerMerkmal = "Unfähigkeit für [Merkmal]",
-                })
                 common.multiline_content({
                     name="Nachteile", rows=common.current_page.Nachteile,
                     baselinestretch=1.35
-                }, data.Nachteile, fixed, data.Nachteile.Magisch, fixed_m)
+                }, data.Nachteile, data.Nachteile.Magisch)
             }
         \end{tabular}
     \end{dsaSheetBox}

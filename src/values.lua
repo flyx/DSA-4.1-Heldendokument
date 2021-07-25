@@ -61,7 +61,6 @@ local values = {
 }
 
 values.Vorteile.Magisch = schema.Vorteile.Magisch:instance()
-values.Vorteile.Magisch.asp = #values.Vorteile.Magisch > 0
 values.Nachteile.Magisch = schema.Nachteile.Magisch:instance()
 for k,v in pairs(schema.Talente) do
   values.Talente[k] = v:instance()
@@ -105,7 +104,7 @@ local getter_map = {
     LE = function() return {"KO", "KO", "KK", div=2} end,
     AU = function() return {"MU", "KO", "GE", div=2} end,
     AE = function()
-      if data.Vorteile.Magisch.asp then
+      if data:has_asp() then
         if data.SF.Magisch.GefaessDerSterne then
           return {"MU", "IN", "CH", "CH", div=2}
         else
@@ -206,6 +205,10 @@ setmetatable(getter_map.calc, {
     return getter_map.sparse(val)
   end
 })
+
+function values:has_asp()
+  return #self.Vorteile.Magisch > 0
+end
 
 function values:cur(name, div)
   div = div or 1
@@ -334,15 +337,15 @@ function values:lernschwierigkeit(z)
   local index = skt.spalte:num(z.Komplexitaet)
   for i, merkmal in ipairs(z.Merkmale) do
     index = index + merkmal_mod_from(merkmal, self.Magie.Merkmalskenntnis, -1)
-    index = index + merkmal_mod_from(merkmal, self.Vorteile.Magisch.BegabungFuerMerkmal, -1)
-    index = index + merkmal_mod_from(merkmal, self.Nachteile.Magisch.UnfaehigkeitFuerMerkmal, 1)
+    index = index + merkmal_mod_from(merkmal, self.Vorteile.Magisch:getlist("BegabungFuerMerkmal"), -1)
+    index = index + merkmal_mod_from(merkmal, self.Nachteile.Magisch:getlist("UnfaehigkeitFuerMerkmal"), 1)
   end
   for _, name in ipairs({"Elementar", "Daemonisch"}) do
     index = index + merkmal_submod_from(name, z.Merkmale[name], self.Magie.Merkmalskenntnis[name], -1)
-    index = index + merkmal_submod_from(name, z.Merkmale[name], self.Vorteile.Magisch.BegabungFuerMerkmal[name], -1)
-    index = index + merkmal_submod_from(name, z.Merkmale[name], self.Nachteile.Magisch.UnfaehigkeitFuerMerkmal[name], 1)
+    index = index + merkmal_submod_from(name, z.Merkmale[name], self.Vorteile.Magisch:getlist("BegabungFuerMerkmal")[name], -1)
+    index = index + merkmal_submod_from(name, z.Merkmale[name], self.Nachteile.Magisch:getlist("UnfaehigkeitFuerMerkmal")[name], 1)
   end
-  for _, name in ipairs(self.Vorteile.Magisch.BegabungFuerZauber) do
+  for _, name in ipairs(self.Vorteile.Magisch:getlist("BegabungFuerZauber")) do
     if name == z.Name then
       index = index - 1
       break
@@ -355,16 +358,13 @@ end
 
 function values:tgruppe_schwierigkeit_mod(gruppe)
   local val = 0
-  if self.Vorteile.BegabungFuerTalentgruppe == nil then
-    tex.error("is nil: BegabungFuerTalentgruppe")
-  end
-  for _,n in ipairs(self.Vorteile.BegabungFuerTalentgruppe) do
+  for _,n in ipairs(self.Vorteile:getlist("BegabungFuerTalentgruppe")) do
     if n == gruppe then
       val = val - 1
       break
     end
   end
-  for _, n in ipairs(self.Nachteile.UnfaehigkeitFuerTalentgruppe) do
+  for _, n in ipairs(self.Nachteile:getlist("UnfaehigkeitFuerTalentgruppe")) do
     if n == gruppe then
       val = val + 1
       break
@@ -411,13 +411,13 @@ end
 function values:talent_schwierigkeit_mod(talent)
   local name = talent[1]
   local val = 0
-  for _,n in ipairs(self.Vorteile.BegabungFuerTalent) do
+  for _,n in ipairs(self.Vorteile:getlist("BegabungFuerTalent")) do
     if n == name then
       val = val - 1
       break
     end
   end
-  for _, n in ipairs(self.Nachteile.UnfaehigkeitFuerTalent) do
+  for _, n in ipairs(self.Nachteile:getlist("UnfaehigkeitFuerTalent")) do
     if n == name then
       val = val + 1
       break
@@ -633,8 +633,8 @@ function values:spezialisierung(e)
     if w.Name == e.Fertigkeit then
       ziel = w
       spalte = self:kampf_schwierigkeit(w)
-      if self.Vorteile.AkademischeAusbildung[1] == "Krieger" or
-          self.Vorteile.AkademischeAusbildung[1] == "Kriegerin" then
+      if self.Vorteile:getlist("AkademischeAusbildung")[1] == "Krieger" or
+          self.Vorteile:getlist("AkademischeAusbildung")[1] == "Kriegerin" then
         faktor = skt.faktor["3/4"]
       end
       event[1] = "Waffenspezialisierung ("
@@ -666,8 +666,8 @@ function values:spezialisierung(e)
       if z.Name == e.Fertigkeit then
         ziel = z
         spalte = self:lernschwierigkeit(z)
-        if self.Vorteile.AkademischeAusbildung[1] == "Magier" or
-            self.Vorteile.AkademischeAusbildung[1] == "Magierin" then
+        if self.Vorteile:getlist("AkademischeAusbildung")[1] == "Magier" or
+            self.Vorteile:getlist("AkademischeAusbildung")[1] == "Magierin" then
           if self.Vorteile.EidetischesGedaechtnis then
             faktor = skt.faktor["3/8"]
           elseif self.Vorteile.GutesGedaechtnis then
@@ -705,7 +705,7 @@ end
 function values:eig_steigerung(e)
   local event = {}
   local spalte = skt.spalte:num("H")
-  for _, n in ipairs(self.Vorteile.BegabungFuerEigenschaft) do
+  for _, n in ipairs(self.Vorteile:getlist("BegabungFuerEigenschaft")) do
     if n == e.Eigenschaft then
       spalte = spalte - 1
       break

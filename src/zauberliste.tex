@@ -17,10 +17,10 @@
                     tex.sprint(-2, common.merkmalliste(data.Magie.Merkmalskenntnis))
                 } \\ \hline
                 Begabungen: & \normalfont\directlua{
-                    tex.sprint(-2, common.merkmalliste(data.Vorteile.Magisch.BegabungFuerMerkmal, data.Vorteile.Magisch.BegabungFuerZauber))
+                    tex.sprint(-2, common.merkmalliste(data.Vorteile.Magisch:getlist("BegabungFuerMerkmal"), data.Vorteile.Magisch:getlist("BegabungFuerZauber")))
                 } \\ \hline
                 Unfähigkeiten: & \normalfont\directlua{
-                    tex.sprint(-2, common.merkmalliste(data.Nachteile.Magisch.UnfaehigkeitFuerMerkmal))
+                    tex.sprint(-2, common.merkmalliste(data.Nachteile.Magisch:getlist("UnfaehigkeitFuerMerkmal")))
                 }
             \end{tabular}
         \end{dsaSheetBox}
