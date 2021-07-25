@@ -940,7 +940,7 @@ Waffen.Fernkampf {</xsl:text>
 
   <xsl:template match="ausrüstungen" mode="schilde">
     <xsl:text>
-Waffen.Schilde {</xsl:text>
+Waffen.SchildeUndParierwaffen {</xsl:text>
     <xsl:apply-templates select="heldenausruestung[@set = 0 and starts-with(@name, 'schild')]" mode="schilde"/>
     <xsl:text>
 }
@@ -950,16 +950,16 @@ Waffen.Schilde {</xsl:text>
   <xsl:template match="heldenausruestung" mode="schilde">
     <xsl:variable name="name" select="@schildname" />
     <xsl:text>
-  {</xsl:text>
-    <xsl:value-of select="concat(dsa:stringVal($name), ', ')"/>
+  </xsl:text>
     <xsl:choose>
       <xsl:when test="@verwendungsArt = 'Schild'">
-        <xsl:text>"Schild", </xsl:text>
+        <xsl:text>Schild {</xsl:text>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>"Parierwaffe", </xsl:text>
+        <xsl:text>Parierwaffe {</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:value-of select="concat(dsa:stringVal($name), ', ')"/>
     <xsl:variable name="def" select="$ausruestung/schildeParier/s[@name=$name]"/>
     <xsl:if test="$def">
       <xsl:value-of select="concat(dsa:singleval($def/@ini), ', ', dsa:doubleval($def/@wm), ', ', $def/@bf)"/>

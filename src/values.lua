@@ -45,7 +45,7 @@ local values = {
   Waffen = {
     Nahkampf = schema.Waffen.Nahkampf:instance(),
     Fernkampf = schema.Waffen.Fernkampf:instance(),
-    Schilde = schema.Waffen.Schilde:instance(),
+    SchildeUndParierwaffen = schema.Waffen.SchildeUndParierwaffen:instance(),
     Ruestung = schema.Waffen.Ruestung:instance(),
   },
   Kleidung = schema.Kleidung:instance(),
@@ -87,7 +87,7 @@ local function sum_and_round(items, pos)
   local cur = nil
   for i,v in ipairs(items) do
     if #v >= pos then
-      local num = tonumber(v[pos]())
+      local num = tonumber(v[pos])
       if num == nil then
         return ""
       elseif cur == nil then

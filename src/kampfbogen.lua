@@ -337,15 +337,20 @@ local waffenlos_render = {
 
 function kampfbogen.waffenlos()
   local Ganzzahl = schema.Ganzzahl
-  kampfwerte(schemadef.MixedList:def({name = "Waffenlos", documentation = ""},
-    schemadef.HeterogeneousList:def({name = "Kampftalent", documentation = ""},
-      {"Name", schema.String}, {"TP/KK Schwelle", schema.Ganzzahl}, {"TP/KK Schritt", schema.Ganzzahl}, {"INI", schema.Ganzzahl})) {
+  kampfwerte(schemadef.List:def({name = "Waffenlos", documentation = ""}, {
+    schemadef.Row:def({name = "Kampftalent", documentation = ""},
+      {"Name", schema.String}, {"TP/KK Schwelle", schema.Ganzzahl}, {"TP/KK Schritt", schema.Ganzzahl}, {"INI", schema.Ganzzahl}
+    )
+  }) {
     {"Raufen", 10, 3, 0},
     {"Ringen", 10, 3, 0}
   }, waffenlos_render, 1, 7, 2)
 end
 
 local schilde_render = {
+  [2]= {false, function(v, talent, ebe)
+    tex.sprint(-2, getmetatable(v).name)
+  end},
   [3]= {true, common.render_delta},
   [4]= {true, common.render_delta},
   [5]= {true, common.render_delta},
@@ -353,7 +358,7 @@ local schilde_render = {
     if #v < 5 then
       return
     end
-    if v.Typ == "Schild" then
+    if getmetatable(v).name == "Schild" then
       local val = data:cur("PA")
       if val == "" then
         return
@@ -367,7 +372,7 @@ local schilde_render = {
         end
       end
       tex.sprint(-2, val + v["WM PA"])
-    elseif v.Typ == "Parierwaffe" then
+    else
       local val = v["WM PA"]
       if data.SF.Nahkampf.Parierwaffen[2] then
         val = val + 2
@@ -377,8 +382,6 @@ local schilde_render = {
         val = val - 4
       end
       common.render_delta(val)
-    else
-      tex.error("Typ muss 'Schild' oder 'Parierwaffe' sein: " .. v.Typ)
     end
   end},
   [7] = {true, render_num},
@@ -386,7 +389,7 @@ local schilde_render = {
 }
 
 function kampfbogen.schilde()
-  kampfwerte(data.Waffen.Schilde, schilde_render, 0, 8, common.current_page.Schilde)
+  kampfwerte(data.Waffen.SchildeUndParierwaffen, schilde_render, 0, 8, common.current_page.Schilde)
 end
 
 function kampfbogen.ruestungsteile()

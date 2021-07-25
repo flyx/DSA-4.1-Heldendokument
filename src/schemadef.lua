@@ -157,7 +157,7 @@ function TypeClass:value_len(key)
 end
 
 --  TypeClass ist the root of the schemadef's type system. The schemadef defines
---  a set of TypeClass instances, e.g. `HeterogeneousList`, `Matching`.
+--  a set of TypeClass instances, e.g. `Row`, `Matching`.
 --  A schema then defines a set of types, each based on one of the type classes,
 --  which define the structures a schema instance can contain.
 --
@@ -411,31 +411,32 @@ function TypeClass:print_documentation(printer, depth, named)
     printer:close()
   end
   io.write("</code></pre>\n\n")
-  if type(self.documentation) == "string" then
+  if self.description ~= nil then
     printer:p(self.documentation)
-  else
+  end
+  if self.documentation ~= nil then
     self:documentation(printer)
   end
   io.write("\n\n")
 end
 
-d.MixedList = TypeClass.new({
+d.List = TypeClass.new({
   input_kind = "unnamed"
 })
 
-function d.MixedList:init(...)
-  self.items = {...}
+function d.List:init(items, min, max)
+  self.items, self.min_items, self.max_items = items, min, max
   if #self.items > 1 and self.item_name == nil then
-    self:err("MixedList must have item_name defined if giving more than one type")
+    self:err("List must have item_name defined if giving more than one type")
   end
-  self.__index = d.MixedList.getfield
+  self.__index = d.List.getfield
 end
 
-function d.MixedList:pre_construct()
+function d.List:pre_construct()
   self.value = {}
 end
 
-function d.MixedList:append(v, sort)
+function d.List:append(v, sort)
   local mt = getmetatable(v)
   if (mt == nil or mt == string_metatable) and #self.items == 1 then
     v = self.items[1](v)
@@ -518,7 +519,7 @@ function d.MixedList:append(v, sort)
   table.insert(self.value, index + 1, v)
 end
 
-function d.MixedList:getfield(key)
+function d.List:getfield(key)
   if type(key) == "number" then
     local v = self.value[key]
     if v ~= nil then
@@ -530,7 +531,7 @@ function d.MixedList:getfield(key)
   end
 end
 
-function d.MixedList:print_syntax(printer)
+function d.List:print_syntax(printer)
   if #self.items == 0 then
     io.write("EMPTY MIXEDLIST: " .. self.name .. "\n")
   end
@@ -711,84 +712,29 @@ function d.ListWithKnown:print_syntax(printer)
     if type(v) ~= "string" then
       printer:sym(",")
       printer:nl()
-      printer:meta("(optional) ")
+      printer:meta("(opt) ")
       printer:id(v.name .. " ")
       v:print_syntax(printer)
     end
   end
 end
 
-d.FixedList = TypeClass.new({
-  input_kind = "unnamed"
-})
-
-function d.FixedList:init(inner, min, max)
-  self.inner = inner
-  self.min_items = min
-  self.max_items = max
-  self.__index = d.FixedList.getfield
-end
-
-function d.FixedList:pre_construct()
-  self.value = {}
-end
-
-function d.FixedList:append(v)
-  local mt = getmetatable(v)
-  if mt == nil or mt == string_metatable then
-    v = self.inner(v)
-    mt = getmetatable(v)
-  end
-  if mt ~= d.Poison and mt ~= self.inner then
-    return string.format("falscher Typ: erwartete %s, bekam %s", self.inner.name, mt.name)
-  end
-  table.insert(self.value, v)
-end
-
-function d.FixedList:getfield(key)
-  local v = nil
-  if type(key) == "number" then
-    v = self.value[key]
-    if v ~= nil then
-      v = v:get()
-    end
-  else
-    v = getmetatable(self)[key]
-  end
-  return v
-end
-
-function d.FixedList:print_syntax(printer)
-  if self.max_items ~= nil then
-    for i=1,self.max_items do
-      if i > 1 then
-        printer:sym(", ")
-      end
-      self.inner:print_syntax(printer)
-    end
-  else
-    self.inner:print_syntax(printer)
-    printer:sym(", ")
-    printer:meta("...")
-  end
-end
-
-d.HeterogeneousList = TypeClass.new({
+d.Row = TypeClass.new({
   input_kind = "named"
 })
 
-function d.HeterogeneousList:init(...)
+function d.Row:init(...)
   self.fields = {...}
   self.unnamed_to_named = self.fields
-  self.__index = d.HeterogeneousList.getfield
-  self.__newindex = d.HeterogeneousList.setfield
+  self.__index = d.Row.getfield
+  self.__newindex = d.Row.setfield
 end
 
-function d.HeterogeneousList:pre_construct()
+function d.Row:pre_construct()
   rawset(self, "value", {})
 end
 
-function d.HeterogeneousList:put(key, v)
+function d.Row:put(key, v)
   for i,def in ipairs(self.fields) do
     if def[1] == key then
       local mt = getmetatable(v)
@@ -808,7 +754,7 @@ function d.HeterogeneousList:put(key, v)
   return "unbekannter Wert"
 end
 
-function d.HeterogeneousList:post_construct()
+function d.Row:post_construct()
   for i=1,#self.fields do
     if self.value[i] == nil then
       local def = self.fields[i]
@@ -826,7 +772,7 @@ function d.HeterogeneousList:post_construct()
 end
 
 -- used as __getindex for the values
-function d.HeterogeneousList:getfield(key)
+function d.Row:getfield(key)
   local mt = getmetatable(self)
   local v = mt[key]
   if v == nil then
@@ -850,7 +796,7 @@ function d.HeterogeneousList:getfield(key)
   return v
 end
 
-function d.HeterogeneousList:setfield(key, value)
+function d.Row:setfield(key, value)
   local mt = getmetatable(self)
   local fields = rawget(mt, "fields")
   local svalue = rawget(self, "value")
@@ -868,10 +814,13 @@ function d.HeterogeneousList:setfield(key, value)
   self:err("cannot set key: " .. key)
 end
 
-function d.HeterogeneousList:print_syntax(printer)
+function d.Row:print_syntax(printer)
   for i,v in ipairs(self.fields) do
     if i > 1 then
       printer:sym(", ")
+    end
+    if v[3] ~= nil then
+      printer:meta("(opt) ")
     end
     if v[2] == nil then
       printer:meta("&lt;" .. v[1] .. ":")
