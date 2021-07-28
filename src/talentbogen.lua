@@ -118,7 +118,10 @@ end
 function talent.sprache(v, prefix)
   tex.sprint([[& \faComments{} ]] .. prefix)
   talent.namecol(v.Name, v.Dialekt)
-  tex.sprint(" & " .. data:sprache_schwierigkeit(v))
+  tex.sprint(" & ")
+  if string.len(v.Name) > 0 then
+    tex.sprint(-2, data:sprache_schwierigkeit(v))
+  end
   for i=2,3 do
     tex.sprint("& ")
     tex.sprint(-2, v[i])
@@ -128,7 +131,10 @@ end
 function talent.schrift(v, mod)
   tex.sprint([[& \faBookOpen{} ]])
   tex.sprint(-2, v[1])
-  tex.sprint(" & " .. data:schrift_schwierigkeit(v))
+  tex.sprint(" & ")
+  if v.Steigerungsspalte ~= nil then
+    tex.sprint(-2, data:schrift_schwierigkeit(v))
+  end
   for i=3,4 do
     tex.sprint("& ")
     tex.sprint(-2, v[i])

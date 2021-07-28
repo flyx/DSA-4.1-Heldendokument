@@ -7,7 +7,12 @@ local d = {
     name = "Poison",
     count = 0,
   },
-  schema = {}
+  schema = {},
+  multi = {
+    forbid = 0,
+    allow = 1,
+    merge = 2
+  }
 }
 d.Poison.__metatable = d.Poison
 setmetatable(d.Poison, d.Poison)
@@ -44,7 +49,7 @@ function doc_printer:ph(name)
   io.write([[&gt;</span>]])
 end
 
-function doc_printer:ref(target, name, force_named)
+function doc_printer:ref(target)
   if target == nil then
     print(debug.traceback())
     io.write("ERROR: target nil!\n")
@@ -52,38 +57,18 @@ function doc_printer:ref(target, name, force_named)
   if self.known[target] == nil then
     local found = false
     for _,v in ipairs(self.refs) do
-      if v.target == target then
+      if v == target then
         found = true
         break
       end
     end
     if not found then
-      table.insert(self.refs, {target = target, named = force_named == true})
+      table.insert(self.refs, target)
     end
   end
-  if name ~= nil then
-    self:meta("&lt;" .. name .. ":")
-  end
-  if target ~= nil then
-    io.write([[<a href="#]] .. target.name .. [[">]])
-  end
-  if name == nil then
-    io.write([[&lt;]])
-  end
-  if target == nil then
-    io.write("Any")
-  else
-    io.write(target.name)
-  end
-  if name == nil then
-    io.write("&gt;")
-  end
-  if target ~= nil then
-    io.write("</a>")
-  end
-  if name ~= nil then
-    self:meta("&gt;")
-  end
+  io.write([[<a href="#]] .. target.name .. [[">]])
+  io.write(target.name)
+  io.write("</a>")
 end
 
 function doc_printer:meta(s)
@@ -131,7 +116,7 @@ function doc_printer:close()
 end
 
 function doc_printer:h(depth, id, label)
-  io.write("<h" .. tostring(depth + 2) .. " id=\"" .. label .. "\">")
+  io.write("<h" .. tostring(depth + 2) .. " id=\"" .. id .. "\">")
   io.write(label)
   io.write("</h" .. tostring(depth + 2) .. ">")
 end
@@ -175,7 +160,7 @@ end
 --
 --  The following functions are to be defined on every type class:
 --
---    print_syntax: function(self, printer, named)
+--    proto_param_values: function(self, printer)
 --        will be called on types to render a schema's documentation.
 --
 --    init: function(self, ...)
@@ -315,70 +300,69 @@ function TypeClass:construct_instance(value)
   if self.pre_construct ~= nil then
     self.pre_construct(ret)
   end
-  if type(value) == "table" and getmetatable(value) == nil then
-    if self.input_kind == "scalar" then
-      self:err("erwartete einzelnen Wert, bekam table")
-    else
-      if #value > 0 then
-        if self.input_kind == "named" then
-          if self.unnamed_to_named == nil then
-            self:err("enthält unerwartete benamte Werte")
-          else
-            for i, v in ipairs(value) do
-              d.context:push(" [" .. tostring(i) .. "]")
-              if i == #self.unnamed_to_named + 1 then
-                self:err("zu viele Werte: erwartete %d, bekam %d", #self.unnamed_to_named, #value)
-              elseif i <= #self.unnamed_to_named then
-                local item = self.unnamed_to_named[i]
-                if type(item) == "table" then
-                  item = item[1]
-                end
-                local msg = ret:put(item, v)
-                if msg ~= nil then
-                  self:err(msg)
-                end
-              end
-              d.context:pop()
-            end
-          end
+  if self.input_kind == "scalar" then
+    local msg = ret:set(value)
+    if msg ~= nil then
+      self:err("%s", msg)
+    end
+  elseif type(value) == "table" and getmetatable(value) == nil then
+    if #value > 0 then
+      if self.input_kind == "named" then
+        if self.unnamed_to_named == nil then
+          self:err("enthält unerwartete benamte Werte")
         else
           for i, v in ipairs(value) do
             d.context:push(" [" .. tostring(i) .. "]")
-            if self.max_items ~= nil and i == self.max_items + 1 then
-              self:err("zu viele Werte: erwartete maximal %d, bekam %d", self.max_items, #value)
-            elseif self.max_items == nil or i <= self.max_items then
-              local msg = ret:append(v)
+            if i == #self.unnamed_to_named + 1 then
+              self:err("zu viele Werte: erwartete %d, bekam %d", #self.unnamed_to_named, #value)
+            elseif i <= #self.unnamed_to_named then
+              local item = self.unnamed_to_named[i]
+              if type(item) == "table" then
+                item = item[1]
+              end
+              local msg = ret:put(item, v)
               if msg ~= nil then
                 self:err(msg)
               end
             end
             d.context:pop()
           end
-          if self.min_items ~= nil and #value < self.min_items then
-            self:err("zu wenige Werte: erwartete mindestens %d, bekam %d", self.min_items, #value)
-          end
         end
-      end
-      for k, v in pairs(value) do
-        if type(k) ~= "number" then
-          d.context:push("\"" .. k .. "\"")
-          if self.input_kind == "named" then
-            local msg = ret:put(k, v)
+      else
+        for i, v in ipairs(value) do
+          d.context:push(" [" .. tostring(i) .. "]")
+          if self.max_items ~= nil and i == self.max_items + 1 then
+            self:err("zu viele Werte: erwartete maximal %d, bekam %d", self.max_items, #value)
+          elseif self.max_items == nil or i <= self.max_items then
+            local msg = ret:append(v)
             if msg ~= nil then
               self:err(msg)
             end
-          else
-            self:err("unerwarteter benamter Wert")
           end
           d.context:pop()
         end
+        if self.min_items ~= nil and #value < self.min_items then
+          self:err("zu wenige Werte: erwartete mindestens %d, bekam %d", self.min_items, #value)
+        end
+      end
+    end
+    for k, v in pairs(value) do
+      if type(k) ~= "number" then
+        d.context:push("\"" .. k .. "\"")
+        if self.input_kind == "named" then
+          local msg = ret:put(k, v)
+          if msg ~= nil then
+            self:err(msg)
+          end
+        else
+          self:err("unerwarteter benamter Wert")
+        end
+        d.context:pop()
       end
     end
   else
     local msg
-    if self.input_kind == "scalar" then
-      msg = ret:set(value)
-    elseif self.input_kind == "unnamed" then
+    if self.input_kind == "unnamed" then
       msg = ret:append(value)
     else
       msg = "erwartete table mit benamten Werten, bekam einzelnen Wert '" .. tostring(value) .. "'"
@@ -410,25 +394,19 @@ end
 --  Called on a type to generate the HTML documentation
 function TypeClass:print_documentation(printer, depth, named)
   printer.known[self] = true
-  printer:h(depth, self.name, self.name)
-  io.write("\n\n<pre><code>")
-  if self.input_kind == "scalar" then
-    if named then
-      printer:id(self.name)
-      printer:sym("(")
+  local proto = "UNKNOWN"
+  local mt = getmetatable(self)
+  for k,v in pairs(d) do
+    if v == mt then
+      proto = k
+      break
     end
-    self:print_syntax(printer)
-    if named then printer:sym(")") end
-  else
-    if named then
-      printer:open(self.name)
-    else
-      printer:open()
-    end
-    self:print_syntax(printer)
-    printer:close()
   end
-  io.write("</code></pre>\n\n")
+  printer:h(depth, self.name, self.name .. " (<a href=\"#" .. proto .. "\">" .. proto .. "</a>)")
+  printer:p("Werte der Prototypenparameter:")
+  io.write("<table class=\"protoparam\">")
+  self:proto_param_values(printer)
+  io.write("</table>\n\n")
   if self.description ~= nil then
     printer:p(self.description)
   end
@@ -550,23 +528,19 @@ function d.List:getfield(key)
   end
 end
 
-function d.List:print_syntax(printer)
-  if #self.items == 0 then
-    io.write("EMPTY MIXEDLIST: " .. self.name .. "\n")
-  end
-  if #self.items > 1 then
-    printer:meta("&lt;" .. self.item_name .. ': [ ')
-    for i,t in ipairs(self.items) do
-      if i > 1 then
-        printer:meta(" | ")
-      end
-      printer:ref(t, nil, true)
+function d.List:proto_param_values(printer)
+  io.write("<tr><th>items</th><td>")
+  for i,t in ipairs(self.items) do
+    if i > 1 then
+      io.write(", ")
     end
-    printer:meta(" ]&gt;")
-    printer:sym(", ...")
-  else
-    printer:ref(self.items[1], nil, false)
-    printer:sym(", ...")
+    printer:ref(t)
+  end
+  for _, k in ipairs({"min", "max"}) do
+    local v = self[k .. "_items"]
+    if v ~= nil then
+      io.write("<tr><th>" .. k .. "</th><td>" .. tostring(v) .. "</td></tr>")
+    end
   end
 end
 
@@ -625,19 +599,17 @@ function d.Record:getfield(key)
   return v
 end
 
-function d.Record:print_syntax(printer)
-  local first = true
-  for _,f in pairs(self.order) do
-    if first then
-      first = false
-    else
-      printer:sym(",")
-      printer:nl()
+function d.Record:proto_param_values(printer)
+  io.write("<tr><th>items</th><td>")
+  for i,f in pairs(self.order) do
+    if i > 1 then
+      io.write(", ")
     end
-    printer:id(f)
-    printer:sym(" = ")
+    io.write(f)
+    io.write(": ")
     printer:ref(self.defs[f][1])
   end
+  io.write("</td></tr>")
 end
 
 d.Row = TypeClass.new({
@@ -735,22 +707,21 @@ function d.Row:setfield(key, value)
   self:err("cannot set key: " .. key)
 end
 
-function d.Row:print_syntax(printer)
+function d.Row:proto_param_values(printer)
+  io.write("<tr><th>items</th><td>")
   for i,v in ipairs(self.fields) do
     if i > 1 then
-      printer:sym(", ")
+      io.write(", ")
     end
-    if v[3] ~= nil then
-      printer:meta("(opt) ")
-    end
+    io.write(v[1])
+    io.write(": ")
     if v[2] == nil then
-      printer:meta("&lt;" .. v[1] .. ":")
-      io.write("Any")
-      printer:meta("&gt;")
+      io.write("<em>beliebig</em>")
     else
-      printer:ref(v[2], v[1])
+      printer:ref(v[2])
     end
   end
+  io.write("</td></tr>")
 end
 
 d.Numbered = TypeClass.new({
@@ -795,132 +766,67 @@ function d.Numbered:merge(v)
   end
 end
 
-function d.Numbered:print_syntax(printer)
-  printer:meta("[ ")
-  for i=1,self.max_items do
-    if i > 1 then
-      printer:meta(" | ")
-    end
-    printer:id(string.rep("I", i))
-  end
-  printer:meta(" ]")
-  printer:sym(", ")
-  printer:meta("...")
+function d.Numbered:proto_param_values(printer)
+  io.write("<tr><th>max</th><td>" .. tostring(self.max_items) .. "</td></tr>")
 end
 
-d.MapToFixed = TypeClass.new({
-  input_kind = "named"
-})
+d.Primitive = TypeClass.new({input_kind = "scalar"})
 
-function d.MapToFixed:init(...)
-  self.target_set = {...}
-  self.__pairs = d.MapToFixed.iterate
-end
-
-function d.MapToFixed:pre_construct()
-  self.value = {}
-end
-
-function d.MapToFixed:put(key, v)
-  local found = false
-  for _,e in ipairs(self.target_set) do
-    if v == e then
-      found = true
-      break
-    end
-  end
-  if not found then
-    local l = "('"
-    for i,e in ipairs(self) do
-      if i > i then
-        l = l .. "','"
-      end
-      l = l .. e
-    end
-    return string.format("Unbekannter Wert '%s', erwartete %s')", v, l)
-  end
-  self.value[key] = v
-end
-
-function d.MapToFixed:iterate()
-  return next, self.value, nil
-end
-
-function d.MapToFixed:merge(v)
-  for k,v in pairs(v.value) do
-    local msg = self:put(k, v)
-    if msg ~= nil then
-      return msg
+function d.Primitive:init(inner, optional, decimals, min, max)
+  self.inner, self.optional = inner, optional
+  if self.inner == "number" then
+    self.min, self.max, self.decimals = min, max, decimals
+    if self.decimals == nil then
+      self:err("Primitive with inner=number requires `decimals` to be set")
     end
   end
 end
 
-function d.MapToFixed:print_syntax(printer)
-  printer:sym("[ ")
-  printer:ref(d.schema.String, "Kampfstil")
-  printer:sym(" ] = ")
-  printer:ref(d.schema.String, "VerbessertesTalent")
-  printer:sym(", ")
-  printer:meta("...")
-end
-
-d.Number = TypeClass.new({
-  input_kind = "scalar"
-})
-
-function d.Number:init(min, max, decimals)
-  self.min = min
-  self.max = max
-  self.decimals = decimals
-end
-
-function d.Number:set(v)
-  if v < self.min or v > self.max then
-    return string.format("Zahl %d außerhalb des erwarteten Bereichs %d..%s", v, self.min, self.max)
+function d.Primitive:set(v)
+  local t = type(v)
+  if t == "table" then
+    for key,_ in pairs(v) do
+      return string.format("Skalaren Wert oder leere table erwartet, bekam table mit key '%s'", key)
+    end
+    if not self.optional then
+      return string.format("Wert ist nicht optional, {} nicht erlaubt.")
+    end
+    self.value = nil
   else
-    local x = v * 10 ^ self.decimals
-    if math.abs(x - math.floor(x)) > 0.00001 then
-      return string.format("Zu viele Dezimalstellen (erlaubt sind maximal %d)", self.decimals)
+    if t ~= self.inner then
+      return string.format("%s-Inhalt erwartet, bekam %s", self.inner, t)
+    end
+    if self.decimals ~= nil then
+      local x = v * 10 ^ self.decimals
+      if math.abs(x - math.floor(x)) > 0.00001 then
+        return string.format("Zu viele Dezimalstellen (erlaubt sind maximal %d)", self.decimals)
+      end
+      if (self.min ~= nil and v < self.min) or (self.max ~= nil and v > self.max) then
+        local minstr = self.min == nil and "-∞" or tostring(self.min)
+        local maxstr = self.max == nil and "∞" or tostring(self.max)
+        return string.format("Zahl %d außerhalb des erwarteten Bereichs %d..%s", v, minstr, maxstr)
+      end
+    end
+    self.value = v
+  end
+end
+
+function d.Primitive:get()
+  return self.value
+end
+
+function d.Primitive:proto_param_values(printer)
+  io.write("<tr><th>inner</th><td>" .. self.inner .. "</td></tr>\n")
+  io.write("<tr><th>optional</th><td>" .. tostring(self.optional) .. "</td></tr>\n")
+  if self.inner == "number" then
+    io.write("<tr><th>decimals</th><td>" .. tostring(self.decimals) .. "</td></tr>\n")
+    for _,k in pairs({"min", "max"}) do
+      local v = self[k]
+      if v ~= nil then
+        io.write("<tr><th>" .. k .. "</th><td>" .. tostring(v) .. "</td></tr>\n")
+      end
     end
   end
-  self.value = v
-end
-
-function d.Number:get()
-  return self.value
-end
-
-function d.Number:print_syntax(printer)
-  printer:meta("[")
-  printer:num(self.min)
-  printer:meta("..")
-  printer:num(self.max)
-  printer:meta("]")
-end
-
-d.String = TypeClass.new({
-  input_kind = "scalar"
-})
-
-function d.String:init()
-end
-
-function d.String:set(v)
-  self.value = v
-end
-
-function d.String:get()
-  return self.value
-end
-
-function d.String:print_syntax(printer)
-  printer:sym("\"")
-  printer:ph("Text")
-  printer:sym("\"")
-end
-
-function d.String:documentation(printer)
-  printer:p("Beliebiger Text.")
 end
 
 d.Matching = TypeClass.new({
@@ -962,42 +868,15 @@ function d.Matching:get()
   return self.value
 end
 
-function d.Matching:print_syntax(printer)
-  printer:sym("\"")
-  if #self.raw == 1 then
-    printer:id(self.raw[1])
-  else
-    printer:choice(unpack(self.raw))
+function d.Matching:proto_param_values(printer)
+  io.write("<tr><th>patterns</th><td>")
+  for i,p in ipairs(self.raw) do
+    if i > 1 then
+      io.write(", ")
+    end
+    io.write("<code>" .. p .. "</code>")
   end
-  printer:sym("\"")
-end
-
-d.Simple = TypeClass.new({
-  input_kind = "scalar"
-})
-
-function d.Simple:init()
-end
-
-function d.Simple:set(v)
-  if type(v) ~= "string" and type(v) ~= "number" then
-    return string.format("string oder number als Wert erwartet, bekam %s", type(value))
-  end
-  self.value = v
-end
-
-function d.Simple:get()
-  return self.value
-end
-
-function d.Simple:print_syntax(printer)
-  printer:meta("[ ")
-  d.String:print_syntax(printer)
-  printer:meta(" | &lt;Zahl&gt; ]")
-end
-
-function d.Simple:documentation(printer)
-  printer:p("Zahl oder Text (letzter primär, um ein leeres Feld zu bekommen).")
+  io.write("</td></tr>")
 end
 
 d.Multivalue = TypeClass.new({
@@ -1006,12 +885,29 @@ d.Multivalue = TypeClass.new({
 
 function d.Multivalue:init(inner, known_items)
   if inner == nil then
-    self:err("Multivalue ohne `inner` Wert!\n")
+    self:err("Multivalue ohne `inner` Wert!")
   end
   self.__index = d.Multivalue.getfield
   self.__tostring = TypeClass.tostring
   self.inner = inner
-  self.known_items = known_items == nil and {} or known_items
+  self.known_items = {}
+  if known_items ~= nil then
+    for k,v in pairs(known_items) do
+      if type(v) == "string" then
+        self.known_items[k] = v
+      else
+        local mt = getmetatable(v)
+        if mt == nil then
+          if #v ~= 2 or (v[2] ~= d.multi.forbid and v[2] ~= d.multi.allow and v[2] ~= d.multi.merge) then
+            self:err("invalid known item `" .. k .. "`")
+          end
+          self.known_items[k] = v
+        else
+          self.known_items[k] = {v, v.merge ~= nil and d.multi.merge or d.multi.forbid}
+        end
+      end
+    end
+  end
 end
 
 function d.Multivalue:pre_construct()
@@ -1028,11 +924,18 @@ function d.Multivalue:append(v)
       end
     elseif mt ~= self.inner then
       for key,item in pairs(self.known_items) do
-        if mt == item then
+        if type(item) == "table" and mt == item[1] then
           if self.named_index[key] ~= nil then
-            self.named_index[key]:merge(v)
+            if item[2] == d.multi.merge then
+              self.named_index[key]:merge(v)
+            elseif item[2] == d.multi.allow then
+              table.insert(self.named_index[key], v)
+              table.insert(self.value, v)
+            else
+              return string.format("%s darf in %s maximal einmal vorkommen", mt.name, self.name)
+            end
           else
-            self.named_index[key] = v
+            self.named_index[key] = item[2] == d.multi.allow and {v} or v
             table.insert(self.value, v)
           end
           return
@@ -1086,69 +989,34 @@ function d.Multivalue:getlist(key)
   return v == nil and {} or v
 end
 
-function d.Multivalue:print_syntax(printer)
-  printer:meta("[ ")
-  printer:ref(self.inner)
-  printer:meta(" | ")
-  printer:sym("{}")
+function d.Multivalue:proto_param_values(printer)
+  io.write("<tr><th>known</th><td>")
+  local first = true
   for k,v in pairs(self.known_items) do
-    if type(v) ~= "string" then
-      printer:meta(" | ")
-      printer:ref(v, nil, true)
+    if first then first = false else io.write(", ") end
+    if type(v) == "string" then
+      io.write("<code>\"" .. v .. "\"</code>")
+    else
+      io.write("(")
+      printer:ref(v[1])
+      if v[2] == d.multi.forbid then
+        io.write(", <em>forbid</em>")
+      elseif v[2] == d.multi.allow then
+        io.write(", <em>allow</em>")
+      elseif v[2] == d.multi.merge then
+        io.write(", <em>merge</em>")
+      end
+      io.write(")")
     end
   end
-  printer:meta(" ]")
-  printer:sym(", ")
-  printer:meta("...")
+  if first then
+    io.write("<em>keine</em>")
+  end
+  io.write("</td></tr>")
 end
 
 function d.Multivalue:documentation(printer)
-  printer:p(string.format("Ein einzelner oder eine Liste von %s-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.", self.inner.name))
-end
-
-d.Boolean = TypeClass.new({
-  input_kind = "scalar"
-})
-
-function d.Boolean:init()
-end
-
-function d.Boolean:set(v)
-  if type(v) ~= "boolean" then
-    return string.format("erwartete boolean, bekam %s", type(v))
-  end
-  self.value = v
-end
-
-function d.Boolean:get()
-  return self.value
-end
-
-function d.Boolean:print_syntax(printer)
-  printer:choice("true", "false")
-end
-
-function d.Boolean:documentation(printer)
-  printer:p("<code>true</code> oder <code>false</code>")
-end
-
-d.Void = TypeClass.new({
-  input_kind = "unnamed"
-})
-
-function d.Void:init()
-end
-
-function d.Void:set(v)
-  return "Unerwarteter Wert"
-end
-
-function d.Void:get()
-  return nil
-end
-
-function d.Void:print_syntax(printer)
-  printer:sym("{}")
+  printer:p(string.format("Ein einzelner oder eine Liste von %s-Werten.", self.inner.name))
 end
 
 function d:singleton(tc, o, ...)
@@ -1164,9 +1032,231 @@ function d:singleton(tc, o, ...)
   end
 end
 
+local function prototype_header(name, params)
+  io.write("<section>")
+  doc_printer:h(1, name, "Der Prototyp <em>" .. name .. "</em>")
+  doc_printer:p("Parameter:")
+  io.write("<table class=\"protoparam\">")
+  for _,p in ipairs(params) do
+    for k,v in pairs(p) do
+      io.write("<tr>")
+      io.write("<th>" .. k .. "</th>")
+      io.write("<td>" .. v .. "</td>")
+      io.write("</tr>")
+    end
+  end
+  io.write("</table>")
+end
+
+function d:typeclass_docs()
+  io.write("<section>")
+  doc_printer:h(0, "syntax", "Generelle Syntax")
+  doc_printer:p([[
+    In der Eingabedatei werden <em>Werte</em> angegeben.
+    Ein Wert wird mit einer der folgenden Strukturen angegeben:
+  ]])
+  io.write([[<pre><code>]])
+  doc_printer:ph("Inhalt")
+  doc_printer:nl()
+  doc_printer:ph("Typ")
+  io.write(" ")
+  doc_printer:ph("Inhalt")
+  io.write("</code></pre>")
+  doc_printer:p([[
+    Ein Wert hat immer einen Inhalt und einen Typ.
+    Der Typ muss vor den Inhalt geschrieben werden, wenn der Typ des Werts nicht aus dem Kontext abgeleitet werden kann.
+    Der Inhalt eines Werts hat eine der folgenden Strukturen:
+  ]])
+  io.write([[<pre><code>]])
+  doc_printer:sym("\"")
+  doc_printer:ph("Textinhalt")
+  doc_printer:sym("\"")
+  doc_printer:nl()
+  doc_printer:ph("Dezimalzahl")
+  doc_printer:nl()
+  doc_printer:sym("false")
+  doc_printer:nl()
+  doc_printer:sym("true")
+  doc_printer:nl()
+  doc_printer:sym("{")
+  doc_printer:ph("Wert")
+  doc_printer:sym(", ")
+  doc_printer:ph("Wert")
+  doc_printer:sym(", ")
+  doc_printer:meta("...")
+  doc_printer:sym(", ")
+  doc_printer:ph("Name")
+  doc_printer:sym(" = ")
+  doc_printer:ph("Wert")
+  doc_printer:sym(", ")
+  doc_printer:meta("...")
+  doc_printer:sym("}")
+  io.write("</code></pre>")
+  doc_printer:p([[
+    Wie ersichtlich wird Textinhalt durch Hochkommas eingeleitet und abgeschlossen.
+    Zahlen werden direkt mit Dezimalziffern eingegeben, wobei die Nachkommastellen von einem Punkt (nicht einem Komma) eingeleitet werden.
+    Die beiden speziellen Werte <em>false</em> und <em>true</em> sind die sogenannten Boolean-Werte.
+    Zusammengesetzte Werte schließlich werden von geschweiften Klammern umschlossen.
+    Innerhalb dieser können innere Werte entweder direkt oder mit einem voranstehenden Namen und Gleichheitszeichen angegeben werden.
+    Namen bestehen aus Buchstaben.
+    Beide Formen können vermischt werden, wobei benamte Werte hinter unbenamten stehen sollten.
+    Leerzeichen und Zeilenumbrüche können beliebig zwischen Werten eingefügt werden.
+  ]])
+  doc_printer:p([[
+    Der Typ eines Werts definiert, welche Form sein Inhalt haben muss.
+    Ein Typ kann verschiedene Arten von Inhalt zulassen.
+    Lässt ein Typ zusammengesetzten Inhalt zu, verlangt er von diesem eine bestimmte Struktur.
+  ]])
+  doc_printer:p([[
+    Nachfolgend werden <em>Prototypen</em> beschrieben.
+    Ein Prototyp definiert strukturelle Grundlagen, mit denen dann verschiedene Typen definiert werden können.
+    Der Prototyp <em>List</em> definiert beispielsweise die grundsätzliche Struktur von Listen, und darauf können dann ein Typ für eine Liste von Text, und ein anderer Typ für eine Liste von Zahlen definiert werden.
+    Prototypen definieren Parameter, die von einem Typ gesetzt werden.
+    Auf Basis der aufgelisteten Prototypen werden alle Typen definiert, die die Struktur des Eingabedokuments definieren.
+  ]])
+
+  prototype_header("Primitive", {
+    {inner = "definiert die Art des Inhalts: <code>string</code> (Textinhalt), <code>number</code> (Zahl), <code>boolean</code> (Boolean-Inhalt), <code>void</code> (kein Inhalt)"},
+    {optional = "definiert, ob der Wert optional ist. Falls <code>true</code>, darf statt einem der oben genannten Werte auch <code><span class=\"sym\">{}</span></code> als Indikator für die Abwesenheit eines Werts angegeben werden."},
+    {decimals = "definiert für Zahlenwerte, wie viele Nachkommastellen angegeben werden dürfen."},
+    {min = "definiert für Zahlenwerte den kleinstmöglichen Wert."},
+    {max = "definiert für Zahlenwerte den größtmöglichen Wert."},
+  })
+  doc_printer:p([[
+    Auf der Basis von <em>Primitive</em> werden Typen definiert, die nicht zusammengesetzte Werte annehmen.
+    Zahlenwerte können weiter beschränkt werden wie bei den entsprechenden Parametern beschrieben.
+    Ist <em>inner</em> <code>void</code>, muss <em>optional</em> <code>true</code> sein – ein solcher Wert hat nie Inhalt.
+  ]])
+  io.write("</section>")
+
+  prototype_header("Matching", {
+    {patterns = "Liste von Patterns, von denen mindestens eines vom Inhalt erfüllt werden muss."}
+  })
+  doc_printer:p([[
+    <em>Matching</em> definiert Typen, die Textinhalt annehmen, welcher einem der gegebenen Pattern entspricht.
+    Leerer Text (<code><span class="sym">&quot;&quot;</span></code>) wird immer angenommen.
+    Die Pattern werden in der Syntax von <a href="https://www.lua.org/pil/20.2.html">Lua Patterns</a> angegeben.
+  ]])
+  io.write("</section>")
+
+  prototype_header("Numbered", {
+    {max = "Die höchstmögliche enthaltene Zahl"}
+  })
+  doc_printer:p([[
+    <em>Numbered</em> definiert Typen mit zusammengesetzten Inhalt (<code><span class="sym">{</span><span class="meta">...</span><span class="sym">}</span></code>).
+    Der Inhalt darf nur unbenamte Wert enthalten, und alle Werte müssen Ganzzahlen zwischen 1 und <em>max</em> sein.
+    Die Ganzzahlen müssen typlos sein.
+  ]])
+  doc_printer:p([[
+    <em>Numbered</em>-Typen werden verwendet für mehrstufige Werte.
+    Statt der Dezimalschreibweise kann man auch die römischen Ziffern <code>I</code>, <code>II</code>, <code>III</code>, <code>IV</code>, <code>V</code> und <code>VI</code> verwenden.
+    Beispiel:
+  ]])
+  io.write("<pre><code>")
+  doc_printer:id("Ausweichen ")
+  doc_printer:sym("{")
+  doc_printer:id("I")
+  doc_printer:sym(", ")
+  doc_printer:id("II")
+  doc_printer:sym("}")
+  io.write("</code></pre>")
+  doc_printer:p([[
+    Die Reihenfolge der Zahlenwerte spielt keine Rolle.
+    Auch wenn es oft keinen Sinn ergibt, die Stufe <code>II</code> ohne die Stufe <code>I</code> zu aktivieren, ist dies nicht verboten.
+  ]])
+  io.write("</section>")
+
+  prototype_header("List", {
+    {inner = "Einer oder mehrere Typen. Die Liste nimmt innere Werte dieser Typen an."},
+    {min = "Minimale Anzahl innerer Werte"},
+    {max = "Maximale Anzahl innerer Werte"},
+  })
+  doc_printer:p([[
+    <em>List</em> definiert Listentypen.
+    Listentypen haben zusammengesetzten Inhalt.
+    Ist <em>inner</em> ein einziger Typ, brauchen innere Werte keinen voranstehenden Typ.
+    Enthält <em>inner</em> aber mehrere Typen, müssen alle inneren Werte ihren Typ angeben.
+    In jedem Fall dürfen die inneren Werte nicht benamt sein.
+  ]])
+  doc_printer:p([[
+    <em>List</em>-Typen werden vor allem für Tabellen verwendet, wobei <code>inner</code> dann der Typ einer Zeile in der Tabelle ist.
+  ]])
+  io.write("</section>")
+
+  prototype_header("Row", {
+    {items = "Liste von <em>Einträgen</em>. Jeder Eintrag hat einen Namen und einen Typ, möglicherweise außerdem Default-Inhalt."},
+  })
+  doc_printer:p([[
+    <em>Row</em> definiert Typen, die eine Tabellenzeile beschreiben.
+    Die Liste von Einträgen korrespondiert nicht unbedingt mit ausgegebenen Spalten – oftmals gibt es Spalten, deren Inhalt automatisch berechnet wird und die daher im zugrundeliegenden <em>Row</em>-Typ keinen Eintrag haben.
+  ]])
+  doc_printer:p([[
+    Der Inhalt von <em>Row</em>-Typen darf sowohl unbenamte wie auch benamte innere Werte beinhalten.
+    Unbenamte Werte werden über ihre Position mit einem Eintrag assoziiert (der dritte unbenamte Wert also mit dem dritten Eintrag), benamte Werte müssen einen Namen eines der Einträge haben und werden mit diesem assoziiert.
+    Die inneren Werte einer <em>Row</em> müssen nie einen Typen haben.
+  ]])
+  doc_printer:p([[
+    Wird vom Inhalt für einen Eintrag kein Wert gegeben, wird der Default-Inhalt dieses Eintrags als Wert genommen.
+    Für Einträge, die keinen Default-Inhalt haben, <em>muss</em> ein Wert gegeben werden..
+  ]])
+  io.write("</section>")
+
+  prototype_header("Record", {
+    {items = "Liste von <em>Einträgen</em>. Jeder Eintrag hat einen Namen und einen Typ."}
+  })
+  doc_printer:p([[
+    <em>Record</em> definiert Typen für zusammengesetzte Werte ähnlich wie <em>Row</em>.
+    Allerdings haben die Einträge eines <em>Record</em> nie Default-Werte und der Inhalt darf ausschließlich aus benamten Werten bestehen.
+    Wie bei <em>Rows</em> müssen die inneren Werte nie typisiert sein.
+  ]])
+  doc_printer:p([[
+    Records werden üblicherweise für Tabellen mit fester Anzahl an Zeilen benutzt, wie etwa eine Liste von Eigenschaftenwerten.
+  ]])
+  io.write("</section>")
+
+  prototype_header("Multivalue", {
+    {inner = "Innerer Typ", known = "Bekannte Werte und Untertypen"}
+  })
+  doc_printer:p([[
+    <em>Multivalue</em> definiert Typen für Auflistungen von Werten, die meistens im Ausgabedokument mit Kommas getrennt hintereinander geschrieben werden.
+    Multivalue-Werte haben zusammengesetzten Inhalt, wobei die inneren Werte unbenamt sein müssen.
+    Werte des Typs <em>inner</em> brauchen keinen Typ.
+    Daneben ist immer der Wert <code><span class="sym">{}</span></code> erlaubt, der an der Stelle seines Auftretens einen Zeilenumbruch generiert, falls das ausgegebene Dokument das an dieser Stelle zulässt.
+  ]])
+  doc_printer:p([[
+    <em>known</em> definiert eine Liste bekannter Werte und Untertypen.
+    Bekannte Werte sind vom Typ <em>inner</em> und sind ein Hinweis an den Benutzer, dass der beschriebene Wert Auswirkungen auf berechnete Werte im Dokument haben kann.
+  ]])
+  doc_printer:p([[
+    Bekannte Untertypen sind zusätzliche Typen, deren Werte ebenfalls – dann mit Typ – als innere Werte auftreten dürfen.
+    Sie ermöglichen es, neben textuellen Werten strukturierte Werte anzunehmen, wie etwa eine Sonderfertigkeit, die mehrere Stufen haben kann. Beispiel:
+  ]])
+  io.write("<pre><code>")
+  doc_printer:id("SF.Nahkampf ")
+  doc_printer:sym("{")
+  doc_printer:sym("\"")
+  io.write("Aufmerksamkeit")
+  doc_printer:sym("\", ")
+  doc_printer:id("Ausweichen ")
+  doc_printer:sym("{")
+  doc_printer:id("I")
+  doc_printer:sym("} }")
+  io.write("</code></pre>")
+  doc_printer:p([[
+    Untertypen haben ein Flag <em>multi</em>, welches eines der Werte <code>forbid</code>, <code>allow</code> oder <code>merge</code> hat.
+    Dieses Flag definiert, ob mehrere Werte dieses Untertyps gegeben werden dürfen:
+    <code>forbid</code> verbietet es, <code>allow</code> erlaubt es, und <code>merge</code> führt alle weiteren Werte mit dem ersten Wert des Untertyps zusammen.
+  ]])
+  io.write("</section>")
+
+  io.write("</section>")
+end
+
 function d:gendocs()
-  io.write("<article class=\"doc\">\n\n<section><h1>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</h1>\n\n")
-  io.write("<p>Grundsätzliche Struktur:</p>\n\n<pre><code>")
+  io.write("<section>")
+  doc_printer:h(0, "general", "Struktur des Eingabedokuments")
+  doc_printer:p("Auf der obersten Ebene des Eingabedokuments können Werte der nachfolgend gelisteten Typen angegeben werden:")
+  io.write("<pre><code>")
   for _, t in ipairs(self.typelist) do
     io.write([[<a href="#]])
     io.write(t.name)
@@ -1184,19 +1274,12 @@ function d:gendocs()
     end
     doc_printer:nl()
   end
-  io.write([[</code></pre><p>
-  Jedes Element auf der obersten Ebene ist optional, ihre Reihenfolge beliebig.
-  Die Struktur der einzelnen Elemente wird bei dem jeweiligen verlinkten Typen beschrieben.
-  Wird ein Element nicht angegeben, erhält es einen Standard-Wert, was in der Regel bedeutet, dass die Daten leer sind.
-  Die Ausnahme ist <code>Layout</code>, dessen Standardwert alle verfügbaren Seiten generiert.
-  Dies eignet sich als Kopiervorlage, aber für einen spezifischen Helden ist es eher unnütz, da man kaum sowohl Ausrüstungs- wie auch Liturgiebogen benötigt.</p>]])
-  io.write([[</section><section><h2>Grundlegende Typen</h2>
-
-  <p>
-  Die im Folgenden definierten Typen werden an vielen Stellen für Werte benutzt.</p>]])
-  for _, n in ipairs({"String", "Ganzzahl", "Simple", "Boolean", "Multiline"}) do
-    self.schema[n]:print_documentation(doc_printer, 1, false)
-  end
+  io.write([[</code></pre>]])
+  doc_printer:p([[
+    Jeder dieser Werte ist optional, ihre Reihenfolge beliebig.
+    Die Struktur der einzelnen Elemente wird bei dem jeweiligen verlinkten Typen beschrieben.
+    Wird ein Element nicht angegeben, erhält es einen Standard-Wert, was in der Regel bedeutet, dass die Daten leer sind; Ausnahmen sind beim Typen angegeben.
+  ]])
   for _, t in ipairs(self.typelist) do
     io.write([[</section><section>]])
     t:print_documentation(doc_printer, 0, true)
@@ -1214,17 +1297,17 @@ function d:gendocs()
       if #refs[depth] == 0 then
         table.remove(refs)
       end
-      cur.target:print_documentation(doc_printer, depth, cur.named)
+      cur:print_documentation(doc_printer, depth)
     end
   end
-  io.write("</section></article>")
+  io.write("</section>")
 end
 
 setmetatable(d, {
   __call = function(self, docgen)
-    self.schema.Boolean = self.Boolean:def({name = "Boolean"})
-    self.schema.String = self.String:def({name = "String"})
-    self.schema.Simple = self.Simple:def({name = "Simple"})
+    self.schema.Boolean = self.Primitive:def({name = "Boolean"}, "boolean")
+    self.schema.String = self.Primitive:def({name = "String"}, "string")
+    self.schema.OptNum = self.Primitive:def({name = "OptNum"}, "number", true, 0)
     self.schema.Multiline = self.Multivalue:def({name = "Multiline"}, self.schema.String)
     if docgen then
       self.typelist = {}

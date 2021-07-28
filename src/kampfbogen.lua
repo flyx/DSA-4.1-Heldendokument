@@ -88,13 +88,15 @@ local function mod_tp(tp, schwelle, schritt)
   if cur_kk == "" then
     return nil
   end
-  while cur_kk < schwelle do
-    tp.num = tp.num - 1
-    cur_kk = cur_kk + schritt
-  end
-  while cur_kk > schwelle + schritt do
-    tp.num = tp.num + 1
-    cur_kk = cur_kk - schritt
+  if schwelle ~= nil and schritt ~= nil and schritt > 0 then
+    while cur_kk < schwelle do
+      tp.num = tp.num - 1
+      cur_kk = cur_kk + schritt
+    end
+    while cur_kk > schwelle + schritt do
+      tp.num = tp.num + 1
+      cur_kk = cur_kk - schritt
+    end
   end
   return tp
 end
@@ -110,7 +112,7 @@ end
 local function atpa_mod(basis, talent, schwelle, schritt, wm, art, spez)
   local val = basis
   local cur_kk = data:cur("KK")
-  if cur_kk ~= "" and type(schwelle) == "number" and type(schritt) == "number" then
+  if cur_kk ~= "" and schwelle ~= nil and schritt ~= nil and schritt > 0 then
     while cur_kk < schwelle do
       val = val - 1
       cur_kk = cur_kk + schritt
@@ -282,7 +284,10 @@ local fernkampf_render = {
     if talent == nil or fk_basis == "" then
       return
     end
-    local fk = talent.TaW - ebe
+    local fk = fk_basis - ebe
+    if talent.TaW ~= nil then
+      fk = fk + talent.TaW
+    end
     local a = art(v)
     for _, s in ipairs(talent.Spezialisierungen) do
       if s == a then
@@ -290,7 +295,7 @@ local fernkampf_render = {
         break
       end
     end
-    tex.sprint(-2, fk_basis + fk)
+    tex.sprint(-2, fk)
   end}
 }
 
@@ -308,8 +313,8 @@ local waffenlos_render = {
     if talent == nil or #talent < 4 or atb == "" or #v < 3 then
       return
     end
-    for _, t in pairs(data.SF.Waffenlos:getlist("Kampfstile")) do
-      if v.Name == t then
+    for _, t in ipairs(data.SF.Waffenlos:getlist("Kampfstil")) do
+      if v.Name == t.VerbessertesTalent then
         atb = atb + 1
       end
     end
@@ -320,8 +325,8 @@ local waffenlos_render = {
     if talent == nil or #talent < 4 or pab == "" or #v < 3 then
       return
     end
-    for _, t in pairs(data.SF.Waffenlos:getlist("Kampfstile")) do
-      if v.Name == t then
+    for _, t in ipairs(data.SF.Waffenlos:getlist("Kampfstil")) do
+      if v.Name == t.VerbessertesTalent then
         pab = pab + 1
       end
     end
@@ -436,7 +441,7 @@ function kampfbogen.ausweichen()
   for i,v in ipairs(data.Talente.Koerper) do
     if #v >= 6 then
       found, _ = string.find(v.Name, "^Akrobatik")
-      if found ~= nil and type(v.TaW) == "number" then
+      if found ~= nil and v.TaW ~= nil then
         local x = v.TaW - 11
         while x > 0 do
           val = val + 1

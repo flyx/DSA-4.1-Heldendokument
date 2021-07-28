@@ -209,7 +209,7 @@ Magie.Unfaehigkeiten {
     <xsl:text>
 Held {
   Name       = </xsl:text><xsl:value-of select="dsa:stringVal(parent::held/@name)"/><xsl:text>,
-  GP         = </xsl:text><xsl:value-of select="dsa:stringVal(rasse/aussehen/@gpstart)"/><xsl:text>,
+  GP         = </xsl:text><xsl:value-of select="rasse/aussehen/@gpstart"/><xsl:text>,
   Rasse      = </xsl:text><xsl:value-of select="dsa:stringVal(rasse/@string)"/><xsl:text>,
   Kultur     = </xsl:text><xsl:value-of select="dsa:stringVal(kultur/@string)"/><xsl:text>,
   Profession = </xsl:text><xsl:value-of select="dsa:stringVal($profession)"/><xsl:text>,
@@ -834,14 +834,13 @@ SF.Magisch {
     <xsl:variable name="name" select="dsa:sfName($kind)"/>
     <xsl:variable name="def" select="$sonderfertigkeiten/sf[@name=$name]"/>
     <xsl:if test="$def/@boni = '1' and not(./preceding-sibling::sonderfertigkeit[starts-with(@name, $name)])">
-      <xsl:value-of select="concat($def/@id, ' {')"/>
       <xsl:for-each select=".|./following-sibling::sonderfertigkeit[starts-with(@name, $name)]">
         <xsl:if test="position() != 1">
           <xsl:text>, </xsl:text>
         </xsl:if>
-        <xsl:value-of select="concat('[ ', dsa:stringVal(substring-after(@name, ': ')), ' ] = ', dsa:stringVal(dsa:kampfstilTalent(@name)))"/>
+        <xsl:value-of select="concat($def/@id, ' {')"/>
+        <xsl:value-of select="concat(dsa:stringVal(substring-after(@name, ': ')), ', ', dsa:stringVal(dsa:kampfstilTalent(@name)), '}')"/>
       </xsl:for-each>
-      <xsl:text>}</xsl:text>
     </xsl:if>
   </xsl:template>
 

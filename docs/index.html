@@ -2,16 +2,80 @@
 <html lang="de" style="background-color: darkslategray;">
   <head>
     <title>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</title>
-    <link rel="stylesheet" href="code.css"/>
+    <link rel="stylesheet" href="style.css"/>
   </head>
   <body>
-<article class="doc">
-
-<section><h1>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</h1>
-
-<p>Grundsätzliche Struktur:</p>
-
-<pre><code><a href="#Layout">Layout</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
+    <article class="doc">
+      <h1>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</h1>
+<section><h2 id="syntax">Generelle Syntax</h2><p>    In der Eingabedatei werden <em>Werte</em> angegeben.
+    Ein Wert wird mit einer der folgenden Strukturen angegeben:
+  </p><pre><code><span class="metasym">&lt;Inhalt&gt;</span>
+<span class="metasym">&lt;Typ&gt;</span> <span class="metasym">&lt;Inhalt&gt;</span></code></pre><p>    Ein Wert hat immer einen Inhalt und einen Typ.
+    Der Typ muss vor den Inhalt geschrieben werden, wenn der Typ des Werts nicht aus dem Kontext abgeleitet werden kann.
+    Der Inhalt eines Werts hat eine der folgenden Strukturen:
+  </p><pre><code><span class="sym">"</span><span class="metasym">&lt;Textinhalt&gt;</span><span class="sym">"</span>
+<span class="metasym">&lt;Dezimalzahl&gt;</span>
+<span class="sym">false</span>
+<span class="sym">true</span>
+<span class="sym">{</span><span class="metasym">&lt;Wert&gt;</span><span class="sym">, </span><span class="metasym">&lt;Wert&gt;</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">, </span><span class="metasym">&lt;Name&gt;</span><span class="sym"> = </span><span class="metasym">&lt;Wert&gt;</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre><p>    Wie ersichtlich wird Textinhalt durch Hochkommas eingeleitet und abgeschlossen.
+    Zahlen werden direkt mit Dezimalziffern eingegeben, wobei die Nachkommastellen von einem Punkt (nicht einem Komma) eingeleitet werden.
+    Die beiden speziellen Werte <em>false</em> und <em>true</em> sind die sogenannten Boolean-Werte.
+    Zusammengesetzte Werte schließlich werden von geschweiften Klammern umschlossen.
+    Innerhalb dieser können innere Werte entweder direkt oder mit einem voranstehenden Namen und Gleichheitszeichen angegeben werden.
+    Namen bestehen aus Buchstaben.
+    Beide Formen können vermischt werden, wobei benamte Werte hinter unbenamten stehen sollten.
+    Leerzeichen und Zeilenumbrüche können beliebig zwischen Werten eingefügt werden.
+  </p><p>    Der Typ eines Werts definiert, welche Form sein Inhalt haben muss.
+    Ein Typ kann verschiedene Arten von Inhalt zulassen.
+    Lässt ein Typ zusammengesetzten Inhalt zu, verlangt er von diesem eine bestimmte Struktur.
+  </p><p>    Nachfolgend werden <em>Prototypen</em> beschrieben.
+    Ein Prototyp definiert strukturelle Grundlagen, mit denen dann verschiedene Typen definiert werden können.
+    Der Prototyp <em>List</em> definiert beispielsweise die grundsätzliche Struktur von Listen, und darauf können dann ein Typ für eine Liste von Text, und ein anderer Typ für eine Liste von Zahlen definiert werden.
+    Prototypen definieren Parameter, die von einem Typ gesetzt werden.
+    Auf Basis der aufgelisteten Prototypen werden alle Typen definiert, die die Struktur des Eingabedokuments definieren.
+  </p><section><h3 id="Primitive">Der Prototyp <em>Primitive</em></h3><p>Parameter:</p><table class="protoparam"><tr><th>inner</th><td>definiert die Art des Inhalts: <code>string</code> (Textinhalt), <code>number</code> (Zahl), <code>boolean</code> (Boolean-Inhalt), <code>void</code> (kein Inhalt)</td></tr><tr><th>optional</th><td>definiert, ob der Wert optional ist. Falls <code>true</code>, darf statt einem der oben genannten Werte auch <code><span class="sym">{}</span></code> als Indikator für die Abwesenheit eines Werts angegeben werden.</td></tr><tr><th>decimals</th><td>definiert für Zahlenwerte, wie viele Nachkommastellen angegeben werden dürfen.</td></tr><tr><th>min</th><td>definiert für Zahlenwerte den kleinstmöglichen Wert.</td></tr><tr><th>max</th><td>definiert für Zahlenwerte den größtmöglichen Wert.</td></tr></table><p>    Auf der Basis von <em>Primitive</em> werden Typen definiert, die nicht zusammengesetzte Werte annehmen.
+    Zahlenwerte können weiter beschränkt werden wie bei den entsprechenden Parametern beschrieben.
+    Ist <em>inner</em> <code>void</code>, muss <em>optional</em> <code>true</code> sein – ein solcher Wert hat nie Inhalt.
+  </p></section><section><h3 id="Matching">Der Prototyp <em>Matching</em></h3><p>Parameter:</p><table class="protoparam"><tr><th>patterns</th><td>Liste von Patterns, von denen mindestens eines vom Inhalt erfüllt werden muss.</td></tr></table><p>    <em>Matching</em> definiert Typen, die Textinhalt annehmen, welcher einem der gegebenen Pattern entspricht.
+    Leerer Text (<code><span class="sym">&quot;&quot;</span></code>) wird immer angenommen.
+    Die Pattern werden in der Syntax von <a href="https://www.lua.org/pil/20.2.html">Lua Patterns</a> angegeben.
+  </p></section><section><h3 id="Numbered">Der Prototyp <em>Numbered</em></h3><p>Parameter:</p><table class="protoparam"><tr><th>max</th><td>Die höchstmögliche enthaltene Zahl</td></tr></table><p>    <em>Numbered</em> definiert Typen mit zusammengesetzten Inhalt (<code><span class="sym">{</span><span class="meta">...</span><span class="sym">}</span></code>).
+    Der Inhalt darf nur unbenamte Wert enthalten, und alle Werte müssen Ganzzahlen zwischen 1 und <em>max</em> sein.
+    Die Ganzzahlen müssen typlos sein.
+  </p><p>    <em>Numbered</em>-Typen werden verwendet für mehrstufige Werte.
+    Statt der Dezimalschreibweise kann man auch die römischen Ziffern <code>I</code>, <code>II</code>, <code>III</code>, <code>IV</code>, <code>V</code> und <code>VI</code> verwenden.
+    Beispiel:
+  </p><pre><code><span class="id">Ausweichen </span><span class="sym">{</span><span class="id">I</span><span class="sym">, </span><span class="id">II</span><span class="sym">}</span></code></pre><p>    Die Reihenfolge der Zahlenwerte spielt keine Rolle.
+    Auch wenn es oft keinen Sinn ergibt, die Stufe <code>II</code> ohne die Stufe <code>I</code> zu aktivieren, ist dies nicht verboten.
+  </p></section><section><h3 id="List">Der Prototyp <em>List</em></h3><p>Parameter:</p><table class="protoparam"><tr><th>inner</th><td>Einer oder mehrere Typen. Die Liste nimmt innere Werte dieser Typen an.</td></tr><tr><th>min</th><td>Minimale Anzahl innerer Werte</td></tr><tr><th>max</th><td>Maximale Anzahl innerer Werte</td></tr></table><p>    <em>List</em> definiert Listentypen.
+    Listentypen haben zusammengesetzten Inhalt.
+    Ist <em>inner</em> ein einziger Typ, brauchen innere Werte keinen voranstehenden Typ.
+    Enthält <em>inner</em> aber mehrere Typen, müssen alle inneren Werte ihren Typ angeben.
+    In jedem Fall dürfen die inneren Werte nicht benamt sein.
+  </p><p>    <em>List</em>-Typen werden vor allem für Tabellen verwendet, wobei <code>inner</code> dann der Typ einer Zeile in der Tabelle ist.
+  </p></section><section><h3 id="Row">Der Prototyp <em>Row</em></h3><p>Parameter:</p><table class="protoparam"><tr><th>items</th><td>Liste von <em>Einträgen</em>. Jeder Eintrag hat einen Namen und einen Typ, möglicherweise außerdem Default-Inhalt.</td></tr></table><p>    <em>Row</em> definiert Typen, die eine Tabellenzeile beschreiben.
+    Die Liste von Einträgen korrespondiert nicht unbedingt mit ausgegebenen Spalten – oftmals gibt es Spalten, deren Inhalt automatisch berechnet wird und die daher im zugrundeliegenden <em>Row</em>-Typ keinen Eintrag haben.
+  </p><p>    Der Inhalt von <em>Row</em>-Typen darf sowohl unbenamte wie auch benamte innere Werte beinhalten.
+    Unbenamte Werte werden über ihre Position mit einem Eintrag assoziiert (der dritte unbenamte Wert also mit dem dritten Eintrag), benamte Werte müssen einen Namen eines der Einträge haben und werden mit diesem assoziiert.
+    Die inneren Werte einer <em>Row</em> müssen nie einen Typen haben.
+  </p><p>    Wird vom Inhalt für einen Eintrag kein Wert gegeben, wird der Default-Inhalt dieses Eintrags als Wert genommen.
+    Für Einträge, die keinen Default-Inhalt haben, <em>muss</em> ein Wert gegeben werden..
+  </p></section><section><h3 id="Record">Der Prototyp <em>Record</em></h3><p>Parameter:</p><table class="protoparam"><tr><th>items</th><td>Liste von <em>Einträgen</em>. Jeder Eintrag hat einen Namen und einen Typ.</td></tr></table><p>    <em>Record</em> definiert Typen für zusammengesetzte Werte ähnlich wie <em>Row</em>.
+    Allerdings haben die Einträge eines <em>Record</em> nie Default-Werte und der Inhalt darf ausschließlich aus benamten Werten bestehen.
+    Wie bei <em>Rows</em> müssen die inneren Werte nie typisiert sein.
+  </p><p>    Records werden üblicherweise für Tabellen mit fester Anzahl an Zeilen benutzt, wie etwa eine Liste von Eigenschaftenwerten.
+  </p></section><section><h3 id="Multivalue">Der Prototyp <em>Multivalue</em></h3><p>Parameter:</p><table class="protoparam"><tr><th>inner</th><td>Innerer Typ</td></tr><tr><th>known</th><td>Bekannte Werte und Untertypen</td></tr></table><p>    <em>Multivalue</em> definiert Typen für Auflistungen von Werten, die meistens im Ausgabedokument mit Kommas getrennt hintereinander geschrieben werden.
+    Multivalue-Werte haben zusammengesetzten Inhalt, wobei die inneren Werte unbenamt sein müssen.
+    Werte des Typs <em>inner</em> brauchen keinen Typ.
+    Daneben ist immer der Wert <code><span class="sym">{}</span></code> erlaubt, der an der Stelle seines Auftretens einen Zeilenumbruch generiert, falls das ausgegebene Dokument das an dieser Stelle zulässt.
+  </p><p>    <em>known</em> definiert eine Liste bekannter Werte und Untertypen.
+    Bekannte Werte sind vom Typ <em>inner</em> und sind ein Hinweis an den Benutzer, dass der beschriebene Wert Auswirkungen auf berechnete Werte im Dokument haben kann.
+  </p><p>    Bekannte Untertypen sind zusätzliche Typen, deren Werte ebenfalls – dann mit Typ – als innere Werte auftreten dürfen.
+    Sie ermöglichen es, neben textuellen Werten strukturierte Werte anzunehmen, wie etwa eine Sonderfertigkeit, die mehrere Stufen haben kann. Beispiel:
+  </p><pre><code><span class="id">SF.Nahkampf </span><span class="sym">{</span><span class="sym">"</span>Aufmerksamkeit<span class="sym">", </span><span class="id">Ausweichen </span><span class="sym">{</span><span class="id">I</span><span class="sym">} }</span></code></pre><p>    Untertypen haben ein Flag <em>multi</em>, welches eines der Werte <code>forbid</code>, <code>allow</code> oder <code>merge</code> hat.
+    Dieses Flag definiert, ob mehrere Werte dieses Untertyps gegeben werden dürfen:
+    <code>forbid</code> verbietet es, <code>allow</code> erlaubt es, und <code>merge</code> führt alle weiteren Werte mit dem ersten Wert des Untertyps zusammen.
+  </p></section></section><section><h2 id="general">Struktur des Eingabedokuments</h2><p>Auf der obersten Ebene des Eingabedokuments können Werte der nachfolgend gelisteten Typen angegeben werden:</p><pre><code><a href="#Layout">Layout</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
 <a href="#Held">Held</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
 <a href="#Vorteile">Vorteile</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
 <a href="#Vorteile.Magisch">Vorteile.Magisch</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
@@ -58,1218 +122,719 @@
 <a href="#Magie.Merkmalskenntnis">Magie.Merkmalskenntnis</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
 <a href="#Magie.Zauber">Magie.Zauber</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
 <a href="#Ereignisse">Ereignisse</a><span class="sym"> {</span><span class="metasym">...</span><span class="sym">}</span>
-</code></pre><p>
-  Jedes Element auf der obersten Ebene ist optional, ihre Reihenfolge beliebig.
-  Die Struktur der einzelnen Elemente wird bei dem jeweiligen verlinkten Typen beschrieben.
-  Wird ein Element nicht angegeben, erhält es einen Standard-Wert, was in der Regel bedeutet, dass die Daten leer sind.
-  Die Ausnahme ist <code>Layout</code>, dessen Standardwert alle verfügbaren Seiten generiert.
-  Dies eignet sich als Kopiervorlage, aber für einen spezifischen Helden ist es eher unnütz, da man kaum sowohl Ausrüstungs- wie auch Liturgiebogen benötigt.</p></section><section><h2>Grundlegende Typen</h2>
-
-  <p>
-  Die im Folgenden definierten Typen werden an vielen Stellen für Werte benutzt.</p><h3 id="String">String</h3>
-
-<pre><code><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span></code></pre>
-
-<p>Beliebiger Text.</p>
-
-<h3 id="Ganzzahl">Ganzzahl</h3>
-
-<pre><code><span class="metasym">[</span><span class="num">-9999999</span><span class="metasym">..</span><span class="num">9999999</span><span class="metasym">]</span></code></pre>
-
-<p>Eine Zahl in Dezimalschreibweise.</p>
-
-<h3 id="Simple">Simple</h3>
-
-<pre><code><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | &lt;Zahl&gt; ]</span></code></pre>
-
-<p>Zahl oder Text (letzter primär, um ein leeres Feld zu bekommen).</p>
-
-<h3 id="Boolean">Boolean</h3>
-
-<pre><code><span class="metasym">[ </span><span class="id">true</span><span class="metasym"> | </span><span class="id">false</span><span class="metasym"> ]</span></code></pre>
-
-<p><code>true</code> oder <code>false</code></p>
-
-<h3 id="Multiline">Multiline</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre>
-
-<p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-</section><section><h2 id="Layout">Layout</h2>
-
-<pre><code><span class="id">Layout</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Seite: [ </span><a href="#Front">&lt;Front&gt;</a><span class="metasym"> | </span><a href="#Talentliste">&lt;Talentliste&gt;</a><span class="metasym"> | </span><a href="#Kampfbogen">&lt;Kampfbogen&gt;</a><span class="metasym"> | </span><a href="#Ausruestungsbogen">&lt;Ausruestungsbogen&gt;</a><span class="metasym"> | </span><a href="#Liturgiebogen">&lt;Liturgiebogen&gt;</a><span class="metasym"> | </span><a href="#Zauberdokument">&lt;Zauberdokument&gt;</a><span class="metasym"> | </span><a href="#Zauberliste">&lt;Zauberliste&gt;</a><span class="metasym"> | </span><a href="#Ereignisliste">&lt;Ereignisliste&gt;</a><span class="metasym"> ]&gt;</span><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</code></pre><p>    Jeder dieser Werte ist optional, ihre Reihenfolge beliebig.
+    Die Struktur der einzelnen Elemente wird bei dem jeweiligen verlinkten Typen beschrieben.
+    Wird ein Element nicht angegeben, erhält es einen Standard-Wert, was in der Regel bedeutet, dass die Daten leer sind; Ausnahmen sind beim Typen angegeben.
+  </p></section><section><h2 id="Layout">Layout (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Front">Front</a>, <a href="#Talentliste">Talentliste</a>, <a href="#Kampfbogen">Kampfbogen</a>, <a href="#Ausruestungsbogen">Ausruestungsbogen</a>, <a href="#Liturgiebogen">Liturgiebogen</a>, <a href="#Zauberdokument">Zauberdokument</a>, <a href="#Zauberliste">Zauberliste</a>, <a href="#Ereignisliste">Ereignisliste</a></table>
 
 <p>Definiert, welche Seiten in welcher Reihenfolge generiert werden.
 Für die einzelnen Seiten können weitere Spezifikationen vorgenommen werden, dies ist bei den Typen der
 einzelnen Seiten beschrieben.</p>
 
-<h3 id="Front">Front</h3>
-
-<pre><code><span class="id">Front</span> <span class="sym">{</span>
-  <span class="id">Aussehen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Vorteile</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Nachteile</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a>
-<span class="sym">}</span></code></pre>
+<h3 id="Front">Front (<a href="#Record">Record</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Aussehen: <a href="#Zeilen">Zeilen</a>, Vorteile: <a href="#Zeilen">Zeilen</a>, Nachteile: <a href="#Zeilen">Zeilen</a></td></tr></table>
 
 <p>Frontseite</p>
 
-<h4 id="Zeilen">Zeilen</h4>
-
-<pre><code><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span></code></pre>
+<h4 id="Zeilen">Zeilen (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
 
 <p>Anzahl Zeilen in einem Feld oder einer Tabelle</p>
 
-<h3 id="Talentliste">Talentliste</h3>
-
-<pre><code><span class="id">Talentliste</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Gruppe: [ </span><a href="#Sonderfertigkeiten">&lt;Sonderfertigkeiten&gt;</a><span class="metasym"> | </span><a href="#Gaben">&lt;Gaben&gt;</a><span class="metasym"> | </span><a href="#Begabungen">&lt;Begabungen&gt;</a><span class="metasym"> | </span><a href="#Kampf">&lt;Kampf&gt;</a><span class="metasym"> | </span><a href="#Koerper">&lt;Koerper&gt;</a><span class="metasym"> | </span><a href="#Gesellschaft">&lt;Gesellschaft&gt;</a><span class="metasym"> | </span><a href="#Natur">&lt;Natur&gt;</a><span class="metasym"> | </span><a href="#Wissen">&lt;Wissen&gt;</a><span class="metasym"> | </span><a href="#SprachenUndSchriften">&lt;SprachenUndSchriften&gt;</a><span class="metasym"> | </span><a href="#Handwerk">&lt;Handwerk&gt;</a><span class="metasym"> ]&gt;</span><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Talentliste">Talentliste (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Sonderfertigkeiten">Sonderfertigkeiten</a>, <a href="#Gaben">Gaben</a>, <a href="#Begabungen">Begabungen</a>, <a href="#Kampf">Kampf</a>, <a href="#Koerper">Koerper</a>, <a href="#Gesellschaft">Gesellschaft</a>, <a href="#Natur">Natur</a>, <a href="#Wissen">Wissen</a>, <a href="#SprachenUndSchriften">SprachenUndSchriften</a>, <a href="#Handwerk">Handwerk</a></table>
 
 <p>Sonderfertigkeiten & Talente. Der Inhalt dieses Werts definiert die Reihenfolge der Untergruppen und die Anzahl Zeilen jeder Untergruppe.</p>
 
-<h4 id="Sonderfertigkeiten">Sonderfertigkeiten</h4>
-
-<pre><code><span class="id">Sonderfertigkeiten</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+<h4 id="Sonderfertigkeiten">Sonderfertigkeiten (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
 
 <p>Zeilen für Sonderfertigkeiten</p>
 
-<h4 id="Gaben">Gaben</h4>
-
-<pre><code><span class="id">Gaben</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+<h4 id="Gaben">Gaben (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
 
 <p>Zeilen für Gaben</p>
 
-<h4 id="Begabungen">Begabungen</h4>
-
-<pre><code><span class="id">Begabungen</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+<h4 id="Begabungen">Begabungen (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
 
 <p>Zeilen für Übernatürliche Begabungen</p>
 
-<h4 id="Kampf">Kampf</h4>
-
-<pre><code><span class="id">Kampf</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+<h4 id="Kampf">Kampf (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
 
 <p>Zeilen für Kampftalente</p>
 
-<h4 id="Koerper">Koerper</h4>
-
-<pre><code><span class="id">Koerper</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+<h4 id="Koerper">Koerper (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
 
 <p>Zeilen für Körperliche Talente</p>
 
-<h4 id="Gesellschaft">Gesellschaft</h4>
-
-<pre><code><span class="id">Gesellschaft</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+<h4 id="Gesellschaft">Gesellschaft (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
 
 <p>Zeilen für Gesellschaftstalente</p>
 
-<h4 id="Natur">Natur</h4>
-
-<pre><code><span class="id">Natur</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+<h4 id="Natur">Natur (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
 
 <p>Zeilen für Naturtalente</p>
 
-<h4 id="Wissen">Wissen</h4>
-
-<pre><code><span class="id">Wissen</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+<h4 id="Wissen">Wissen (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
 
 <p>Zeilen für Wissenstalente</p>
 
-<h4 id="SprachenUndSchriften">SprachenUndSchriften</h4>
-
-<pre><code><span class="id">SprachenUndSchriften</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+<h4 id="SprachenUndSchriften">SprachenUndSchriften (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
 
 <p>Zeilen für Sprachen & Schriften</p>
 
-<h4 id="Handwerk">Handwerk</h4>
-
-<pre><code><span class="id">Handwerk</span><span class="sym">(</span><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
+<h4 id="Handwerk">Handwerk (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
 
 <p>Zeilen für Handwerkstalente</p>
 
-<h3 id="Kampfbogen">Kampfbogen</h3>
-
-<pre><code><span class="id">Kampfbogen</span> <span class="sym">{</span>
-  <span class="id">Nahkampf</span><span class="sym"> = </span><a href="#NahkampfWaffenUndSF">&lt;NahkampfWaffenUndSF&gt;</a><span class="sym">,</span>
-  <span class="id">Fernkampf</span><span class="sym"> = </span><a href="#FernkampfWaffenUndSF">&lt;FernkampfWaffenUndSF&gt;</a><span class="sym">,</span>
-  <span class="id">Waffenlos</span><span class="sym"> = </span><a href="#Waffenlos">&lt;Waffenlos&gt;</a><span class="sym">,</span>
-  <span class="id">Schilde</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Ruestung</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a>
-<span class="sym">}</span></code></pre>
+<h3 id="Kampfbogen">Kampfbogen (<a href="#Record">Record</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Nahkampf: <a href="#NahkampfWaffenUndSF">NahkampfWaffenUndSF</a>, Fernkampf: <a href="#FernkampfWaffenUndSF">FernkampfWaffenUndSF</a>, Waffenlos: <a href="#Waffenlos">Waffenlos</a>, Schilde: <a href="#Zeilen">Zeilen</a>, Ruestung: <a href="#Zeilen">Zeilen</a></td></tr></table>
 
 <p>Kampfbogen.</p>
 
-<h4 id="NahkampfWaffenUndSF">NahkampfWaffenUndSF</h4>
-
-<pre><code><span class="sym">{</span><span class="id">Waffen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">SF</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">}</span></code></pre>
+<h4 id="NahkampfWaffenUndSF">NahkampfWaffenUndSF (<a href="#Record">Record</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Waffen: <a href="#Zeilen">Zeilen</a>, SF: <a href="#Zeilen">Zeilen</a></td></tr></table>
 
 <p>Zeilen für Nahkampfwaffen und -SF.</p>
 
-<h4 id="FernkampfWaffenUndSF">FernkampfWaffenUndSF</h4>
-
-<pre><code><span class="sym">{</span><span class="id">Waffen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">SF</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">}</span></code></pre>
+<h4 id="FernkampfWaffenUndSF">FernkampfWaffenUndSF (<a href="#Record">Record</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Waffen: <a href="#Zeilen">Zeilen</a>, SF: <a href="#Zeilen">Zeilen</a></td></tr></table>
 
 <p>Zeilen für Fernkampfwaffen und -SF.</p>
 
-<h4 id="Waffenlos">Waffenlos</h4>
-
-<pre><code><span class="sym">{</span><span class="id">SF</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">}</span></code></pre>
+<h4 id="Waffenlos">Waffenlos (<a href="#Record">Record</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>SF: <a href="#Zeilen">Zeilen</a></td></tr></table>
 
 <p>Zeilen für waffenlose Manöver.</p>
 
-<h3 id="Ausruestungsbogen">Ausruestungsbogen</h3>
-
-<pre><code><span class="id">Ausruestungsbogen</span> <span class="sym">{</span>
-  <span class="id">Kleidung</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Gegenstaende</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Proviant</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Vermoegen</span><span class="sym"> = </span><a href="#Vermoegensbox">&lt;Vermoegensbox&gt;</a><span class="sym">,</span>
-  <span class="id">Verbindungen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Notizen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Tiere</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a>
-<span class="sym">}</span></code></pre>
+<h3 id="Ausruestungsbogen">Ausruestungsbogen (<a href="#Record">Record</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Kleidung: <a href="#Zeilen">Zeilen</a>, Gegenstaende: <a href="#Zeilen">Zeilen</a>, Proviant: <a href="#Zeilen">Zeilen</a>, Vermoegen: <a href="#Vermoegensbox">Vermoegensbox</a>, Verbindungen: <a href="#Zeilen">Zeilen</a>, Notizen: <a href="#Zeilen">Zeilen</a>, Tiere: <a href="#Zeilen">Zeilen</a></td></tr></table>
 
 <p>Ausrüstungsbogen.</p>
 
-<h4 id="Vermoegensbox">Vermoegensbox</h4>
-
-<pre><code><span class="sym">{</span><span class="id">Muenzen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Sonstiges</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">}</span></code></pre>
+<h4 id="Vermoegensbox">Vermoegensbox (<a href="#Record">Record</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Muenzen: <a href="#Zeilen">Zeilen</a>, Sonstiges: <a href="#Zeilen">Zeilen</a></td></tr></table>
 
 <p>Zeilen in der Vermögensbox.</p>
 
-<h3 id="Liturgiebogen">Liturgiebogen</h3>
-
-<pre><code><span class="id">Liturgiebogen</span> <span class="sym">{</span>
-  <span class="id">Kleidung</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Liturgien</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Gegenstaende</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">ProviantVermoegen</span><span class="sym"> = </span><a href="#ProviantVermoegen">&lt;ProviantVermoegen&gt;</a><span class="sym">,</span>
-  <span class="id">VerbindungenNotizen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Tiere</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a>
-<span class="sym">}</span></code></pre>
+<h3 id="Liturgiebogen">Liturgiebogen (<a href="#Record">Record</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Kleidung: <a href="#Zeilen">Zeilen</a>, Liturgien: <a href="#Zeilen">Zeilen</a>, Gegenstaende: <a href="#Zeilen">Zeilen</a>, ProviantVermoegen: <a href="#ProviantVermoegen">ProviantVermoegen</a>, VerbindungenNotizen: <a href="#Zeilen">Zeilen</a>, Tiere: <a href="#Zeilen">Zeilen</a></td></tr></table>
 
 <p>Bogen für Liturgien & Ausrüsung.</p>
 
-<h4 id="ProviantVermoegen">ProviantVermoegen</h4>
-
-<pre><code><span class="sym">{</span><span class="id">Gezaehlt</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Sonstiges</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">}</span></code></pre>
+<h4 id="ProviantVermoegen">ProviantVermoegen (<a href="#Record">Record</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Gezaehlt: <a href="#Zeilen">Zeilen</a>, Sonstiges: <a href="#Zeilen">Zeilen</a></td></tr></table>
 
 <p>Zeilen für Proviant & Vermögen Box.</p>
 
-<h3 id="Zauberdokument">Zauberdokument</h3>
-
-<pre><code><span class="id">Zauberdokument</span> <span class="sym">{</span>
-  <span class="id">VorUndNachteile</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Sonderfertigkeiten</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Rituale</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Ritualkenntnis</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Artefakte</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a><span class="sym">,</span>
-  <span class="id">Notizen</span><span class="sym"> = </span><a href="#Zeilen">&lt;Zeilen&gt;</a>
-<span class="sym">}</span></code></pre>
+<h3 id="Zauberdokument">Zauberdokument (<a href="#Record">Record</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>VorUndNachteile: <a href="#Zeilen">Zeilen</a>, Sonderfertigkeiten: <a href="#Zeilen">Zeilen</a>, Rituale: <a href="#Zeilen">Zeilen</a>, Ritualkenntnis: <a href="#Zeilen">Zeilen</a>, Artefakte: <a href="#Zeilen">Zeilen</a>, Notizen: <a href="#Zeilen">Zeilen</a></td></tr></table>
 
 <p>Zauberdokument.</p>
 
-<h3 id="Zauberliste">Zauberliste</h3>
-
-<pre><code><span class="id">Zauberliste</span> <span class="sym">{</span>
-  <span class="sym">{}</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Zauberliste">Zauberliste (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>void</td></tr>
+<tr><th>optional</th><td>true</td></tr>
+</table>
 
 <p>Zauberliste.</p>
 
-<h3 id="Ereignisliste">Ereignisliste</h3>
-
-<pre><code><span class="id">Ereignisliste</span> <span class="sym">{</span>
-  <span class="sym">{}</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Ereignisliste">Ereignisliste (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>void</td></tr>
+<tr><th>optional</th><td>true</td></tr>
+</table>
 
 <p>Ereignisliste.</p>
 
-</section><section><h2 id="Held">Held</h2>
-
-<pre><code><span class="id">Held</span> <span class="sym">{</span>
-  <span class="id">Name</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">GP</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Rasse</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Kultur</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Profession</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Geschlecht</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Tsatag</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Groesse</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Gewicht</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Haarfarbe</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Augenfarbe</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Stand</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Sozialstatus</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Titel</span><span class="sym"> = </span><a href="#Multiline">&lt;Multiline&gt;</a><span class="sym">,</span>
-  <span class="id">Aussehen</span><span class="sym"> = </span><a href="#Multiline">&lt;Multiline&gt;</a>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Held">Held (<a href="#Record">Record</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, GP: <a href="#OptNum">OptNum</a>, Rasse: <a href="#String">String</a>, Kultur: <a href="#String">String</a>, Profession: <a href="#String">String</a>, Geschlecht: <a href="#String">String</a>, Tsatag: <a href="#String">String</a>, Groesse: <a href="#String">String</a>, Gewicht: <a href="#String">String</a>, Haarfarbe: <a href="#String">String</a>, Augenfarbe: <a href="#String">String</a>, Stand: <a href="#String">String</a>, Sozialstatus: <a href="#OptNum">OptNum</a>, Titel: <a href="#Multiline">Multiline</a>, Aussehen: <a href="#Multiline">Multiline</a></td></tr></table>
 
 <p>Grundlegende Daten des Helden.</p>
 
-</section><section><h2 id="Vorteile">Vorteile</h2>
+<h3 id="String">String (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>string</td></tr>
+<tr><th>optional</th><td>nil</td></tr>
+</table>
 
-<pre><code><span class="id">Vorteile</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#AkademischeAusbildung">&lt;AkademischeAusbildung&gt;</a><span class="metasym"> | </span><a href="#BegabungFuerTalentgruppe">&lt;BegabungFuerTalentgruppe&gt;</a><span class="metasym"> | </span><a href="#BegabungFuerTalent">&lt;BegabungFuerTalent&gt;</a><span class="metasym"> | </span><a href="#Flink">&lt;Flink&gt;</a><span class="metasym"> | </span><a href="#BegabungFuerEigenschaft">&lt;BegabungFuerEigenschaft&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
 
-<p>Liste von nicht-magischen Vorteilen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
 
-<h3 id="AkademischeAusbildung">AkademischeAusbildung</h3>
+<h3 id="OptNum">OptNum (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>true</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+</table>
 
-<pre><code><span class="id">AkademischeAusbildung</span> <span class="sym">{</span>
-  <a href="#Ausbildungsname">&lt;Ausbildungsname&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
 
-<p>Akademische Ausbildung</p>
 
-<h4 id="Ausbildungsname">Ausbildungsname</h4>
+<h3 id="Multiline">Multiline (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">Gelehrter?</span><span class="metasym"> | </span><span class="id">Magier</span><span class="metasym"> | </span><span class="id">Magierin</span><span class="metasym"> | </span><span class="id">Krieger</span><span class="metasym"> | </span><span class="id">Kriegerin</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Name einer akademischen Ausbildung</p>
+</section><section><h2 id="Vorteile">Vorteile (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Eidetisches Gedächtnis"</code>, (<a href="#BegabungFuerTalentgruppe">BegabungFuerTalentgruppe</a>, <em>forbid</em>), (<a href="#BegabungFuerEigenschaft">BegabungFuerEigenschaft</a>, <em>forbid</em>), (<a href="#BegabungFuerTalent">BegabungFuerTalent</a>, <em>forbid</em>), (<a href="#AkademischeAusbildung">AkademischeAusbildung</a>, <em>forbid</em>), <code>"Eisern"</code>, <code>"Gutes Gedächtnis"</code>, (<a href="#Flink">Flink</a>, <em>forbid</em>)</td></tr></table>
 
-<h3 id="BegabungFuerTalentgruppe">BegabungFuerTalentgruppe</h3>
+<p>Liste von nicht-magischen Vorteilen.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<pre><code><span class="id">BegabungFuerTalentgruppe</span> <span class="sym">{</span>
-  <a href="#Talentgruppe">&lt;Talentgruppe&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+<h3 id="BegabungFuerTalentgruppe">BegabungFuerTalentgruppe (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talentgruppe">Talentgruppe</a></table>
 
 <p>Begabung für eine oder mehrere Talentgruppen.</p>
 
-<h4 id="Talentgruppe">Talentgruppe</h4>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">Kampf</span><span class="metasym"> | </span><span class="id">Nahkampf</span><span class="metasym"> | </span><span class="id">Fernkampf</span><span class="metasym"> | </span><span class="id">Koerper</span><span class="metasym"> | </span><span class="id">Gesellschaft</span><span class="metasym"> | </span><span class="id">Natur</span><span class="metasym"> | </span><span class="id">Wissen</span><span class="metasym"> | </span><span class="id">SprachenUndSchriften</span><span class="metasym"> | </span><span class="id">Handwerk</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<h4 id="Talentgruppe">Talentgruppe (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>Kampf</code>, <code>Nahkampf</code>, <code>Fernkampf</code>, <code>Koerper</code>, <code>Gesellschaft</code>, <code>Natur</code>, <code>Wissen</code>, <code>SprachenUndSchriften</code>, <code>Handwerk</code></td></tr></table>
 
 <p>Eine der existierenden Talentgruppen</p>
 
-<h3 id="BegabungFuerTalent">BegabungFuerTalent</h3>
-
-<pre><code><span class="id">BegabungFuerTalent</span> <span class="sym">{</span>
-  <a href="#String">&lt;String&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
-
-<p>Begabung für ein oder mehrere Talente</p>
-
-<h3 id="Flink">Flink</h3>
-
-<pre><code><span class="id">Flink</span><span class="sym">(</span><span class="metasym">[</span><span class="num">1</span><span class="metasym">..</span><span class="num">2</span><span class="metasym">]</span><span class="sym">)</span></code></pre>
-
-<p>Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen.</p>
-
-<h3 id="BegabungFuerEigenschaft">BegabungFuerEigenschaft</h3>
-
-<pre><code><span class="id">BegabungFuerEigenschaft</span> <span class="sym">{</span>
-  <a href="#EigName">&lt;EigName&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+<h3 id="BegabungFuerEigenschaft">BegabungFuerEigenschaft (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#EigName">EigName</a></table>
 
 <p>Begabung für eine oder mehrere Eigenschaften. Üblicherweise nicht frei wählbar, kommt aber etwa in 7G vor.</p>
 
-<h3 id="EigName">EigName</h3>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">MU</span><span class="metasym"> | </span><span class="id">KL</span><span class="metasym"> | </span><span class="id">IN</span><span class="metasym"> | </span><span class="id">CH</span><span class="metasym"> | </span><span class="id">FF</span><span class="metasym"> | </span><span class="id">GE</span><span class="metasym"> | </span><span class="id">KO</span><span class="metasym"> | </span><span class="id">KK</span><span class="metasym"> | </span><span class="id">LE</span><span class="metasym"> | </span><span class="id">AU</span><span class="metasym"> | </span><span class="id">AE</span><span class="metasym"> | </span><span class="id">MR</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<h4 id="EigName">EigName (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>MU</code>, <code>KL</code>, <code>IN</code>, <code>CH</code>, <code>FF</code>, <code>GE</code>, <code>KO</code>, <code>KK</code>, <code>LE</code>, <code>AU</code>, <code>AE</code>, <code>MR</code></td></tr></table>
 
 <p>Name einer steigerbaren Eigenschaft</p>
 
-</section><section><h2 id="Vorteile.Magisch">Vorteile.Magisch</h2>
+<h3 id="BegabungFuerTalent">BegabungFuerTalent (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
 
-<pre><code><span class="id">Vorteile.Magisch</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#BegabungFuerRitual">&lt;BegabungFuerRitual&gt;</a><span class="metasym"> | </span><a href="#BegabungFuerMerkmal">&lt;BegabungFuerMerkmal&gt;</a><span class="metasym"> | </span><a href="#Meisterhandwerk">&lt;Meisterhandwerk&gt;</a><span class="metasym"> | </span><a href="#BegabungFuerZauber">&lt;BegabungFuerZauber&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Begabung für ein oder mehrere Talente</p>
 
-<p>Liste von magischen Vorteilen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+<h3 id="AkademischeAusbildung">AkademischeAusbildung (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Ausbildungsname">Ausbildungsname</a><tr><th>min</th><td>0</td></tr><tr><th>max</th><td>1</td></tr></table>
 
-<h3 id="BegabungFuerRitual">BegabungFuerRitual</h3>
+<p>Akademische Ausbildung</p>
 
-<pre><code><span class="id">BegabungFuerRitual</span> <span class="sym">{</span>
-  <a href="#String">&lt;String&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+<h4 id="Ausbildungsname">Ausbildungsname (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>Gelehrter?</code>, <code>Magier</code>, <code>Magierin</code>, <code>Krieger</code>, <code>Kriegerin</code></td></tr></table>
+
+<p>Name einer akademischen Ausbildung</p>
+
+<h3 id="Flink">Flink (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>1</td></tr>
+<tr><th>max</th><td>2</td></tr>
+</table>
+
+<p>Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen.</p>
+
+</section><section><h2 id="Vorteile.Magisch">Vorteile.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#BegabungFuerRitual">BegabungFuerRitual</a>, <em>forbid</em>), <code>"Eigeboren"</code>, (<a href="#BegabungFuerMerkmal">BegabungFuerMerkmal</a>, <em>merge</em>), (<a href="#BegabungFuerZauber">BegabungFuerZauber</a>, <em>forbid</em>), (<a href="#Meisterhandwerk">Meisterhandwerk</a>, <em>forbid</em>)</td></tr></table>
+
+<p>Liste von magischen Vorteilen.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
+
+<h3 id="BegabungFuerRitual">BegabungFuerRitual (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
 
 <p>Begabung für ein oder mehrere Rituale</p>
 
-<h3 id="BegabungFuerMerkmal">BegabungFuerMerkmal</h3>
+<h3 id="BegabungFuerMerkmal">BegabungFuerMerkmal (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Elementar">Elementar</a>, <em>forbid</em>), (<a href="#Daemonisch">Daemonisch</a>, <em>forbid</em>)</td></tr></table>
 
-<pre><code><span class="id">BegabungFuerMerkmal</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Elementar">&lt;Elementar&gt;</a><span class="metasym"> | </span><a href="#Daemonisch">&lt;Daemonisch&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Begabung für ein oder mehrere Merkmale.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Begabung für ein oder mehrere Merkmale.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-<h4 id="Elementar">Elementar</h4>
-
-<pre><code><span class="id">Elementar</span> <span class="sym">{</span>
-  <a href="#Element">&lt;Element&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+<h4 id="Elementar">Elementar (<a href="#List">List</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Element">Element</a></table>
 
 <p>Spezifikation elementarer Merkmale.</p>
 
-<h5 id="Element">Element</h5>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">gesamt</span><span class="metasym"> | </span><span class="id">Eis</span><span class="metasym"> | </span><span class="id">Humus</span><span class="metasym"> | </span><span class="id">Feuer</span><span class="metasym"> | </span><span class="id">Wasser</span><span class="metasym"> | </span><span class="id">Luft</span><span class="metasym"> | </span><span class="id">Erz</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<h5 id="Element">Element (<a href="#Matching">Matching</a>)</h5><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>gesamt</code>, <code>Eis</code>, <code>Humus</code>, <code>Feuer</code>, <code>Wasser</code>, <code>Luft</code>, <code>Erz</code></td></tr></table>
 
 <p>Name eines Elements, oder 'gesamt'.</p>
 
-<h4 id="Daemonisch">Daemonisch</h4>
-
-<pre><code><span class="id">Daemonisch</span> <span class="sym">{</span>
-  <a href="#Domaene">&lt;Domaene&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+<h4 id="Daemonisch">Daemonisch (<a href="#List">List</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Domaene">Domaene</a></table>
 
 <p>Spezifikation dämonischer Merkmale.</p>
 
-<h4 id="Domaene">Domaene</h4>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">gesamt</span><span class="metasym"> | </span><span class="id">Blakharaz</span><span class="metasym"> | </span><span class="id">Belhalhar</span><span class="metasym"> | </span><span class="id">Charyptoroth</span><span class="metasym"> | </span><span class="id">Lolgramoth</span><span class="metasym"> | </span><span class="id">Thargunitoth</span><span class="metasym"> | </span><span class="id">Amazeroth</span><span class="metasym"> | </span><span class="id">Belshirash</span><span class="metasym"> | </span><span class="id">Asfaloth</span><span class="metasym"> | </span><span class="id">Tasfarelel</span><span class="metasym"> | </span><span class="id">Belzhorash</span><span class="metasym"> | </span><span class="id">Agrimoth</span><span class="metasym"> | </span><span class="id">Belkelel</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<h4 id="Domaene">Domaene (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>gesamt</code>, <code>Blakharaz</code>, <code>Belhalhar</code>, <code>Charyptoroth</code>, <code>Lolgramoth</code>, <code>Thargunitoth</code>, <code>Amazeroth</code>, <code>Belshirash</code>, <code>Asfaloth</code>, <code>Tasfarelel</code>, <code>Belzhorash</code>, <code>Agrimoth</code>, <code>Belkelel</code></td></tr></table>
 
 <p>Name einer Domäne, oder 'gesamt'</p>
 
-<h3 id="Meisterhandwerk">Meisterhandwerk</h3>
-
-<pre><code><span class="id">Meisterhandwerk</span> <span class="sym">{</span>
-  <a href="#String">&lt;String&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
-
-<p>Liste von Talenten, für die ein Meisterhandwerk existiert.</p>
-
-<h3 id="BegabungFuerZauber">BegabungFuerZauber</h3>
-
-<pre><code><span class="id">BegabungFuerZauber</span> <span class="sym">{</span>
-  <a href="#String">&lt;String&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+<h3 id="BegabungFuerZauber">BegabungFuerZauber (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
 
 <p>Begabung für einen oder mehrere Zauber</p>
 
-</section><section><h2 id="Nachteile">Nachteile</h2>
+<h3 id="Meisterhandwerk">Meisterhandwerk (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
 
-<pre><code><span class="id">Nachteile</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#UnfaehigkeitFuerTalentgruppe">&lt;UnfaehigkeitFuerTalentgruppe&gt;</a><span class="metasym"> | </span><a href="#UnfaehigkeitFuerTalent">&lt;UnfaehigkeitFuerTalent&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Liste von Talenten, für die ein Meisterhandwerk existiert.</p>
 
-<p>Liste von nicht-magischen Nachteilen</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+</section><section><h2 id="Nachteile">Nachteile (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Glasknochen"</code>, <code>"Zwergenwuchs"</code>, <code>"Behäbig"</code>, <code>"Kleinwüchsig"</code>, (<a href="#UnfaehigkeitFuerTalentgruppe">UnfaehigkeitFuerTalentgruppe</a>, <em>forbid</em>), (<a href="#UnfaehigkeitFuerTalent">UnfaehigkeitFuerTalent</a>, <em>forbid</em>), <code>"Unstet"</code></td></tr></table>
 
-<h3 id="UnfaehigkeitFuerTalentgruppe">UnfaehigkeitFuerTalentgruppe</h3>
+<p>Liste von nicht-magischen Nachteilen</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<pre><code><span class="id">UnfaehigkeitFuerTalentgruppe</span> <span class="sym">{</span>
-  <a href="#Talentgruppe">&lt;Talentgruppe&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+<h3 id="UnfaehigkeitFuerTalentgruppe">UnfaehigkeitFuerTalentgruppe (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talentgruppe">Talentgruppe</a></table>
 
 <p>Unfähigkeit für eine oder mehrere Talentgruppen</p>
 
-<h3 id="UnfaehigkeitFuerTalent">UnfaehigkeitFuerTalent</h3>
-
-<pre><code><span class="id">UnfaehigkeitFuerTalent</span> <span class="sym">{</span>
-  <a href="#String">&lt;String&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+<h3 id="UnfaehigkeitFuerTalent">UnfaehigkeitFuerTalent (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
 
 <p>Unfähigkeit für ein oder mehrere bestimmte Talente</p>
 
-</section><section><h2 id="Nachteile.Magisch">Nachteile.Magisch</h2>
+</section><section><h2 id="Nachteile.Magisch">Nachteile.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#UnfaehigkeitFuerMerkmal">UnfaehigkeitFuerMerkmal</a>, <em>merge</em>)</td></tr></table>
 
-<pre><code><span class="id">Nachteile.Magisch</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#UnfaehigkeitFuerMerkmal">&lt;UnfaehigkeitFuerMerkmal&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Liste von magischen Nachteilen.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Liste von magischen Nachteilen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+<h3 id="UnfaehigkeitFuerMerkmal">UnfaehigkeitFuerMerkmal (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Elementar">Elementar</a>, <em>forbid</em>), (<a href="#Daemonisch">Daemonisch</a>, <em>forbid</em>)</td></tr></table>
 
-<h3 id="UnfaehigkeitFuerMerkmal">UnfaehigkeitFuerMerkmal</h3>
+<p>Unfähigkeit für ein oder mehrere Merkmale.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<pre><code><span class="id">UnfaehigkeitFuerMerkmal</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Elementar">&lt;Elementar&gt;</a><span class="metasym"> | </span><a href="#Daemonisch">&lt;Daemonisch&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
-
-<p>Unfähigkeit für ein oder mehrere Merkmale.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-</section><section><h2 id="Eigenschaften">Eigenschaften</h2>
-
-<pre><code><span class="id">Eigenschaften</span> <span class="sym">{</span>
-  <span class="id">MU</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
-  <span class="id">KL</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
-  <span class="id">IN</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
-  <span class="id">CH</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
-  <span class="id">FF</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
-  <span class="id">GE</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
-  <span class="id">KO</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
-  <span class="id">KK</span><span class="sym"> = </span><a href="#BasisEig">&lt;BasisEig&gt;</a><span class="sym">,</span>
-  <span class="id">LE</span><span class="sym"> = </span><a href="#AbgeleiteteEig">&lt;AbgeleiteteEig&gt;</a><span class="sym">,</span>
-  <span class="id">AU</span><span class="sym"> = </span><a href="#AbgeleiteteEig">&lt;AbgeleiteteEig&gt;</a><span class="sym">,</span>
-  <span class="id">AE</span><span class="sym"> = </span><a href="#AbgeleiteteEig">&lt;AbgeleiteteEig&gt;</a><span class="sym">,</span>
-  <span class="id">MR</span><span class="sym"> = </span><a href="#AbgeleiteteEig">&lt;AbgeleiteteEig&gt;</a><span class="sym">,</span>
-  <span class="id">KE</span><span class="sym"> = </span><a href="#AbgeleiteteEig">&lt;AbgeleiteteEig&gt;</a><span class="sym">,</span>
-  <span class="id">INI</span><span class="sym"> = </span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Eigenschaften">Eigenschaften (<a href="#Record">Record</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>MU: <a href="#BasisEig">BasisEig</a>, KL: <a href="#BasisEig">BasisEig</a>, IN: <a href="#BasisEig">BasisEig</a>, CH: <a href="#BasisEig">BasisEig</a>, FF: <a href="#BasisEig">BasisEig</a>, GE: <a href="#BasisEig">BasisEig</a>, KO: <a href="#BasisEig">BasisEig</a>, KK: <a href="#BasisEig">BasisEig</a>, LE: <a href="#AbgeleiteteEig">AbgeleiteteEig</a>, AU: <a href="#AbgeleiteteEig">AbgeleiteteEig</a>, AE: <a href="#AbgeleiteteEig">AbgeleiteteEig</a>, MR: <a href="#AbgeleiteteEig">AbgeleiteteEig</a>, KE: <a href="#AbgeleiteteEig">AbgeleiteteEig</a>, INI: <a href="#Ganzzahl">Ganzzahl</a></td></tr></table>
 
 <p>Liste von Basis- und abgeleiteten Eigenschaften</p>
 
-<h3 id="BasisEig">BasisEig</h3>
-
-<pre><code><span class="sym">{</span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">, ...</span><span class="sym">}</span></code></pre>
+<h3 id="BasisEig">BasisEig (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Mod: <a href="#Ganzzahl">Ganzzahl</a>, Start: <a href="#Ganzzahl">Ganzzahl</a>, Aktuell: <a href="#Ganzzahl">Ganzzahl</a></td></tr></table>
 
 <p>Eine Basiseigenschaft mit Modifikator, Startwert und aktuellem Wert.</p>
 
-<h3 id="AbgeleiteteEig">AbgeleiteteEig</h3>
+<h4 id="Ganzzahl">Ganzzahl (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+</table>
 
-<pre><code><span class="sym">{</span><a href="#Ganzzahl">&lt;Ganzzahl&gt;</a><span class="sym">, ...</span><span class="sym">}</span></code></pre>
+<p>Eine Zahl in Dezimalschreibweise.</p>
+
+<h3 id="AbgeleiteteEig">AbgeleiteteEig (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Mod: <a href="#Ganzzahl">Ganzzahl</a>, Zugekauft: <a href="#Ganzzahl">Ganzzahl</a>, Permanent: <a href="#Ganzzahl">Ganzzahl</a></td></tr></table>
 
 <p>Eine abgeleitete Eigenschaft mit Modifikator, zugekauften Punkten und permanent verlorenen Punkten.</p>
 
-</section><section><h2 id="AP">AP</h2>
+<h3 id="Ganzzahl">Ganzzahl (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+</table>
 
-<pre><code><span class="id">AP</span> <span class="sym">{</span>
-  <span class="id">Gesamt</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Eingesetzt</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a><span class="sym">,</span>
-  <span class="id">Guthaben</span><span class="sym"> = </span><a href="#Simple">&lt;Simple&gt;</a>
-<span class="sym">}</span></code></pre>
+<p>Eine Zahl in Dezimalschreibweise.</p>
+
+</section><section><h2 id="AP">AP (<a href="#Record">Record</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Gesamt: <a href="#OptNum">OptNum</a>, Eingesetzt: <a href="#OptNum">OptNum</a>, Guthaben: <a href="#OptNum">OptNum</a></td></tr></table>
 
 <p>Abenteuerpunkte.</p>
 
-</section><section><h2 id="Talente.Begabungen">Talente.Begabungen</h2>
-
-<pre><code><span class="id">Talente.Begabungen</span> <span class="sym">{</span>
-  <a href="#Talent">&lt;Talent&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Talente.Begabungen">Talente.Begabungen (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talent">Talent</a></table>
 
 <p>Liste übernatürlicher Begabungen.</p>
 
-<h3 id="Talent">Talent</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe1:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe2:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe3:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<h3 id="Talent">Talent (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Probe1: <a href="#BasisEig">BasisEig</a>, Probe2: <a href="#BasisEig">BasisEig</a>, Probe3: <a href="#BasisEig">BasisEig</a>, TaW: <a href="#OptNum">OptNum</a>, Spezialisierungen: <a href="#Spezialisierungen">Spezialisierungen</a></td></tr></table>
 
 <p>Ein allgemeines Talent.</p>
 
-<h3 id="BasisEig">BasisEig</h3>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">%*%*</span><span class="metasym"> | </span><span class="id">MU</span><span class="metasym"> | </span><span class="id">KL</span><span class="metasym"> | </span><span class="id">IN</span><span class="metasym"> | </span><span class="id">CH</span><span class="metasym"> | </span><span class="id">FF</span><span class="metasym"> | </span><span class="id">GE</span><span class="metasym"> | </span><span class="id">KO</span><span class="metasym"> | </span><span class="id">KK</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<h3 id="BasisEig">BasisEig (<a href="#Matching">Matching</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>%*%*</code>, <code>MU</code>, <code>KL</code>, <code>IN</code>, <code>CH</code>, <code>FF</code>, <code>GE</code>, <code>KO</code>, <code>KK</code></td></tr></table>
 
 <p>Name einer Basis-Eigenschaft, oder ** in seltenen Fällen.</p>
 
-<h3 id="Spezialisierungen">Spezialisierungen</h3>
+<h3 id="Spezialisierungen">Spezialisierungen (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre>
+<p>Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-</section><section><h2 id="Talente.Gaben">Talente.Gaben</h2>
-
-<pre><code><span class="id">Talente.Gaben</span> <span class="sym">{</span>
-  <a href="#Talent">&lt;Talent&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Talente.Gaben">Talente.Gaben (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talent">Talent</a></table>
 
 <p>Liste von Gaben.</p>
 
-</section><section><h2 id="Talente.Kampf">Talente.Kampf</h2>
-
-<pre><code><span class="id">Talente.Kampf</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Kampftalent: [ </span><a href="#Nah">&lt;Nah&gt;</a><span class="metasym"> | </span><a href="#NahAT">&lt;NahAT&gt;</a><span class="metasym"> | </span><a href="#Fern">&lt;Fern&gt;</a><span class="metasym"> ]&gt;</span><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Talente.Kampf">Talente.Kampf (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Nah">Nah</a>, <a href="#NahAT">NahAT</a>, <a href="#Fern">Fern</a></table>
 
 <p>Liste von Kampftalenten.</p>
 
-<h3 id="Nah">Nah</h3>
-
-<pre><code><span class="id">Nah</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;AT:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;PA:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Nah">Nah (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Steigerungsspalte: <a href="#SteigSpalte">SteigSpalte</a>, BE: <a href="#Behinderung">Behinderung</a>, AT: <a href="#OptNum">OptNum</a>, PA: <a href="#OptNum">OptNum</a>, TaW: <a href="#OptNum">OptNum</a>, Spezialisierungen: <a href="#Spezialisierungen">Spezialisierungen</a></td></tr></table>
 
 <p>Ein Nahkampf-Talent mit AT/PA Verteilung.</p>
 
-<h4 id="SteigSpalte">SteigSpalte</h4>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">A%*?</span><span class="metasym"> | </span><span class="id">B</span><span class="metasym"> | </span><span class="id">C</span><span class="metasym"> | </span><span class="id">D</span><span class="metasym"> | </span><span class="id">E</span><span class="metasym"> | </span><span class="id">F</span><span class="metasym"> | </span><span class="id">G</span><span class="metasym"> | </span><span class="id">H</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<h4 id="SteigSpalte">SteigSpalte (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>A%*?</code>, <code>B</code>, <code>C</code>, <code>D</code>, <code>E</code>, <code>F</code>, <code>G</code>, <code>H</code></td></tr></table>
 
 <p>Eine Steigerungsspalte.</p>
 
-<h4 id="Behinderung">Behinderung</h4>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">%-</span><span class="metasym"> | </span><span class="id">BE</span><span class="metasym"> | </span><span class="id">BE%-[1-9]</span><span class="metasym"> | </span><span class="id">BEx[2-9]</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<h4 id="Behinderung">Behinderung (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>%-</code>, <code>BE</code>, <code>BE%-[1-9]</code>, <code>BEx[2-9]</code></td></tr></table>
 
 <p>Behinderung.</p>
 
-<h3 id="NahAT">NahAT</h3>
-
-<pre><code><span class="id">NahAT</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="NahAT">NahAT (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Steigerungsspalte: <a href="#SteigSpalte">SteigSpalte</a>, BE: <a href="#Behinderung">Behinderung</a>, TaW: <a href="#OptNum">OptNum</a>, Spezialisierungen: <a href="#Spezialisierungen">Spezialisierungen</a></td></tr></table>
 
 <p>Ein Nahkampf-Talent, dessen Wert ausschließlich zur Attacke dient und das keine AT/PA Verteilung hat.</p>
 
-<h3 id="Fern">Fern</h3>
-
-<pre><code><span class="id">Fern</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Fern">Fern (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Steigerungsspalte: <a href="#SteigSpalte">SteigSpalte</a>, BE: <a href="#Behinderung">Behinderung</a>, TaW: <a href="#OptNum">OptNum</a>, Spezialisierungen: <a href="#Spezialisierungen">Spezialisierungen</a></td></tr></table>
 
 <p>Ein Fernkampf-Talent.</p>
 
-</section><section><h2 id="Talente.Koerper">Talente.Koerper</h2>
-
-<pre><code><span class="id">Talente.Koerper</span> <span class="sym">{</span>
-  <a href="#KoerperTalent">&lt;KoerperTalent&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Talente.Koerper">Talente.Koerper (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#KoerperTalent">KoerperTalent</a></table>
 
 <p>Liste von körperlichen Talenten.</p>
 
-<h3 id="KoerperTalent">KoerperTalent</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe1:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe2:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe3:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BE:</span><a href="#Behinderung">Behinderung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<h3 id="KoerperTalent">KoerperTalent (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Probe1: <a href="#BasisEig">BasisEig</a>, Probe2: <a href="#BasisEig">BasisEig</a>, Probe3: <a href="#BasisEig">BasisEig</a>, BE: <a href="#Behinderung">Behinderung</a>, TaW: <a href="#OptNum">OptNum</a>, Spezialisierungen: <a href="#Spezialisierungen">Spezialisierungen</a></td></tr></table>
 
 <p>Ein Talent aus der Gruppe der Körperlichen Talente.</p>
 
-</section><section><h2 id="Talente.Gesellschaft">Talente.Gesellschaft</h2>
-
-<pre><code><span class="id">Talente.Gesellschaft</span> <span class="sym">{</span>
-  <a href="#Talent">&lt;Talent&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Talente.Gesellschaft">Talente.Gesellschaft (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talent">Talent</a></table>
 
 <p>Liste von Gesellschaftstalenten.</p>
 
-</section><section><h2 id="Talente.Natur">Talente.Natur</h2>
-
-<pre><code><span class="id">Talente.Natur</span> <span class="sym">{</span>
-  <a href="#Talent">&lt;Talent&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Talente.Natur">Talente.Natur (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talent">Talent</a></table>
 
 <p>Liste von Naturtalenten.</p>
 
-</section><section><h2 id="Talente.Wissen">Talente.Wissen</h2>
-
-<pre><code><span class="id">Talente.Wissen</span> <span class="sym">{</span>
-  <a href="#Talent">&lt;Talent&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Talente.Wissen">Talente.Wissen (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talent">Talent</a></table>
 
 <p>Liste von Wissenstalenten.</p>
 
-</section><section><h2 id="Talente.SprachenUndSchriften">Talente.SprachenUndSchriften</h2>
-
-<pre><code><span class="id">Talente.SprachenUndSchriften</span> <span class="sym">{</span>
-  <span class="metasym">&lt;SpracheOderSchrift: [ </span><a href="#Muttersprache">&lt;Muttersprache&gt;</a><span class="metasym"> | </span><a href="#Zweitsprache">&lt;Zweitsprache&gt;</a><span class="metasym"> | </span><a href="#Sprache">&lt;Sprache&gt;</a><span class="metasym"> | </span><a href="#Schrift">&lt;Schrift&gt;</a><span class="metasym"> ]&gt;</span><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Talente.SprachenUndSchriften">Talente.SprachenUndSchriften (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Muttersprache">Muttersprache</a>, <a href="#Zweitsprache">Zweitsprache</a>, <a href="#Sprache">Sprache</a>, <a href="#Schrift">Schrift</a></table>
 
 <p>Liste von Sprachen & Schriften.</p>
 
-<h3 id="Muttersprache">Muttersprache</h3>
-
-<pre><code><span class="id">Muttersprache</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Dialekt:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Sprachfamilie:</span><a href="#Familie">Familie</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Schriftfamilie:</span><a href="#Familie">Familie</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Muttersprache">Muttersprache (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Komplexität: <a href="#OptNum">OptNum</a>, TaW: <a href="#OptNum">OptNum</a>, Dialekt: <a href="#Spezialisierungen">Spezialisierungen</a>, Sprachfamilie: <a href="#Familie">Familie</a>, Schriftfamilie: <a href="#Familie">Familie</a></td></tr></table>
 
 <p>Die Muttersprache des Helden. Anders als andere Sprachen definiert eine Muttersprache Listen der verwandten Sprachen und Schriften, welche nicht ausgegeben werden, sondern nur zur Berechnung der Steigerungsschwierigkeit anderer Sprachen und Schriften dienen.</p>
 
-<h4 id="Familie">Familie</h4>
-
-<pre><code><span class="sym">{</span><a href="#String">&lt;String&gt;</a><span class="sym">, ...</span><span class="sym">}</span></code></pre>
+<h4 id="Familie">Familie (<a href="#List">List</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
 
 <p>Liste von Sprachen oder Schriften in einer Familie.</p>
 
-<h3 id="Zweitsprache">Zweitsprache</h3>
-
-<pre><code><span class="id">Zweitsprache</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Dialekt:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Zweitsprache">Zweitsprache (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Komplexität: <a href="#OptNum">OptNum</a>, TaW: <a href="#OptNum">OptNum</a>, Dialekt: <a href="#Spezialisierungen">Spezialisierungen</a></td></tr></table>
 
 <p>Eine Zweitsprache, für die die Grund-Steigerungsschwierigkeit gilt.</p>
 
-<h3 id="Sprache">Sprache</h3>
-
-<pre><code><span class="id">Sprache</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Dialekt:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Sprache">Sprache (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Komplexität: <a href="#OptNum">OptNum</a>, TaW: <a href="#OptNum">OptNum</a>, Dialekt: <a href="#Spezialisierungen">Spezialisierungen</a></td></tr></table>
 
 <p>Eine Fremdsprache. Steigerungsschwierigkeit hängt ab davon, ob sie in der Sprachfamilie der Muttersprache enthalten ist.</p>
 
-<h3 id="Schrift">Schrift</h3>
-
-<pre><code><span class="id">Schrift</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Steigerungsspalte:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Komplexität:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TaW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Schrift">Schrift (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Steigerungsspalte: <a href="#SteigSpalte">SteigSpalte</a>, Komplexität: <a href="#OptNum">OptNum</a>, TaW: <a href="#OptNum">OptNum</a></td></tr></table>
 
 <p>Eine Schrift. Es sollte die Steigerungsschwierigkeit gemäß WdS angegeben werden; der Bogen modifiziert sie automatisch im Falle einer Begabung oder Unfähigkeit.</p>
 
-</section><section><h2 id="Talente.Handwerk">Talente.Handwerk</h2>
-
-<pre><code><span class="id">Talente.Handwerk</span> <span class="sym">{</span>
-  <a href="#Talent">&lt;Talent&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Talente.Handwerk">Talente.Handwerk (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talent">Talent</a></table>
 
 <p>Liste von Handwerkstalenten.</p>
 
-</section><section><h2 id="SF">SF</h2>
+</section><section><h2 id="SF">SF (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Kulturkunde">Kulturkunde</a>, <em>merge</em>), (<a href="#Ortskenntnis">Ortskenntnis</a>, <em>merge</em>)</td></tr></table>
 
-<pre><code><span class="id">SF</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Kulturkunde">&lt;Kulturkunde&gt;</a><span class="metasym"> | </span><a href="#Ortskenntnis">&lt;Ortskenntnis&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Sonderfertigkeiten (außer Kampf & magischen)</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Sonderfertigkeiten (außer Kampf & magischen)</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+<h3 id="Kulturkunde">Kulturkunde (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<h3 id="Kulturkunde">Kulturkunde</h3>
+<p>Liste von Kulturen, für die Kulturkunde besteht.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<pre><code><span class="id">Kulturkunde</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Ortskenntnis">Ortskenntnis (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<p>Liste von Kulturen, für die Kulturkunde besteht.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+<p>Liste von Orten, für die Ortskenntnis besteht.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<h3 id="Ortskenntnis">Ortskenntnis</h3>
+</section><section><h2 id="SF.Nahkampf">SF.Nahkampf (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Kampfreflexe"</code>, (<a href="#Ruestungsgewoehnung">Ruestungsgewoehnung</a>, <em>merge</em>), <code>"Kampfgespür"</code>, (<a href="#Parierwaffen">Parierwaffen</a>, <em>merge</em>), <code>"Linkhand"</code>, (<a href="#Ausweichen">Ausweichen</a>, <em>merge</em>), (<a href="#Schildkampf">Schildkampf</a>, <em>merge</em>)</td></tr></table>
 
-<pre><code><span class="id">Ortskenntnis</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Liste von Nahkampf-Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Liste von Orten, für die Ortskenntnis besteht.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-</section><section><h2 id="SF.Nahkampf">SF.Nahkampf</h2>
-
-<pre><code><span class="id">SF.Nahkampf</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Ausweichen">&lt;Ausweichen&gt;</a><span class="metasym"> | </span><a href="#Schildkampf">&lt;Schildkampf&gt;</a><span class="metasym"> | </span><a href="#Ruestungsgewoehnung">&lt;Ruestungsgewoehnung&gt;</a><span class="metasym"> | </span><a href="#Parierwaffen">&lt;Parierwaffen&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
-
-<p>Liste von Nahkampf-Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-<h3 id="Ausweichen">Ausweichen</h3>
-
-<pre><code><span class="id">Ausweichen</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
-
-<p>Die SF Ausweichen, unterteilt in I, II und III.</p>
-
-<h3 id="Schildkampf">Schildkampf</h3>
-
-<pre><code><span class="id">Schildkampf</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
-
-<p>Die SF Schildkampf, unterteilt in I und II.</p>
-
-<h3 id="Ruestungsgewoehnung">Ruestungsgewoehnung</h3>
-
-<pre><code><span class="id">Ruestungsgewoehnung</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> | </span><span class="id">III</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Ruestungsgewoehnung">Ruestungsgewoehnung (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>3</td></tr></table>
 
 <p>Die SF Rüstungsgewöhnung, unterteilt in I, II und III.</p>
 
-<h3 id="Parierwaffen">Parierwaffen</h3>
-
-<pre><code><span class="id">Parierwaffen</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><span class="id">I</span><span class="metasym"> | </span><span class="id">II</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Parierwaffen">Parierwaffen (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>2</td></tr></table>
 
 <p>Die SF Parierwaffen, unterteilt in I und II.</p>
 
-</section><section><h2 id="SF.Fernkampf">SF.Fernkampf</h2>
+<h3 id="Ausweichen">Ausweichen (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>3</td></tr></table>
 
-<pre><code><span class="id">SF.Fernkampf</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Schnellladen">&lt;Schnellladen&gt;</a><span class="metasym"> | </span><a href="#Meisterschuetze">&lt;Meisterschuetze&gt;</a><span class="metasym"> | </span><a href="#Scharfschuetze">&lt;Scharfschuetze&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Die SF Ausweichen, unterteilt in I, II und III.</p>
 
-<p>Liste von Fernkampf-Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+<h3 id="Schildkampf">Schildkampf (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>2</td></tr></table>
 
-<h3 id="Schnellladen">Schnellladen</h3>
+<p>Die SF Schildkampf, unterteilt in I und II.</p>
 
-<pre><code><span class="id">Schnellladen</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="SF.Fernkampf">SF.Fernkampf (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Scharfschuetze">Scharfschuetze</a>, <em>merge</em>), (<a href="#Schnellladen">Schnellladen</a>, <em>merge</em>), (<a href="#Meisterschuetze">Meisterschuetze</a>, <em>merge</em>)</td></tr></table>
 
-<p>Liste von Talenten, für die Schnellladen gilt.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+<p>Liste von Fernkampf-Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<h3 id="Meisterschuetze">Meisterschuetze</h3>
+<h3 id="Scharfschuetze">Scharfschuetze (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<pre><code><span class="id">Meisterschuetze</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Liste von Talenten, für die Scharfschütze gilt.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Liste von Talenten, für die Meisterschütze gilt.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+<h3 id="Schnellladen">Schnellladen (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<h3 id="Scharfschuetze">Scharfschuetze</h3>
+<p>Liste von Talenten, für die Schnellladen gilt.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<pre><code><span class="id">Scharfschuetze</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Meisterschuetze">Meisterschuetze (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<p>Liste von Talenten, für die Scharfschütze gilt.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+<p>Liste von Talenten, für die Meisterschütze gilt.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-</section><section><h2 id="SF.Waffenlos">SF.Waffenlos</h2>
+</section><section><h2 id="SF.Waffenlos">SF.Waffenlos (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Kampfstil">Kampfstil</a>, <em>allow</em>)</td></tr></table>
 
-<pre><code><span class="id">SF.Waffenlos</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Kampfstile">&lt;Kampfstile&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Listen waffenloser Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Listen waffenloser Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+<h3 id="Kampfstil">Kampfstil (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, VerbessertesTalent: <a href="#WaffenlosesKampftalent">WaffenlosesKampftalent</a></td></tr></table>
 
-<h3 id="Kampfstile">Kampfstile</h3>
+<p>Ein erlernter Kampfstil, der AT und PA eines waffenlosen Nahkampftalents um je 1 steigert.</p>
 
-<pre><code><span class="id">Kampfstile</span> <span class="sym">{</span>
-  <span class="sym">[ </span><span class="metasym">&lt;Kampfstil:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym"> ] = </span><span class="metasym">&lt;VerbessertesTalent:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<h3 id="WaffenlosesKampftalent">WaffenlosesKampftalent (<a href="#Matching">Matching</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>Raufen</code>, <code>Ringen</code></td></tr></table>
 
-<p>Liste bekannter Kampfstile</p>
+<p>Raufen oder Ringen</p>
 
-</section><section><h2 id="SF.Magisch">SF.Magisch</h2>
+</section><section><h2 id="SF.Magisch">SF.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Gefäß der Sterne"</code></td></tr></table>
 
-<pre><code><span class="id">SF.Magisch</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Liste magischer Sonderfertigkeiten</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Liste magischer Sonderfertigkeiten</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-</section><section><h2 id="Waffen.Nahkampf">Waffen.Nahkampf</h2>
-
-<pre><code><span class="id">Waffen.Nahkampf</span> <span class="sym">{</span>
-  <a href="#Nahkampfwaffe">&lt;Nahkampfwaffe&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Waffen.Nahkampf">Waffen.Nahkampf (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Nahkampfwaffe">Nahkampfwaffe</a></table>
 
 <p>Liste von Nahkampfwaffen.</p>
 
-<h3 id="Nahkampfwaffe">Nahkampfwaffe</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">(opt) </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Talent:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;DK:</span><a href="#Distanzklasse">Distanzklasse</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP:</span><a href="#Schaden">Schaden</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/KK Schwelle:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/KK Schritt:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;INI:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;WM AT:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;WM PA:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BF1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BF2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<h3 id="Nahkampfwaffe">Nahkampfwaffe (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Talent: <a href="#String">String</a>, DK: <a href="#Distanzklasse">Distanzklasse</a>, TP: <a href="#Schaden">Schaden</a>, TP/KK Schwelle: <a href="#OptNum">OptNum</a>, TP/KK Schritt: <a href="#OptNum">OptNum</a>, INI: <a href="#OptNum">OptNum</a>, WM AT: <a href="#OptNum">OptNum</a>, WM PA: <a href="#OptNum">OptNum</a>, BF1: <a href="#OptNum">OptNum</a>, BF2: <a href="#OptNum">OptNum</a>, Art: <a href="#String">String</a></td></tr></table>
 
 <p>Eine Nahkampfwaffe.</p>
 
-<h3 id="Distanzklasse">Distanzklasse</h3>
-
-<pre><code><span class="sym">"</span><span class="id">[HNSP]*</span><span class="sym">"</span></code></pre>
+<h3 id="Distanzklasse">Distanzklasse (<a href="#Matching">Matching</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>[HNSP]*</code></td></tr></table>
 
 <p>Eine Distanzklasse.</p>
 
-<h3 id="Schaden">Schaden</h3>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">[0-9]*W[0-9]*</span><span class="metasym"> | </span><span class="id">[0-9]*W[0-9]*[%+%-][0-9]+</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<h3 id="Schaden">Schaden (<a href="#Matching">Matching</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>[0-9]*W[0-9]*</code>, <code>[0-9]*W[0-9]*[%+%-][0-9]+</code></td></tr></table>
 
 <p>Trefferpunkte einer Waffe.</p>
 
-</section><section><h2 id="Waffen.Fernkampf">Waffen.Fernkampf</h2>
-
-<pre><code><span class="id">Waffen.Fernkampf</span> <span class="sym">{</span>
-  <a href="#Fernkampfwaffe">&lt;Fernkampfwaffe&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Waffen.Fernkampf">Waffen.Fernkampf (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Fernkampfwaffe">Fernkampfwaffe</a></table>
 
 <p>Liste von Fernkampfwaffen.</p>
 
-<h3 id="Fernkampfwaffe">Fernkampfwaffe</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">(opt) </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Talent:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP:</span><a href="#Schaden">Schaden</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Entfernung1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Entfernung2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Entfernung3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Entfernung4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Entfernung5:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/Entfernung1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/Entfernung2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/Entfernung3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/Entfernung4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP/Entfernung5:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Geschosse1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Geschosse2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Geschosse3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<h3 id="Fernkampfwaffe">Fernkampfwaffe (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Talent: <a href="#String">String</a>, TP: <a href="#Schaden">Schaden</a>, Entfernung1: <a href="#OptNum">OptNum</a>, Entfernung2: <a href="#OptNum">OptNum</a>, Entfernung3: <a href="#OptNum">OptNum</a>, Entfernung4: <a href="#OptNum">OptNum</a>, Entfernung5: <a href="#OptNum">OptNum</a>, TP/Entfernung1: <a href="#OptNum">OptNum</a>, TP/Entfernung2: <a href="#OptNum">OptNum</a>, TP/Entfernung3: <a href="#OptNum">OptNum</a>, TP/Entfernung4: <a href="#OptNum">OptNum</a>, TP/Entfernung5: <a href="#OptNum">OptNum</a>, Geschosse1: <a href="#OptNum">OptNum</a>, Geschosse2: <a href="#OptNum">OptNum</a>, Geschosse3: <a href="#OptNum">OptNum</a>, Art: <a href="#String">String</a></td></tr></table>
 
 <p>Eine Fernkampfwaffe.</p>
 
-</section><section><h2 id="Waffen.SchildeUndParierwaffen">Waffen.SchildeUndParierwaffen</h2>
-
-<pre><code><span class="id">Waffen.SchildeUndParierwaffen</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Eintrag: [ </span><a href="#Schild">&lt;Schild&gt;</a><span class="metasym"> | </span><a href="#Parierwaffe">&lt;Parierwaffe&gt;</a><span class="metasym"> ]&gt;</span><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Waffen.SchildeUndParierwaffen">Waffen.SchildeUndParierwaffen (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Schild">Schild</a>, <a href="#Parierwaffe">Parierwaffe</a></table>
 
 <p>Liste von Schilden und Parierwaffen.</p>
 
-<h3 id="Schild">Schild</h3>
-
-<pre><code><span class="id">Schild</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;INI:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM AT:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM PA:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BF1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BF2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Schild">Schild (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, INI: <a href="#Ganzzahl">Ganzzahl</a>, WM AT: <a href="#Ganzzahl">Ganzzahl</a>, WM PA: <a href="#Ganzzahl">Ganzzahl</a>, BF1: <a href="#OptNum">OptNum</a>, BF2: <a href="#OptNum">OptNum</a>, Art: <a href="#String">String</a></td></tr></table>
 
 <p>Ein Schild.</p>
 
-<h3 id="Parierwaffe">Parierwaffe</h3>
-
-<pre><code><span class="id">Parierwaffe</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;INI:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM AT:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;WM PA:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BF1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;BF2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Parierwaffe">Parierwaffe (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, INI: <a href="#Ganzzahl">Ganzzahl</a>, WM AT: <a href="#Ganzzahl">Ganzzahl</a>, WM PA: <a href="#Ganzzahl">Ganzzahl</a>, BF1: <a href="#OptNum">OptNum</a>, BF2: <a href="#OptNum">OptNum</a>, Art: <a href="#String">String</a></td></tr></table>
 
 <p>Eine Parierwaffe.</p>
 
-</section><section><h2 id="Waffen.Ruestung">Waffen.Ruestung</h2>
-
-<pre><code><span class="id">Waffen.Ruestung</span> <span class="sym">{</span>
-  <a href="#Ruestungsteil">&lt;Ruestungsteil&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Waffen.Ruestung">Waffen.Ruestung (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Ruestungsteil">Ruestungsteil</a></table>
 
 <p>Liste von Rüstungsteilen.</p>
 
-<h3 id="Ruestungsteil">Ruestungsteil</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;gRS:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;gBE:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Kopf:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Brust:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Ruecken:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;LArm:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;RArm:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Bauch:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;LBein:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;RBein:</span><a href="#Zonenruestung">Zonenruestung</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<h3 id="Ruestungsteil">Ruestungsteil (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, gRS: <a href="#Zonenruestung">Zonenruestung</a>, gBE: <a href="#Zonenruestung">Zonenruestung</a>, Kopf: <a href="#Zonenruestung">Zonenruestung</a>, Brust: <a href="#Zonenruestung">Zonenruestung</a>, Ruecken: <a href="#Zonenruestung">Zonenruestung</a>, LArm: <a href="#Zonenruestung">Zonenruestung</a>, RArm: <a href="#Zonenruestung">Zonenruestung</a>, Bauch: <a href="#Zonenruestung">Zonenruestung</a>, LBein: <a href="#Zonenruestung">Zonenruestung</a>, RBein: <a href="#Zonenruestung">Zonenruestung</a></td></tr></table>
 
 <p>Ein Rüstungsteil.</p>
 
-<h3 id="Zonenruestung">Zonenruestung</h3>
-
-<pre><code><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">100</span><span class="metasym">]</span></code></pre>
+<h3 id="Zonenruestung">Zonenruestung (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>2</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
 
 <p>Zonenrüstungswert eines Rüstungsteils mit bis zu zwei Dezimalstellen</p>
 
-</section><section><h2 id="Kleidung">Kleidung</h2>
+</section><section><h2 id="Kleidung">Kleidung (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<pre><code><span class="id">Kleidung</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Mehrzeiliger Text für den Kleidungs-Kasten auf dem Ausrüstungsbogen.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Mehrzeiliger Text für den Kleidungs-Kasten auf dem Ausrüstungsbogen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-</section><section><h2 id="Ausruestung">Ausruestung</h2>
-
-<pre><code><span class="id">Ausruestung</span> <span class="sym">{</span>
-  <a href="#Gegenstand">&lt;Gegenstand&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Ausruestung">Ausruestung (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Gegenstand">Gegenstand</a></table>
 
 <p>Liste von Ausrüstungsgegenständen.</p>
 
-<h3 id="Gegenstand">Gegenstand</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Gewicht:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Getragen:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<h3 id="Gegenstand">Gegenstand (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Gewicht: <a href="#OptNum">OptNum</a>, Getragen: <a href="#String">String</a></td></tr></table>
 
 <p>Ein Ausrüstungsgegenstand.</p>
 
-</section><section><h2 id="Proviant">Proviant</h2>
-
-<pre><code><span class="id">Proviant</span> <span class="sym">{</span>
-  <a href="#Rationen">&lt;Rationen&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Proviant">Proviant (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Rationen">Rationen</a></table>
 
 <p>Liste von Proviant & Tränken.</p>
 
-<h3 id="Rationen">Rationen</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Ration1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Ration2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Ration3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Ration4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<h3 id="Rationen">Rationen (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Ration1: <a href="#OptNum">OptNum</a>, Ration2: <a href="#OptNum">OptNum</a>, Ration3: <a href="#OptNum">OptNum</a>, Ration4: <a href="#OptNum">OptNum</a></td></tr></table>
 
 <p>Proviant oder Trank mit Rationen.</p>
 
-</section><section><h2 id="Vermoegen">Vermoegen</h2>
-
-<pre><code><span class="id">Vermoegen</span> <span class="sym">{</span>
-  <a href="#Muenzen">&lt;Muenzen&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Vermoegen">Vermoegen (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Muenzen">Muenzen</a></table>
 
 <p>Liste von Münzenarten.</p>
 
-<h3 id="Muenzen">Muenzen</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">(opt) </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert1:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert2:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert3:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert4:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert5:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert6:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert7:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert8:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<h3 id="Muenzen">Muenzen (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Wert1: <a href="#OptNum">OptNum</a>, Wert2: <a href="#OptNum">OptNum</a>, Wert3: <a href="#OptNum">OptNum</a>, Wert4: <a href="#OptNum">OptNum</a>, Wert5: <a href="#OptNum">OptNum</a>, Wert6: <a href="#OptNum">OptNum</a>, Wert7: <a href="#OptNum">OptNum</a>, Wert8: <a href="#OptNum">OptNum</a></td></tr></table>
 
 <p>Eine Münzenart mit mehreren Werten.</p>
 
-</section><section><h2 id="Vermoegen.Sonstiges">Vermoegen.Sonstiges</h2>
+</section><section><h2 id="Vermoegen.Sonstiges">Vermoegen.Sonstiges (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<pre><code><span class="id">Vermoegen.Sonstiges</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Sonstiges Vermögen.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Sonstiges Vermögen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+</section><section><h2 id="Verbindungen">Verbindungen (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-</section><section><h2 id="Verbindungen">Verbindungen</h2>
+<p>Verbindungen.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<pre><code><span class="id">Verbindungen</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Notizen">Notizen (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<p>Verbindungen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+<p>Notizen auf dem Ausrüstungs / Liturgienbogen.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-</section><section><h2 id="Notizen">Notizen</h2>
-
-<pre><code><span class="id">Notizen</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
-
-<p>Notizen auf dem Ausrüstungs / Liturgienbogen.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-</section><section><h2 id="Tiere">Tiere</h2>
-
-<pre><code><span class="id">Tiere</span> <span class="sym">{</span>
-  <a href="#Tier">&lt;Tier&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Tiere">Tiere (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Tier">Tier</a></table>
 
 <p>Liste von Tieren.</p>
 
-<h3 id="Tier">Tier</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Art:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;INI:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;AT:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;PA:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TP:</span><a href="#Schaden">Schaden</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;LE:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;RS:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;KO:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;KO:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;GS:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;AU:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;MR:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;LO:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;TK:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;ZK:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<h3 id="Tier">Tier (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Art: <a href="#String">String</a>, INI: <a href="#OptNum">OptNum</a>, AT: <a href="#OptNum">OptNum</a>, PA: <a href="#OptNum">OptNum</a>, TP: <a href="#Schaden">Schaden</a>, LE: <a href="#OptNum">OptNum</a>, RS: <a href="#OptNum">OptNum</a>, KO: <a href="#OptNum">OptNum</a>, KO: <a href="#OptNum">OptNum</a>, GS: <a href="#OptNum">OptNum</a>, AU: <a href="#OptNum">OptNum</a>, MR: <a href="#OptNum">OptNum</a>, LO: <a href="#OptNum">OptNum</a>, TK: <a href="#OptNum">OptNum</a>, ZK: <a href="#OptNum">OptNum</a></td></tr></table>
 
 <p>Werte eines Tiers.</p>
 
-</section><section><h2 id="Mirakel.Liturgiekenntnis">Mirakel.Liturgiekenntnis</h2>
-
-<pre><code><span class="id">Mirakel.Liturgiekenntnis</span> <span class="sym">{</span>
-  <span class="metasym">(opt) </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Mirakel.Liturgiekenntnis">Mirakel.Liturgiekenntnis (<a href="#Row">Row</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Wert: <a href="#OptNum">OptNum</a></td></tr></table>
 
 <p>Liturgiekenntnis.</p>
 
-</section><section><h2 id="Mirakel.Plus">Mirakel.Plus</h2>
-
-<pre><code><span class="id">Mirakel.Plus</span> <span class="sym">{</span>
-  <a href="#String">&lt;String&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Mirakel.Plus">Mirakel.Plus (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
 
 <p>Der Gottheit wohlgefällige Talente</p>
 
-</section><section><h2 id="Mirakel.Minus">Mirakel.Minus</h2>
-
-<pre><code><span class="id">Mirakel.Minus</span> <span class="sym">{</span>
-  <a href="#String">&lt;String&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Mirakel.Minus">Mirakel.Minus (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
 
 <p>Talente, die der Gottheit zuwider sind</p>
 
-</section><section><h2 id="Mirakel.Liturgien">Mirakel.Liturgien</h2>
-
-<pre><code><span class="id">Mirakel.Liturgien</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Liturgie: [ </span><a href="#Segnung">&lt;Segnung&gt;</a><span class="metasym"> | </span><a href="#Liturgie">&lt;Liturgie&gt;</a><span class="metasym"> ]&gt;</span><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Mirakel.Liturgien">Mirakel.Liturgien (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Segnung">Segnung</a>, <a href="#Liturgie">Liturgie</a></table>
 
 <p>Liste von Liturgien.</p>
 
-<h3 id="Segnung">Segnung</h3>
-
-<pre><code><span class="id">Segnung</span> <span class="sym">{</span>
-  <span class="metasym">(opt) </span><span class="metasym">&lt;Seite:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Segnung">Segnung (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Seite: <a href="#OptNum">OptNum</a>, Name: <a href="#String">String</a></td></tr></table>
 
 <p>Eine der zwölf kleinen Segnungen</p>
 
-<h3 id="Liturgie">Liturgie</h3>
-
-<pre><code><span class="id">Liturgie</span> <span class="sym">{</span>
-  <span class="metasym">(opt) </span><span class="metasym">&lt;Seite:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Grade:</span><a href="#Grade">Grade</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Liturgie">Liturgie (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Seite: <a href="#OptNum">OptNum</a>, Name: <a href="#String">String</a>, Grade: <a href="#Grade">Grade</a></td></tr></table>
 
 <p>Eine Liturgie, die keine der zwölf kleinen Segnungen ist.</p>
 
-<h3 id="Grade">Grade</h3>
+<h3 id="Grade">Grade (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#Grad">&lt;Grad&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre>
+<p>Liste von Graden einer Liturgie</p><p>Ein einzelner oder eine Liste von Grad-Werten.</p>
 
-<p>Liste von Graden einer Liturgie</p><p>Ein einzelner oder eine Liste von Grad-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-<h3 id="Grad">Grad</h3>
-
-<pre><code><span class="metasym">[</span><span class="num">0</span><span class="metasym">..</span><span class="num">6</span><span class="metasym">]</span></code></pre>
-
-<p>Der Grad einer Liturgie (0 - VI)</p>
-
-</section><section><h2 id="Magie.Rituale">Magie.Rituale</h2>
-
-<pre><code><span class="id">Magie.Rituale</span> <span class="sym">{</span>
-  <a href="#Ritual">&lt;Ritual&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Magie.Rituale">Magie.Rituale (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Ritual">Ritual</a></table>
 
 <p>Liste von Ritualen.</p>
 
-<h3 id="Ritual">Ritual</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe1:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe2:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Probe3:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Dauer:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Kosten:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wirkung:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Lernkosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<h3 id="Ritual">Ritual (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Probe1: <a href="#BasisEig">BasisEig</a>, Probe2: <a href="#BasisEig">BasisEig</a>, Probe3: <a href="#BasisEig">BasisEig</a>, Dauer: <a href="#OptNum">OptNum</a>, Kosten: <a href="#OptNum">OptNum</a>, Wirkung: <a href="#OptNum">OptNum</a>, Lernkosten: <a href="#Ganzzahl">Ganzzahl</a></td></tr></table>
 
 <p>Ein Ritual.</p>
 
-</section><section><h2 id="Magie.Ritualkenntnis">Magie.Ritualkenntnis</h2>
-
-<pre><code><span class="id">Magie.Ritualkenntnis</span> <span class="sym">{</span>
-  <a href="#Ritualkenntnis">&lt;Ritualkenntnis&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Magie.Ritualkenntnis">Magie.Ritualkenntnis (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Ritualkenntnis">Ritualkenntnis</a></table>
 
 <p>Liste von Ritualkenntnissen.</p>
 
-<h3 id="Ritualkenntnis">Ritualkenntnis</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Steigerung:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Wert:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<h3 id="Ritualkenntnis">Ritualkenntnis (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Steigerung: <a href="#SteigSpalte">SteigSpalte</a>, Wert: <a href="#OptNum">OptNum</a></td></tr></table>
 
 <p>Ein Ritualkenntnis-Wert einer bestimmten Tradition.</p>
 
-</section><section><h2 id="Magie.Regeneration">Magie.Regeneration</h2>
+</section><section><h2 id="Magie.Regeneration">Magie.Regeneration (<a href="#Primitive">Primitive</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>string</td></tr>
+<tr><th>optional</th><td>true</td></tr>
+</table>
 
-<pre><code><span class="id">Magie.Regeneration</span><span class="sym">(</span><span class="metasym">[ </span><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span><span class="metasym"> | &lt;Zahl&gt; ]</span><span class="sym">)</span></code></pre>
+<p>AsP-Regeneration pro Phase.</p>
 
-<p>AsP-Regeneration pro Phase.</p><p>Zahl oder Text (letzter primär, um ein leeres Feld zu bekommen).</p>
+</section><section><h2 id="Magie.Artefakte">Magie.Artefakte (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-</section><section><h2 id="Magie.Artefakte">Magie.Artefakte</h2>
+<p>Artefakte.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<pre><code><span class="id">Magie.Artefakte</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Magie.Notizen">Magie.Notizen (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<p>Artefakte.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+<p>Notizen auf dem Zauberdokument.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-</section><section><h2 id="Magie.Notizen">Magie.Notizen</h2>
-
-<pre><code><span class="id">Magie.Notizen</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
-
-<p>Notizen auf dem Zauberdokument.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-</section><section><h2 id="Magie.Repraesentationen">Magie.Repraesentationen</h2>
-
-<pre><code><span class="id">Magie.Repraesentationen</span> <span class="sym">{</span>
-  <a href="#Repraesentation">&lt;Repraesentation&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Magie.Repraesentationen">Magie.Repraesentationen (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Repraesentation">Repraesentation</a></table>
 
 <p>Liste beherrschter Repräsentationen.</p>
 
-<h3 id="Repraesentation">Repraesentation</h3>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">Ach</span><span class="metasym"> | </span><span class="id">Alh</span><span class="metasym"> | </span><span class="id">Bor</span><span class="metasym"> | </span><span class="id">Dru</span><span class="metasym"> | </span><span class="id">Dra</span><span class="metasym"> | </span><span class="id">Elf</span><span class="metasym"> | </span><span class="id">Fee</span><span class="metasym"> | </span><span class="id">Geo</span><span class="metasym"> | </span><span class="id">Gro</span><span class="metasym"> | </span><span class="id">Gül</span><span class="metasym"> | </span><span class="id">Kob</span><span class="metasym"> | </span><span class="id">Kop</span><span class="metasym"> | </span><span class="id">Hex</span><span class="metasym"> | </span><span class="id">Mag</span><span class="metasym"> | </span><span class="id">Mud</span><span class="metasym"> | </span><span class="id">Nac</span><span class="metasym"> | </span><span class="id">Srl</span><span class="metasym"> | </span><span class="id">Sch</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<h3 id="Repraesentation">Repraesentation (<a href="#Matching">Matching</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>Ach</code>, <code>Alh</code>, <code>Bor</code>, <code>Dru</code>, <code>Dra</code>, <code>Elf</code>, <code>Fee</code>, <code>Geo</code>, <code>Gro</code>, <code>Gül</code>, <code>Kob</code>, <code>Kop</code>, <code>Hex</code>, <code>Mag</code>, <code>Mud</code>, <code>Nac</code>, <code>Srl</code>, <code>Sch</code></td></tr></table>
 
 <p>Name einer Repräsentation.</p>
 
-</section><section><h2 id="Magie.Merkmalskenntnis">Magie.Merkmalskenntnis</h2>
+</section><section><h2 id="Magie.Merkmalskenntnis">Magie.Merkmalskenntnis (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Elementar">Elementar</a>, <em>forbid</em>), (<a href="#Daemonisch">Daemonisch</a>, <em>forbid</em>)</td></tr></table>
 
-<pre><code><span class="id">Magie.Merkmalskenntnis</span> <span class="sym">{</span>
-  <span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Elementar">&lt;Elementar&gt;</a><span class="metasym"> | </span><a href="#Daemonisch">&lt;Daemonisch&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span>
-<span class="sym">}</span></code></pre>
+<p>Liste gelernter Merkmalskenntnisse</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Liste gelernter Merkmalskenntnisse</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-</section><section><h2 id="Magie.Zauber">Magie.Zauber</h2>
-
-<pre><code><span class="id">Magie.Zauber</span> <span class="sym">{</span>
-  <a href="#Zauber">&lt;Zauber&gt;</a><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+</section><section><h2 id="Magie.Zauber">Magie.Zauber (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Zauber">Zauber</a></table>
 
 <p>Liste von gelernten Zaubern.</p>
 
-<h3 id="Zauber">Zauber</h3>
-
-<pre><code><span class="sym">{</span><span class="metasym">(opt) </span><span class="metasym">&lt;Seite:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe1:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe2:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Probe3:</span><a href="#BasisEig">BasisEig</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;ZfW:</span><a href="#Simple">Simple</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Komplexitaet:</span><a href="#SteigSpalte">SteigSpalte</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Merkmale:</span><a href="#Merkmale">Merkmale</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Repraesentation:</span><a href="#Repraesentation">Repraesentation</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Hauszauber:</span><a href="#Boolean">Boolean</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Spezialisierungen:</span><a href="#Spezialisierungen">Spezialisierungen</a><span class="metasym">&gt;</span><span class="sym">}</span></code></pre>
+<h3 id="Zauber">Zauber (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Seite: <a href="#OptNum">OptNum</a>, Name: <a href="#String">String</a>, Probe1: <a href="#BasisEig">BasisEig</a>, Probe2: <a href="#BasisEig">BasisEig</a>, Probe3: <a href="#BasisEig">BasisEig</a>, ZfW: <a href="#OptNum">OptNum</a>, Komplexitaet: <a href="#SteigSpalte">SteigSpalte</a>, Merkmale: <a href="#Merkmale">Merkmale</a>, Repraesentation: <a href="#Repraesentation">Repraesentation</a>, Hauszauber: <a href="#Boolean">Boolean</a>, Spezialisierungen: <a href="#Spezialisierungen">Spezialisierungen</a></td></tr></table>
 
 <p>Ein Zauber.</p>
 
-<h3 id="Merkmale">Merkmale</h3>
+<h3 id="Merkmale">Merkmale (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Elementar">Elementar</a>, <em>forbid</em>), (<a href="#Daemonisch">Daemonisch</a>, <em>forbid</em>)</td></tr></table>
 
-<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> | </span><a href="#Elementar">&lt;Elementar&gt;</a><span class="metasym"> | </span><a href="#Daemonisch">&lt;Daemonisch&gt;</a><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre>
+<p>Liste von Merkmalen eines Zaubers.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Liste von Merkmalen eines Zaubers.</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
+<h3 id="Boolean">Boolean (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>boolean</td></tr>
+<tr><th>optional</th><td>nil</td></tr>
+</table>
 
-</section><section><h2 id="Ereignisse">Ereignisse</h2>
 
-<pre><code><span class="id">Ereignisse</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Ereignis: [ </span><a href="#TaW">&lt;TaW&gt;</a><span class="metasym"> | </span><a href="#ZfW">&lt;ZfW&gt;</a><span class="metasym"> | </span><a href="#Spezialisierung">&lt;Spezialisierung&gt;</a><span class="metasym"> | </span><a href="#ProfaneSF">&lt;ProfaneSF&gt;</a><span class="metasym"> | </span><a href="#NahkampfSF">&lt;NahkampfSF&gt;</a><span class="metasym"> | </span><a href="#FernkampfSF">&lt;FernkampfSF&gt;</a><span class="metasym"> | </span><a href="#WaffenlosSF">&lt;WaffenlosSF&gt;</a><span class="metasym"> | </span><a href="#Eigenschaft">&lt;Eigenschaft&gt;</a><span class="metasym"> | </span><a href="#RkW">&lt;RkW&gt;</a><span class="metasym"> | </span><a href="#LkW">&lt;LkW&gt;</a><span class="metasym"> | </span><a href="#Aktiviere">&lt;Aktiviere&gt;</a><span class="metasym"> | </span><a href="#Zugewinn">&lt;Zugewinn&gt;</a><span class="metasym"> ]&gt;</span><span class="sym">, ...</span>
-<span class="sym">}</span></code></pre>
+
+</section><section><h2 id="Ereignisse">Ereignisse (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#TaW">TaW</a>, <a href="#ZfW">ZfW</a>, <a href="#Spezialisierung">Spezialisierung</a>, <a href="#ProfaneSF">ProfaneSF</a>, <a href="#NahkampfSF">NahkampfSF</a>, <a href="#FernkampfSF">FernkampfSF</a>, <a href="#WaffenlosSF">WaffenlosSF</a>, <a href="#Eigenschaft">Eigenschaft</a>, <a href="#RkW">RkW</a>, <a href="#LkW">LkW</a>, <a href="#Aktiviere">Aktiviere</a>, <a href="#Zugewinn">Zugewinn</a></table>
 
 <p>Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.</p>
 
-<h3 id="TaW">TaW</h3>
-
-<pre><code><span class="id">TaW</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Typ:</span>Any<span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="TaW">TaW (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Zielwert: <a href="#Ganzzahl">Ganzzahl</a>, Methode: <a href="#SteigerMethode">SteigerMethode</a>, Typ: <em>beliebig</em></td></tr></table>
 
 <p>Steigerung eines Talentwerts. Heißen verschiedene Talente gleich, kann der Typ angegeben werden (z.B. Sprache Tuladimya vs Schrift Tulamidya).</p>
 
-<h4 id="SteigerMethode">SteigerMethode</h4>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">SE</span><span class="metasym"> | </span><span class="id">Lehrmeister</span><span class="metasym"> | </span><span class="id">Gegenseitig</span><span class="metasym"> | </span><span class="id">Selbststudium</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<h4 id="SteigerMethode">SteigerMethode (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>SE</code>, <code>Lehrmeister</code>, <code>Gegenseitig</code>, <code>Selbststudium</code></td></tr></table>
 
 <p>Steigerungsmethode</p>
 
-<h3 id="ZfW">ZfW</h3>
-
-<pre><code><span class="id">ZfW</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="ZfW">ZfW (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Zielwert: <a href="#Ganzzahl">Ganzzahl</a>, Methode: <a href="#SteigerMethode">SteigerMethode</a></td></tr></table>
 
 <p>Steigerung eines Zauberfertigkeitwerts</p>
 
-<h3 id="Spezialisierung">Spezialisierung</h3>
-
-<pre><code><span class="id">Spezialisierung</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Fertigkeit:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Spezialisierung">Spezialisierung (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Fertigkeit: <a href="#String">String</a>, Name: <a href="#String">String</a>, Methode: <a href="#SFLernmethode">SFLernmethode</a></td></tr></table>
 
 <p>Erlernen einer Talent- oder Zauberspezialisierung</p>
 
-<h4 id="SFLernmethode">SFLernmethode</h4>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">SE</span><span class="metasym"> | </span><span class="id">Lehrmeister</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<h4 id="SFLernmethode">SFLernmethode (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>SE</code>, <code>Lehrmeister</code></td></tr></table>
 
 <p>Lernmethode für eine Sonderfertigkeit</p>
 
-<h3 id="ProfaneSF">ProfaneSF</h3>
-
-<pre><code><span class="id">ProfaneSF</span> <span class="sym">{</span>
-  <span class="metasym">&lt;SF:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="ProfaneSF">ProfaneSF (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>SF: <em>beliebig</em>, Kosten: <a href="#Ganzzahl">Ganzzahl</a>, Methode: <a href="#SFLernmethode">SFLernmethode</a></td></tr></table>
 
 <p>Erlernen einer Sonderfertigkeit, die nicht Kampf und nicht magisch ist.</p>
 
-<h3 id="NahkampfSF">NahkampfSF</h3>
-
-<pre><code><span class="id">NahkampfSF</span> <span class="sym">{</span>
-  <span class="metasym">&lt;SF:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="NahkampfSF">NahkampfSF (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>SF: <em>beliebig</em>, Kosten: <a href="#Ganzzahl">Ganzzahl</a>, Methode: <a href="#SFLernmethode">SFLernmethode</a></td></tr></table>
 
 <p>Erlernen einer Nahkampf-Sonderfertigkeit.</p>
 
-<h3 id="FernkampfSF">FernkampfSF</h3>
-
-<pre><code><span class="id">FernkampfSF</span> <span class="sym">{</span>
-  <span class="metasym">&lt;SF:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="FernkampfSF">FernkampfSF (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>SF: <em>beliebig</em>, Kosten: <a href="#Ganzzahl">Ganzzahl</a>, Methode: <a href="#SFLernmethode">SFLernmethode</a></td></tr></table>
 
 <p>Erlernen einer Fernkampf-Sonderfertigkeit.</p>
 
-<h3 id="WaffenlosSF">WaffenlosSF</h3>
-
-<pre><code><span class="id">WaffenlosSF</span> <span class="sym">{</span>
-  <span class="metasym">&lt;SF:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Kosten:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SFLernmethode">SFLernmethode</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="WaffenlosSF">WaffenlosSF (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>SF: <em>beliebig</em>, Kosten: <a href="#Ganzzahl">Ganzzahl</a>, Methode: <a href="#SFLernmethode">SFLernmethode</a></td></tr></table>
 
 <p>Erlernen einer Waffenlosen Sonderfertigkeit.</p>
 
-<h3 id="Eigenschaft">Eigenschaft</h3>
-
-<pre><code><span class="id">Eigenschaft</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Eigenschaft:</span><a href="#EigName">EigName</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#EigSteigerMethode">EigSteigerMethode</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Eigenschaft">Eigenschaft (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Eigenschaft: <a href="#EigName">EigName</a>, Zielwert: <a href="#Ganzzahl">Ganzzahl</a>, Methode: <a href="#EigSteigerMethode">EigSteigerMethode</a></td></tr></table>
 
 <p>Steigern einer Basis-Eigenschaft oder Zukauf von Punkten zu einer abgeleiteten Eigenschaft.</p>
 
-<h4 id="EigSteigerMethode">EigSteigerMethode</h4>
-
-<pre><code><span class="sym">"</span><span class="metasym">[ </span><span class="id">SE</span><span class="metasym"> | </span><span class="id">Standard</span><span class="metasym"> ]</span><span class="sym">"</span></code></pre>
+<h4 id="EigSteigerMethode">EigSteigerMethode (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>SE</code>, <code>Standard</code></td></tr></table>
 
 <p>Steigerungsmethode für Eigenschaften</p>
 
-<h3 id="RkW">RkW</h3>
-
-<pre><code><span class="id">RkW</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Name:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="RkW">RkW (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Name: <a href="#String">String</a>, Zielwert: <a href="#Ganzzahl">Ganzzahl</a>, Methode: <a href="#SteigerMethode">SteigerMethode</a></td></tr></table>
 
 <p>Steigerung eines Ritualkenntniswerts.</p>
 
-<h3 id="LkW">LkW</h3>
-
-<pre><code><span class="id">LkW</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Zielwert:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="LkW">LkW (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Zielwert: <a href="#Ganzzahl">Ganzzahl</a>, Methode: <a href="#SteigerMethode">SteigerMethode</a></td></tr></table>
 
 <p>Steigerung des Liturgiekenntniswerts.</p>
 
-<h3 id="Aktiviere">Aktiviere</h3>
-
-<pre><code><span class="id">Aktiviere</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Subjekt:</span>Any<span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Methode:</span><a href="#SteigerMethode">SteigerMethode</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Sortierung:</span><a href="#Sortiere">Sortiere</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Talentgruppe:</span><a href="#String">String</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Aktiviere">Aktiviere (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Subjekt: <em>beliebig</em>, Methode: <a href="#SteigerMethode">SteigerMethode</a>, Sortierung: <a href="#Sortiere">Sortiere</a>, Talentgruppe: <a href="#String">String</a></td></tr></table>
 
 <p>Aktiviert ein Talent, einen Zauber, eine Liturgie oder ein Ritual. Ist der gegebene Wert des Talents oder des Zaubers größer 0, wird anschließend eine Steigerung durchgeführt. Für Gesellschafts-, Natur-, Wissens- und Handwerkstalente muss die Talentgruppe angegeben werden; in allen anderen Fällen wird sie ignoriert.</p>
 
-<h4 id="Sortiere">Sortiere</h4>
+<h4 id="Sortiere">Sortiere (<a href="#Multivalue">Multivalue</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<pre><code><span class="sym">{</span><span class="metasym">[ </span><a href="#String">&lt;String&gt;</a><span class="metasym"> | </span><span class="sym">{}</span><span class="metasym"> ]</span><span class="sym">, </span><span class="metasym">...</span><span class="sym">}</span></code></pre>
+<p>Definiert, wie eine neu aktivierte Fähigkeit (Talent, Zauber, …) in die bestehende Liste einsortiert wird. Ein leerer Wert sortiert am Ende der Liste ein, ansonsten wird zuerst nach der Spalte, die vom ersten Wert gegeben wird, sortiert, dann nach der vom zweiten Wert etc. Wenn in der Liste der erste Wert ein leerer String ist, dann wird das Talent in der letzten Gruppe gleichartiger Talente einsortiert (um z.B. Sprachen von Schriften zu trennen).</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-<p>Definiert, wie eine neu aktivierte Fähigkeit (Talent, Zauber, …) in die bestehende Liste einsortiert wird. Ein leerer Wert sortiert am Ende der Liste ein, ansonsten wird zuerst nach der Spalte, die vom ersten Wert gegeben wird, sortiert, dann nach der vom zweiten Wert etc. Wenn in der Liste der erste Wert ein leerer String ist, dann wird das Talent in der letzten Gruppe gleichartiger Talente einsortiert (um z.B. Sprachen von Schriften zu trennen).</p><p>Ein einzelner oder eine Liste von String-Werten. Die Liste darf `{}` enthalten, die zu Zeilenumbrüchen werden.</p>
-
-<h3 id="Zugewinn">Zugewinn</h3>
-
-<pre><code><span class="id">Zugewinn</span> <span class="sym">{</span>
-  <span class="metasym">&lt;Text:</span><a href="#String">String</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">&lt;AP:</span><a href="#Ganzzahl">Ganzzahl</a><span class="metasym">&gt;</span><span class="sym">, </span><span class="metasym">(opt) </span><span class="metasym">&lt;Fett:</span><a href="#Boolean">Boolean</a><span class="metasym">&gt;</span>
-<span class="sym">}</span></code></pre>
+<h3 id="Zugewinn">Zugewinn (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td>Text: <a href="#String">String</a>, AP: <a href="#Ganzzahl">Ganzzahl</a>, Fett: <a href="#Boolean">Boolean</a></td></tr></table>
 
 <p>Zugewinn von AP. Kann als Überschrift (fett) formatiert werden.</p>
 
-</section></article>  </body>
+</section>    </article>
+  </body>
 </html>

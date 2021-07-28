@@ -531,7 +531,7 @@
     <sf name="Vielfache Ladungen" art="magisch"/>
     <sf name="Würgegriff" art="waffenlos"/>
     <sf name="Waffe zerbrechen" art="nahkampf"/>
-    <sf name="Waffenloser Kampfstil" art="waffenlos" named="1" id="Kampfstile" boni="1"/>
+    <sf name="Waffenloser Kampfstil" art="waffenlos" named="1" id="Kampfstil" boni="1"/>
     <sf name="Waffenmeister" art="nahkampf"/>
     <sf name="Windmühle" art="nahkampf"/>
     <sf name="Wuchtschlag" art="nahkampf"/>

@@ -35,14 +35,18 @@ if gendoc then
 <html lang="de" style="background-color: darkslategray;">
   <head>
     <title>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</title>
-    <link rel="stylesheet" href="code.css"/>
+    <link rel="stylesheet" href="style.css"/>
   </head>
   <body>
+    <article class="doc">
+      <h1>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</h1>
 ]])
   end
+  d:typeclass_docs()
   d:gendocs()
   if standalone then
     io.write([[
+    </article>
   </body>
 </html>]])
   end
