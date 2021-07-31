@@ -168,21 +168,21 @@ function gruppe.spec(self, name)
     return "Sonderfertigkeiten (außer Kampf)", nil, 1, 0, 1, "", ""
   elseif name == "Kampf" then
     return "Kampftechniken", nil, 3, 4.542, 7,
-        [[|x{0.4cm}|x{1cm}|x{0.65cm}@{\dotsep}x{0.65cm}|y{0.55cm}@{\hskip 0.1cm}]],
+        [[Ix{0.4cm}Ix{1cm}Ix{0.65cm}@{\dotsep}x{0.65cm}Iy{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{BE} & \Th{AT} & \Th{PA} & \multicolumn{1}{c}{\Th{TaW}}]]
   elseif name == "SprachenUndSchriften" then
     return "Sprachen & Schriften", nil, 3, 6.245, 5,
-        [[|x{0.4cm}|x{0.9cm}|y{0.55cm}@{\hskip 0.1cm}]],
+        [[Ix{0.4cm}Ix{0.9cm}Iy{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{Komp} & \multicolumn{1}{c}{\Th{TaW}}]]
   end
   local spalte = data:tgruppe_schwierigkeit(name)
   if name == "Koerper" then
     return "Körperliche Talente", spalte, 5, 4.6, 7,
-        [[|x{0.55cm}@{\dotsep}x{0.55cm}@{\dotsep}x{0.55cm}|x{1.0cm}|y{0.55cm}@{\hskip 0.1cm}]],
+        [[Ix{0.55cm}@{\dotsep}x{0.55cm}@{\dotsep}x{0.55cm}Ix{1.0cm}Iy{0.55cm}@{\hskip 0.1cm}]],
         [[& \Th{BE} & \multicolumn{1}{c}{\Th{TaW}}]]
   else
     return self.labels[name], spalte, 5, 5.92, 6,
-        [[|x{0.5cm}@{\dotsep}x{0.5cm}@{\dotsep}x{0.5cm}|y{0.55cm}@{\hskip 0.1cm}]],
+        [[Ix{0.5cm}@{\dotsep}x{0.5cm}@{\dotsep}x{0.5cm}Iy{0.55cm}@{\hskip 0.1cm}]],
         [[& \multicolumn{1}{c}{\Th{TaW}}]]
   end
 end
@@ -196,7 +196,7 @@ function gruppe.render(self, g, start_white)
 
   local label, spalte, title_col_len, item_name_len, num_items, col_spec, headers = self:spec(name)
 
-  tex.sprint([[\begin{NiceTabular}{p{0.2cm}|p{]])
+  tex.sprint([[\begin{NiceTabular}{p{0.2cm}Ip{]])
   tex.sprint(item_name_len .. "cm")
   tex.sprint("}")
   tex.sprint(col_spec)

@@ -75,6 +75,7 @@
 \usepackage{nicematrix}
 \newcolumntype{x}[1]{>{\centering\arraybackslash\hspace{0pt}}p{#1}}
 \newcolumntype{y}[1]{>{\raggedleft\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{I}{!{\vrule}}
 
 % graphics
 

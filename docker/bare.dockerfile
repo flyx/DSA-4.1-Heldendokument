@@ -23,8 +23,8 @@ WORKDIR /tmp
 RUN apt install -y curl && \
     curl -L https://github.com/probonopd/font-newg8/releases/download/continuous/newg8-otf.zip -O && \
     curl -L https://www.fontsquirrel.com/fonts/download/copse -o copse.zip && \
-    curl -L https://mirrors.ctan.org/fonts/fontawesome5.zip -O && \
-    curl -L https://mirrors.ctan.org/macros/latex/contrib/nicematrix.zip -O && \
+    curl -L http://mirrors.ctan.org/fonts/fontawesome5.zip -O && \
+    curl -L http://mirrors.ctan.org/macros/latex/contrib/nicematrix.zip -O && \
     curl -L -s -o wds.pdf http://www.ulisses-spiele.de/download/468/ && \
     curl -L http://www.ulisses-spiele.de/download/889/ -o fanpaket.zip && \
     apt remove -y --purge curl && \
