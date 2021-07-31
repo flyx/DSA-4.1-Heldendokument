@@ -728,7 +728,11 @@ function values:eig_steigerung(e)
   local target = self.eig[e.Eigenschaft]
   event[1] = event[1] .. e.Eigenschaft .. ", " .. e.Methode .. ") von " .. tostring(target[index]) .. " auf " .. tostring(e.Zielwert)
   while target[index] < e.Zielwert do
-    target[index] = target[index] + 1
+    local cur = target[index]
+    target[index] = cur + 1
+    if target[index] == cur then
+      tex.error("Fehler: kann Wert nicht steigern, aktuell " .. tostring(cur) .. "(" .. type(cur) .. ") [" .. event[1] .. "]")
+    end
     ap = ap + skt:kosten(skt.spalte:name(spalte), target[index])
   end
   event[2] = -1 * ap

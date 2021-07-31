@@ -26,7 +26,7 @@ function d.context:pop()
 end
 
 local doc_printer = {
-  levels = {},
+  levels = 0,
   refs = {},
   known = {},
 }
@@ -75,44 +75,69 @@ function doc_printer:meta(s)
   io.write([[<span class="metasym">]] .. s .. [[</span>]])
 end
 
-function doc_printer:choice(...)
-  self:meta("[ ")
-  for i, v in ipairs({...}) do
-    if i > 1 then
-      self:meta(" | ")
-    end
-    self:id(v)
-  end
-  self:meta(" ]")
-end
-
 function doc_printer:num(n)
   io.write([[<span class="num">]] .. tostring(n) .. [[</span>]])
 end
 
 function doc_printer:nl()
   io.write("\n")
-  io.write(string.rep("  ", #self.levels))
+  io.write(string.rep("  ", self.levels))
 end
 
-function doc_printer:open(name)
-  table.insert(self.levels, {named = (name ~= nil)})
-  if name ~= nil then
-    self:id(name)
+function doc_printer:repr(input, indents, named)
+  local mt = getmetatable(input)
+  if named then
+    self:id(mt.name)
     io.write(" ")
-    self:sym("{")
-    self:nl()
+  end
+  local val = input
+  if mt ~= nil and mt ~= string_metatable then
+    val = val:get()
+  end
+  local t = type(val)
+  if t == "string" then
+    self:sym('"')
+    io.write(val)
+    self:sym('"')
+  elseif t == "number" then
+    self:num(val)
+  elseif t == "boolean" or t == "nil" then
+    self:sym(tostring(val))
   else
     self:sym("{")
+    if indents > 0 then
+      self.levels = self.levels + 1
+    end
+    local first = true
+    for i, v in ipairs(val) do
+      local named = false
+      local mmt = getmetatable(mt)
+      if mmt == d.List then
+        named = #self.items > 1
+      elseif mmt == d.Multivalue then
+        named = getmetatable(v) ~= self.inner
+      end
+      if first then first = false else self:sym(", ") end
+      if indents > 0 then self:nl() end
+      self:repr(v, indents - 1, named)
+    end
+    for k,v in pairs(val) do
+      if type(k) ~= "number" then
+        if first then first = false else self:sym(", ") end
+        if indents > 0 then self:nl() end
+        self:id(k)
+        self:sym(" = ")
+        self:repr(v, indents - 1, false)
+      end
+    end
+    if indents > 0 then
+      self.levels = self.levels - 1
+      if not first then
+        self:nl()
+      end
+    end
+    self:sym("}")
   end
-end
-
-function doc_printer:close()
-  local lvl = table.remove(self.levels)
-  if lvl.named then
-    self:nl()
-  end
-  self:sym("}")
 end
 
 function doc_printer:h(depth, id, label)
@@ -392,7 +417,7 @@ function TypeClass:get()
 end
 
 --  Called on a type to generate the HTML documentation
-function TypeClass:print_documentation(printer, depth, named)
+function TypeClass:print_documentation(printer, depth)
   printer.known[self] = true
   local proto = "UNKNOWN"
   local mt = getmetatable(self)
@@ -692,16 +717,19 @@ end
 function d.Row:setfield(key, value)
   local mt = getmetatable(self)
   local fields = rawget(mt, "fields")
-  local svalue = rawget(self, "value")
   if type(key) == "string" then
     for i, f in ipairs(fields) do
       if f[1] == key then
-        svalue[i]:set(value)
+        self.value[i]:set(value)
         return
       end
     end
-  elseif type(key) == "number" and key < #svalue then
-    svalue[key]:set(value)
+  elseif type(key) == "number" then
+    if key >= 1 and key <= #self.value then
+      self.value[key]:set(value)
+    else
+      self:err("index " .. tostring(key) .. " not in interval [0.." .. tostring(#self.value) .. "]")
+    end
     return
   end
   self:err("cannot set key: " .. key)
@@ -710,16 +738,23 @@ end
 function d.Row:proto_param_values(printer)
   io.write("<tr><th>items</th><td>")
   for i,v in ipairs(self.fields) do
-    if i > 1 then
-      io.write(", ")
-    end
+    io.write([[<ul class="rowitem"><li>]])
     io.write(v[1])
-    io.write(": ")
+    io.write("</li><li>")
     if v[2] == nil then
       io.write("<em>beliebig</em>")
     else
       printer:ref(v[2])
     end
+    io.write("</li><li>")
+    if v[3] == nil then
+      io.write("<em>kein default</em>")
+    else
+      io.write("<code>")
+      printer:repr(v[3], 0, false)
+      io.write("</code>")
+    end
+    io.write("</ul>")
   end
   io.write("</td></tr>")
 end
@@ -1264,9 +1299,7 @@ function d:gendocs()
     io.write(t.name)
     io.write([[</a>]])
     if t.name == "Magie.Regeneration" then
-      doc_printer:sym("(")
-      doc_printer:meta("...")
-      doc_printer:sym(")")
+      doc_printer:meta(" ...")
     else
       doc_printer:sym(" {")
       doc_printer:meta("...")
@@ -1282,7 +1315,7 @@ function d:gendocs()
   ]])
   for _, t in ipairs(self.typelist) do
     io.write([[</section><section>]])
-    t:print_documentation(doc_printer, 0, true)
+    t:print_documentation(doc_printer, 0)
     local refs = {}
     while true do
       if #doc_printer.refs > 0 then
