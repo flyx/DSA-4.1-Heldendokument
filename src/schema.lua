@@ -402,8 +402,8 @@ end
 local Repraesentation = d.Matching:def({name = "Repraesentation", description = "Name einer Repräsentation."}, "Ach", "Alh", "Bor", "Dru", "Dra", "Elf", "Fee", "Geo", "Gro", "Gül", "Kob", "Kop", "Hex", "Mag", "Mud", "Nac", "Srl", "Sch")
 local Ritual = d.Row:def({name = "Ritual", description = "Ein Ritual."},
   {"Name", String}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""},
-  {"Probe3", BasisEig, ""}, {"Dauer", OptNum, {}}, {"Kosten", OptNum, {}},
-  {"Wirkung", OptNum, {}}, {"Lernkosten", Ganzzahl, 0})
+  {"Probe3", BasisEig, ""}, {"Dauer", String, {}}, {"Kosten", String, {}},
+  {"Wirkung", String, {}}, {"Lernkosten", Ganzzahl, 0})
 local Ritualkenntnis = d.Row:def({name = "Ritualkenntnis", description = "Ein Ritualkenntnis-Wert einer bestimmten Tradition."},
   {"Name", String}, {"Steigerung", SteigSpalte, "E"}, {"Wert", OptNum, {}})
 local Zauber = d.Row:def({name = "Zauber", description = "Ein Zauber."},
