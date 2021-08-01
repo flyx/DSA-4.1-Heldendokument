@@ -699,6 +699,20 @@ SF.Magisch {
     </func:result>
   </func:function>
 
+  <func:function name="dsa:leiteigenschaft">
+    <xsl:variable name="ritk" select="substring-after(//sonderfertigkeit[starts-with(@name, 'Ritualkenntnis: ')]/@name, 'Ritualkenntnis: ')"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$ritk = 'Kristallomant' or $ritk = 'Derwisch' or $ritk = 'Durro-Dûn' or $ritk = 'Elf' or $ritk = 'Ferkina' or $ritk = 'Geode' or $ritk = 'Hexe' or $ritk = 'Schamane' or $ritk = 'Schelm' or $ritk = 'Zaubertänzer'">
+          <xsl:text>IN</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>KL</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+
   <xsl:template match="sonderfertigkeit">
     <xsl:param name="art" select="''"/>
     <xsl:variable name="kind" select="dsa:sfKind()"/>
@@ -745,8 +759,7 @@ SF.Magisch {
     <xsl:if test="not($def/@boni) and not(./preceding-sibling::sonderfertigkeit[starts-with(@name, $name)]) and ((not($def/@art) and $art = '') or ($art = $def/@art))">
       <xsl:choose>
         <xsl:when test="$def/@leit">
-          <!-- TODO: Leiteigenschaft herausfinden -->
-          <xsl:value-of select="concat($def/@id, '(&quot;KL&quot;), ')"/>
+          <xsl:value-of select="concat($def/@id, '(', dsa:stringVal(dsa:leiteigenschaft()), '), ')"/>
         </xsl:when>
         <xsl:when test="$kind = 'roman'">
           <xsl:choose>
