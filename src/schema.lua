@@ -97,6 +97,27 @@ function schema.Layout:documentation(printer)
 Für die einzelnen Seiten können weitere Spezifikationen vorgenommen werden, dies ist bei den Typen der
 einzelnen Seiten beschrieben.]])
 end
+function schema.Layout.example(printer)
+  printer:highlight([[Layout {
+  Front {},
+  Talentliste {
+    Sonderfertigkeiten(6),
+    Gaben(2),
+    Kampf(13),
+    Koerper(17),
+    Gesellschaft(9),
+    Natur(7),
+    Wissen(17),
+    SprachenUndSchriften(10),
+    Handwerk(15)
+  },
+  Kampfbogen {},
+  Ausruestungsbogen {},
+  Liturgiebogen {},
+  Zauberdokument {},
+  Zauberliste {}
+}]])
+end
 
 d:singleton(d.Record, {name = "Held", description = [[Grundlegende Daten des Helden.]]},
   {"Name", String, ""},
@@ -114,6 +135,27 @@ d:singleton(d.Record, {name = "Held", description = [[Grundlegende Daten des Hel
   {"Sozialstatus", OptNum, {}},
   {"Titel", Multiline, ""},
   {"Aussehen", Multiline, ""})
+function schema.Held.example(printer)
+  printer:highlight([[Held {
+  Name         = "Fette Alrike",
+  GP           = 110,
+  Rasse        = "Mittelländerin",
+  Kultur       = "Mittelländische Landbevölkerung",
+  Profession   = "Söldnerin",
+  Geschlecht   = "weiblich",
+  Tsatag       = "3. Rondra 1020 BF",
+  Groesse      = "1,78 Schritt",
+  Gewicht      = "78 Stein",
+  Haarfarbe    = "braun",
+  Augenfarbe   = "grün",
+  Sozialstatus = 4,
+  -- Aussehen ist eine mehrzeilige Box. Grundsätzlich wird Text darin
+  -- automatisch umgebrochen, mit {} kann ein Zeilenumbruch an einer bestimmten
+  -- Stelle forciert werden.
+  Aussehen     = {"Narbe an der rechten Wange", {}, "kurz geschnittene Haare"}
+  -- Stand und Titel sind nicht gegeben und erhalten daher ihren default-Wert.
+}]])
+end
 
 local Talentgruppe = d.Matching:def({name = "Talentgruppe", description = "Eine der existierenden Talentgruppen"}, "Kampf", "Nahkampf", "Fernkampf", "Koerper", "Gesellschaft", "Natur", "Wissen", "SprachenUndSchriften", "Handwerk")
 
@@ -135,10 +177,18 @@ d:singleton(d.Multivalue, {name = "Vorteile", description = "Liste von nicht-mag
   Flink = d.Primitive:def({name = "Flink", description = "Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen."}, "number", false, 0, 1, 2),
   GutesGedaechtnis = "Gutes Gedächtnis",
 })
+function schema.Vorteile.example(printer)
+  printer:highlight([[Vorteile {
+  "Balance", BegabungFuerTalentgruppe {"Nahkampf"}, "Eisern", Flink(1), "Verbindungen 5"
+}]])
+end
 
 schema.Vorteile.Magisch = d:singleton(d.Multivalue, {name = "Vorteile.Magisch", description = "Liste von magischen Vorteilen."}, String, {
   -- TODO: Astrale Regeneration
   Eigeboren = "Eigeboren",
+  Viertelzauberer = "Viertelzauberer",
+  Halbzauberer = "Halbzauberer",
+  Vollzauberer = "Vollzauberer",
   BegabungFuerMerkmal = d.Multivalue:def({name = "BegabungFuerMerkmal", description = "Begabung für ein oder mehrere Merkmale.", label = "Begabung für Merkmal"}, String, {
     Elementar = Elementar,
     Daemonisch = Daemonisch
@@ -147,6 +197,12 @@ schema.Vorteile.Magisch = d:singleton(d.Multivalue, {name = "Vorteile.Magisch", 
   BegabungFuerZauber = d.List:def({name = "BegabungFuerZauber", description = "Begabung für einen oder mehrere Zauber", label = "Begabung für Zauber"}, {String}),
   Meisterhandwerk = d.List:def({name = "Meisterhandwerk", description = "Liste von Talenten, für die ein Meisterhandwerk existiert."}, {String}),
 }) {}
+function schema.Vorteile.Magisch.example(printer)
+  printer:highlight([[Vorteile.Magisch {
+  BegabungFuerMerkmal {"Antimagie", Elementar {"Eis"}},
+  Meisterhandwerk {"Alchimie"}, "Feste Matrix", "Vollzauberer"
+}]])
+end
 
 d:singleton(d.Multivalue, {name = "Nachteile", description = "Liste von nicht-magischen Nachteilen"}, String, {
   Glasknochen = "Glasknochen",
@@ -157,6 +213,11 @@ d:singleton(d.Multivalue, {name = "Nachteile", description = "Liste von nicht-ma
   UnfaehigkeitFuerTalent = d.List:def({name = "UnfaehigkeitFuerTalent", description = "Unfähigkeit für ein oder mehrere bestimmte Talente", label = "Unfähigkeit für Talent"}, {String}),
   Unstet = "Unstet",
 })
+function schema.Nachteile.example(printer)
+  printer:highlight([[Nachteile {
+  "Impulsiv", "Zwergenwuchs", UnfaehigkeitFuerTalent {"Schwimmen"}
+}]])
+end
 
 schema.Nachteile.Magisch = d:singleton(d.Multivalue, {name = "Nachteile.Magisch", description = "Liste von magischen Nachteilen."}, String, {
   -- TODO: Schwache Ausstrahlung
@@ -165,9 +226,14 @@ schema.Nachteile.Magisch = d:singleton(d.Multivalue, {name = "Nachteile.Magisch"
     Daemonisch = Daemonisch
   }),
 }) {}
+function schema.Nachteile.Magisch.example(printer)
+  printer:highlight([[Nachteile.Magisch {
+  "Körpergebundene Kraft", UnfaehigkeitFuerMerkmal {Daemonisch {"gesamt"}},
+  "Lästige Mindergeister"
+}]])
+end
 
 local Ganzzahl = d.Primitive:def({name = "Ganzzahl", description = "Eine Zahl in Dezimalschreibweise."}, "number", false, 0)
-
 
 local BasisEig = d.Row:def({name = "BasisEig", description = "Eine Basiseigenschaft mit Modifikator, Startwert und aktuellem Wert."},
   {"Mod", Ganzzahl}, {"Start", Ganzzahl}, {"Aktuell", Ganzzahl})
@@ -189,11 +255,35 @@ d:singleton(d.Record, {name = "Eigenschaften", description = "Liste von Basis- u
   {"MR", AbgeleiteteEig, {0, 0, 0}},
   {"KE", AbgeleiteteEig, {0, 0, 0}},
   {"INI", Ganzzahl, 0})
+function schema.Eigenschaften.example(printer)
+  printer:highlight([[Eigenschaften {
+  MU = {1, 15, 17},
+  KL = {0, 11, 12},
+  IN = {0, 13, 16},
+  CH = {0, 14, 14},
+  FF = {0, 8, 8},
+  GE = {0, 12, 12},
+  KO = {1, 15, 17},
+  KK = {1, 15, 18},
+  -- GS wird automatisch berechnet.
+  -- ab hier werden Mod, zugekaufte, und permanent verlorene Punkte angegeben.
+  LE = {13, 1, 0},
+  AU = {14, 0, 0},
+  AE = {0, 0, 0},
+  MR = {-5, 1, 0},
+  KE = {24, 0, 0},
+  -- INI hat nur einen Modifikator.
+  INI = 0,
+}]])
+end
 
 d:singleton(d.Record, {name = "AP", description = "Abenteuerpunkte."},
   {"Gesamt", OptNum, {}},
   {"Eingesetzt", OptNum, {}},
   {"Guthaben", OptNum, {}})
+function schema.AP.example(printer)
+  printer:highlight([[AP {500, 458, 42}]])
+end
 
 local SteigSpalte = d.Matching:def({name = "SteigSpalte", description = "Eine Steigerungsspalte."}, "A%*?", "B", "C", "D", "E", "F", "G", "H")
 local Behinderung = d.Matching:def({name = "Behinderung", description = "Behinderung."}, "%-", "BE", "BE%-[1-9]", "BEx[2-9]")
@@ -273,11 +363,85 @@ schema.Talente = {
     {"Schneidern",       "KL", "FF", "FF"},
   },
 }
+function schema.Talente.Begabungen.example(printer)
+  printer:highlight([[Talente.Begabungen {
+  {"Axxeleratus Blitzgeschwind", "KL", "GE", "KO", 6}
+}]])
+end
+function schema.Talente.Gaben.example(printer)
+  printer:highlight([[Talente.Gaben {
+  {"Prophezeien", "IN", "IN", "CH", 7}
+}]])
+end
+function schema.Talente.Kampf.example(printer)
+  printer:highlight([[Talente.Kampf {
+  Fern {"Bogen", "E", "BE-3", 17, Spezialisierungen = {"Kurzbogen", "Langbogen"}},
+  Nah {"Dolche", "D", "BE-1", 8, 5, 13},
+  NahAT {"Lanzenreiten", "E", "", 4},
+  Nah {"Raufen", "C", "BE", 6, 4, 10},
+  Nah {"Ringen", "D", "BE", 6, 4, 10},
+}]])
+end
+function schema.Talente.Koerper.example(printer)
+  printer:highlight([[Talente.Koerper {
+  {"Athletik", "GE", "KO", "KK", "BEx2", 5},
+  {"Klettern", "MU", "GE", "KK", "BEx2", 4},
+  {"Schleichen", "MU", "IN", "GE", "BE", 9, Spezialisierungen = {"Gebäude"}},
+  {"Sinnenschärfe", "KL", "IN", "IN", "", 12},
+}]])
+end
+function schema.Talente.Gesellschaft.example(printer)
+  printer:highlight([[Talente.Gesellschaft {
+  {"Lehren", "KL", "IN", "CH", 7},
+  {"Menschenkenntnis", "KL", "IN", "CH", 11},
+  {"Überreden", "MU", "IN", "CH", 9},
+}]])
+end
+function schema.Talente.Natur.example(printer)
+  printer:highlight([[Talente.Natur {
+  {"Orientierung", "KL", "IN", "IN", 3},
+  {"Wildnisleben", "IN", "GE", "KO", 2},
+}]])
+end
+function schema.Talente.Wissen.example(printer)
+  printer:highlight([[Talente.Wissen {
+  {"Anatomie", "MU", "KL", "FF", 10},
+  {"Baukunst", "KL", "KL", "FF", 4},
+  {"Götter / Kulte", "KL", "KL", "IN", 10},
+}]])
+end
+function schema.Talente.SprachenUndSchriften.example(printer)
+  printer:highlight([[Talente.SprachenUndSchriften {
+  -- Die Muttersprache gibt andere Sprachen und Schriften derselben Sprachfamilie an.
+  -- Daraus berechnen sich die Steigerungsschwierigkeiten; sind die Sprachen/Schriften
+  -- dem Helden bekannt, müssen sie unten separat aufgelistet werden.
+  Muttersprache {"Garethi", 18, 8, Dialekt = {"Horathi"},
+    Sprachfamilie  = {"Bosparano", "Aureliani", "Zyklopäisch"},
+    Schriftfamilie = {"Kusliker Zeichen", "Imperiale Zeichen"}
+  },
+  Zweitsprache {"Tulamidya", 18, 6},
+  Sprache {"Atak", 12, 4},
+  Sprache {"Oloarkh", 10, 4},
+  Schrift {"Kusliker Zeichen", "A", 10, 6},
+}]])
+end
+function schema.Talente.Handwerk.example(printer)
+  printer:highlight([[Talente.Handwerk {
+  {"Holzbearbeitung", "KL", "FF", "KK", 12},
+  {"Kochen", "KL", "IN", "FF", 0},
+  {"Lederarbeiten", "KL", "FF", "FF", 1},
+}]])
+end
 
 d:singleton(d.Multivalue, {name = "SF", description = "Sonderfertigkeiten (außer Kampf & magischen)"}, String, {
   Kulturkunde = d.Multivalue:def({name = "Kulturkunde", description = "Liste von Kulturen, für die Kulturkunde besteht."}, String),
   Ortskenntnis = d.Multivalue:def({name = "Ortskenntnis", description = "Liste von Orten, für die Ortskenntnis besteht."}, String),
 })
+function schema.SF.example(printer)
+  printer:highlight([[SF {
+  "Eiskundig", Kulturkunde {"Horasreich"}, "Nandusgefälliges Wissen",
+}]])
+end
 
 schema.SF.Nahkampf = d:singleton(d.Multivalue, {name = "SF.Nahkampf", description = "Liste von Nahkampf-Sonderfertigkeiten."}, String, {
   Ausweichen = d.Numbered:def({name = "Ausweichen", description = "Die SF Ausweichen, unterteilt in I, II und III.", skip = true}, 3),
@@ -288,12 +452,23 @@ schema.SF.Nahkampf = d:singleton(d.Multivalue, {name = "SF.Nahkampf", descriptio
   Ruestungsgewoehnung = d.Numbered:def({name = "Ruestungsgewoehnung", description = "Die SF Rüstungsgewöhnung, unterteilt in I, II und III.", label = "Rüstungsgewöhnung", skip = true}, 3),
   Schildkampf = d.Numbered:def({name = "Schildkampf", description = "Die SF Schildkampf, unterteilt in I und II.", skip = true}, 2)
 }) {}
+function schema.SF.Nahkampf.example(printer)
+  printer:highlight([[SF.Nahkampf {
+  "Aufmerksamkeit", Ausweichen {I, II}, "Kampfreflexe", "Wuchtschlag"
+}]])
+end
 
 schema.SF.Fernkampf = d:singleton(d.Multivalue, {name = "SF.Fernkampf", description = "Liste von Fernkampf-Sonderfertigkeiten."}, String, {
+  Geschuetzmeister = "Geschützmeister",
   Scharfschuetze = d.Multivalue:def({name = "Scharfschuetze", description = "Liste von Talenten, für die Scharfschütze gilt.", label = "Scharfschütze"}, String),
   Meisterschuetze = d.Multivalue:def({name = "Meisterschuetze", description = "Liste von Talenten, für die Meisterschütze gilt.", label = "Meisterschütze"}, String),
   Schnellladen = d.Multivalue:def({name = "Schnellladen", description = "Liste von Talenten, für die Schnellladen gilt."}, String),
 }) {}
+function schema.SF.Fernkampf.example(printer)
+  printer:highlight([[SF.Fernkampf {
+  "Geschützmeister", Schnellladen {"Bogen"}
+}]])
+end
 
 local WaffenlosesKampftalent = d.Matching:def({name = "WaffenlosesKampftalent", description = "Raufen oder Ringen"}, "Raufen", "Ringen")
 
@@ -307,10 +482,20 @@ end
 schema.SF.Waffenlos = d:singleton(d.Multivalue, {name = "SF.Waffenlos", description = "Listen waffenloser Sonderfertigkeiten."}, String, {
   Kampfstil = {Kampfstil, d.multi.allow}
 }) {}
+function schema.SF.Waffenlos.example(printer)
+  printer:highlight([[SF.Waffenlos {
+  Kampfstil {"Bornländisch", "Ringen"}, "Auspendeln", "Biss", "Block"
+}]])
+end
 
 schema.SF.Magisch = d:singleton(d.Multivalue, {name = "SF.Magisch", description = "Liste magischer Sonderfertigkeiten"}, String, {
   GefaessDerSterne = "Gefäß der Sterne"
 }) {}
+function schema.SF.Magisch.example(printer)
+  printer:highlight([[SF.Magisch {
+  "Gefäß der Sterne", "Simultanzaubern", "Zauberroutine"
+}]])
+end
 
 schema.I = 1
 schema.II = 2
@@ -348,13 +533,57 @@ schema.Waffen = {
   SchildeUndParierwaffen = d:singleton(d.List, {name = "Waffen.SchildeUndParierwaffen", description = "Liste von Schilden und Parierwaffen.", item_name = "Eintrag"}, {Schild, Parierwaffe}) {},
   Ruestung = d:singleton(d.List, {name = "Waffen.Ruestung", description = "Liste von Rüstungsteilen."}, {Ruestungsteil}) {},
 }
+function schema.Waffen.Nahkampf.example(printer)
+  printer:highlight([[Waffen.Nahkampf {
+  {"Kurzschwert", "Dolche", "HN", "1W+2", 11, 4, 0, 0, -1, 1},
+  -- Steht nicht die Art der Waffe sondern ihr Name vornan, muss die Art extra angegeben werden,
+  -- damit etwaige Talentspezialisierungen mit eingerechnet werden können.
+  {"Stich", "Dolche", "H", "1W+2", 12, 5, 0, 0, -1, 1, Art="Borndorn"},
+}]])
+end
+function schema.Waffen.Fernkampf.example(printer)
+  printer:highlight([[Waffen.Fernkampf {
+  {"Langbogen", "Bogen", "1W+6", 10, 25, 50, 100, 200, 3, 2, 1, 0, -1}
+}]])
+end
+function schema.Waffen.SchildeUndParierwaffen.example(printer)
+  printer:highlight([[Waffen.SchildeUndParierwaffen {
+  Schild {"Thorwaler Rundschild", -1, -2, 4, 3},
+  Parierwaffe {"Buckler (Vollmetall)", 0, 0, 2, -2}
+}]])
+end
+function schema.Waffen.Ruestung.example(printer)
+  printer:highlight([[Waffen.Ruestung {
+  {"Leichte Platte", 3.2, 2.2, Brust=5, Ruecken=4, LBein=2, RBein=2},
+  {"Panzerhandschuhe (Paar)", 0.2, 0.2, LArm=2, RArm=2},
+}]])
+end
 
 local Gegenstand = d.Row:def({name = "Gegenstand", description = "Ein Ausrüstungsgegenstand."}, {"Name", String}, {"Gewicht", OptNum, {}}, {"Getragen", String, ""})
 local Rationen = d.Row:def({name = "Rationen", description = "Proviant oder Trank mit Rationen."}, {"Name", String}, {"Ration1", OptNum, {}}, {"Ration2", OptNum, {}}, {"Ration3", OptNum, {}}, {"Ration4", OptNum, {}})
 
 d:singleton(d.Multivalue, {name = "Kleidung", description = "Mehrzeiliger Text für den Kleidungs-Kasten auf dem Ausrüstungsbogen."}, String)
+function schema.Kleidung.example(printer)
+  printer:highlight([[Kleidung {
+  "Reisegewand, Konventsgewand",
+}]])
+end
+
 d:singleton(d.List, {name = "Ausruestung", description = "Liste von Ausrüstungsgegenständen."}, {Gegenstand})
+function schema.Ausruestung.example(printer)
+  printer:highlight([[Ausruestung {
+  {"Tusche"},
+  {"Gänsekiele"},
+  {"Federmesser"}
+}]])
+end
+
 d:singleton(d.List, {name = "Proviant", description = "Liste von Proviant & Tränken."}, {Rationen})
+function schema.Proviant.example(printer)
+  printer:highlight([[Proviant {
+  {"Pökelfleisch", 3}
+}]])
+end
 
 local Muenzen = d.Row:def({name = "Muenzen", description = "Eine Münzenart mit mehreren Werten."}, {"Name", String, ""}, {"Wert1", OptNum, {}}, {"Wert2", OptNum, {}}, {"Wert3", OptNum, {}}, {"Wert4", OptNum, {}}, {"Wert5", OptNum, {}}, {"Wert6", OptNum, {}}, {"Wert7", OptNum, {}}, {"Wert8", OptNum, {}})
 
@@ -364,13 +593,41 @@ d:singleton(d.List, {name = "Vermoegen", description = "Liste von Münzenarten."
   {"Heller"},
   {"Kreuzer"},
 }
+function schema.Vermoegen.example(printer)
+  printer:highlight([[Vermoegen {
+  {"Dukaten", 10},
+  {"Silbertaler", 24},
+  {"Heller", 56},
+  {"Kreuzer", 42},
+}]])
+end
+
 schema.Vermoegen.Sonstiges = d:singleton(d.Multivalue, {name = "Vermoegen.Sonstiges", description = "Sonstiges Vermögen."}, String) {}
+function schema.Vermoegen.Sonstiges.example(printer)
+  printer:highlight([[Vermoegen.Sonstiges {
+  "Schuldschein 100 Dukaten Nordlandbank"
+}]])
+end
 
 d:singleton(d.Multivalue, {name = "Verbindungen", description = "Verbindungen."}, String)
+function schema.Verbindungen.example(printer)
+  printer:highlight([[Verbindungen {
+  "Alte Gilde (Gareth)", "Madabasari (Aranien)"
+}]])
+end
+
 d:singleton(d.Multivalue, {name = "Notizen", description = "Notizen auf dem Ausrüstungs / Liturgienbogen."}, String)
+function schema.Notizen.example(printer)
+  printer:highlight([[Notizen {
+  "Lorem ipsum", "dolor sit amet"
+}]])
+end
 
 local Tier = d.Row:def({name = "Tier", description = "Werte eines Tiers."}, {"Name", String}, {"Art", String, ""}, {"INI", OptNum, {}}, {"AT", OptNum, {}}, {"PA", OptNum, {}}, {"TP", Schaden, ""}, {"LE", OptNum, {}}, {"RS", OptNum, {}}, {"KO", OptNum, {}}, {"KO", OptNum, {}}, {"GS", OptNum, {}}, {"AU", OptNum, {}}, {"MR", OptNum, {}}, {"LO", OptNum, {}}, {"TK", OptNum, {}}, {"ZK", OptNum, {}})
 d:singleton(d.List, {name = "Tiere", description = "Liste von Tieren."}, {Tier})
+function schema.Tiere.example(printer)
+
+end
 
 local Segnung = d.Row:def({name = "Segnung", description = "Eine der zwölf kleinen Segnungen"},
   {"Seite", OptNum, {}}, {"Name", String})
@@ -386,6 +643,28 @@ schema.Mirakel = {
   Minus = d:singleton(d.List, {name = "Mirakel.Minus", description = "Talente, die der Gottheit zuwider sind"}, {String}) {},
   Liturgien = d:singleton(d.List, {name = "Mirakel.Liturgien", description = "Liste von Liturgien.", item_name = "Liturgie"}, {Segnung, Liturgie}) {},
 }
+function schema.Mirakel.Liturgiekenntnis.example(printer)
+  printer:highlight([[Mirakel.Liturgiekenntnis {"Efferd", 7}]])
+end
+function schema.Mirakel.Plus.example(printer)
+  printer:highlight([[Mirakel.Plus {"Wettervorhersage", "Schifffahrt"}]])
+end
+function schema.Mirakel.Minus.example(printer)
+  printer:highlight([[Mirakel.Minus {"Grobschmied", "Kochen"}]])
+end
+function schema.Mirakel.Liturgien.example(printer)
+  printer:highlight([[Mirakel.Liturgien {
+  Segnung {76, "Feuersegen"},
+  Segnung {78, "Glückssegen"},
+  Segnung {79, "Grabsegen"},
+  Segnung {82, "Märtyrersegen"},
+  Segnung {83, "Schutzsegen"},
+  Segnung {84, "Speisesegen"},
+  Segnung {85, "Tranksegen"},
+  Liturgie {107, "Bannfluch des Heiligen Khalid", {III}},
+  Liturgie {261, "Etilias Zeit der Meditation", {I}}
+}]])
+end
 
 local Merkmale = d.Multivalue:def({name = "Merkmale", description = "Liste von Merkmalen eines Zaubers."}, String, {
   Elementar = Elementar,
@@ -402,8 +681,8 @@ end
 local Repraesentation = d.Matching:def({name = "Repraesentation", description = "Name einer Repräsentation."}, "Ach", "Alh", "Bor", "Dru", "Dra", "Elf", "Fee", "Geo", "Gro", "Gül", "Kob", "Kop", "Hex", "Mag", "Mud", "Nac", "Srl", "Sch")
 local Ritual = d.Row:def({name = "Ritual", description = "Ein Ritual."},
   {"Name", String}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""},
-  {"Probe3", BasisEig, ""}, {"Dauer", String, {}}, {"Kosten", String, {}},
-  {"Wirkung", String, {}}, {"Lernkosten", Ganzzahl, 0})
+  {"Probe3", BasisEig, ""}, {"Dauer", String, ""}, {"Kosten", String, ""},
+  {"Wirkung", String, ""}, {"Lernkosten", Ganzzahl, 0})
 local Ritualkenntnis = d.Row:def({name = "Ritualkenntnis", description = "Ein Ritualkenntnis-Wert einer bestimmten Tradition."},
   {"Name", String}, {"Steigerung", SteigSpalte, "E"}, {"Wert", OptNum, {}})
 local Zauber = d.Row:def({name = "Zauber", description = "Ein Zauber."},
@@ -422,6 +701,41 @@ schema.Magie = {
   Merkmalskenntnis = merkmale("Magie.Merkmalskenntnis", "Liste gelernter Merkmalskenntnisse"),
   Zauber = d:singleton(d.List, {name = "Magie.Zauber", description = "Liste von gelernten Zaubern."}, {Zauber}) {}
 }
+function schema.Magie.Rituale.example(printer)
+  printer:highlight([[Magie.Rituale {
+  {"Bindung des Stabes"},
+  {"Kraftfokus"},
+  {"Hammer des Magus", "MU", "CH", "KK", "3 AsP"},
+  {"Seil des Adepten", Kosten = "1 AsP"},
+}]])
+end
+function schema.Magie.Ritualkenntnis.example(printer)
+  printer:highlight([[Magie.Ritualkenntnis {
+  {"Gildenmagie", "E", 10}
+}]])
+end
+function schema.Magie.Regeneration.example(printer)
+  printer:highlight([[Magie.Regeneration("1W+3")]])
+end
+function schema.Magie.Artefakte.example(printer)
+  printer:highlight([[Magie.Artefakte {
+  "Karfunkelstein; WINKE WINKE KONTINENT VERSINKE (2 Ladungen); Auslöser: Den Meister ärgern"
+}]])
+end
+function schema.Magie.Repraesentationen.example(printer)
+  printer:highlight([[Magie.Repraesentationen {"Mag"}]])
+end
+function schema.Magie.Merkmalskenntnis.example(printer)
+  printer:highlight([[Magie.Merkmalskenntnis {"Antimagie", Elementar {"gesamt"}, Daemonisch {"Agrimoth"}}]])
+end
+function schema.Magie.Zauber.example(printer)
+  printer:highlight([[Magie.Zauber {
+  {37,  "Balsam Salabunde",          "KL", "IN", "CH", 8,  "C", {"Heilung", "Form"}, "Mag", Hauszauber=true},
+  {41,  "Beherrschung brechen",      "KL", "IN", "CH", 10, "D", {"Antimagie", "Herrschaft"}, "Mag", Spezialisierungen={"Erzwingen"}},
+  {187, "Nebelwand und Morgendunst", "KL", "FF", "KO", 10, "C", {"Umwelt", Elementar {"Luft", "Wasser"}}, "Mag"},
+  {205, "Pentagramma",               "MU", "MU", "CH", 4,  "D", {"Antimagie", "Beschwörung", Daemonisch {}, "Geisterwesen"}, "Mag"},
+}]])
+end
 
 local SteigerMethode = d.Matching:def({name = "SteigerMethode", description = "Steigerungsmethode"}, "SE", "Lehrmeister", "Gegenseitig", "Selbststudium")
 local SFLernmethode = d.Matching:def({name = "SFLernmethode", description = "Lernmethode für eine Sonderfertigkeit"}, "SE", "Lehrmeister")
@@ -468,5 +782,33 @@ local Zugewinn = d.Row:def({name = "Zugewinn", description = "Zugewinn von AP. K
 d:singleton(d.List, {name = "Ereignisse", description = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"}, {
   TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, Zugewinn
 }) {}
+function schema.Ereignisse.example(printer)
+  printer:highlight([[Ereignisse {
+    -- AP-Zugewinn
+    Zugewinn {"Ende Jahr des Greifen", 2250,  Fett=true},
+    -- steigere MU auf 17
+    Eigenschaft {"MU", 17},
+    -- steigere Geschichtswissen auf 11 mittels SE
+    TaW {"Geschichtswissen", 11, "SE"},
+    -- steigere Tanzen auf 4 mittels gegenseitigem Lehren
+    TaW {"Tanzen", 4, "Gegenseitig"},
+    -- aktiviere Wissenstalent Staatskunst und steigere es auf 4 mittels Lehrmeister
+    Aktiviere {Talent {"Staatskunst", "KL", "IN", "CH", 4}, "Lehrmeister", Talentgruppe = "Wissen"},
+    -- seigere KO auf 12 mittels SE
+    Eigenschaft {"KO", 12, "SE"},
+    -- aktiviere Sprache Rogolan und steigere sie auf 10 mittels Lehrmeister.
+    -- sortiere sie bei den Sprachen ein gemäß ihrem Namen.
+    Aktiviere {Sprache {"Rogolan", 21, 10}, "Lehrmeister", Sortierung={"", "Name"}},
+    -- aktiviere Sprache Rogolan und steigere sie auf 10 mittels Lehrmeister.
+    -- sortiere sie bei den Schriften ein gemäß ihrem Namen.
+    Aktiviere {Schrift {"Angram", "A", 21, 10}, "Lehrmeister", Sortierung={"", "Name"}},
+    -- aktiviere den Zauber Bannbaladin und steigere ihn auf 10 mittels Lehrmeister
+    Aktiviere {Zauber {39, "Bannbaladin", "IN", "CH", "CH", 10, "B", {"Einfluss"}, "Mag"}, "Lehrmeister"},
+    -- erlerne die Zauberspezialisierung Erzwingen für den Zauber Horriphobus Schreckgestalt
+    Spezialisierung {"Horriphobus Schreckgestalt", "Erzwingen"},
+    -- steigere den Zauber Klarum Purum auf 12 mittels Lehrmeister
+    ZfW {"Klarum Purum", 12, "Lehrmeister"},
+  }]])
+end
 
 return schema

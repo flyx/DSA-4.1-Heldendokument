@@ -79,6 +79,10 @@ function doc_printer:num(n)
   io.write([[<span class="num">]] .. tostring(n) .. [[</span>]])
 end
 
+function doc_printer:comment(c)
+  io.write([[<span class="comment">]] .. c .. "</span>")
+end
+
 function doc_printer:nl()
   io.write("\n")
   io.write(string.rep("  ", self.levels))
@@ -103,40 +107,75 @@ function doc_printer:repr(input, indents, named)
     self:num(val)
   elseif t == "boolean" or t == "nil" then
     self:sym(tostring(val))
-  else
+  elseif t == "table" then
     self:sym("{")
     if indents > 0 then
       self.levels = self.levels + 1
     end
     local first = true
-    for i, v in ipairs(val) do
-      local named = false
-      local mmt = getmetatable(mt)
-      if mmt == d.List then
-        named = #self.items > 1
-      elseif mmt == d.Multivalue then
-        named = getmetatable(v) ~= self.inner
-      end
-      if first then first = false else self:sym(", ") end
-      if indents > 0 then self:nl() end
-      self:repr(v, indents - 1, named)
-    end
-    for k,v in pairs(val) do
-      if type(k) ~= "number" then
+    if val.value ~= nil then
+      for i, v in ipairs(val.value) do
+        local child_named = false
+        local mmt = getmetatable(mt)
+        if mmt == d.List then
+          child_named = #mt.items > 1
+        elseif mmt == d.Multivalue then
+          child_named = getmetatable(v) ~= mt.inner
+        end
         if first then first = false else self:sym(", ") end
         if indents > 0 then self:nl() end
-        self:id(k)
-        self:sym(" = ")
-        self:repr(v, indents - 1, false)
+        self:repr(v, indents - 1, child_named)
       end
-    end
-    if indents > 0 then
-      self.levels = self.levels - 1
-      if not first then
-        self:nl()
+      for k,v in pairs(val.value) do
+        if type(k) ~= "number" then
+          if first then first = false else self:sym(", ") end
+          if indents > 0 then self:nl() end
+          self:id(k)
+          self:sym(" = ")
+          self:repr(v, indents - 1, false)
+        end
+      end
+      if indents > 0 then
+        self.levels = self.levels - 1
+        if not first then
+          self:nl()
+        end
       end
     end
     self:sym("}")
+  else
+    self:err("unexpected type: " .. t .. "\n")
+  end
+end
+
+function doc_printer:highlight(input)
+  while #input > 0 do
+    local e
+    if input:sub(1, 2) == "--" then
+      e = input:find("\n")
+      self:comment(input:sub(1, e))
+      if e == nil then
+        break
+      end
+    else
+      local c = input:sub(1, 1)
+      if c:match("[0-9]") then
+        _, e = input:find("[0-9]+")
+        self:num(input:sub(1, e))
+      elseif c:match("[{},=%[%]]") then
+        _, e = input:find("[{},=%[%]]+")
+        self:sym(input:sub(1, e))
+      elseif c == '"' then
+        self:sym('"')
+        _, e = input:find('"', 2)
+        self:meta(input:sub(2, e - 1))
+        self:sym('"')
+      else
+        io.write(c)
+        e = 1
+      end
+    end
+    input = input:sub(e + 1)
   end
 end
 
@@ -439,6 +478,11 @@ function TypeClass:print_documentation(printer, depth)
     self:documentation(printer)
   end
   io.write("\n\n")
+  if self.example ~= nil then
+    io.write([[<div class="example"><h4>Beispiel</h4><pre><code>]])
+    self.example(printer)
+    io.write("</code></pre></div>\n\n")
+  end
 end
 
 d.List = TypeClass.new({
@@ -627,12 +671,24 @@ end
 function d.Record:proto_param_values(printer)
   io.write("<tr><th>items</th><td>")
   for i,f in pairs(self.order) do
-    if i > 1 then
-      io.write(", ")
-    end
+    local d = self.defs[f]
+    io.write([[<ul class="rowitem"><li>]])
     io.write(f)
-    io.write(": ")
-    printer:ref(self.defs[f][1])
+    io.write("</li><li>")
+    if d[1] == nil then
+      io.write("<em>beliebig</em>")
+    else
+      printer:ref(d[1])
+    end
+    io.write("</li><li>")
+    if d[2] == nil then
+      io.write("<em>kein default</em>")
+    else
+      io.write("<code>")
+      printer:repr(d[2], 0, false)
+      io.write("</code>")
+    end
+    io.write("</ul>")
   end
   io.write("</td></tr>")
 end
@@ -1087,32 +1143,45 @@ function d:typeclass_docs()
   io.write("<section>")
   doc_printer:h(0, "syntax", "Generelle Syntax")
   doc_printer:p([[
-    In der Eingabedatei werden <em>Werte</em> angegeben.
+    Die Eingabedatei folgt der Syntax der Programmiersprache <a href="https://www.lua.org">Lua</a>, es sind keine Programmierkenntnisse nötig
+    (aber es kann ein Editor mit Lua-Unterstützung verwendet werden, um eine Heldendatei zu schreiben).
+    Alle für die Heldendatei nötige Syntax ist in diesem Dokument beschrieben.
+    Zwei Gedankenstriche (<code>--</code>) werden verwendet, um einen Kommentar einzuleiten, der bis zum Ende der Zeile geht und keinen Wert darstellt – solche finden sich in den Beispielen.
+    Die üblichen Lua-Funktionen sind in der Eingabedatei nicht verfügbar aus Sicherheitsgründen (damit man nicht böswilligen Code in Heldendaten einbetten kann).
+  ]])
+  doc_printer:p([[
+    In der Eingabedatei werden <em>Werte</em> definiert.
     Ein Wert wird mit einer der folgenden Strukturen angegeben:
   ]])
   io.write([[<pre><code>]])
-  doc_printer:ph("Inhalt")
+  doc_printer:ph("Skalar")
+  doc_printer:nl()
+  doc_printer:ph("Zusammengesetzt")
+  doc_printer:nl()
+  doc_printer:ph("Typ")
+  doc_printer:sym("(")
+  doc_printer:ph("Skalar")
+  doc_printer:sym(")")
   doc_printer:nl()
   doc_printer:ph("Typ")
   io.write(" ")
-  doc_printer:ph("Inhalt")
+  doc_printer:ph("Zusammengesetzt")
   io.write("</code></pre>")
   doc_printer:p([[
-    Ein Wert hat immer einen Inhalt und einen Typ.
-    Der Typ muss vor den Inhalt geschrieben werden, wenn der Typ des Werts nicht aus dem Kontext abgeleitet werden kann.
-    Der Inhalt eines Werts hat eine der folgenden Strukturen:
+    Ein Wert hat immer entweder skalaren oder zusammengesetzten Inhalt.
+    Außerdem hat er einen Typ, der entweder explizit angegeben werden kann oder sich aus dem Kontext ergibt.
+    Die letzten beiden Zeilen zeigen, wie der Typ explizit vor dem Inhalt steht; skalarer Inhalt muss dabei eingeklammert werden.
   ]])
-  io.write([[<pre><code>]])
-  doc_printer:sym("\"")
-  doc_printer:ph("Textinhalt")
-  doc_printer:sym("\"")
-  doc_printer:nl()
-  doc_printer:ph("Dezimalzahl")
-  doc_printer:nl()
-  doc_printer:sym("false")
-  doc_printer:nl()
-  doc_printer:sym("true")
-  doc_printer:nl()
+  doc_printer:p([[
+    <code><span class="metasym">&lt;Skalar&gt;</span></code> ist skalarer Inhalt.
+    Dies kann Textinhalt sein, der durch Hochkommas umschlossen wird (<code><span class="sym">"</span><span class="metasym">&lt;Text&gt;</span><span class="sym">"</span></code>);
+    eine Zahl, die falls nötig den Punkt (nicht das Komma) für Dezimalstellen benutzt (Beispiel: <code><span class="num">3.1415</span></code>);
+    oder die speziellen Boolean-Werte <code><span class="sym">true</span></code> und <code><span class="sym">false</span></code>.
+  ]])
+  doc_printer:p([[
+    <code><span class="metasym">&lt;Zusammengesetzt&gt;</span></code> ist zusammengesetzter Inhalt und hat folgende Struktur:
+  ]])
+  io.write("<pre><code>")
   doc_printer:sym("{")
   doc_printer:ph("Wert")
   doc_printer:sym(", ")
@@ -1128,26 +1197,24 @@ function d:typeclass_docs()
   doc_printer:sym("}")
   io.write("</code></pre>")
   doc_printer:p([[
-    Wie ersichtlich wird Textinhalt durch Hochkommas eingeleitet und abgeschlossen.
-    Zahlen werden direkt mit Dezimalziffern eingegeben, wobei die Nachkommastellen von einem Punkt (nicht einem Komma) eingeleitet werden.
-    Die beiden speziellen Werte <em>false</em> und <em>true</em> sind die sogenannten Boolean-Werte.
-    Zusammengesetzte Werte schließlich werden von geschweiften Klammern umschlossen.
-    Innerhalb dieser können innere Werte entweder direkt oder mit einem voranstehenden Namen und Gleichheitszeichen angegeben werden.
+    Innerhalb der geschweiften Klammern können innere Werte entweder direkt oder mit einem voranstehenden Namen und Gleichheitszeichen angegeben werden.
     Namen bestehen aus Buchstaben.
     Beide Formen können vermischt werden, wobei benamte Werte hinter unbenamten stehen sollten.
     Leerzeichen und Zeilenumbrüche können beliebig zwischen Werten eingefügt werden.
   ]])
   doc_printer:p([[
+    Der oberste Typ einer Wertstruktur muss immer angegeben werden, damit klar ist, wozu der Wert dient.
+    Werte in zusammengesetzten Strukturen können den Typ weglassen, wenn durch ihre Position der Typ ableitbar ist; ist dies nicht der Fall, muss dort ebenfalls der Typ angegeben werden.
     Der Typ eines Werts definiert, welche Form sein Inhalt haben muss.
     Ein Typ kann verschiedene Arten von Inhalt zulassen.
     Lässt ein Typ zusammengesetzten Inhalt zu, verlangt er von diesem eine bestimmte Struktur.
   ]])
   doc_printer:p([[
     Nachfolgend werden <em>Prototypen</em> beschrieben.
-    Ein Prototyp definiert strukturelle Grundlagen, mit denen dann verschiedene Typen definiert werden können.
-    Der Prototyp <em>List</em> definiert beispielsweise die grundsätzliche Struktur von Listen, und darauf können dann ein Typ für eine Liste von Text, und ein anderer Typ für eine Liste von Zahlen definiert werden.
-    Prototypen definieren Parameter, die von einem Typ gesetzt werden.
-    Auf Basis der aufgelisteten Prototypen werden alle Typen definiert, die die Struktur des Eingabedokuments definieren.
+    Prototypen fassen die strukturellen Grundlagen mehrere Typen zusammen.
+    Der Prototyp <em>List</em> definiert beispielsweise die grundsätzliche Struktur von Listen, die sowohl für eine Liste von Text wie auch für eine Liste von Zahlen gilt.
+    Prototypen haben Parameter; ein Typ wird definiert, indem der verwendete Prototyp angegeben wird und Werte für dessen Parameter.
+    Der Prototyp <em>List</em> halt beispielsweise einen Parameter, der den inneren Typ der Liste angibt.
   ]])
 
   prototype_header("Primitive", {
@@ -1178,7 +1245,7 @@ function d:typeclass_docs()
     {max = "Die höchstmögliche enthaltene Zahl"}
   })
   doc_printer:p([[
-    <em>Numbered</em> definiert Typen mit zusammengesetzten Inhalt (<code><span class="sym">{</span><span class="meta">...</span><span class="sym">}</span></code>).
+    <em>Numbered</em> definiert Typen mit zusammengesetzten Inhalt (<code><span class="sym">{</span><span class="metasym">...</span><span class="sym">}</span></code>).
     Der Inhalt darf nur unbenamte Wert enthalten, und alle Werte müssen Ganzzahlen zwischen 1 und <em>max</em> sein.
     Die Ganzzahlen müssen typlos sein.
   ]])
@@ -1289,7 +1356,7 @@ end
 
 function d:gendocs()
   io.write("<section>")
-  doc_printer:h(0, "general", "Struktur des Eingabedokuments")
+  doc_printer:h(0, "Struktur", "Struktur des Eingabedokuments")
   doc_printer:p("Auf der obersten Ebene des Eingabedokuments können Werte der nachfolgend gelisteten Typen angegeben werden:")
   io.write("<pre><code>")
   for _, t in ipairs(self.typelist) do

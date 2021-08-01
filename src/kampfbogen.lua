@@ -21,86 +21,6 @@ local function calc_be(input)
   end
 end
 
-local function parse_tp(input)
-  local orig = input
-  local n_start, n_end = string.find(input, "^[0-9]+")
-  local num = n_start == nil and nil or string.sub(input, n_start, n_end)
-  if n_start ~= nil then
-    input = string.sub(input, n_end + 1)
-  end
-  if string.len(input) == 0 then
-    return {num = num}
-  end
-  local ret = {dice = num}
-  local first = string.sub(input, 1, 1)
-  if first == "W" or first == "w" then
-    input = string.sub(input, 2)
-    n_start, n_end = string.find(input, "^[0-9]+")
-    if n_start == nil then
-      ret.die = 6
-    else
-      ret.die = tonumber(string.sub(input, n_start, n_end))
-      input = string.sub(input, n_end + 1)
-    end
-  else
-    tex.error("ungültige TP: '" .. orig .. "' (W/w erwartet bei '" .. first .. "')")
-  end
-  if #input == 0 then
-    ret.num = 0
-    return ret
-  end
-  first = string.sub(input, 1, 1)
-  if first ~= "+" and first ~= "-" then
-    tex.error("ungültige TP: '" .. orig .. "' (+/- erwartet bei '" .. first .. "')")
-  end
-  ret.num = tonumber(input)
-  if ret.num == nil then
-    tex.error("ungültige TP: '" .. orig .. "' (ungültiger Summand: '" .. input .. "')")
-  end
-  return ret
-end
-
-local function render_tp(tp)
-  if tp.dice ~= nil then
-    tex.sprint(-2, tp.dice)
-  end
-  if tp.die ~= nil then
-    if tp.die == 6 then
-      tex.sprint([[\hspace{1pt}\faDiceD6\hspace{1pt}]])
-    elseif tp.die == 20 then
-      tex.sprint([[\hspace{1pt}\faDiceD20\hspace{1pt}]])
-    else
-      tex.sprint(-2, "W" .. tp.die)
-    end
-  end
-  if tp.num ~= 0 then
-    if tp.num < 0 then
-      tex.sprint(-2, "−")
-    elseif tp.die ~= nil then
-      tex.sprint(-2, "+")
-    end
-    tex.sprint(-2, common.round(math.abs(tp.num)))
-  end
-end
-
-local function mod_tp(tp, schwelle, schritt)
-  local cur_kk = data:cur("KK")
-  if cur_kk == "" then
-    return nil
-  end
-  if schwelle ~= nil and schritt ~= nil and schritt > 0 then
-    while cur_kk < schwelle do
-      tp.num = tp.num - 1
-      cur_kk = cur_kk + schritt
-    end
-    while cur_kk > schwelle + schritt do
-      tp.num = tp.num + 1
-      cur_kk = cur_kk - schritt
-    end
-  end
-  return tp
-end
-
 local function art(zeile)
   if zeile.Art ~= "" then
     return zeile.Art
@@ -231,8 +151,8 @@ nahkampf_render[3]= {false, function(v, talent, ebe)
   end
 end}
 nahkampf_render[5]= {true, function(v)
-  local tp = parse_tp(v)
-  render_tp(tp)
+  local tp = common.schaden.parse(v)
+  common.schaden.render(tp)
 end}
 for i=8,10 do
   nahkampf_render[i] = {true, common.render_delta}
@@ -255,10 +175,10 @@ nahkampf_render[13]= {false, function(v, talent, ebe)
   if #v < 6 then
     return
   end
-  local tp = parse_tp(v.TP)
-  tp = mod_tp(tp, v["TP/KK Schwelle"], v["TP/KK Schritt"])
+  local tp = common.schaden.parse(v.TP)
+  tp = common.schaden.mod(tp, v["TP/KK Schwelle"], v["TP/KK Schritt"])
   if tp ~= nil then
-    render_tp(tp)
+    common.schaden.render(tp)
   end
 end}
 for i=14,15 do
@@ -270,14 +190,21 @@ function kampfbogen.nahkampf()
 end
 
 local fernkampf_render = {
+  [2]= {true, function(v)
+    if v == "Belagerungswaffen" then
+      tex.sprint("Belager")
+    else
+      tex.sprint(-2, v)
+    end
+  end},
   [3]= {false, function(v, talent, ebe)
     if talent ~= nil and #talent >= 3 then
       tex.sprint(-2, ebe)
     end
   end},
   [4]= {true, function(v)
-    local tp = parse_tp(v)
-    render_tp(tp)
+    local tp = common.schaden.parse(v)
+    common.schaden.render(tp)
   end},
   [15]= {false, function(v, talent, ebe)
     local fk_basis = data:cur("FK")
@@ -294,6 +221,9 @@ local fernkampf_render = {
         fk = fk + 2
         break
       end
+    end
+    if talent.Name == "Belagerungswaffen" and data.SF.Fernkampf.Geschuetzmeister then
+      fk = fk + 2
     end
     tex.sprint(-2, fk)
   end}
@@ -333,9 +263,9 @@ local waffenlos_render = {
     tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), talent.PA, v["TP/KK Schwelle"], v["TP/KK Schritt"], 0))
   end},
   [7]= {false, function(v, talent, ebe)
-    tp = mod_tp({dice=1, die=6, num=0}, v["TP/KK Schwelle"], v["TP/KK Schritt"])
+    tp = common.schaden.mod({dice=1, die=6, num=0}, v["TP/KK Schwelle"], v["TP/KK Schritt"])
     if tp ~= nil then
-      render_tp(tp)
+      common.schaden.render(tp)
     end
   end}
 }

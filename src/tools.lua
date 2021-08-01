@@ -39,7 +39,13 @@ if gendoc then
   </head>
   <body>
     <article class="doc">
-      <h1>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</h1>
+      <section>
+        <h1>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</h1>
+        <p>Dieses Dokument spezifiziert die Struktur der Eingabedatei für die Generierung des Heldendokuments.
+        Es dient der Referenz; generell ist es nicht nötig, das komplette Dokument zu lesen, um eine Eingabedatei schreiben zu können.
+        Zum Einstieg wird empfohlen, beim Abschnitt <a href="#Struktur">Struktur des Eingabedokuments</a> zu beginnen und bei den dort verlinkten Strukturen auf der obersten Ebene die Beispiele anzuschauen.
+        Sind dann Einzelheiten unklar, kann die Referenz zu Rate gezogen werden.</p>
+      </section>
 ]])
   end
   d:typeclass_docs()

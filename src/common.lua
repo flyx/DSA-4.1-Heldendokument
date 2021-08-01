@@ -422,4 +422,86 @@ function common.proviant_vermoegen()
   common.inner_rows(content, 4)
 end
 
+common.schaden = {}
+
+function common.schaden.parse(input)
+  local orig = input
+  local n_start, n_end = string.find(input, "^[0-9]+")
+  local num = n_start == nil and nil or string.sub(input, n_start, n_end)
+  if n_start ~= nil then
+    input = string.sub(input, n_end + 1)
+  end
+  if string.len(input) == 0 then
+    return {num = num}
+  end
+  local ret = {dice = num}
+  local first = string.sub(input, 1, 1)
+  if first == "W" or first == "w" then
+    input = string.sub(input, 2)
+    n_start, n_end = string.find(input, "^[0-9]+")
+    if n_start == nil then
+      ret.die = 6
+    else
+      ret.die = tonumber(string.sub(input, n_start, n_end))
+      input = string.sub(input, n_end + 1)
+    end
+  else
+    tex.error("ungültige TP: '" .. orig .. "' (W/w erwartet bei '" .. first .. "')")
+  end
+  if #input == 0 then
+    ret.num = 0
+    return ret
+  end
+  first = string.sub(input, 1, 1)
+  if first ~= "+" and first ~= "-" then
+    tex.error("ungültige TP: '" .. orig .. "' (+/- erwartet bei '" .. first .. "')")
+  end
+  ret.num = tonumber(input)
+  if ret.num == nil then
+    tex.error("ungültige TP: '" .. orig .. "' (ungültiger Summand: '" .. input .. "')")
+  end
+  return ret
+end
+
+function common.schaden.render(tp)
+  if tp.dice ~= nil then
+    tex.sprint(-2, tp.dice)
+  end
+  if tp.die ~= nil then
+    if tp.die == 6 then
+      tex.sprint([[\hspace{1pt}\faDiceD6\hspace{1pt}]])
+    elseif tp.die == 20 then
+      tex.sprint([[\hspace{1pt}\faDiceD20\hspace{1pt}]])
+    else
+      tex.sprint(-2, "W" .. tp.die)
+    end
+  end
+  if tp.num ~= 0 then
+    if tp.num < 0 then
+      tex.sprint(-2, "−")
+    elseif tp.die ~= nil then
+      tex.sprint(-2, "+")
+    end
+    tex.sprint(-2, common.round(math.abs(tp.num)))
+  end
+end
+
+function common.schaden.mod(tp, schwelle, schritt)
+  local cur_kk = data:cur("KK")
+  if cur_kk == "" then
+    return nil
+  end
+  if schwelle ~= nil and schritt ~= nil and schritt > 0 then
+    while cur_kk < schwelle do
+      tp.num = tp.num - 1
+      cur_kk = cur_kk + schritt
+    end
+    while cur_kk > schwelle + schritt do
+      tp.num = tp.num + 1
+      cur_kk = cur_kk - schritt
+    end
+  end
+  return tp
+end
+
 return common
