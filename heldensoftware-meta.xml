@@ -476,7 +476,7 @@
     <sf name="Matrixgeber" art="magisch"/>
     <sf name="Matrixkontrolle" art="magisch"/>
     <sf name="Matrixregeneration" art="magisch" roman="2"/>
-    <sf name="Meisterliche Regeneration" art="magisch"/>
+    <sf name="Meisterliche Regeneration" art="magisch" id="MeisterlicheRegeneration" leit="1"/>
     <sf name="Meisterliche Zauberkontrolle" art="magisch" roman="2"/>
     <sf name="Meisterliches Entwaffnen" art="nahkampf"/>
     <sf name="Meisterparade" art="nahkampf"/>
@@ -487,7 +487,7 @@
     <sf name="Ottagaldr" art="magisch"/>
     <sf name="Ortskenntnis" sub="auswahl" container="Ortskenntnis"/>
     <sf name="Parierwaffen" art="nahkampf" id="Parierwaffen" roman="2"/>
-    <sf name="Regeneration" art="magisch" roman="2"/>
+    <sf name="Regeneration" art="magisch" id="Regeneration" roman="2"/>
     <sf name="Reiterkampf" art="nahkampf"/>
     <sf name="Repräsentation" art="ignore" named="1"/>
     <sf name="Ritual" art="ritual" named="1"/>

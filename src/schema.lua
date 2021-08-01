@@ -184,7 +184,7 @@ function schema.Vorteile.example(printer)
 end
 
 schema.Vorteile.Magisch = d:singleton(d.Multivalue, {name = "Vorteile.Magisch", description = "Liste von magischen Vorteilen."}, String, {
-  -- TODO: Astrale Regeneration
+  AstraleRegeneration = d.Primitive:def({name = "AstraleRegeneration", description = "Astrale Regeneration I, II oder III", label = "Astrale Regeneretaion"}, "number", false, 0, 1, 3),
   Eigeboren = "Eigeboren",
   Viertelzauberer = "Viertelzauberer",
   Halbzauberer = "Halbzauberer",
@@ -220,7 +220,7 @@ function schema.Nachteile.example(printer)
 end
 
 schema.Nachteile.Magisch = d:singleton(d.Multivalue, {name = "Nachteile.Magisch", description = "Liste von magischen Nachteilen."}, String, {
-  -- TODO: Schwache Ausstrahlung
+  AstralerBlock = "Astraler Block",
   UnfaehigkeitFuerMerkmal = d.Multivalue:def({name = "UnfaehigkeitFuerMerkmal", description = "Unfähigkeit für ein oder mehrere Merkmale.", label = "Unfähigkeit für Merkmal"}, String, {
     Elementar = Elementar,
     Daemonisch = Daemonisch
@@ -489,11 +489,13 @@ function schema.SF.Waffenlos.example(printer)
 end
 
 schema.SF.Magisch = d:singleton(d.Multivalue, {name = "SF.Magisch", description = "Liste magischer Sonderfertigkeiten"}, String, {
-  GefaessDerSterne = "Gefäß der Sterne"
+  GefaessDerSterne = "Gefäß der Sterne",
+  MeisterlicheRegeneration = d.Matching:def({name = "MeisterlicheRegeneration", description = "Meisterliche Regeneration; gibt die Leiteigenschaft an, auf deren Basis die nächtliche Regeneration berechnet wird.", label = "Meisterliche Regeneration"}, "KL", "IN", "CH"),
+  Regeneration = d.Numbered:def({name = "Regeneration", description = "Die Sonderfertigkeit Regenetation I und II"}, 2),
 }) {}
 function schema.SF.Magisch.example(printer)
   printer:highlight([[SF.Magisch {
-  "Gefäß der Sterne", "Simultanzaubern", "Zauberroutine"
+  "Gefäß der Sterne", Regeneration {I}, "Simultanzaubern", "Zauberroutine"
 }]])
 end
 
@@ -694,7 +696,6 @@ local Zauber = d.Row:def({name = "Zauber", description = "Ein Zauber."},
 schema.Magie = {
   Rituale = d:singleton(d.List, {name = "Magie.Rituale", description = "Liste von Ritualen."}, {Ritual}) {},
   Ritualkenntnis = d:singleton(d.List, {name = "Magie.Ritualkenntnis", description = "Liste von Ritualkenntnissen."}, {Ritualkenntnis}) {},
-  Regeneration = d:singleton(d.Primitive, {name = "Magie.Regeneration", description = "AsP-Regeneration pro Phase."}, "string", true) {},
   Artefakte = d:singleton(d.Multivalue, {name = "Magie.Artefakte", description = "Artefakte."}, String) {},
   Notizen = d:singleton(d.Multivalue, {name = "Magie.Notizen", description = "Notizen auf dem Zauberdokument."}, String) {},
   Repraesentationen = d:singleton(d.List, {name = "Magie.Repraesentationen", description = "Liste beherrschter Repräsentationen."}, {Repraesentation}) {},
@@ -713,9 +714,6 @@ function schema.Magie.Ritualkenntnis.example(printer)
   printer:highlight([[Magie.Ritualkenntnis {
   {"Gildenmagie", "E", 10}
 }]])
-end
-function schema.Magie.Regeneration.example(printer)
-  printer:highlight([[Magie.Regeneration("1W+3")]])
 end
 function schema.Magie.Artefakte.example(printer)
   printer:highlight([[Magie.Artefakte {

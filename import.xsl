@@ -744,6 +744,10 @@ SF.Magisch {
     </xsl:if>
     <xsl:if test="not($def/@boni) and not(./preceding-sibling::sonderfertigkeit[starts-with(@name, $name)]) and ((not($def/@art) and $art = '') or ($art = $def/@art))">
       <xsl:choose>
+        <xsl:when test="$def/@leit">
+          <!-- TODO: Leiteigenschaft herausfinden -->
+          <xsl:value-of select="concat($def/@id, '(&quot;KL&quot;), ')"/>
+        </xsl:when>
         <xsl:when test="$kind = 'roman'">
           <xsl:choose>
             <xsl:when test="$def/@id">
