@@ -135,18 +135,10 @@
         \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
             \dsaTHeading{\Large Verbindungen \& Notizen} \\ \hline
             \directlua{
-                local merged = {}
-                for _, v in ipairs(data.Verbindungen) do
-                    table.insert(merged, v)
-                end
-                table.insert(merged, {})
-                for _, v in ipairs(data.Notizen) do
-                    table.insert(merged, v)
-                end
                 common.multiline_content({
                     name="Verbindungen und Notizen", rows=common.current_page.VerbindungenNotizen,
                     baselinestretch=1.033, fontsize={8,12}
-                }, merged)
+                }, data.Verbindungen, data.Notizen)
             }
         \end{tabular}
     \end{dsaSheetBox}

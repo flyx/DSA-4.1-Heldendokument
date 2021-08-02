@@ -465,6 +465,7 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
   </xsl:template>
 
   <xsl:template match="talent|zauber" mode="spezialisierungen">
+    <xsl:param name="maxPerLine" select="28"/>
     <xsl:variable name="name" select="@name"/>
     <xsl:variable name="sfname">
       <xsl:choose>
@@ -477,13 +478,45 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
       </xsl:choose>
     </xsl:variable>
     <xsl:text>, {</xsl:text>
-    <xsl:for-each select="../../sf/sonderfertigkeit[starts-with(@name, $sfname) and *[1]/@name = $name]">
-      <xsl:if test="position() > 1">
-        <xsl:text>, </xsl:text>
-      </xsl:if>
-      <xsl:value-of select="dsa:stringVal(spezialisierung/@name)"/>
-    </xsl:for-each>
+    <xsl:apply-templates select="../../sf/sonderfertigkeit[starts-with(@name, $sfname) and *[1]/@name = $name][1]" mode="spezialisierung">
+      <xsl:with-param name="sfname" select="$sfname"/>
+      <xsl:with-param name="name" select="$name"/>
+      <xsl:with-param name="maxPerLine" select="$maxPerLine"/>
+      <xsl:with-param name="lettersInLine" select="string-length($name) + 1"/>
+    </xsl:apply-templates>
     <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="sonderfertigkeit" mode="spezialisierung">
+    <xsl:param name="sfname"/>
+    <xsl:param name="name"/>
+    <xsl:param name="maxPerLine"/>
+    <xsl:param name="lettersInLine"/>
+    <xsl:variable name="output" select="spezialisierung/@name"/>
+    <xsl:variable name="newLineLen" select="$lettersInLine + string-length($output) + 1"/>
+    <xsl:variable name="next" select="following-sibling::sonderfertigkeit[starts-with(@name, $sfname) and *[1]/@name = $name][1]"/>
+    <xsl:if test="$newLineLen &gt; $maxPerLine">
+      <xsl:text>{}, </xsl:text>
+    </xsl:if>
+    <xsl:value-of select="dsa:stringVal($output)"/>
+    <xsl:if test="$next">
+      <xsl:text>, </xsl:text>
+      <xsl:apply-templates select="$next" mode="spezialisierung">
+        <xsl:with-param name="sfname" select="$sfname"/>
+        <xsl:with-param name="name" select="$name"/>
+        <xsl:with-param name="maxPerLine" select="$maxPerLine"/>
+        <xsl:with-param name="lettersInLine">
+          <xsl:choose>
+            <xsl:when test="$newLineLen &gt; $maxPerLine">
+              <xsl:value-of select="string-length($output) + 3"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$newLineLen"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:with-param>
+      </xsl:apply-templates>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="talent" mode="kampf">

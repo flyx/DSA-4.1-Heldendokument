@@ -288,7 +288,7 @@ end
 local SteigSpalte = d.Matching:def({name = "SteigSpalte", description = "Eine Steigerungsspalte."}, "A%*?", "B", "C", "D", "E", "F", "G", "H")
 local Behinderung = d.Matching:def({name = "Behinderung", description = "Behinderung."}, "%-", "BE", "BE%-[1-9]", "BEx[2-9]")
 local BasisEig = d.Matching:def({name = "BasisEig", description = "Name einer Basis-Eigenschaft, oder ** in seltenen Fällen."}, "%*%*", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK")
-local Spezialisierungen = d.Multivalue:def({name = "Spezialisierungen", description = "Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden."}, String)
+local Spezialisierungen = d.Multivalue:def({name = "Spezialisierungen", description = "Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden. Ist der erste Eintrag {}, wird direkt nach dem Talentnamen umgebrochen."}, String)
 
 d.Row:def({name = "Nah", description = "Ein Nahkampf-Talent mit AT/PA Verteilung."},
   {"Name", String}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"AT", OptNum, {}}, {"PA", OptNum, {}}, {"TaW", OptNum, {}}, {"Spezialisierungen", Spezialisierungen, {}})

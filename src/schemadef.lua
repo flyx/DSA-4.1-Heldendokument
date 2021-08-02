@@ -1059,7 +1059,7 @@ function d.Multivalue:getfield(key)
   local t = type(key)
   if t == "number" then
     local v = self.value[key]
-    if v ~= nil then
+    if v ~= nil and getmetatable(v) ~= nil then
       v = v:get()
     end
     return v

@@ -76,7 +76,7 @@
     Allerdings haben die Einträge eines <em>Record</em> nie Default-Werte und der Inhalt darf ausschließlich aus benamten Werten bestehen.
     Wie bei <em>Rows</em> müssen die inneren Werte nie typisiert sein.
   </p><p>    Records werden üblicherweise für Tabellen mit fester Anzahl an Zeilen benutzt, wie etwa eine Liste von Eigenschaftenwerten.
-  </p></section><section><h3 id="Multivalue">Der Prototyp <em>Multivalue</em></h3><p>Parameter:</p><table class="protoparam"><tr><th>inner</th><td>Innerer Typ</td></tr><tr><th>known</th><td>Bekannte Werte und Untertypen</td></tr></table><p>    <em>Multivalue</em> definiert Typen für Auflistungen von Werten, die meistens im Ausgabedokument mit Kommas getrennt hintereinander geschrieben werden.
+  </p></section><section><h3 id="Multivalue">Der Prototyp <em>Multivalue</em></h3><p>Parameter:</p><table class="protoparam"><tr><th>known</th><td>Bekannte Werte und Untertypen</td></tr><tr><th>inner</th><td>Innerer Typ</td></tr></table><p>    <em>Multivalue</em> definiert Typen für Auflistungen von Werten, die meistens im Ausgabedokument mit Kommas getrennt hintereinander geschrieben werden.
     Multivalue-Werte haben zusammengesetzten Inhalt, wobei die inneren Werte unbenamt sein müssen.
     Werte des Typs <em>inner</em> brauchen keinen Typ.
     Daneben ist immer der Wert <code><span class="sym">{}</span></code> erlaubt, der an der Stelle seines Auftretens einen Zeilenumbruch generiert, falls das ausgegebene Dokument das an dieser Stelle zulässt.
@@ -347,7 +347,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-</section><section><h2 id="Vorteile">Vorteile (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#AkademischeAusbildung">AkademischeAusbildung</a>, <em>forbid</em>), (<a href="#BegabungFuerEigenschaft">BegabungFuerEigenschaft</a>, <em>forbid</em>), <code>"Eisern"</code>, (<a href="#BegabungFuerTalentgruppe">BegabungFuerTalentgruppe</a>, <em>forbid</em>), (<a href="#Flink">Flink</a>, <em>forbid</em>), <code>"Eidetisches Gedächtnis"</code>, <code>"Gutes Gedächtnis"</code>, (<a href="#BegabungFuerTalent">BegabungFuerTalent</a>, <em>forbid</em>)</td></tr></table>
+</section><section><h2 id="Vorteile">Vorteile (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#AkademischeAusbildung">AkademischeAusbildung</a>, <em>forbid</em>), <code>"Eidetisches Gedächtnis"</code>, (<a href="#BegabungFuerTalent">BegabungFuerTalent</a>, <em>forbid</em>), <code>"Gutes Gedächtnis"</code>, (<a href="#BegabungFuerEigenschaft">BegabungFuerEigenschaft</a>, <em>forbid</em>), <code>"Eisern"</code>, (<a href="#BegabungFuerTalentgruppe">BegabungFuerTalentgruppe</a>, <em>forbid</em>), (<a href="#Flink">Flink</a>, <em>forbid</em>)</td></tr></table>
 
 <p>Liste von nicht-magischen Vorteilen.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
@@ -362,6 +362,10 @@ einzelnen Seiten beschrieben.</p>
 <h4 id="Ausbildungsname">Ausbildungsname (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>Gelehrter?</code>, <code>Magier</code>, <code>Magierin</code>, <code>Krieger</code>, <code>Kriegerin</code></td></tr></table>
 
 <p>Name einer akademischen Ausbildung</p>
+
+<h3 id="BegabungFuerTalent">BegabungFuerTalent (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
+
+<p>Begabung für ein oder mehrere Talente</p>
 
 <h3 id="BegabungFuerEigenschaft">BegabungFuerEigenschaft (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#EigName">EigName</a></table>
 
@@ -388,11 +392,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen.</p>
 
-<h3 id="BegabungFuerTalent">BegabungFuerTalent (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
-
-<p>Begabung für ein oder mehrere Talente</p>
-
-</section><section><h2 id="Vorteile.Magisch">Vorteile.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Viertelzauberer"</code>, (<a href="#Meisterhandwerk">Meisterhandwerk</a>, <em>forbid</em>), (<a href="#BegabungFuerRitual">BegabungFuerRitual</a>, <em>forbid</em>), <code>"Halbzauberer"</code>, <code>"Vollzauberer"</code>, <code>"Eigeboren"</code>, (<a href="#AstraleRegeneration">AstraleRegeneration</a>, <em>forbid</em>), (<a href="#BegabungFuerMerkmal">BegabungFuerMerkmal</a>, <em>merge</em>), (<a href="#BegabungFuerZauber">BegabungFuerZauber</a>, <em>forbid</em>)</td></tr></table>
+</section><section><h2 id="Vorteile.Magisch">Vorteile.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#BegabungFuerZauber">BegabungFuerZauber</a>, <em>forbid</em>), (<a href="#Meisterhandwerk">Meisterhandwerk</a>, <em>forbid</em>), <code>"Vollzauberer"</code>, (<a href="#BegabungFuerMerkmal">BegabungFuerMerkmal</a>, <em>merge</em>), <code>"Eigeboren"</code>, <code>"Viertelzauberer"</code>, (<a href="#BegabungFuerRitual">BegabungFuerRitual</a>, <em>forbid</em>), (<a href="#AstraleRegeneration">AstraleRegeneration</a>, <em>forbid</em>), <code>"Halbzauberer"</code></td></tr></table>
 
 <p>Liste von magischen Vorteilen.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
@@ -401,22 +401,13 @@ einzelnen Seiten beschrieben.</p>
   Meisterhandwerk <span class="sym">{</span><span class="sym">"</span><span class="metasym">Alchimie</span><span class="sym">"</span><span class="sym">},</span> <span class="sym">"</span><span class="metasym">Feste Matrix</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">Vollzauberer</span><span class="sym">"</span>
 <span class="sym">}</span></code></pre></div>
 
+<h3 id="BegabungFuerZauber">BegabungFuerZauber (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
+
+<p>Begabung für einen oder mehrere Zauber</p>
+
 <h3 id="Meisterhandwerk">Meisterhandwerk (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
 
 <p>Liste von Talenten, für die ein Meisterhandwerk existiert.</p>
-
-<h3 id="BegabungFuerRitual">BegabungFuerRitual (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
-
-<p>Begabung für ein oder mehrere Rituale</p>
-
-<h3 id="AstraleRegeneration">AstraleRegeneration (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
-<tr><th>optional</th><td>false</td></tr>
-<tr><th>decimals</th><td>0</td></tr>
-<tr><th>min</th><td>1</td></tr>
-<tr><th>max</th><td>3</td></tr>
-</table>
-
-<p>Astrale Regeneration I, II oder III</p>
 
 <h3 id="BegabungFuerMerkmal">BegabungFuerMerkmal (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Elementar">Elementar</a>, <em>forbid</em>), (<a href="#Daemonisch">Daemonisch</a>, <em>forbid</em>)</td></tr></table>
 
@@ -438,11 +429,20 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Name einer Domäne, oder 'gesamt'</p>
 
-<h3 id="BegabungFuerZauber">BegabungFuerZauber (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
+<h3 id="BegabungFuerRitual">BegabungFuerRitual (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
 
-<p>Begabung für einen oder mehrere Zauber</p>
+<p>Begabung für ein oder mehrere Rituale</p>
 
-</section><section><h2 id="Nachteile">Nachteile (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Kleinwüchsig"</code>, <code>"Behäbig"</code>, <code>"Zwergenwuchs"</code>, <code>"Glasknochen"</code>, <code>"Unstet"</code>, (<a href="#UnfaehigkeitFuerTalentgruppe">UnfaehigkeitFuerTalentgruppe</a>, <em>forbid</em>), (<a href="#UnfaehigkeitFuerTalent">UnfaehigkeitFuerTalent</a>, <em>forbid</em>)</td></tr></table>
+<h3 id="AstraleRegeneration">AstraleRegeneration (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>1</td></tr>
+<tr><th>max</th><td>3</td></tr>
+</table>
+
+<p>Astrale Regeneration I, II oder III</p>
+
+</section><section><h2 id="Nachteile">Nachteile (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Unstet"</code>, <code>"Glasknochen"</code>, <code>"Kleinwüchsig"</code>, <code>"Zwergenwuchs"</code>, <code>"Behäbig"</code>, (<a href="#UnfaehigkeitFuerTalentgruppe">UnfaehigkeitFuerTalentgruppe</a>, <em>forbid</em>), (<a href="#UnfaehigkeitFuerTalent">UnfaehigkeitFuerTalent</a>, <em>forbid</em>)</td></tr></table>
 
 <p>Liste von nicht-magischen Nachteilen</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
@@ -458,7 +458,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Unfähigkeit für ein oder mehrere bestimmte Talente</p>
 
-</section><section><h2 id="Nachteile.Magisch">Nachteile.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#UnfaehigkeitFuerMerkmal">UnfaehigkeitFuerMerkmal</a>, <em>merge</em>), <code>"Astraler Block"</code></td></tr></table>
+</section><section><h2 id="Nachteile.Magisch">Nachteile.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Astraler Block"</code>, (<a href="#UnfaehigkeitFuerMerkmal">UnfaehigkeitFuerMerkmal</a>, <em>merge</em>)</td></tr></table>
 
 <p>Liste von magischen Nachteilen.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
@@ -541,7 +541,7 @@ einzelnen Seiten beschrieben.</p>
 
 <h3 id="Spezialisierungen">Spezialisierungen (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<p>Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
+<p>Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden. Ist der erste Eintrag {}, wird direkt nach dem Talentnamen umgebrochen.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
 </section><section><h2 id="Talente.Gaben">Talente.Gaben (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talent">Talent</a></table>
 
@@ -691,7 +691,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Liste von Orten, für die Ortskenntnis besteht.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
-</section><section><h2 id="SF.Nahkampf">SF.Nahkampf (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Ruestungsgewoehnung">Ruestungsgewoehnung</a>, <em>merge</em>), <code>"Kampfgespür"</code>, (<a href="#Parierwaffen">Parierwaffen</a>, <em>merge</em>), (<a href="#Ausweichen">Ausweichen</a>, <em>merge</em>), (<a href="#Schildkampf">Schildkampf</a>, <em>merge</em>), <code>"Kampfreflexe"</code>, <code>"Linkhand"</code></td></tr></table>
+</section><section><h2 id="SF.Nahkampf">SF.Nahkampf (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Kampfreflexe"</code>, (<a href="#Ausweichen">Ausweichen</a>, <em>merge</em>), <code>"Kampfgespür"</code>, (<a href="#Parierwaffen">Parierwaffen</a>, <em>merge</em>), (<a href="#Schildkampf">Schildkampf</a>, <em>merge</em>), (<a href="#Ruestungsgewoehnung">Ruestungsgewoehnung</a>, <em>merge</em>), <code>"Linkhand"</code></td></tr></table>
 
 <p>Liste von Nahkampf-Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
@@ -699,33 +699,29 @@ einzelnen Seiten beschrieben.</p>
   <span class="sym">"</span><span class="metasym">Aufmerksamkeit</span><span class="sym">"</span><span class="sym">,</span> Ausweichen <span class="sym">{</span>I<span class="sym">,</span> II<span class="sym">},</span> <span class="sym">"</span><span class="metasym">Kampfreflexe</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">Wuchtschlag</span><span class="sym">"</span>
 <span class="sym">}</span></code></pre></div>
 
-<h3 id="Ruestungsgewoehnung">Ruestungsgewoehnung (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>3</td></tr></table>
+<h3 id="Ausweichen">Ausweichen (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>3</td></tr></table>
 
-<p>Die SF Rüstungsgewöhnung, unterteilt in I, II und III.</p>
+<p>Die SF Ausweichen, unterteilt in I, II und III.</p>
 
 <h3 id="Parierwaffen">Parierwaffen (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>2</td></tr></table>
 
 <p>Die SF Parierwaffen, unterteilt in I und II.</p>
 
-<h3 id="Ausweichen">Ausweichen (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>3</td></tr></table>
-
-<p>Die SF Ausweichen, unterteilt in I, II und III.</p>
-
 <h3 id="Schildkampf">Schildkampf (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>2</td></tr></table>
 
 <p>Die SF Schildkampf, unterteilt in I und II.</p>
 
-</section><section><h2 id="SF.Fernkampf">SF.Fernkampf (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Meisterschuetze">Meisterschuetze</a>, <em>merge</em>), (<a href="#Schnellladen">Schnellladen</a>, <em>merge</em>), <code>"Geschützmeister"</code>, (<a href="#Scharfschuetze">Scharfschuetze</a>, <em>merge</em>)</td></tr></table>
+<h3 id="Ruestungsgewoehnung">Ruestungsgewoehnung (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>3</td></tr></table>
+
+<p>Die SF Rüstungsgewöhnung, unterteilt in I, II und III.</p>
+
+</section><section><h2 id="SF.Fernkampf">SF.Fernkampf (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Geschützmeister"</code>, (<a href="#Schnellladen">Schnellladen</a>, <em>merge</em>), (<a href="#Scharfschuetze">Scharfschuetze</a>, <em>merge</em>), (<a href="#Meisterschuetze">Meisterschuetze</a>, <em>merge</em>)</td></tr></table>
 
 <p>Liste von Fernkampf-Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
 <div class="example"><h4>Beispiel</h4><pre><code>SF.Fernkampf <span class="sym">{</span>
   <span class="sym">"</span><span class="metasym">Geschützmeister</span><span class="sym">"</span><span class="sym">,</span> Schnellladen <span class="sym">{</span><span class="sym">"</span><span class="metasym">Bogen</span><span class="sym">"</span><span class="sym">}</span>
 <span class="sym">}</span></code></pre></div>
-
-<h3 id="Meisterschuetze">Meisterschuetze (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
-
-<p>Liste von Talenten, für die Meisterschütze gilt.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
 <h3 id="Schnellladen">Schnellladen (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
@@ -734,6 +730,10 @@ einzelnen Seiten beschrieben.</p>
 <h3 id="Scharfschuetze">Scharfschuetze (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
 <p>Liste von Talenten, für die Scharfschütze gilt.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
+
+<h3 id="Meisterschuetze">Meisterschuetze (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
+
+<p>Liste von Talenten, für die Meisterschütze gilt.</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 
 </section><section><h2 id="SF.Waffenlos">SF.Waffenlos (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Kampfstil">Kampfstil</a>, <em>allow</em>)</td></tr></table>
 
@@ -751,7 +751,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Raufen oder Ringen</p>
 
-</section><section><h2 id="SF.Magisch">SF.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#MeisterlicheRegeneration">MeisterlicheRegeneration</a>, <em>forbid</em>), (<a href="#Regeneration">Regeneration</a>, <em>merge</em>), <code>"Gefäß der Sterne"</code></td></tr></table>
+</section><section><h2 id="SF.Magisch">SF.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#MeisterlicheRegeneration">MeisterlicheRegeneration</a>, <em>forbid</em>), <code>"Gefäß der Sterne"</code>, (<a href="#Regeneration">Regeneration</a>, <em>merge</em>)</td></tr></table>
 
 <p>Liste magischer Sonderfertigkeiten</p><p>Ein einzelner oder eine Liste von String-Werten.</p>
 

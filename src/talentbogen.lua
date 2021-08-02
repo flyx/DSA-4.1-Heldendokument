@@ -27,12 +27,24 @@ end
 function talent.namecol(name, spez)
   tex.sprint(-2, name)
   if #spez > 0 then
-    tex.sprint(-2, " (")
-    for k, s in ipairs(spez) do
-      if k > 1 then
-        tex.sprint(-2, ", ")
+    local i = 1
+    if type(spez[i]) == "table" then
+      tex.sprint([[\newline\hspace*{-4pt}]])
+      i = i + 1
+    else
+      tex.sprint(" ")
+    end
+    tex.sprint([[(]])
+    local first = true
+    while i <= #spez do
+      if first then first = false else tex.sprint(", ") end
+      while type(spez[i]) == "table" do
+        tex.sprint([[\newline]])
+        i = i + 1
       end
-      tex.sprint(-2, s)
+      if i > #spez then break end
+      tex.sprint(-2, spez[i])
+      i = i + 1
     end
     tex.sprint(-2, ")")
   end
@@ -72,6 +84,7 @@ function talent.nah(v)
     tex.sprint([[& ]])
     local content = v[j]
     if j == 1 then
+      tex.sprint([[\hspace{-8pt}]])
       talent.namecol(content, v.Spezialisierungen)
     elseif j == 2 then
       tex.sprint(-2, data:kampf_schwierigkeit(v))
@@ -88,6 +101,7 @@ function talent.fern(v, filler)
     tex.sprint([[& ]])
     local content = v[j]
     if j == 1 then
+      tex.sprint([[\hspace{-8pt}]])
       talent.namecol(content, v.Spezialisierungen)
     elseif j == 2 then
       tex.sprint(-2, data:kampf_schwierigkeit(v))
@@ -106,6 +120,7 @@ function talent.koerper(v)
     tex.sprint([[& ]])
     local content = v[j]
     if j == 1 then
+      tex.sprint([[\hspace{-8pt}]])
       talent.namecol(content, v.Spezialisierungen)
     elseif j == 5 then
       tex.sprint(-2, talent.be(content))
@@ -116,7 +131,7 @@ function talent.koerper(v)
 end
 
 function talent.sprache(v, prefix)
-  tex.sprint([[& \faComments{} ]] .. prefix)
+  tex.sprint([[& \hspace{-8pt}\faComments{} ]] .. prefix)
   talent.namecol(v.Name, v.Dialekt)
   tex.sprint(" & ")
   if string.len(v.Name) > 0 then
@@ -129,7 +144,7 @@ function talent.sprache(v, prefix)
 end
 
 function talent.schrift(v, mod)
-  tex.sprint([[& \faBookOpen{} ]])
+  tex.sprint([[& \hspace{-8pt}\faBookOpen{} ]])
   tex.sprint(-2, v[1])
   tex.sprint(" & ")
   if v.Steigerungsspalte ~= nil then
@@ -145,6 +160,7 @@ function talent.sonstige(v)
   for i=1,5 do
     tex.sprint(" & ")
     if i == 1 then
+      tex.sprint([[\hspace{-8pt}]])
       talent.namecol(v.Name, v.Spezialisierungen)
     else
       tex.sprint(-2, v[i])
@@ -187,6 +203,8 @@ function gruppe.spec(self, name)
   end
 end
 
+local talentbogen = {}
+
 function gruppe.render(self, g, start_white)
   local name = getmetatable(g).name
   g = g:get()
@@ -196,17 +214,18 @@ function gruppe.render(self, g, start_white)
 
   local label, spalte, title_col_len, item_name_len, num_items, col_spec, headers = self:spec(name)
 
-  tex.sprint([[\begin{NiceTabular}{p{0.2cm}Ip{]])
+  tex.sprint([[\begin{NiceTabular}{p{0.2cm}I>{\setlength{\baselineskip}{1.033\baselineskip}\leftskip=8pt}p{]])
   tex.sprint(item_name_len .. "cm")
   tex.sprint("}")
   tex.sprint(col_spec)
   tex.print("}")
 
   if start_white then
-    tex.print([[\CodeBefore\rowcolors{3}{white}{gray!30}\Body]])
+    tex.print([[\CodeBefore\rowcolors{3}{white}{gray!30}]])
   else
-    tex.print([[\CodeBefore\rowcolors{3}{gray!30}{white}\Body]])
+    tex.print([[\CodeBefore\rowcolors{3}{gray!30}{white}]])
   end
+  tex.sprint([[\Body]])
 
   tex.sprint([[\setarstrut{\scriptsize}\multicolumn{]])
   tex.sprint(spalte == nil and num_items or title_col_len - 1)
@@ -232,7 +251,7 @@ function gruppe.render(self, g, start_white)
     talent.render(v)
     tex.sprint([[\\ \hline]])
   end
-  for i = #data.Talente[name] + 1, g do
+  for i = talentbogen.rows_to_be_rendered(data.Talente[name]) + 1, g do
     for j=2,num_items do
       tex.sprint("&")
     end
@@ -244,14 +263,28 @@ function gruppe.render(self, g, start_white)
   tex.print([[\vspace{1.9pt}]])
 end
 
-local talentbogen = {}
+function talentbogen.rows_to_be_rendered(l)
+  local ret = #l
+  for _, t in ipairs(l) do
+    local s = t.Spezialisierungen
+    if s ~= nil then
+      for _, v in ipairs(s) do
+        if type(v) == "table" then
+          ret = ret + 1
+        end
+      end
+    end
+  end
+  return ret
+end
 
 function talentbogen.num_rows(g)
   local ret = g:get()
   local name = getmetatable(g).name
   if name ~= "Sonderfertigkeiten" then
-    if #data.Talente[name] > ret then
-      ret = #data.Talente[name]
+    local rendered = talentbogen.rows_to_be_rendered(data.Talente[name])
+    if rendered > ret then
+      ret = rendered
     end
   end
   return ret
