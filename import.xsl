@@ -31,6 +31,7 @@
   <xsl:variable name="kampfstile" select="$meta/kampfstile"/>
   <xsl:variable name="ausruestung" select="$meta/ausruestung"/>
   <xsl:variable name="zauber" select="$meta/zauber"/>
+  <xsl:variable name="mirakel" select="$meta/mirakel"/>
   <xsl:variable name="liturgien" select="$meta/liturgien"/>
 
   <xsl:template match="/">
@@ -1048,6 +1049,7 @@ Waffen.Ruestung {</xsl:text>
       <xsl:value-of select="dsa:zrs($def, 'ko', 'Kopf')"/>
       <xsl:value-of select="dsa:zrs($def, 'br', 'Brust')"/>
       <xsl:value-of select="dsa:zrs($def, 'ru', 'Ruecken')"/>
+      <xsl:value-of select="dsa:zrs($def, 'ba', 'Bauch')"/>
       <xsl:value-of select="dsa:zrs($def, 'la', 'LArm')"/>
       <xsl:value-of select="dsa:zrs($def, 'ra', 'RArm')"/>
       <xsl:value-of select="dsa:zrs($def, 'lb', 'LBein')"/>
@@ -1059,8 +1061,38 @@ Waffen.Ruestung {</xsl:text>
   <xsl:template match="talent" mode="liturgiekenntnis">
     <xsl:text>
 Mirakel.Liturgiekenntnis {</xsl:text>
-    <xsl:value-of select="dsa:stringVal(substring-before(substring-after(@name, '('), ')'))"/>
+    <xsl:variable name="gott" select="substring-before(substring-after(@name, '('), ')')"/>
+    <xsl:value-of select="dsa:stringVal($gott)"/>
     <xsl:value-of select="concat(', ', @value, '}')"/>
+    <xsl:text>
+
+Mirakel.Plus {</xsl:text>
+    <xsl:call-template name="list-mirakel">
+      <xsl:with-param name="input" select="$mirakel/plus[@gott = $gott]/text()"/>
+    </xsl:call-template>
+    <xsl:text>}
+
+Mirakel.Minus {</xsl:text>
+    <xsl:call-template name="list-mirakel">
+      <xsl:with-param name="input" select="$mirakel/minus[@gott = $gott]/text()"/>
+    </xsl:call-template>
+    <xsl:text>}
+</xsl:text>
+  </xsl:template>
+
+  <xsl:template name="list-mirakel">
+    <xsl:param name="input"/>
+    <xsl:choose>
+      <xsl:when test="contains($input, '|')">
+        <xsl:value-of select="concat(dsa:stringVal(substring-before($input, '|')), ', ')"/>
+        <xsl:call-template name="list-mirakel">
+          <xsl:with-param name="input" select="substring-after($input, '|')"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="dsa:stringVal($input)"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="sf" mode="liturgien">
