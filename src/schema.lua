@@ -625,7 +625,8 @@ function schema.Notizen.example(printer)
 }]])
 end
 
-local Tier = d.Row:def({name = "Tier", description = "Werte eines Tiers."}, {"Name", String}, {"Art", String, ""}, {"INI", OptNum, {}}, {"AT", OptNum, {}}, {"PA", OptNum, {}}, {"TP", Schaden, ""}, {"LE", OptNum, {}}, {"RS", OptNum, {}}, {"KO", OptNum, {}}, {"KO", OptNum, {}}, {"GS", OptNum, {}}, {"AU", OptNum, {}}, {"MR", OptNum, {}}, {"LO", OptNum, {}}, {"TK", OptNum, {}}, {"ZK", OptNum, {}})
+local Tier = d.Row:def({name = "Tier", description = "Werte eines Tiers."},
+  {"Name", String}, {"Art", String, ""}, {"INI", OptNum, {}}, {"AT", OptNum, {}}, {"PA", OptNum, {}}, {"TP", Schaden, ""}, {"LE", OptNum, {}}, {"RS", OptNum, {}}, {"KO", OptNum, {}}, {"KO", OptNum, {}}, {"GS", OptNum, {}}, {"AU", OptNum, {}}, {"MR", OptNum, {}}, {"LO", OptNum, {}}, {"TK", OptNum, {}}, {"ZK", OptNum, {}})
 d:singleton(d.List, {name = "Tiere", description = "Liste von Tieren."}, {Tier})
 function schema.Tiere.example(printer)
 

@@ -1041,7 +1041,7 @@ Waffen.Ruestung {</xsl:text>
   <xsl:template match="heldenausruestung" mode="ruestung">
     <xsl:variable name="name" select="@ruestungsname"/>
     <xsl:text>
-    {</xsl:text>
+  {</xsl:text>
     <xsl:value-of select="concat(dsa:stringVal($name), ', ')"/>
     <xsl:variable name="def" select="$ausruestung/ruestung/r[@name=$name]"/>
     <xsl:if test="$def">
@@ -1197,11 +1197,11 @@ Mirakel.Liturgien {</xsl:text>
     <xsl:choose>
       <xsl:when test="$def/@zw">
         <xsl:text>
-    Segnung {</xsl:text>
+  Segnung {</xsl:text>
       </xsl:when>
       <xsl:otherwise>
         <xsl:text>
-    Liturgie {</xsl:text>
+  Liturgie {</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:choose>

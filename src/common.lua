@@ -6,26 +6,30 @@ function common.p(fstr, ...)
   tex.sprint(string.format(string.gsub(fstr, "\n", ""), unpack({...})))
 end
 
-function common.row(...)
+function common.row(output_funcs, ...)
   for i, s in ipairs({...}) do
     if i ~= 1 then
       tex.print([[& ]])
     end
-    tex.sprint(-2, s)
+    if output_funcs ~= nil and output_funcs[i] ~= nil then
+      output_funcs[i](s)
+    else
+      tex.sprint(-2, s)
+    end
   end
 end
 
 function common.fixed_length_row(l, prepend_empty)
-  return function(v)
+  return function(output_funcs, v)
     desired_num = prepend_empty and l - 1 or l
     values = {unpack(v, 1, desired_num)}
     while #values < desired_num do
       table.insert(values, "")
     end
     if prepend_empty then
-      common.row("", unpack(values))
+      common.row(output_funcs, "", unpack(values))
     else
-      common.row(unpack(values))
+      common.row(output_funcs, unpack(values))
     end
   end
 end
@@ -75,7 +79,7 @@ function common.padded_values(t, max_items, name)
   end
 end
 
-function common.inner_rows(v, num_items, num_rows)
+function common.inner_rows(v, num_items, num_rows, output_funcs)
   if num_rows == nil then
     num_rows = #v
   end
@@ -83,13 +87,11 @@ function common.inner_rows(v, num_items, num_rows)
     local my_row = num_items > 1 and common.fixed_length_row(num_items, false) or common.row
     for i=1,num_rows do
       if i > #v then
-        if num_items > 1 then
-          my_row({})
-        else
-          my_row("")
+        for j=2,num_items do
+          tex.sprint("&")
         end
       else
-        my_row(v[i])
+        my_row(output_funcs, v[i])
       end
       if i ~= num_rows then
         tex.sprint([[\\ \hline\relax]])

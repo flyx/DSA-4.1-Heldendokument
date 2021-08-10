@@ -157,7 +157,7 @@
         \scriptsize\textbf{KO} & \scriptsize\textbf{GS} & \scriptsize\textbf{AU} & \scriptsize\textbf{MR} &
         \scriptsize\textbf{LO} & \scriptsize\textbf{TK} & \scriptsize\textbf{ZK} \\ \hline
         \directlua{
-            common.inner_rows(data.Tiere, 15, common.current_page.Tiere)
+            common.inner_rows(data.Tiere, 15, common.current_page.Tiere, {[6] = function(v) common.schaden.render(common.schaden.parse(v)) end})
         }
     \end{tabular}
 \end{dsaSheetBox}

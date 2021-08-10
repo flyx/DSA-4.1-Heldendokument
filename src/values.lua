@@ -252,9 +252,10 @@ function values:cur(name, div)
       return val
     end
     if kind == "be" then
-      if self.SF.Nahkampf.Ruestungsgewoehnung[3] then
+      local rg = self.SF.Nahkampf:getlist("Ruestungsgewoehnung")
+      if rg[3] then
         val = val - 2
-      elseif self.SF.Nahkampf.Ruestungsgewoehnung[1] then
+      elseif rg[1] then
         val = val - 1
       end
       if val < 0 then
