@@ -7,23 +7,62 @@
         display: flex;
         justify-content: space-between;
       }
-      form#import-form {
-        border: 1px solid #333;
-        padding: .5em;
+      h1 {
+        font-size: larger;
+        margin: .5em;
       }
-      header {
+      .step {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-block-end: 2em;
+        align-items: stretch;
+        margin: 0 .5em .5em .5em;
+        padding: 0;
       }
-      form#import-form label {
-        text-align: center;
-        font-weight: bold;
+      .step > h2 {
+        flex-shrink: 0;
+        background-color: coral;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
+        padding: .5em;
+        margin: 0;
         font-size: large;
+      }
+      .step > .options {
+        flex-grow: 1;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: flex-start;
+        align-items: center;
+        background-color: bisque;
+        padding: 3px;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+      }
+      .step p {
+        margin: 0.25em;
+        max-width: 720px;
+        text-align: justify;
+      }
+      .options {
+        flex: 1 1 200px;
+      }
+      strong.option {
+        flex-shrink: 0;
+        padding-left: 1em;
+        padding-right: 1em;
+      }
+      p.option {
+        flex-shrink: 1;
+      }
+      .options p,
+      .options label {
+        padding: 0 .5em;
+      }
+      .option label {
+        text-align: center;
         display: block;
       }
-      form#import-form input {
+      .option input,
+      .option .btns {
         display: block;
         margin-left: auto;
         margin-right: auto;
@@ -77,24 +116,51 @@
   <body>
     <header>
       <h1>DSA 4.1 Heldendokument-Generator</h1>
-
-      <form method="post" action="/import" id="import-form" enctype="multipart/form-data">
-        <label>Held aus Heldensoftware importieren </label>
-        <input id="import" type="file" name="data" />
-      </form>
     </header>
-    <form id="main">
-      <div class="btn-wrapper">
-        <button type="submit">Generieren</button>
-        <div>
-          Lade ein Template:
-          <button type="button" id="profan">Profan</button>
-          <button type="button" id="geweiht">Geweiht</button>
-          <button type="button" id="magier">Magier</button>
+    <section class="step">
+      <h2>Schritt 1</h2>
+      <div class="options">
+        <form method="post" action="/import" id="import-form" enctype="multipart/form-data" class="option">
+          <label>Importiere einen Held aus der Heldensoftware</label>
+          <input id="import" type="file" name="data" />
+        </form>
+        <strong class="option">oder</strong>
+        <div class="option">
+          <label>Lade ein Template</label>
+          <div class="btns">
+            <button type="button" id="profan">Profan</button>
+            <button type="button" id="geweiht">Geweiht</button>
+            <button type="button" id="magier">Magier</button>
+          </div>
+        </div>
+        <strong class="option">oder</strong>
+        <p class="option">Fange mit einer leeren Datei an.</p>
+      </div>
+    </section>
+    <section class="step">
+      <h2>Schritt 2</h2>
+      <div class="options">
+        <div class="option">
+          <p>Sofern du den Helden nicht immer wieder neu aus der Heldensoftware importieren willst, solltest du eine <code>.lua</code> Datei bei dir lokal anlegen.
+          Der Generator speichert deine Eingabe nicht, sie ist weg wenn du die Seite neu lädst!</p>
+          <p>Zum Editieren der Werte bietet sich ein Code-Editor an, der die Programmiersprache <em>Lua</em> beherrscht (das Textfeld unten kann natürlich zum editieren verwendet werden, ist aber mehr zum rein- und rauskopieren gedacht).
+          Die Eingabe ist vom Format her Lua; du musst aber nicht programmieren können und hast auch keinen Zugriff auf die Lua-Standardfunktionen.</p>
+          <p>Editiere die Werte nach Wunsch und speichere sie in die Datei.
+          Die Dokumentation der Eingabestruktur findest du <a href="https://flyx.github.io/DSA-4.1-Heldendokument/">hier</a>.
+          Kopiere danach den Dateiinhalt in das Textfeld unten.</p>
         </div>
       </div>
-
-      <br/>
+    </section>
+    <form id="main">
+      <section class="step">
+        <h2>Schritt 3</h2>
+        <div class="options">
+          <p>Wenn du die Daten fertig editiert und in das Textfeld unten kopiert hast, klicke auf</p>
+          <button type="submit">Generieren</button>
+          <p>Dies kann mehrere Minuten dauern, dann gibt dein Browser dir einen Speichern-Dialog.</p>
+          <p>Hinweis: Das Generieren scheint auf mobilen Endgeräten nicht zu funktionieren, ich weiß nicht warum.</p>
+        </div>
+      </section>
       <textarea name="data" id="data"></textarea>
     </form>
     <div id="overlay" style="display: none;">
