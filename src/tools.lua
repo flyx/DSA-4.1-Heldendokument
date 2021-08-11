@@ -62,12 +62,16 @@ if validate then
   local res = 0
   local prev_pcount = 0
   for i = curarg + 1,#arg do
+    local f = function() error(arg[i] .. " brauchte zu lange zum Laden!") end
+    debug.sethook(f, "", 1e6)
     local f, errmsg = loadfile(arg[i], "t", schema)
     if f == nil then
+      debug.sethook()
       io.stderr:write(errmsg)
       res = 1
     else
       local ret = f()
+      debug.sethook()
       if d.Poison.count ~= prev_pcount then
         res = 1
         prev_pcount = d.Poison.count

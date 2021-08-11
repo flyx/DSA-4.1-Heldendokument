@@ -17,11 +17,14 @@ if i < #arg then
 end
 
 if i == #arg then
+  local f = function() tex.error(arg[i] .. " brauchte zu lange zum Laden!") end
+  debug.sethook(f, "", 1e6)
   local f, errmsg = loadfile(arg[i], "t", schema)
   if f == nil then
     tex.error(errmsg)
   end
   f()
+  debug.sethook()
   if d.Poison.count > 0 then
     tex.error("Fehler beim Laden der Heldendefinition!")
   end
