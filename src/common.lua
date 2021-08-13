@@ -384,19 +384,20 @@ function common.merkmalliste(input, zauber)
     else
       ret = ret .. ", "
     end
-    ret = ret .. v
-  end
-  for k, label in pairs({Daemonisch="Dämonisch", Elementar="Elementar"}) do
-    local vals = input[k]
-    if vals ~= nil then
-      for _, item in ipairs(vals) do
-        if first then
-          first = false
-        else
-          ret = ret .. ", "
+    local mt = getmetatable(v)
+    if mt.name == "Daemonisch" or mt.name == "Elementar" then
+      ret = ret .. (mt.name == "Daemonisch" and "Dämonisch" or "Elementar")
+      if #v > 0 then
+        ret = ret .. " ("
+        local f = true
+        for _, s in ipairs(v) do
+          if f then f = false else ret = ret .. ", " end
+          ret = ret .. s
         end
-        ret = ret .. label .. " (" .. item .. ")"
+        ret = ret .. ")"
       end
+    else
+      ret = ret .. v
     end
   end
   return ret

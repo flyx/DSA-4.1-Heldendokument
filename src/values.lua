@@ -292,20 +292,22 @@ local function merkmal_mod_from(merkmal, merkmale, delta)
   return 0
 end
 
-local function merkmal_submod_from(name, sub, merkmale, delta)
+local function merkmal_submod_from(sub, merkmale, delta)
   local ret = 0
   if sub ~= nil and merkmale ~= nil then
-    if merkmale.gesamt ~= nil then
-      ret = ret + delta
+    for _, v in ipairs(merkmale) do
+      if v == "gesamt" then
+        ret = ret + delta
+        break
+      end
     end
-    if type(sub) == "table" then
-      for _,v in ipairs(sub) do
-        if merkmale[v] ~= nil then
+    for _, v in ipairs(sub) do
+      for _, w in ipairs(merkmale) do
+        if v == w then
           ret = ret + delta
+          break
         end
       end
-    elseif type(sub) == "string" and merkmale[sub] ~= nil then
-      ret = ret + delta
     end
   end
   return ret
@@ -340,14 +342,16 @@ function values:lernschwierigkeit(z)
   end
   local index = skt.spalte:num(z.Komplexitaet)
   for i, merkmal in ipairs(z.Merkmale) do
-    index = index + merkmal_mod_from(merkmal, self.Magie.Merkmalskenntnis, -1)
-    index = index + merkmal_mod_from(merkmal, self.Vorteile.Magisch:getlist("BegabungFuerMerkmal"), -1)
-    index = index + merkmal_mod_from(merkmal, self.Nachteile.Magisch:getlist("UnfaehigkeitFuerMerkmal"), 1)
-  end
-  for _, name in ipairs({"Elementar", "Daemonisch"}) do
-    index = index + merkmal_submod_from(name, z.Merkmale[name], self.Magie.Merkmalskenntnis[name], -1)
-    index = index + merkmal_submod_from(name, z.Merkmale[name], self.Vorteile.Magisch:getlist("BegabungFuerMerkmal")[name], -1)
-    index = index + merkmal_submod_from(name, z.Merkmale[name], self.Nachteile.Magisch:getlist("UnfaehigkeitFuerMerkmal")[name], 1)
+    local mt = getmetatable(merkmal)
+    if mt.name == "Daemonisch" or mt.name == "Elementar" then
+      index = index + merkmal_submod_from(merkmal, self.Magie.Merkmalskenntnis[mt.name], -1)
+      index = index + merkmal_submod_from(merkmal, self.Vorteile.Magisch:getlist("BegabungFuerMerkmal")[mt.name], -1)
+      index = index + merkmal_submod_from(merkmal, self.Nachteile.Magisch:getlist("UnfaehigkeitFuerMerkmal")[mt.name], 1)
+    else
+      index = index + merkmal_mod_from(merkmal, self.Magie.Merkmalskenntnis, -1)
+      index = index + merkmal_mod_from(merkmal, self.Vorteile.Magisch:getlist("BegabungFuerMerkmal"), -1)
+      index = index + merkmal_mod_from(merkmal, self.Nachteile.Magisch:getlist("UnfaehigkeitFuerMerkmal"), 1)
+    end
   end
   for _, name in ipairs(self.Vorteile.Magisch:getlist("BegabungFuerZauber")) do
     if name == z.Name then

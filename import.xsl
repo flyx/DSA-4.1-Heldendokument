@@ -1324,7 +1324,7 @@ Magie.Repraesentationen {
     <xsl:variable name="base" select="dsa:merkmalBase($item)"/>
     <xsl:choose>
       <xsl:when test="contains($base, '(')">
-        <func:result select="substring-before(substring-after('(', $base), ')')"/>
+        <func:result select="substring-before(substring-after($base, '('), ')')"/>
       </xsl:when>
       <xsl:otherwise>
         <func:result select="'gesamt'"/>
@@ -1343,16 +1343,18 @@ Magie.Repraesentationen {
       <xsl:text>
   Elementar {</xsl:text>
       <xsl:for-each select="$ele">
-        <xsl:value-of select="concat(dsa:stringVal(dsa:merkmalSub($item)), ', ')"/>
+        <xsl:if test="position() &gt; 1"><xsl:text>, </xsl:text></xsl:if>
+        <xsl:value-of select="dsa:stringVal(dsa:merkmalSub($item))"/>
       </xsl:for-each>
       <xsl:text>},</xsl:text>
     </xsl:if>
     <xsl:variable name="dae" select="$items[starts-with(dsa:merkmalBase($item, .), 'Dämonisch')]"/>
     <xsl:if test="count($dae) &gt; 0">
       <xsl:text>
-  Daemonisch = {</xsl:text>
+  Daemonisch {</xsl:text>
       <xsl:for-each select="$dae">
-        <xsl:value-of select="concat(dsa:stringVal(dsa:merkmalSub($item)), ',')"/>
+        <xsl:if test="position() &gt; 1"><xsl:text>, </xsl:text></xsl:if>
+        <xsl:value-of select="dsa:stringVal(dsa:merkmalSub($item))"/>
       </xsl:for-each>
       <xsl:text>},</xsl:text>
     </xsl:if>

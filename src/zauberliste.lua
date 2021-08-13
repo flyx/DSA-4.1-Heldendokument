@@ -104,23 +104,20 @@ function zauberliste.seite(start)
         else
           tex.sprint(-2, ", ")
         end
-        tex.sprint(-2, merkmale.kurz(m))
-      end
-      for k, label in pairs({Daemonisch="Dämon", Elementar="Element"}) do
-        local sub = z.Merkmale[k]
-        if sub ~= nil then
-          if first then
-            first = false
-          else
-            tex.sprint(-2, ", ")
+        local mt = getmetatable(m)
+        if mt.name == "Daemonisch" or mt.name == "Elementar" then
+          tex.sprint(mt.name == "Daemonisch" and "Dämon" or "Element")
+          if #m > 0 then
+            tex.sprint(" (")
+            local f = true
+            for _, v in ipairs(m) do
+              if f then f = false else tex.sprint(", ") end
+              tex.sprint(-2, merkmale.kurz(v))
+            end
+            tex.sprint(")")
           end
-          if type(sub) == "string" then
-            tex.sprint(-2, label .. " (")
-            tex.sprint(-2, merkmale.kurz(sub))
-            tex.sprint(-2, ")")
-          else
-            tex.sprint(-2, label)
-          end
+        else
+          tex.sprint(-2, merkmale.kurz(m))
         end
       end
       tex.sprint("&")
