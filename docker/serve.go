@@ -3,18 +3,28 @@ package main
 import (
 	"bytes"
 	"context"
+	"flag"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
 	"os/signal"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"syscall"
 
 	"golang.org/x/net/websocket"
 )
+
+type processingRequest struct {
+	c        *websocket.Conn
+	finished chan struct{}
+}
+
+var rqChannel chan processingRequest
+var srcDir, wd string
 
 func index(w http.ResponseWriter, req *http.Request) {
 	if req.Method != "GET" {
@@ -38,7 +48,7 @@ func index(w http.ResponseWriter, req *http.Request) {
 }
 
 func template(w http.ResponseWriter, req *http.Request) {
-	file, err := ioutil.ReadFile("templates/" + req.URL.Path[1:] + ".lua")
+	file, err := ioutil.ReadFile(filepath.Join(srcDir, "templates", req.URL.Path[1:]+".lua"))
 	if err != nil {
 		panic(err)
 	}
@@ -76,6 +86,7 @@ func importHeld(w http.ResponseWriter, req *http.Request) {
 	var stdout, stderr bytes.Buffer
 	xsltproc.Stdout = &stdout
 	xsltproc.Stderr = &stderr
+	xsltproc.Dir = srcDir
 	if err := xsltproc.Start(); err != nil {
 		panic(err)
 	}
@@ -95,13 +106,51 @@ func importHeld(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	setupRAMdisk()
+	src_dir := flag.String("src", "/heldendokument", "Verzeichnis, in dem die Quelldateien liegen")
+	num_threads := flag.Int("threads", 5, "Anzahl threads, mit denen gleichzeitig Dokumente erstellt werden können")
+	flag.Parse()
+	if len(flag.Args()) > 0 {
+		log.Fatal("unerwarteter Parameter: " + flag.Arg(0))
+	}
+	srcDir = filepath.Join(*src_dir, ".")
+	{
+		var err error
+		wd, err = os.Getwd()
+		if err != nil {
+			log.Fatal("unable to get working directory: " + err.Error())
+		}
+	}
+
+	var baseDir string
+	if setupRAMdisk() {
+		baseDir = "/ramdisk/"
+	} else {
+		baseDir = os.TempDir()
+	}
+
+	rqChannel = make(chan processingRequest)
+	processors := make([]Processor, *num_threads, *num_threads)
+	for i := 0; i < *num_threads; i++ {
+		dir, err := ioutil.TempDir(baseDir, "heldendokument-")
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		log.Println("starting processor in " + dir)
+		processors[i].init(dir)
+		go processors[i].run(rqChannel)
+	}
+	defer func() {
+		for _, p := range processors {
+			os.RemoveAll(p.dir)
+		}
+	}()
+
 	srv := &http.Server{Addr: ":80"}
 	log.Println("Starting server")
 	go worker(srv)
 	http.HandleFunc("/", index)
 	http.HandleFunc("/index.html", index)
-	http.Handle("/process", websocket.Handler(buildPdf))
+	http.Handle("/process", websocket.Handler(wsHandler))
 	http.HandleFunc("/import", importHeld)
 	http.HandleFunc("/profan", template)
 	http.HandleFunc("/geweiht", template)
@@ -109,26 +158,50 @@ func main() {
 	srv.ListenAndServe()
 }
 
-func setupRAMdisk() {
+func setupRAMdisk() bool {
 	log.Println("Setting up RAM disk…")
 	create := exec.Command("mount", "-t", "tmpfs", "-o", "size=64M", "tmpfs", "/ramdisk")
 	if err := create.Run(); err != nil {
 		log.Println("Cannot initialize RAM disk, running from normal storage")
 		log.Println("  to run on a RAM disk, call docker run with --privileged.")
-		return
-	}
-	cp := exec.Command("cp", "-a", "/heldendokument/.", "/ramdisk/")
-	if err := cp.Run(); err != nil {
-		panic("while copying to ramdisk: " + err.Error())
-	}
-	if err := os.Chdir("/ramdisk"); err != nil {
-		panic("while chdir to ramdisk: " + err.Error())
+		return false
 	}
 	log.Println("Running on RAM disk.")
+	return true
+}
+
+type Processor struct {
+	dir string
+}
+
+func (p *Processor) init(dir string) {
+	p.dir = dir
+	cp := exec.Command("cp", "-a", srcDir, dir)
+	if err := cp.Run(); err != nil {
+		log.Fatal("while copying sources to processor directory: " + err.Error())
+	}
+}
+
+func (p *Processor) run(c chan processingRequest) {
+	for {
+		request := <-c
+		if request.c == nil {
+			break
+		}
+		p.buildPdf(request.c)
+		request.finished <- struct{}{}
+	}
 }
 
 func wsHandler(c *websocket.Conn) {
-	go buildPdf(c)
+	resp := make(chan struct{})
+	select {
+	case rqChannel <- processingRequest{c, resp}:
+		_ = <-resp
+		break
+	default:
+		sendWithStatus(c, 3, []byte{})
+	}
 }
 
 func sendWithStatus(c *websocket.Conn, status byte, content []byte) {
@@ -139,41 +212,105 @@ func sendWithStatus(c *websocket.Conn, status byte, content []byte) {
 	c.Close()
 }
 
-type ProgressChecker struct {
-	c   *websocket.Conn
-	cur byte
-}
-
-func (p *ProgressChecker) Write(b []byte) (n int, err error) {
-	str := string(b)
-	if strings.Contains(str, "Latexmk: applying rule 'lualatex'...") {
-		p.cur += 25
-		payload := []byte{p.cur, 0}
-		websocket.Message.Send(p.c, payload)
-	}
-	return len(b), nil
-}
-
-func buildPdf(c *websocket.Conn) {
+func (p *Processor) buildPdf(c *websocket.Conn) {
 	var input string
 	if err := websocket.Message.Receive(c, &input); err != nil {
 		os.Stderr.WriteString("websocket error: " + err.Error() + "\n")
 		c.Close()
 		return
 	}
-	held := exec.Command("/bin/sh", "held.sh")
+	held := exec.Command("/bin/sh", filepath.Join(wd, "held.sh"))
 	held.Stdin = strings.NewReader(input)
-	held.Stdout = &ProgressChecker{c, 0}
+	held.Stdout = &ProgressChecker{InitialState, c, 0, nil, strings.Builder{}, 0, ""}
+	held.Dir = p.dir
 	if err := held.Start(); err != nil {
 		panic(err)
 	}
 	if err := held.Wait(); err != nil {
-		log, _ := ioutil.ReadFile("src/heldendokument.log")
+		log.Printf("error while processing: %s\n", err.Error())
+		log, _ := ioutil.ReadFile(filepath.Join(p.dir, "src", "heldendokument.log"))
 		sendWithStatus(c, 1, log)
 	} else {
-		pdf, _ := ioutil.ReadFile("src/heldendokument.pdf")
+		pdf, _ := ioutil.ReadFile(filepath.Join(p.dir, "src", "heldendokument.pdf"))
 		sendWithStatus(c, 2, pdf)
 	}
+}
+
+type ProgressState int
+
+const (
+	InitialState ProgressState = iota
+	FileListStartedState
+	AwaitingNextRun
+	ProgressReportState
+)
+
+type ProgressChecker struct {
+	state    ProgressState
+	c        *websocket.Conn
+	cur      byte
+	fileList []string
+	builder  strings.Builder
+	nextFile byte
+	trailing string
+}
+
+func (p *ProgressChecker) Write(b []byte) (n int, err error) {
+	str := p.trailing + string(b)
+	for {
+		switch p.state {
+		case InitialState:
+			index := strings.Index(str, "---\n")
+			if index != -1 {
+				str = str[index+4:]
+				p.state = FileListStartedState
+				continue
+			}
+		case FileListStartedState:
+			index := strings.Index(str, "---\n")
+			if index != -1 {
+				p.builder.WriteString(str[:index])
+				p.fileList = strings.Split(p.builder.String(), "\n")
+				if len(p.fileList[len(p.fileList)-1]) == 0 {
+					p.fileList = p.fileList[:len(p.fileList)-1]
+				}
+				str = str[index+4:]
+				p.state = AwaitingNextRun
+				continue
+			}
+			p.builder.WriteString(str)
+		case AwaitingNextRun:
+			if index := strings.Index(str, "Latexmk: applying rule 'lualatex'..."); index != -1 {
+				p.nextFile = 0
+				p.state = ProgressReportState
+				payload := []byte{p.cur, 0}
+				websocket.Message.Send(p.c, payload)
+				str = str[index+len("Latexmk: applying rule 'lualatex'..."):]
+				continue
+			}
+		case ProgressReportState:
+			if index := strings.Index(str, p.fileList[p.nextFile]); index != -1 {
+				var percentage byte = p.cur + 33*(p.nextFile+1)/byte(len(p.fileList)+1)
+				payload := []byte{percentage, 0}
+				websocket.Message.Send(p.c, payload)
+				str = str[index+len(p.fileList[p.nextFile]):]
+				p.nextFile += 1
+				if p.nextFile == byte(len(p.fileList)) {
+					p.state = AwaitingNextRun
+					p.cur = p.cur + 33
+				}
+				continue
+			}
+		}
+		break
+	}
+
+	if len(str) < 20 {
+		p.trailing = str
+	} else {
+		p.trailing = str[len(str)-20:]
+	}
+	return len(b), nil
 }
 
 func worker(srv *http.Server) {

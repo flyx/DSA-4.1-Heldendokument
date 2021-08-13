@@ -152,14 +152,17 @@
 \vspace{-10pt}
 
 \begin{dsaSheetBox}
-    \begin{tabular}{p{3cm}|x{3.9cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}}
+    \begin{NiceTabular}{p{3.067cm}|x{3.9cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}}
+    \CodeBefore
+        \rowcolors{2}{gray!30}{white}
+    \Body
         \scriptsize\textbf{Name} & \scriptsize\textbf{Art} & \scriptsize\textbf{INI} & \scriptsize\textbf{AT} & \scriptsize\textbf{PA} & \scriptsize\textbf{TP} & \scriptsize\textbf{LE} & \scriptsize\textbf{RS} &
         \scriptsize\textbf{KO} & \scriptsize\textbf{GS} & \scriptsize\textbf{AU} & \scriptsize\textbf{MR} &
         \scriptsize\textbf{LO} & \scriptsize\textbf{TK} & \scriptsize\textbf{ZK} \\ \hline
         \directlua{
             common.inner_rows(data.Tiere, 15, common.current_page.Tiere, {[6] = function(v) common.schaden.render(common.schaden.parse(v)) end})
         }
-    \end{tabular}
+    \end{NiceTabular}
 \end{dsaSheetBox}
 }
 
@@ -170,7 +173,7 @@
             \large\mansontt\bfseries Liturgiekenntnis & \directlua{tex.sprint(-2, data.Mirakel.Liturgiekenntnis.Name)} & \cellcolor{white}\directlua{tex.sprint(-2, data.Mirakel.Liturgiekenntnis.Wert)} \\
         \end{tabular}}
 
-        \vspace{13.5pt}
+        \vspace{1.08pt}
         \renewcommand{\arraystretch}{1}
         \setlength{\tabcolsep}{2pt}
         \normalfont\fontsize{8}{12}\selectfont
@@ -189,7 +192,7 @@
         \vspace{1.08pt}
         \begin{NiceTabular}{y{0.7cm}|p{6.5cm}|x{1.3cm}}
         \CodeBefore
-            \rowcolors{2}{white}{gray!30}
+            \rowcolors{2}{gray!30}{white}
         \Body
             \directlua{
                 common.header_row("scriptsize", "dsaSH",

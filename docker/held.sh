@@ -10,6 +10,7 @@ if [ $? -eq 1 ]; then
   fi
   exit 1
 fi
+cp heldendokument.log /dev/stdout
 
 latexmk -c
 latexmk -lualatex='lualatex %O %S held.lua' heldendokument.tex

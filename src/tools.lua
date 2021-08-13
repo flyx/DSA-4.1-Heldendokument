@@ -58,11 +58,22 @@ if gendoc then
   end
 end
 
+local pages_source = {
+  Front             = "frontseite.tex",
+  Talentliste       = "talentbogen.tex",
+  Kampfbogen        = "kampfbogen.tex",
+  Ausruestungsbogen = "ausruestung.tex",
+  Liturgiebogen     = "liturgien.tex",
+  Zauberdokument    = "zauberdokument.tex",
+  Zauberliste       = "zauberliste.tex",
+  Ereignisliste     = "ereignisse.tex",
+}
+
 if validate then
   local res = 0
   local prev_pcount = 0
   for i = curarg + 1,#arg do
-    local f = function() error(arg[i] .. " brauchte zu lange zum Laden!") end
+    local f = function() error(arg[i] .. " did load too long!") end
     debug.sethook(f, "", 1e6)
     local f, errmsg = loadfile(arg[i], "t", schema)
     if f == nil then
@@ -83,7 +94,14 @@ if validate then
     end
   end
   if res == 0 then
-    io.stdout:write("all files validated successfully!\n")
+    io.stdout:write("all files validated successfully! This input will process the following files:\n---\n")
+    local l = schema.Layout:instance()
+    for i,p in ipairs(l.value) do
+      local pKind = getmetatable(p).name
+      io.stdout:write(pages_source[pKind])
+      io.stdout:write("\n")
+    end
+    io.stdout:write("---\n")
   end
   os.exit(res)
 end

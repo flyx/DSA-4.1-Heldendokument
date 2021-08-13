@@ -247,6 +247,11 @@
               link.click();
               URL.revokeObjectURL(url);
               break;
+            case 3:
+              document.getElementById("errorDisplay").value = "Server überlastet – bitte versuche es später noch einmal.";
+              document.getElementById("error").style.display = "";
+              document.getElementById("processing").style.display = "none";
+              return true;
           }
           overlay.style.display = "none";
           return true;
