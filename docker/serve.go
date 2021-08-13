@@ -112,7 +112,7 @@ func main() {
 	if len(flag.Args()) > 0 {
 		log.Fatal("unerwarteter Parameter: " + flag.Arg(0))
 	}
-	srcDir = filepath.Join(*src_dir, ".")
+	srcDir = *src_dir
 	{
 		var err error
 		wd, err = os.Getwd()
@@ -176,7 +176,7 @@ type Processor struct {
 
 func (p *Processor) init(dir string) {
 	p.dir = dir
-	cp := exec.Command("cp", "-a", srcDir, dir)
+	cp := exec.Command("cp", "-a", srcDir+"/.", dir)
 	if err := cp.Run(); err != nil {
 		log.Fatal("while copying sources to processor directory: " + err.Error())
 	}

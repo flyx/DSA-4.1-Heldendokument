@@ -139,28 +139,6 @@ Magie.Merkmalskenntnis {
     <xsl:text>
 }
 
-Magie.Begabungen {
-  Zauber = {</xsl:text>
-    <xsl:apply-templates select="vt" mode="single">
-      <xsl:with-param name="item" select="'vorteil'"/>
-      <xsl:with-param name="name" select="'Begabung für [Zauber]'"/>
-    </xsl:apply-templates><xsl:text>},
-  Merkmale = {</xsl:text>
-    <xsl:apply-templates select="vt" mode="merkmale">
-      <xsl:with-param name="item" select="'vorteil'"/>
-      <xsl:with-param name="name" select="'Begabung für [Merkmal]'"/>
-    </xsl:apply-templates>
-    <xsl:text>},
-}
-
-Magie.Unfaehigkeiten {
-  </xsl:text>
-    <xsl:apply-templates select="vt" mode="merkmale">
-      <xsl:with-param name="item" select="'vorteil'"/>
-      <xsl:with-param name="name" select="'Unfähigkeit für [Merkmal]'"/>
-    </xsl:apply-templates>
-    <xsl:text>
-}
 </xsl:text>
     </xsl:if>
     <xsl:if test="zauberliste/zauber[@repraesentation != 'Magiedilletant']">
