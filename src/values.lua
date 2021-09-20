@@ -574,6 +574,13 @@ function values:talentsteigerung(e)
         if type(t.TaW) ~= "number" then
           tex.error("\n[TaW] Kann '" .. e.Name .. "' nicht steigern: hat keinen Zahlenwert, sondern " .. type(t.TaW))
         end
+        if getmetatable(t).name == "Nah" then
+          if e.AT == nil then
+            tex.error("\n[TaW] Steigerung von " .. e.Name .. " benötigt AT-Wert")
+          end
+        elseif e.AT ~= nil then
+          tex.error("\n[Taw] Steigerung von " .. e.Name .. " kann mit einem AT-Wert nichts anfangen")
+        end
         local mt = getmetatable(t)
         event[1] = event[1] .. tonumber(t.TaW) .. " auf " .. tonumber(e.Zielwert)
         local spalte
@@ -593,6 +600,9 @@ function values:talentsteigerung(e)
         while t.TaW < e.Zielwert do
           t.TaW = t.TaW + 1
           ap = ap + skt:kosten(skt.spalte:effektiv(spalte, t.TaW, e.Methode), t.TaW)
+        end
+        if e.AT ~= nil then
+          t.AT = t.AT + e.AT
         end
         event[2] = -1 * ap
         event[3] = faktor
@@ -944,6 +954,17 @@ function values:aktiviere(e)
   return event, insta_steiger
 end
 
+function values:spaetweihe(e)
+  self.Mirakel.Liturgiekenntnis.Name = e.Gottheit
+  self.Mirakel.Liturgiekenntnis.Wert = 3
+  for _, n in ipairs({"Plus", "Minus", "Liturgien"}) do
+    for _, v in ipairs(e[n]) do
+      self.Mirakel[n]:append(v)
+    end
+  end
+  return {"Spätweihe (" .. e.Gottheit .. ")", -1 * e.Kosten, skt.faktor["1"], -1 * e.Kosten, self:ap_mod(e.Kosten)}
+end
+
 function values:zugewinn(e)
   local event = {e.Text, e.AP, skt.faktor["1"], e.AP}
   if type(self.AP.Gesamt) == "number" then
@@ -997,6 +1018,8 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
         tex.error("illegal insta_steiger: " .. imt.name)
       end
     end
+  elseif mt.name == "Spaetweihe" then
+    event = values:spaetweihe(e)
   elseif mt.name == "Zugewinn" then
     event = values:zugewinn(e)
   else

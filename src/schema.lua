@@ -290,8 +290,8 @@ local Behinderung = d.Matching:def({name = "Behinderung", description = "Behinde
 local BasisEig = d.Matching:def({name = "BasisEig", description = "Name einer Basis-Eigenschaft, oder ** in seltenen Fällen."}, "%*%*", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK")
 local Spezialisierungen = d.Multivalue:def({name = "Spezialisierungen", description = "Liste von Spezialisierungen. Leere tables {} können als Zeilenumbruch benutzt werden. Ist der erste Eintrag {}, wird direkt nach dem Talentnamen umgebrochen."}, String)
 
-d.Row:def({name = "Nah", description = "Ein Nahkampf-Talent mit AT/PA Verteilung."},
-  {"Name", String}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"AT", OptNum, {}}, {"PA", OptNum, {}}, {"TaW", OptNum, {}}, {"Spezialisierungen", Spezialisierungen, {}})
+d.Row:def({name = "Nah", description = "Ein Nahkampf-Talent mit AT/PA Verteilung. Der PA-Wert berechnet sich aus TaW - AT."},
+  {"Name", String}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"AT", OptNum, {}}, {"TaW", OptNum, {}}, {"Spezialisierungen", Spezialisierungen, {}})
 d.Row:def({name = "NahAT", description = "Ein Nahkampf-Talent, dessen Wert ausschließlich zur Attacke dient und das keine AT/PA Verteilung hat."},
   {"Name", String}, {"Steigerungsspalte", SteigSpalte, ""}, {"BE", Behinderung, ""}, {"TaW", OptNum, {}}, {"Spezialisierungen", Spezialisierungen, {}})
 d.Row:def({name = "Fern", description = "Ein Fernkampf-Talent."},
@@ -375,11 +375,14 @@ function schema.Talente.Gaben.example(printer)
 end
 function schema.Talente.Kampf.example(printer)
   printer:highlight([[Talente.Kampf {
+  -- Spezialisierungen werden vorne in die Namensspalte geschrieben.
   Fern {"Bogen", "E", "BE-3", 17, Spezialisierungen = {"Kurzbogen", "Langbogen"}},
-  Nah {"Dolche", "D", "BE-1", 8, 5, 13},
+  -- AT=8, TaW=13, PA-Wert von 5 wird berechnet.
+  Nah {"Dolche", "D", "BE-1", 8, 13},
+  -- Kein AT-Wert, da keine AT/PA-Verteilung.
   NahAT {"Lanzenreiten", "E", "", 4},
-  Nah {"Raufen", "C", "BE", 6, 4, 10},
-  Nah {"Ringen", "D", "BE", 6, 4, 10},
+  Nah {"Raufen", "C", "BE", 6, 10},
+  Nah {"Ringen", "D", "BE", 6, 10},
 }]])
 end
 function schema.Talente.Koerper.example(printer)
@@ -740,8 +743,8 @@ local SteigerMethode = d.Matching:def({name = "SteigerMethode", description = "S
 local SFLernmethode = d.Matching:def({name = "SFLernmethode", description = "Lernmethode für eine Sonderfertigkeit"}, "SE", "Lehrmeister")
 local EigSteigerMethode = d.Matching:def({name = "EigSteigerMethode", description = "Steigerungsmethode für Eigenschaften"}, "SE", "Standard")
 
-local TaW = d.Row:def({name = "TaW", description = "Steigerung eines Talentwerts. Heißen verschiedene Talente gleich, kann der Typ angegeben werden (z.B. Sprache Tuladimya vs Schrift Tulamidya)."},
-  {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"}, {"Typ", nil, {}})
+local TaW = d.Row:def({name = "TaW", description = "Steigerung eines Talentwerts. Heißen verschiedene Talente gleich, kann der Typ angegeben werden (z.B. Sprache Tuladimya vs Schrift Tulamidya). Der Wert AT muss angegeben werden bei Nahkampftalenten mit AT/PA Verteilung und gibt an, um wie viel die AT erhöht wird."},
+  {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"}, {"Typ", nil, {}}, {"AT", OptNum, {}})
 
 local ZfW = d.Row:def({name = "ZfW", description = "Steigerung eines Zauberfertigkeitwerts"},
   {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"})
@@ -775,11 +778,19 @@ local Sortiere = d.Multivalue:def({name = "Sortiere", description = "Definiert, 
 local Aktiviere = d.Row:def({name = "Aktiviere", description = "Aktiviert ein Talent, einen Zauber, eine Liturgie oder ein Ritual. Ist der gegebene Wert des Talents oder des Zaubers größer 0, wird anschließend eine Steigerung durchgeführt. Für Gesellschafts-, Natur-, Wissens- und Handwerkstalente muss die Talentgruppe angegeben werden; in allen anderen Fällen wird sie ignoriert."},
   {"Subjekt", nil}, {"Methode", SteigerMethode, "Lehrmeister"}, {"Sortierung", Sortiere, "Name"}, {"Talentgruppe", String, ""})
 
+local Spaetweihe = d.Row:def({name = "Spaetweihe", description = "Spätweihe eines Charakters. Die angegebenen Kosten schließen alle gegebenen Segnungen und Liturgien mit ein; SE halbiert die gegebenen Kosten. Liturgiekenntnis wird auf 3 gesetzt."},
+  {"Gottheit", String},
+  {"Liturgien", d.List:def({name = "Spaetweihe.Liturgien", description = "Liste von Liturgien, die durch die Spätweihe erlernt werden.", item_name = "Liturgie"}, {Segnung, Liturgie}), {}},
+  {"Plus", d.List:def({name = "Spaetweihe.Plus", description = "Der Gottheit wohlgefällige Talente"}, {String}), {}},
+  {"Minus", d.List:def({name = "Spaetweihe.Minus", description = "Talente, die der Gottheit zuwider sind"}, {String}), {}},
+  {"Kosten", Ganzzahl},
+  {"Methode", SFLernmethode, "Lehrmeister"})
+
 local Zugewinn = d.Row:def({name = "Zugewinn", description = "Zugewinn von AP. Kann als Überschrift (fett) formatiert werden."},
   {"Text", String}, {"AP", Ganzzahl}, {"Fett", schema.Boolean, false})
 
 d:singleton(d.List, {name = "Ereignisse", description = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"}, {
-  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, Zugewinn
+  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, Spaetweihe, Zugewinn
 }) {}
 function schema.Ereignisse.example(printer)
   printer:highlight([[Ereignisse {
@@ -791,6 +802,8 @@ function schema.Ereignisse.example(printer)
     TaW {"Geschichtswissen", 11, "SE"},
     -- steigere Tanzen auf 4 mittels gegenseitigem Lehren
     TaW {"Tanzen", 4, "Gegenseitig"},
+    -- steigere Stäbe auf 11 mittels Lehrmeister. Verteile zwei zusätzliche Punkte auf AT (den Rest auf PA).
+    TaW {"Stäbe", 11, "Lehrmeister", AT=2},
     -- aktiviere Wissenstalent Staatskunst und steigere es auf 4 mittels Lehrmeister
     Aktiviere {Talent {"Staatskunst", "KL", "IN", "CH", 4}, "Lehrmeister", Talentgruppe = "Wissen"},
     -- seigere KO auf 12 mittels SE
@@ -807,6 +820,24 @@ function schema.Ereignisse.example(printer)
     Spezialisierung {"Horriphobus Schreckgestalt", "Erzwingen"},
     -- steigere den Zauber Klarum Purum auf 12 mittels Lehrmeister
     ZfW {"Klarum Purum", 12, "Lehrmeister"},
+    -- erhalte eine Spätweihe
+    Spaetweihe {"Boron",
+      Plus      = {"Schleichen", "Überzeugen"},
+      Minus     = {"Singen", "Überreden"},
+      Liturgien = {
+        Segnung {76, "Feuersegen"},
+        Segnung {78, "Glückssegen"},
+        Segnung {79, "Grabsegen"},
+        Segnung {82, "Märtyrersegen"},
+        Segnung {83, "Schutzsegen"},
+        Segnung {84, "Speisesegen"},
+        Segnung {85, "Tranksegen"},
+        Liturgie {107, "Bannfluch des Heiligen Khalid", {III}},
+        Liturgie {261, "Etilias Zeit der Meditation", {I}}
+      },
+      Kosten  = 2000,
+      Methode = "Lehrmeister"
+   },
   }]])
 end
 

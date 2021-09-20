@@ -80,20 +80,21 @@ function talent.be(value)
 end
 
 function talent.nah(v)
-  for j = 1,6 do
-    tex.sprint([[& ]])
-    local content = v[j]
-    if j == 1 then
-      tex.sprint([[\hspace{-8pt}]])
-      talent.namecol(content, v.Spezialisierungen)
-    elseif j == 2 then
-      tex.sprint(-2, data:kampf_schwierigkeit(v))
-    elseif j == 3 then
-      tex.sprint(-2, talent.be(content))
-    else
-      tex.sprint(-2, content)
-    end
+  tex.sprint([[& ]])
+  tex.sprint([[\hspace{-8pt}]])
+  talent.namecol(v.Name, v.Spezialisierungen)
+  tex.sprint([[& ]])
+  tex.sprint(-2, data:kampf_schwierigkeit(v))
+  tex.sprint([[& ]])
+  tex.sprint(-2, talent.be(v.BE))
+  tex.sprint([[& ]])
+  tex.sprint(-2, v.AT)
+  tex.sprint([[& ]])
+  if v.TaW ~= nil and v.AT ~= nil then
+    tex.sprint(-2, v.TaW - v.AT)
   end
+  tex.sprint([[& ]])
+  tex.sprint(-2, v.TaW)
 end
 
 function talent.fern(v, filler)
