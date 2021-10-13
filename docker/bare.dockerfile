@@ -11,7 +11,7 @@ RUN apt update -y && apt upgrade -y && apt install -f -y --no-install-recommends
 COPY src/*.lua src/*.tex src/.latexmkrc src/dsa.cls /heldendokument/src/
 COPY img/silhouette.png /heldendokument/img/silhouette.png
 COPY docker/held.sh /heldendokument
-COPY *.otf /fonts
+COPY *.otf /fonts/
 
 ENV OSFONTDIR /fonts
 ENV TERM xterm
