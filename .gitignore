@@ -5,6 +5,10 @@
 *.fls
 *.out
 *.otf
+*.dvi
+/*.lua
+/*.xml
+*.tar
 img/logo-fanprodukt.png
 img/wallpaper.jpg
 *.DS_Store

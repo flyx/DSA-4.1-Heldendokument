@@ -488,7 +488,7 @@ function values:ap_mod(kosten)
   if type(self.AP.Eingesetzt) == "number" then
     self.AP.Eingesetzt = self.AP.Eingesetzt + kosten
   end
-  return self.cur("AP")
+  return self:cur("AP")
 end
 
 function values:steigerSF(tname, e, faktorMod, target)
@@ -972,7 +972,7 @@ function values:zugewinn(e)
   if type(self.AP.Gesamt) == "number" then
     self.AP.Gesamt = self.AP.Gesamt + e.AP
   end
-  event[5] = self.cur("AP")
+  event[5] = self:cur("AP")
   event[6] = e.Fett
   return event
 end
@@ -983,7 +983,7 @@ function values:frei(e)
   debug.sethook(f, "", 1e6)
   e.Modifikation(self)
   debug.sethook()
-  event[5] = self.cur("AP")
+  event[5] = self:cur("AP")
   return event
 end
 
@@ -1029,7 +1029,7 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
     event = values:spaetweihe(e)
   elseif mt.name == "Zugewinn" then
     event = values:zugewinn(e)
-  elseif mt.name = "Frei" then
+  elseif mt.name == "Frei" then
     event = values:frei(e)
   else
     tex.error("\n[Ereignisse] unbekannter Ereignistyp: '" .. mt.name .. "'")

@@ -53,7 +53,7 @@ local Ausruestungsbogen = d.Record:def({name = "Ausruestungsbogen", description 
 
 local Liturgiebogen = d.Record:def({name = "Liturgiebogen", description = "Bogen für Liturgien & Ausrüsung."},
   {"Kleidung", Zeilen, 5},
-  {"Liturgien", Zeilen, 23},
+  {"Liturgien", Zeilen, 24},
   {"Gegenstaende", Zeilen, 29},
   {"ProviantVermoegen", d.Record:def({name = "ProviantVermoegen", description = "Zeilen für Proviant & Vermögen Box."}, {"Gezaehlt", Zeilen, 4}, {"Sonstiges", Zeilen, 5}), {}},
   {"VerbindungenNotizen", Zeilen, 9},
