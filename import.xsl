@@ -342,8 +342,7 @@ Eigenschaften {
     <xsl:text>
 AP {
   Gesamt = </xsl:text><xsl:value-of select="$gesamt"/><xsl:text>,
-  Eingesetzt = </xsl:text><xsl:value-of select="$eingesetzt"/><xsl:text>,
-  Guthaben = </xsl:text><xsl:value-of select="$frei"/><xsl:text>
+  Eingesetzt = </xsl:text><xsl:value-of select="$eingesetzt"/><xsl:text>
 }
 </xsl:text>
   </xsl:template>
@@ -512,8 +511,6 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
     <xsl:if test="$def/@typ = 'Nah'">
       <xsl:variable name="kampfwerte" select="../../kampf/kampfwerte[@name=$name]"/>
       <xsl:value-of select="number($kampfwerte/attacke/@value) - number(//eigenschaft[@name='at']/@value)"/>
-      <xsl:text>, </xsl:text>
-      <xsl:value-of select="number($kampfwerte/parade/@value) - number(//eigenschaft[@name='pa']/@value)"/>
       <xsl:text>, </xsl:text>
     </xsl:if>
     <xsl:value-of select="@value"/>

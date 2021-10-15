@@ -279,8 +279,7 @@ end
 
 d:singleton(d.Record, {name = "AP", description = "Abenteuerpunkte."},
   {"Gesamt", OptNum, {}},
-  {"Eingesetzt", OptNum, {}},
-  {"Guthaben", OptNum, {}})
+  {"Eingesetzt", OptNum, {}})
 function schema.AP.example(printer)
   printer:highlight([[AP {500, 458, 42}]])
 end
@@ -789,8 +788,11 @@ local Spaetweihe = d.Row:def({name = "Spaetweihe", description = "Spätweihe ein
 local Zugewinn = d.Row:def({name = "Zugewinn", description = "Zugewinn von AP. Kann als Überschrift (fett) formatiert werden."},
   {"Text", String}, {"AP", Ganzzahl}, {"Fett", schema.Boolean, false})
 
+local Frei = d.Row:def({name = "Frei", description = "Freie Modifikation der Charakterdaten. Die Modifikation muss als Lua-Funktion definiert werden, die die aktuellen Charakterdaten erhält und modifiziert."},
+  {"Text", String}, {"Modifikation", schema.Function}, {"Kosten", Ganzzahl, 0})
+
 d:singleton(d.List, {name = "Ereignisse", description = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"}, {
-  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, Spaetweihe, Zugewinn
+  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, Spaetweihe, Zugewinn, Frei
 }) {}
 function schema.Ereignisse.example(printer)
   printer:highlight([[Ereignisse {

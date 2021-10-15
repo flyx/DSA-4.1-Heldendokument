@@ -292,7 +292,7 @@ local value_line = {
     INI = "Initiative-Basiswert", BE = {"BE", data:cur("BE")},
     AP_Gesamt = {"Gesamt", data.AP.Gesamt},
     AP_Eingesetzt = {"Eingesetzt", data.AP.Eingesetzt},
-    AP_Guthaben = {"Guthaben", data.AP.Guthaben}
+    AP_Guthaben = {"Guthaben", data.cur("AP")}
   }
 }
 

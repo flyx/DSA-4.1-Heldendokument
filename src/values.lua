@@ -154,6 +154,7 @@ getter_map:reg("gs", "GS")
 getter_map:reg("rs", "RS")
 getter_map:reg("be", "BE")
 getter_map:reg("be_voll", "BE_voll")
+getter_map:reg("ap", "AP")
 
 function getter_map.sparse(val, div)
   div = div or 1
@@ -266,6 +267,12 @@ function values:cur(name, div)
       end
     end
     return val
+  elseif kind == "ap" then
+    if type(self.AP.Gesamt) == "number" and type(self.AP.Eingesetzt) == "number" then
+      return self.AP.Gesamt - self.AP.Eingesetzt
+    else
+      return ""
+    end
   else
     tex.error("queried unknown value: " .. name)
   end
@@ -481,12 +488,7 @@ function values:ap_mod(kosten)
   if type(self.AP.Eingesetzt) == "number" then
     self.AP.Eingesetzt = self.AP.Eingesetzt + kosten
   end
-  if type(self.AP.Guthaben) == "number" then
-    self.AP.Guthaben = self.AP.Guthaben - kosten
-    return self.AP.Guthaben
-  else
-    return ""
-  end
+  return self.cur("AP")
 end
 
 function values:steigerSF(tname, e, faktorMod, target)
@@ -970,13 +972,18 @@ function values:zugewinn(e)
   if type(self.AP.Gesamt) == "number" then
     self.AP.Gesamt = self.AP.Gesamt + e.AP
   end
-  if type(self.AP.Guthaben) == "number" then
-    self.AP.Guthaben = self.AP.Guthaben + e.AP
-    event[5] = self.AP.Guthaben
-  else
-    event[5] = ""
-  end
+  event[5] = self.cur("AP")
   event[6] = e.Fett
+  return event
+end
+
+function values:frei(e)
+  local event = {e.Text, -1 * e.Kosten, skt.faktor["1"], -1 * e.Kosten}
+  local f = function() tex.error(e.Text .. ": Funktion brauchte zu lange zum Verarbeiten!") end
+  debug.sethook(f, "", 1e6)
+  e.Modifikation(self)
+  debug.sethook()
+  event[5] = self.cur("AP")
   return event
 end
 
@@ -1022,6 +1029,8 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
     event = values:spaetweihe(e)
   elseif mt.name == "Zugewinn" then
     event = values:zugewinn(e)
+  elseif mt.name = "Frei" then
+    event = values:frei(e)
   else
     tex.error("\n[Ereignisse] unbekannter Ereignistyp: '" .. mt.name .. "'")
   end

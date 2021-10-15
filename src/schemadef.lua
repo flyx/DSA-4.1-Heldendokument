@@ -1407,6 +1407,7 @@ setmetatable(d, {
   __call = function(self, docgen)
     self.schema.Boolean = self.Primitive:def({name = "Boolean"}, "boolean")
     self.schema.String = self.Primitive:def({name = "String"}, "string")
+    self.schema.Function = self.Primitive:def({name = "Function"}, "function")
     self.schema.OptNum = self.Primitive:def({name = "OptNum"}, "number", true, 0)
     self.schema.Multiline = self.Multivalue:def({name = "Multiline"}, self.schema.String)
     if docgen then
