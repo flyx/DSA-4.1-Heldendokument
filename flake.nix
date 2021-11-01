@@ -35,7 +35,7 @@
           latexmk;
         };
     in {
-      packages = with import nixpkgs { system = system; }; {
+      packages = with import nixpkgs { system = system; }; rec {
         dsa41held = stdenv.mkDerivation {
           name ="DSA-4.1-Heldendokument";
           src = self;
@@ -65,19 +65,34 @@
             fi
             
             ABS_INPUT="\$(cd "\$(dirname "\$1")"; pwd)/\$(basename "\$1")"
+            (cd "$out/share" && ${tex}/bin/texlua tools.lua validate "\$ABS_INPUT")
+            
             OUTPUT=\''${1%.lua}.pdf
             
             TMPDIR=\$(mktemp -d 2>/dev/null || mktemp -d -t 'dsa41held')
-            ${tex}/bin/latexmk -interaction=nonstopmode -output-directory=\$TMPDIR -cd -silent -file-line-error -r "$out/share/.latexmkrc" -lualatex="${tex}/bin/lualatex %O %S \"\$ABS_INPUT\"" "$out/share/heldendokument.tex"
+            ${tex}/bin/latexmk -interaction=nonstopmode -output-directory=\$TMPDIR -cd -file-line-error -r "$out/share/.latexmkrc" -lualatex="${tex}/bin/lualatex %O %S \"\$ABS_INPUT\"" "$out/share/heldendokument.tex" || (cat \$TMPDIR/heldendokument.log /dev/stdout && false)
             mv -- \$TMPDIR/heldendokument.pdf "\$(basename \$OUTPUT)"
             rm -rf \$TMPDIR
             EOF
             chmod u+x "$out/bin/dsa41held"
           '';
         };
+        dsa41held-webui = pkgs.buildGoModule {
+          name = "DSA-4.1-Heldendokument-WebUI";
+          src = self;
+          vendorSha256 = "e8fc083fda5696e2d251e447cf1a7bce9582c8e1b638a03b4aeea4c16f2ee6d6";
+          modRoot = "webui";
+          preBuild = ''
+            echo -n "${dsa41held}" > dsa41held.txt
+          '';
+          postInstall = ''
+            mkdir "$out/share"
+            cp -r index.html ../templates ../import.xsl "$out/share"
+          '';
+        };
       };
       devShell = pkgs.mkShell {
-        buildInputs = [ tex ];
+        buildInputs = [ tex pkgs.go ];
       };
     }
   );

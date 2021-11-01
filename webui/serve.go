@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	_ "embed"
 	"flag"
 	"io/ioutil"
 	"log"
@@ -24,7 +25,10 @@ type processingRequest struct {
 }
 
 var rqChannel chan processingRequest
-var srcDir, wd string
+
+//go:embed dsa41held.txt
+var dsa41held string
+var data string
 
 func index(w http.ResponseWriter, req *http.Request) {
 	if req.Method != "GET" {
@@ -38,7 +42,7 @@ func index(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	file, err := ioutil.ReadFile("index.html")
+	file, err := ioutil.ReadFile(filepath.Join(data, "index.html"))
 	if err != nil {
 		panic(err)
 	}
@@ -48,7 +52,7 @@ func index(w http.ResponseWriter, req *http.Request) {
 }
 
 func template(w http.ResponseWriter, req *http.Request) {
-	file, err := ioutil.ReadFile(filepath.Join(srcDir, "templates", req.URL.Path[1:]+".lua"))
+	file, err := ioutil.ReadFile(filepath.Join(data, "templates", req.URL.Path[1:]+".lua"))
 	if err != nil {
 		panic(err)
 	}
@@ -81,12 +85,11 @@ func importHeld(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	xsltproc := exec.Command("/usr/bin/xsltproc", "import.xsl", "-")
+	xsltproc := exec.Command("/usr/bin/xsltproc", filepath.Join(data, "import.xsl"), "-")
 	xsltproc.Stdin = bytes.NewReader(input)
 	var stdout, stderr bytes.Buffer
 	xsltproc.Stdout = &stdout
 	xsltproc.Stderr = &stderr
-	xsltproc.Dir = srcDir
 	if err := xsltproc.Start(); err != nil {
 		panic(err)
 	}
@@ -106,19 +109,18 @@ func importHeld(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	src_dir := flag.String("src", "/heldendokument", "Verzeichnis, in dem die Quelldateien liegen")
+	log.Println("starting with dsa41held = " + dsa41held)
+	
+	srcDir, err := os.Executable()
+	if err != nil {
+		panic(err)
+	}
+	data = filepath.Join(filepath.Dir(filepath.Dir(srcDir)), "share")
+	
 	num_threads := flag.Int("threads", 5, "Anzahl threads, mit denen gleichzeitig Dokumente erstellt werden können")
 	flag.Parse()
 	if len(flag.Args()) > 0 {
 		log.Fatal("unerwarteter Parameter: " + flag.Arg(0))
-	}
-	srcDir = *src_dir
-	{
-		var err error
-		wd, err = os.Getwd()
-		if err != nil {
-			log.Fatal("unable to get working directory: " + err.Error())
-		}
 	}
 
 	var baseDir string
@@ -176,10 +178,6 @@ type Processor struct {
 
 func (p *Processor) init(dir string) {
 	p.dir = dir
-	cp := exec.Command("cp", "-a", srcDir+"/.", dir)
-	if err := cp.Run(); err != nil {
-		log.Fatal("while copying sources to processor directory: " + err.Error())
-	}
 }
 
 func (p *Processor) run(c chan processingRequest) {
@@ -219,19 +217,36 @@ func (p *Processor) buildPdf(c *websocket.Conn) {
 		c.Close()
 		return
 	}
-	held := exec.Command("/bin/sh", filepath.Join(wd, "held.sh"))
-	held.Stdin = strings.NewReader(input)
-	held.Stdout = &ProgressChecker{InitialState, c, 0, nil, strings.Builder{}, 0, ""}
+	
+	{
+		f, err := os.Create(filepath.Join(p.dir, "held.lua"))
+		if err != nil {
+			os.Stderr.WriteString("error while writing held.lua: " + err.Error() + "\n")
+			c.Close()
+			return
+		}
+		if _, err := f.WriteString(input); err != nil {
+			os.Stderr.WriteString("error while writing held.lua: " + err.Error() + "\n")
+			c.Close()
+			f.Close()
+			return
+		}
+		f.Close()
+	}
+	
+	held := exec.Command("/bin/bash", filepath.Join(dsa41held, "bin", "dsa41held"), "held.lua")
+	checker := ProgressChecker{InitialState, c, 0, nil, strings.Builder{}, 0, "", bytes.Buffer{}}
+	held.Stdout = &checker
+	held.Stderr = &checker
 	held.Dir = p.dir
 	if err := held.Start(); err != nil {
 		panic(err)
 	}
 	if err := held.Wait(); err != nil {
 		log.Printf("error while processing: %s\n", err.Error())
-		log, _ := ioutil.ReadFile(filepath.Join(p.dir, "src", "heldendokument.log"))
-		sendWithStatus(c, 1, log)
+		sendWithStatus(c, 1, checker.fullOutput.Bytes())
 	} else {
-		pdf, _ := ioutil.ReadFile(filepath.Join(p.dir, "src", "heldendokument.pdf"))
+		pdf, _ := ioutil.ReadFile(filepath.Join(p.dir, "held.pdf"))
 		sendWithStatus(c, 2, pdf)
 	}
 }
@@ -253,9 +268,11 @@ type ProgressChecker struct {
 	builder  strings.Builder
 	nextFile byte
 	trailing string
+	fullOutput bytes.Buffer
 }
 
 func (p *ProgressChecker) Write(b []byte) (n int, err error) {
+	p.fullOutput.Write(b)
 	str := p.trailing + string(b)
 	for {
 		switch p.state {
