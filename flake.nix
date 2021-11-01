@@ -28,6 +28,12 @@
           url = http://www.ulisses-spiele.de/download/468/;
           sha256 = "273dc1e19b5dc95c2454c7f2cfd8b49688f11312e6b82cd8f3bc63ee13b371a4";
         };
+        tex = pkgs.texlive.combine {
+          inherit (pkgs.texlive) scheme-minimal latex-bin tools collection-luatex koma-script geometry
+          polyglossia hyphen-german environ makecell multirow amsmath epstopdf-pkg
+          fontawesome5 nicematrix xcolor pgf colortbl wallpaper eso-pic shadowtext 
+          latexmk;
+        };
     in {
       packages = with import nixpkgs { system = system; }; {
         dsa41held = stdenv.mkDerivation {
@@ -35,11 +41,7 @@
           src = self;
           buildInputs = [ ];
           propagatedBuildInputs = [
-            (texlive.combine { inherit (texlive) scheme-minimal latex-bin tools collection-luatex koma-script geometry
-            polyglossia hyphen-german environ makecell multirow amsmath epstopdf-pkg
-            fontawesome5 nicematrix xcolor pgf colortbl wallpaper eso-pic shadowtext 
-            latexmk; })
-            newg8
+            tex
           ];
           phases = ["unpackPhase" "installPhase"];
           installPhase = ''
@@ -53,12 +55,9 @@
             ${pkgs.poppler_utils}/bin/pdfimages -f 2 -l 2 "${wds}" wds
             ${pkgs.imagemagick}/bin/convert wds-000.ppm "$out/share/img/wallpaper.jpg"
             
-            deps=($propagatedBuildInputs)
-            
-            tee "$out/bin/dsa41held.sh" <<EOF
+            tee "$out/bin/dsa41held" <<EOF >/dev/null
             #!/bin/bash
             set -e
-            PATH=$(IFS=":" ; echo "''${deps[*]/%//bin}"):\$PATH
             
             if [ -z "\$1" ]; then
               echo "Pfad zur Heldendatei muss als Eingabe angegeben werden!"
@@ -69,12 +68,16 @@
             OUTPUT=\''${1%.lua}.pdf
             
             TMPDIR=\$(mktemp -d 2>/dev/null || mktemp -d -t 'dsa41held')
-            latexmk -interaction=nonstopmode -output-directory=\$TMPDIR -cd -silent -file-line-error -r "$out/share/.latexmkrc" -lualatex="lualatex %O %S \"\$ABS_INPUT\"" "$out/share/heldendokument.tex"
+            ${tex}/bin/latexmk -interaction=nonstopmode -output-directory=\$TMPDIR -cd -silent -file-line-error -r "$out/share/.latexmkrc" -lualatex="${tex}/bin/lualatex %O %S \"\$ABS_INPUT\"" "$out/share/heldendokument.tex"
             mv -- \$TMPDIR/heldendokument.pdf "\$(basename \$OUTPUT)"
+            rm -rf \$TMPDIR
             EOF
-            chmod u+x "$out/bin/dsa41held.sh"
+            chmod u+x "$out/bin/dsa41held"
           '';
-        }; 
+        };
+      };
+      devShell = pkgs.mkShell {
+        buildInputs = [ tex ];
       };
     }
   );
