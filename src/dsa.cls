@@ -87,9 +87,14 @@
 % font selection
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newfontfamily{\mansontt}{Manson}
+\newfontfamily{\mansontt}[
+  Path=fonts/,
+  Extension = .ttf,
+  UprightFont = Mason-Bold
+]{Manson}
 \DeclareTextFontCommand{\textmansontt}{\mansontt}
 \setmainfont{NewG8}[
+  Path           = fonts/,
   Extension      = .otf,
   UprightFont    = NewG8-Reg,
   BoldFont       = NewG8-Bol,
@@ -97,6 +102,7 @@
   ItalicFont     = NewG8-Ita
 ]
 \setmonofont{Copse}[
+  Path           = fonts/,
   Extension      = .ttf,
   UprightFont    = Copse-Regular
 ]
@@ -111,10 +117,10 @@
   \setlength{\dsaOldParindent}{\parindent}
   \setlength{\parindent}{0pt}
   \ClearWallPaper
-  \IfFileExists{../img/wallpaper.jpg}{
+  \IfFileExists{img/wallpaper.jpg}{
     \setlength{\wpXoffset}{-0.3cm}%
     \setlength{\wpYoffset}{-0.1cm}%
-    \ThisCenterWallPaper{1.0275}{../img/wallpaper.jpg}%
+    \ThisCenterWallPaper{1.0275}{img/wallpaper.jpg}%
   }{}
 }{
   \setlength{\parindent}{\dsaOldParindent}

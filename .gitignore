@@ -8,7 +8,6 @@
 *.dvi
 /*.lua
 /*.xml
-*.tar
-img/logo-fanprodukt.png
-img/wallpaper.jpg
 *.DS_Store
+outputs
+result
