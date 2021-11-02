@@ -26,8 +26,6 @@ type processingRequest struct {
 
 var rqChannel chan processingRequest
 
-//go:embed dsa41held.txt
-var dsa41held string
 var data string
 
 func index(w http.ResponseWriter, req *http.Request) {
@@ -85,7 +83,7 @@ func importHeld(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	xsltproc := exec.Command("/usr/bin/env", "xsltproc", filepath.Join(data, "import.xsl"), "-")
+	xsltproc := exec.Command("xsltproc", filepath.Join(data, "import.xsl"), "-")
 	xsltproc.Stdin = bytes.NewReader(input)
 	var stdout, stderr bytes.Buffer
 	xsltproc.Stdout = &stdout
@@ -109,8 +107,6 @@ func importHeld(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	log.Println("starting with dsa41held = " + dsa41held)
-	
 	srcDir, err := os.Executable()
 	if err != nil {
 		panic(err)
@@ -234,7 +230,7 @@ func (p *Processor) buildPdf(c *websocket.Conn) {
 		f.Close()
 	}
 	
-	held := exec.Command("/bin/bash", filepath.Join(dsa41held, "bin", "dsa41held"), "held.lua")
+	held := exec.Command("dsa41held", "held.lua")
 	checker := ProgressChecker{InitialState, c, 0, nil, strings.Builder{}, 0, "", bytes.Buffer{}}
 	held.Stdout = &checker
 	held.Stderr = &checker

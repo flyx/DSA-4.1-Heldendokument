@@ -59,7 +59,7 @@
             ${pkgs.imagemagick}/bin/convert wds-000.ppm "$out/share/img/wallpaper.jpg"
             
             tee "$out/bin/dsa41held" <<EOF >/dev/null
-            #!/bin/bash
+            #!${bash}/bin/bash
             set -e
             
             if [ -z "\$1" ]; then
@@ -85,21 +85,21 @@
           src = self;
           vendorSha256 = "e8fc083fda5696e2d251e447cf1a7bce9582c8e1b638a03b4aeea4c16f2ee6d6";
           modRoot = "webui";
-          preBuild = ''
-            echo -n "${dsa41held}" > dsa41held.txt
-          '';
+          nativeBuildInputs = [ makeWrapper ];
+          propagatedBuildInputs = [ libxslt dsa41held ];
           postInstall = ''
             mkdir "$out/share"
             cp -r index.html ../templates ../import.xsl ../heldensoftware-meta.xml "$out/share"
+            wrapProgram "$out/bin/webui" --prefix PATH : "${lib.makeBinPath [ libxslt dsa41held ]}"
           '';
         };
         dsa41held-webui-docker = pkgs.dockerTools.buildImage {
           name = "dsa41held-webui";
           tag = version;
-          contents = [ coreutils bash dsa41held-webui libxslt ];
+          contents = [ coreutils dsa41held-webui ];
           runAsRoot = ''
-            mkdir -p /tmp /usr
-            ln -s /bin /usr/bin
+            mkdir -p /tmp
+            ln -s ${bash}/bin/bash /bin/sh
           '';
           config = {
             Cmd = [ "webui" ];
