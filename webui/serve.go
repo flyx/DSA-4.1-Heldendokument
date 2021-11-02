@@ -85,7 +85,7 @@ func importHeld(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	xsltproc := exec.Command("/usr/bin/xsltproc", filepath.Join(data, "import.xsl"), "-")
+	xsltproc := exec.Command("/usr/bin/env", "xsltproc", filepath.Join(data, "import.xsl"), "-")
 	xsltproc.Stdin = bytes.NewReader(input)
 	var stdout, stderr bytes.Buffer
 	xsltproc.Stdout = &stdout
