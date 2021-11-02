@@ -1,13 +1,22 @@
 # DSA 4.1 Heldendokument
 
 Ein DSA 4.1 Heldendokument, das sich am original Heldendokument orientiert.
-Es kann bei der Erstellung mit Werten befüllt werden und berechnet dann abgeleitete Werte automatisch.
+Es kann bei der Erstellung optional mit Werten befüllt werden und berechnet dann abgeleitete Werte automatisch.
 Helden aus der Heldensoftware können importiert werden.
-
 Das Heldendokument wird als PDF mit LuaLaTeX erstellt.
-Daten müssen zum Zeitpunkt der Erstellung eingegeben werden.
-Ändern sich die Daten, muss ein neues PDF erstellt werden.
-Das Dokument bietet keine interaktiven Features wie Heldenerstellung oder Steigerung.
+
+Für ein leeres Heldendokument (zum Ausdrucken) kann eines der gegebenen Templates benutzt werden.
+Jedes der Templates befüllt die Talentliste mit den Basis-Talenten (lässt aber natürlich den TaW frei).
+Abhängig vom Charakter werden verschiedene Seiten erstellt (so hat etwa nur der Magier die Zauberliste).
+
+Um das Heldendokument mit vollständigen Charakterdaten zu befüllen, müssen diese als Datei eingegeben werden.
+Das erstellte PDF ist dann endgültig; ändern sich die Werte, müssen die Daten angepasst und ein neues PDF erstellt werden.
+Die Daten werden in einem vorgegebenen Format eingegeben.
+Es ist möglich, in den Daten die Startwerte des Helden und die Steigerungsaktionen einzugeben; das erstellte Dokument führt diese Steigerungsaktionen dann durch und gibt die resultierenden Werte aus.
+
+Es ist möglich, aus einem exportierten Charakter aus der Heldensoftware eine Eingabedatei für das Heldendokument zu erstellen.
+Nach dieser Konvertierung kann der Held auch durch Updaten jener Eingabedatei gesteigert werden statt in der Heldensoftware.
+Das Heldendokument beherrscht im Wesentlichen dieselben Steigerungsregeln wie die Heldensoftware.
 
 ## Features
 
@@ -42,100 +51,63 @@ Das Dokument bietet keine interaktiven Features wie Heldenerstellung oder Steige
 
 ## Wie generiere ich das Dokument?
 
-Um das Dokument zu generieren, braucht man eine Umgebung, in der alle benötigten Ressourcen und Programme verfügbar sind.
-Es gibt zwei Möglichkeiten, eine solche Umgebung aufzusetzen:
+Das Heldendokument benutzt [nix Flakes](https://nixos.wiki/wiki/Flakes) als Buildsystem und zum Management von Abhängigkeiten.
+`nix`-Benutzer, die auf ihrem System Flakes aktiviert haben, können Folgendes in einem Zielverzeichnis ihrer Wahl tun:
 
- * Mit [Docker](https://www.docker.com): Dies ist ein Werzeug, um die gesamte Umgebung reproduzierbar einzurichten.
-   Hat man Docker installiert, kann man damit ein *image* erstellen, in dem die benötigte Software enthalten ist.
-   Mit diesem Image kann dann das Heldendokument generiert werden.
-   Das Image ist portierbar zwischen Betriebssystemen, insbesondere Windows-Nutzern wird zu dieser Alternative geraten.
-   Es liegt auch eine Definition für ein erweitertes Docker-Image bereit, das ein Web-Frontend zur Generierung bereitstellt – für Leute, die die Kommandozeile nicht mögen.
+    nix build github:flyx/DSA-4.1-Heldendokument#dsa41held
 
-   Obwohl das Docker-Image portierbar ist, wird aus Urheberrechtsgründen kein fertiges Image bereitgestellt – die Lizenzen der Schriftarten und der benutzten Bilder erlauben dies nicht.
-   Man kann das Image allerdings selbst ohne großen Aufwand erstellen.
- * Manuell mit [TeX Live](https://www.tug.org/texlive/) (oder einer anderen Tex-Distribution):
-   Dies erfordert ein wenig Umgang mit der Kommandozeile.
-   Windows-Nutzern wird dazu geraten, hierfür das Windows-Subsystem für Linux zu verwenden.
+Dies erzeugt ein Skript `result/bin/dsa41held`, das danach benutzt werden kann, um PDFs zu generieren, etwa:
 
-   Diese Alternative wird vor allem Benutzern empfohlen, die TeX ohnehin installiert haben.
-   Muss man es extra dafür installieren, verbraucht man nicht arg viel weniger Speicher als mit der Docker-Variante.
+    result/bin/dsa41held templates/profan.lua
 
-Die nachfolgenden Anleitungen gehen davon aus, dass das DSA-4.1-Heldendokument komplett heruntergeladen und in einen Ordner entpackt wurde.
+Die Erstellung eines PDFs dauert etwas länger, auf meinem System (MBP M1 Pro 32GB) etwa 18 Sekunden.
 
-### Docker
+### Docker & Webinterface
 
-Docker muss installiert sein und laufen.
-Die Schriftarten `Manson Regular.otf` und `Manson Bold.otf` müssen [hier](https://fontsgeek.com/manson-font) manuell heruntergeladen werden und direkt ins Hauptverzeichnis gelegt werden (ohne die Unterstruktur in der zip-Datei).
-Alle anderen Abhängigkeiten werden automatisch heruntergeladen beim Bauen des Docker-Images.
+Da nicht jeder `nix` installiert hat, existiert ein einfaches Webinterface, das mit [Docker](https://www.docker.com) betrieben werden kann.
+Dies ist insbesondere die empfohlene Herangehensweise für Windows-Nutzer.
+Hierfür muss zunächst der Inhalt dieses Repositories heruntergeladen werden (entweder mit `git` oder über den grünen *Code*-Knopf unter *Download ZIP* und dann entpacken).
+Außerdem muss Docker installiert sein.
 
-Die Kommandozeilenversion lässt sich bauen mit
+Im Verzeichnis, in dem die heruntergeladenen Quellen liegen, muss dann in der Kommandozeile Folgendes eingegeben werden:
 
-    make docker-bare
+    docker build -f build.dockerfile -t dsa41held-build .
+    docker run --rm dsa41held-build:latest > dsa41held-webui.tar
+    docker load -i dsa41held-webui.tar
 
-Dies generiert ein Image namens *dsa-4.1-heldendokument*.
-Dieses benutzt man wiefolgt:
+Diese Befehle erzeugen ein *image*, welches danach ähnlich wie eine Anwendung gestartet werden kann.
+Für diejenigen, die Details wissen wollen:
+Der erste Befehl erzeugt ein build-Image, das die Werkzeuge enthält, die für den Bau des Generators benötigt werden – insbesondere `nix`.
+Der zweite Befehl führt im Wesentlichen den `nix`-Befehl, der oben beschrieben wird, im build-Image aus und exportiert das Resultat in die Datei `dsa41held-webui.tar`.
+**Der zweite Befehl läuft mitunter einige Minuten, ohne Ausgabe zu produzieren; das ist normal**.
+Der dritte Befehl lädt die erzeugte Datei als *image* in das Docker-Repository, sodass es in Zukunft ausgeführt werden kann – die `.tar`-Datei kann danach gelöscht werden.
 
-    cat templates/profan.lua | docker run -i --rm dsa-4.1-heldendokument > held.pdf
+Nun lässt sich das Webinterface mit folgendem Befehl starten:
 
-In diesem Beispiel wir als Datengrundlage das Template für einen profanen Helden, `templates/profan.lua` benutzt.
-Statt dessen kann natürlich ein eigener Held eingegeben werden.
+    docker run -p 80:80 --rm dsa41held-webui:latest
 
-Das Docker-Image für das Web-Interface setzt voraus, dass *dsa-4.1-heldendokument* existiert, also der vorherige Schritt ausgeführt wurde.
-Es kann folgendermaßen gebaut werden:
+Läuft dieser Befehl, ist das Webinterface im Browser unter `http://localhost/` verfügbar.
 
-    make docker-server
-
-Dies generiert ein Image namens *dsa-4.1-heldendokument-generator*.
-Es kann folgendermaßen gestartet werden:
-
-    docker run -p 80:80 --rm dsa-4.1-heldendokument-generator
-
-Läuft dieser Befehl, kann das Webinterface im Browser unter http://localhost/ aufgerufen werden.
 Das Webinterface ist minimal und dafür gedacht, den Inhalt der Helden-Datei ins Textfeld einzufügen und dann abzusenden.
 Es eignet sich nicht als Editor und speichert die Eingabe nicht ab.
 Die Generierung kann mehrere Minuten dauern, ein simpler Fortschrittsbalken wird währenddessen angezeigt.
 Das Webinterface inkludiert die Option, einen Held aus der Heldensoftware zu importieren.
 
-### Manuell
+## Import von Helden aus der Heldensoftware
 
-Es muss TeX Live 2021 oder neuer installiert sein.
-Ältere Distributionen funktionieren nicht (betrifft aktuelles Debian).
-Mac-User können [MacTeX](https://www.tug.org/mactex/) benutzen.
+Der Held muss über in der Heldensoftware über `Datei > Exportieren > Held exportieren` exportiert werden.
+Die erstellte XML-Datei (hier als Beispiel `held.xml`) kann dann folgendermaßen in Daten für den Heldenbogen (hier `held.lua`) transformiert werden:
 
-Zusätzlich müssen die Schriftarten [Manson](https://fontsgeek.com/manson-font), [NewG8](https://github.com/probonopd/font-newg8/releases/tag/continuous) und [Copse](https://www.fontsquirrel.com/fonts/copse) im System installiert sein, so dass sie von LuaTeX gesehen werden.
-Für Mac-Nutzer bedeutet dies, dass sie systemweit, nicht nur für den aktuellen Benutzer, installiert sein müssen – dies lässt sich in den Einstellungen von *Font Book* festlegen.
+    xsltproc import.xsl held.xml > held.lua
 
-Das Fanprodukt-Logo und der Hintergrund müssen von Ulisses heruntergeladen und an die korrekte Stelle gelegt werden.
-Die folgenden Befehle nutzen unzip, curl, ImageMagick und poppler-utils, um dies zu tun – diese Werkzeuge sollten über jeden vernünftigen Paketmanager installierbar sein:
+Das Import-Skript ist in XSLT 1.0 geschrieben und sollte mit jeder konformen Implementierung funktionieren, also beispielsweise auch mit der in der Windows Powershell.
+Getestet wird es allerdings nur mit `xsltproc`, weshalb zur Benutzung dieses Tools geraten wird.
+Windows-Nutzer seien auf das Webinterface verwiesen, welches im Hintergrund `xsltproc` benutzt.
 
-    # WdS-Handout herunterladen
-    curl -L -s -o wds.pdf http://www.ulisses-spiele.de/download/468/
-    # Hintergrundbild extrahieren
-    pdfimages -f 2 -l 2 wds.pdf wds
-    # Hintergrundbild in JPG umwandeln
-    convert wds-000.ppm img/wallpaper.jpg
+Der Import ist relativ komplex und vermutlich nicht fehlerfrei.
+Fehler im resultierenden Dokument oder auftretende Fehlermeldungen können gerne als Issues hier im Repository berichtet werden.
 
-    # Fanpaket herunterladen
-    curl -L http://www.ulisses-spiele.de/download/889/ -o fanpaket.zip
-    # Die eine Datei aus dem Fanpaket entpacken
-    unzip -p fanpaket.zip "Das Schwarze Auge - Fanpaket - 2013.07.29/Logo - Fanprodukt.png" >img/logo-fanprodukt.png
-
-Danach kann das Heldendokument generiert werden, indem im `src`-Verzeichnis folgende Befehle ausgeführt wird:
-
-    latexmk -c
-    latexmk heldendokument.tex
-
-Der erste Befehl löscht vorherige Ausgaben und ist nötig, wenn im selben Verzeichnis bereits ein anderer Held generiert wurde.
-Der zweite Befehl erzeugt die Datei `heldendokument.pdf` als leeres Heldendokument.
-Um das Dokument mit Daten zu befüllen, muss zusätzlich der Pfad zu einer Heldendatei angegeben werden:
-
-    latexmk -c
-    latexmk -lualatex='lualatex %O %S ../templates/profan.lua' heldendokument.tex
-
-Hier wird als Beispiel das Heldendokument aus dem Template für einen profanen Charakter generiert.
-Der Pfad kann entsprechend verändert werden, um einen Dokument aus einer eigenen Heldendatei zu generieren.
-
-## Eine Helden-Datei erstellen
+## Eine Helden-Datei selbst schreiben
 
 Die Dateneingabe für den Helden geschieht über eine Lua-Datei.
 Eine sehr rudimentäre Dokumentation der Struktur der Eingabedatei ist [hier](https://flyx.github.io/DSA-4.1-Heldendokument/) verfügbar.
@@ -148,27 +120,15 @@ Will man prüfen, ob eine Heldendatei Fehler enthält, lässt sich dies tun, ind
     texlua tools.lua validate ../templates/profan.lua
 
 Der Pfad `../templates/profan.lua` muss durch den Pfad zur zu prüfenden Datei ersetzt werden.
-Das Docker-Webinterface führt diesen Schritt automatisch auf der Eingabe durch.
-
-### Import aus der Heldensoftware
-
-Der Held muss über in der Heldensoftware über `Datei > Exportieren > Held exportieren` exportiert werden.
-Die erstellte XML-Datei (hier als Beispiel `held.xml`) kann dann folgendermaßen in Daten für den Heldenbogen (hier `held.lua`) transformiert werden:
-
-    xsltproc import.xsl held.xml > held.lua
-
-Das Import-Skript ist in XSLT 1.0 geschrieben und sollte mit jeder konformen Implementierung funktionieren, also beispielsweise auch mit der in der Windows Powershell.
-Getestet wird es allerdings nur mit `xsltproc`, weshalb zur Benutzung dieses Tools geraten wird.
-
-Der Docker-Server bietet diese Funktion auf seinem Webinterface ebenfalls an.
-
-Der Import ist ein Beta-Feature und wenig getestet.
-Fehler im resultierenden Dokument oder auftretende Fehlermeldungen können gerne als Issues hier im Repository berichtet werden.
+Die Erstellung des PDFs führt dies automatisch als ersten Schritt aus.
+`texlua` ist ein Werkzeug, das bei jeder TeX-Distribution dabei ist.
 
 ## Lizenz
 
 Der in diesem Repository enthaltene Code ist lizensiert unter der [LaTeX Project Public License](https://www.latex-project.org/lppl/).
 
-**Wichtig:** Die verwendeten Schriftarten und Grafiken, die nicht Teil des Repositories sind, haben keine Lizenz, die die Weiterverbreitung erlaubt!
-Deshalb wird weder ein fertiges Docker-Image noch ein fertiges Heldendokument zur Verfügung gestellt und dem Benutzer wird ebenfalls davon abgeraten, dies zu tun.
-
+**Wichtig:** Der Generator lädt bei der Erstellung mehrere Dateien herunter, welche keine freie Lizenz haben!
+Dazu zählen die verwendeten Schriftarten und das Hintergrundbild.
+Sei dir bewusst, dass daher sowohl das generierte Docker-image wie auch die generierten PDFs technisch gesehen Urheberrechtsbeschränkungen unterliegen und daher nicht verbreitet werden dürfen.
+Du selbst darfst beides als Privatkopie verwenden; ich rate aber beispielsweise davon ab, das Webinterface öffentlich auf einem Server verfügbar zu machen.
+Ich bin kein Anwalt und diese Anmerkungen stellen keine gültige Rechtsberatung dar.

@@ -37,6 +37,10 @@
         fontawesome5 nicematrix xcolor pgf colortbl wallpaper eso-pic shadowtext 
         latexmk;
       };
+      binSh = pkgs.runCommand "bin-sh" { } ''
+        mkdir -p $out/bin $out/tmp
+        ln -s ${pkgs.bash}/bin/bash $out/bin/sh
+      '';
     in {
       packages = with import nixpkgs { system = system; }; rec {
         dsa41held = stdenvNoCC.mkDerivation {
@@ -86,23 +90,19 @@
           vendorSha256 = "e8fc083fda5696e2d251e447cf1a7bce9582c8e1b638a03b4aeea4c16f2ee6d6";
           modRoot = "webui";
           nativeBuildInputs = [ makeWrapper ];
-          propagatedBuildInputs = [ libxslt dsa41held ];
+          propagatedBuildInputs = [ bash libxslt dsa41held ];
           postInstall = ''
             mkdir "$out/share"
             cp -r index.html ../templates ../import.xsl ../heldensoftware-meta.xml "$out/share"
-            wrapProgram "$out/bin/webui" --prefix PATH : "${lib.makeBinPath [ libxslt dsa41held ]}"
+            wrapProgram "$out/bin/webui" --prefix PATH : "${lib.makeBinPath [ bash libxslt dsa41held ]}"
           '';
         };
-        dsa41held-webui-docker = pkgs.dockerTools.buildImage {
+        dsa41held-webui-docker = pkgs.dockerTools.buildLayeredImage {
           name = "dsa41held-webui";
-          tag = version;
-          contents = [ coreutils dsa41held-webui ];
-          runAsRoot = ''
-            mkdir -p /tmp
-            ln -s ${bash}/bin/bash /bin/sh
-          '';
+          tag = "latest";
+          contents = [ coreutils binSh dsa41held-webui ];
           config = {
-            Cmd = [ "webui" ];
+            Cmd = "/bin/webui";
             ExposedPorts = {
               "80" = {};
             };
