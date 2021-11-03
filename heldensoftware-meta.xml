@@ -709,6 +709,7 @@
     <nahkampf typ="Stäbe">
       <w name="Kampfstab" tp="1W+1" tpkk="12/4" bf="5" ini="+1" wm="0/0" dk="NS"/>
       <w name="Magierstab" tp="1W+1" tpkk="11/5" bf="-" ini="0" wm="-1/-1" dk="NS"/>
+      <w name="Magierstab als Stab" tp="1W+1" tpkk="11/5" bf="-" ini="0" wm="-1/-1" dk="NS"/>
       <w name="Zweililien" tp="1W+3" tpkk="12/4" bf="4" ini="+1" wm="+1/-1" dk="N"/>
     </nahkampf>
     <nahkampf typ="Zweihandflegel">

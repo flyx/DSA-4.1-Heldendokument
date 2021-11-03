@@ -430,12 +430,17 @@ common.schaden = {}
 function common.schaden.parse(input)
   local orig = input
   local n_start, n_end = string.find(input, "^[0-9]+")
-  local num = n_start == nil and nil or string.sub(input, n_start, n_end)
+  local num = nil
   if n_start ~= nil then
+    num = string.sub(input, n_start, n_end)
     input = string.sub(input, n_end + 1)
   end
   if string.len(input) == 0 then
-    return {num = num}
+    if num == nil then
+      return {num = 0}
+    else
+      return {num = num}
+    end
   end
   local ret = {dice = num}
   local first = string.sub(input, 1, 1)

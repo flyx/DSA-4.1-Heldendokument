@@ -77,7 +77,7 @@
             OUTPUT=\''${1%.lua}.pdf
             
             TMPDIR=\$(mktemp -d 2>/dev/null || mktemp -d -t 'dsa41held')
-            ${tex}/bin/latexmk -interaction=nonstopmode -output-directory=\$TMPDIR -cd -file-line-error -r "$out/share/.latexmkrc" -lualatex="${tex}/bin/lualatex %O %S \"\$ABS_INPUT\"" "$out/share/heldendokument.tex" || (cat \$TMPDIR/heldendokument.log /dev/stdout && false)
+            ${tex}/bin/latexmk -interaction=nonstopmode -output-directory=\$TMPDIR -cd -file-line-error -halt-on-error -r "$out/share/.latexmkrc" -lualatex="${tex}/bin/lualatex %O %S \"\$ABS_INPUT\"" "$out/share/heldendokument.tex"
             mv -- \$TMPDIR/heldendokument.pdf "\$(basename \$OUTPUT)"
             rm -rf \$TMPDIR
             EOF
