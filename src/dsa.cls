@@ -1,5 +1,5 @@
 %% dsa.cls
-%% Copyright 2014 Felix Krause <contact@flyx.org>
+%% Copyright 2014-2021 Felix Krause <contact@flyx.org>
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
@@ -8,14 +8,6 @@
 %   http://www.latex-project.org/lppl.txt
 % and version 1.3 or later is part of all distributions of LaTeX
 % version 2005/12/01 or later.
-%
-% This work has the LPPL maintenance status `maintained'.
-%
-% The Current Maintainer of this work is Felix Krause
-%
-% This work consists of the dsa.cls, fanpaket-setup.sh and fanpaket-setup.ps1.
-% Other accompanying files may have different licenses, see their source code
-% for details
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{dsa}[2016/06/27 v0.2.1]
@@ -24,6 +16,10 @@
 \ifLuaTeX
   \RequirePackage{luatex85}
 \fi
+\newif\ifbgwallpaper
+\bgwallpapertrue
+
+\DeclareOption{weiss}{\bgwallpaperfalse}
 
 \DeclareOption*{
   \PassOptionsToClass{\CurrentOption}{scrartcl}
@@ -58,7 +54,7 @@
 
 \usepackage[table]{xcolor}
 \usepackage{pgf}
-\usepackage{wallpaper}
+\ifbgwallpaper \usepackage{wallpaper} \fi
 \usepackage{graphicx}
 
 % misc
@@ -116,12 +112,12 @@
   \pagebreak
   \setlength{\dsaOldParindent}{\parindent}
   \setlength{\parindent}{0pt}
-  \ClearWallPaper
-  \IfFileExists{img/wallpaper.jpg}{
+  \ifbgwallpaper
+    \ClearWallPaper
     \setlength{\wpXoffset}{-0.3cm}%
     \setlength{\wpYoffset}{-0.1cm}%
     \ThisCenterWallPaper{1.0275}{img/wallpaper.jpg}%
-  }{}
+  \fi
 }{
   \setlength{\parindent}{\dsaOldParindent}
 }

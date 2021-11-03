@@ -65,6 +65,15 @@
             tee "$out/bin/dsa41held" <<EOF >/dev/null
             #!${bash}/bin/bash
             set -e
+            BASE_NAME="heldendokument"
+            while :; do
+              case \$1 in
+                -w|--white) BASE_NAME="heldendokument-weiss"
+                ;;
+                *) break
+              esac
+              shift
+            done
             
             if [ -z "\$1" ]; then
               echo "Pfad zur Heldendatei muss als Eingabe angegeben werden!"
@@ -77,8 +86,8 @@
             OUTPUT=\''${1%.lua}.pdf
             
             TMPDIR=\$(mktemp -d 2>/dev/null || mktemp -d -t 'dsa41held')
-            ${tex}/bin/latexmk -interaction=nonstopmode -output-directory=\$TMPDIR -cd -file-line-error -halt-on-error -r "$out/share/.latexmkrc" -lualatex="${tex}/bin/lualatex %O %S \"\$ABS_INPUT\"" "$out/share/heldendokument.tex"
-            mv -- \$TMPDIR/heldendokument.pdf "\$(basename \$OUTPUT)"
+            ${tex}/bin/latexmk -interaction=nonstopmode -output-directory=\$TMPDIR -cd -file-line-error -halt-on-error -r "$out/share/.latexmkrc" -lualatex="${tex}/bin/lualatex %O %S \"\$ABS_INPUT\"" "$out/share/\$BASE_NAME.tex"
+            mv -- \$TMPDIR/\$BASE_NAME.pdf "\$(basename \$OUTPUT)"
             rm -rf \$TMPDIR
             EOF
             chmod u+x "$out/bin/dsa41held"
