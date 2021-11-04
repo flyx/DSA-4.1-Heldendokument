@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="de" style="background-color: darkslategray;">
+  <head>
+  <title>DSA 4.1 Heldendokument: Installation &amp; Bedienung</title>
+  <link rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+  <nav>
+    <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="manual.html">Installation &amp; Bedienung</a></li>
+    <li><a href="format.html">Formatspezifikation</a></li>
+    <li><a href="imprint.html">Impressum</a></li>
+    <li><a href="https://github.com/flyx/DSA-4.1-Heldendokument"><img src="GitHub-Mark-Light-32px.png" srcset="GitHub-Mark-Light-64px.png 2x" style="height: .8em;"/> Github</a></li>
+    </ul>
+  </nav>
+  <article class="doc">
+    <section>
+    <h1>DSA 4.1 Heldendokument: Installation &amp; Bedienung</h1>
+    <p>Der Generator des Heldendokuments unterstützt <strong>macOS</strong>, <strong>Linux</strong> und <strong>Windows</strong>.</p>
+    
+    <p>Der Generator benutzt verschiedene Werke, die zwar kostenlos aus dem Internet geladen werden können, deren Lizenz aber keine Weiterverbreitung erlaubt.
+    Aus diesem Grund kann der fertige Generator nicht zum Download angeboten werden.
+    Statt dessen wird ein Script zur Verfügung gestellt, mit dem du den Generator vollautomatisch auf deinem PC bauen kannst.
+    Das Script lädt alle relevanten Dateien aus dem Internet und erstellt dir daraus den Generator.
+    
+    <p>Diese Seite beschreibt die Installation mit Docker und die Bedienung über das Webinterface, die auch für technisch wenig versierte Nutzer machbar ist.
+    Die Installation mit Docker funktioniert nur auf Systemen mit amd64-Prozessor.
+    Linux- und macOS-Nutzer können statt dessen auch die <code>nix</code>-basierte Installation benutzen, die im Readme beschrieben wird – Nutzer mit Apple Silicon Macs oder ARM-basiertem Linux (z.B. Raspberry Pi) müssen dies sogar tun.
+    Windows-Nutzer auf ARM tun mir Leid.</p>
+    </section>
+    <section>
+      <h2>Installation</h2>
+      <p>Zunächst musst du <a href="https://www.docker.com/get-started">Docker Desktop</a> installieren (sofern du es nicht ohnehin auf deinem System hast).
+      Starte Docker nach der Installation.
+      (Linux-Nutzer können statt dessen <a href="https://podman.io">podman</a> benutzen, wenn sie sich damit auskennen – hier muss kein Service laufen.)</p>
+      <p>Lade das <a href="https://github.com/flyx/DSA-4.1-Heldendokument/archive/refs/heads/master.zip">aktuelle zip-Archiv</a> des Projekts herunter, entpacke es, öffne eine Kommandozeile und wechsle in den entpackten Ordner.
+      Führe dort folgende Befehle aus:</p>
+      <pre>
+        <code>
+docker build -f build.dockerfile -t dsa41held-build .
+docker run --rm dsa41held-build:latest > dsa41held-webui.tar
+docker load -i dsa41held-webui.tar
+        </code>
+      </pre>
+      <p>Der erste Befehl baut ein Docker-Image, das die Werkzeuge bereit stellt, die benötigt werden, um den Generator zu bauen.
+      Der zweite Befehl baut den Generator und braucht dafür mehrere Minuten – es mag so aussehen als ob er hängen bleibt, aber das ist nicht der Fall!
+      Warte einfach, bis der Befehl fertig ist.
+      Mit dem dritten Befehl installierst du das <emph>image</emph>, in dem der Generator installiert ist, in Docker und kannst es damit zukünftig ausführen.</p>
+    </section>
+    <section>
+      <h2>Benutzung</h2>
+      <p>Das generierte Docker-Image kann folgendermaßen von der Kommandozeile aus gestartet werden, wenn Docker läuft (man muss in der Kommandozeile nicht zu einem Ordner navigieren):</p>
+      <pre><code>docker run -p 80:80 --rm dsa41held-webui:latest</code></pre>
+      <p>Solange dieser Befehl läuft, kann das Webinterface im Browser über die URL <a href="http://localhost/">http://localhost/</a> aufgerufen werden.
+      Um das Webinterface zu beenden, drücke in der Konsole Ctrl+C.</p>
+      <p>Das Webinterface ist minimal und dafür gedacht, den Inhalt der Helden-Datei ins Textfeld einzufügen und dann abzusenden. Es eignet sich nicht als Editor und speichert die Eingabe nicht ab. Die Generierung kann mehrere Minuten dauern, ein simpler Fortschrittsbalken wird währenddessen angezeigt. Das Webinterface inkludiert die Option, einen Held aus der Heldensoftware zu importieren.</p>
+    </section>
+  </article>
+  </body>
+</html>

@@ -34,13 +34,22 @@ if gendoc then
 <!doctype html>
 <html lang="de" style="background-color: darkslategray;">
   <head>
-    <title>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</title>
+    <title>DSA 4.1 Heldendokument: Formatspezifikation</title>
     <link rel="stylesheet" href="style.css"/>
   </head>
   <body>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="manual.html">Installation &amp; Bedienung</a></li>
+        <li><a href="format.html">Formatspezifikation</a></li>
+        <li><a href="imprint.html">Impressum</a></li>
+        <li><a href="https://github.com/flyx/DSA-4.1-Heldendokument"><img src="GitHub-Mark-Light-32px.png" srcset="GitHub-Mark-Light-64px.png 2x" style="height: .8em;"/> Github</a></li>
+      </ul>
+    </nav>
     <article class="doc">
       <section>
-        <h1>DSA 4.1 Heldendokument: Dokumentation Eingabedaten</h1>
+        <h1>DSA 4.1 Heldendokument: Formatspezikifation</h1>
         <p>Dieses Dokument spezifiziert die Struktur der Eingabedatei für die Generierung des Heldendokuments.
         Es dient der Referenz; generell ist es nicht nötig, das komplette Dokument zu lesen, um eine Eingabedatei schreiben zu können.
         Zum Einstieg wird empfohlen, beim Abschnitt <a href="#Struktur">Struktur des Eingabedokuments</a> zu beginnen und bei den dort verlinkten Strukturen auf der obersten Ebene die Beispiele anzuschauen.

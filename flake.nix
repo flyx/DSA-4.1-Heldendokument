@@ -117,6 +117,19 @@
             };
           };
         };
+        dsa41held-doc = stdenvNoCC.mkDerivation {
+          name = "DSA-4.1-Heldendokument-Dokumentation";
+          src = self;
+          buildInputs = [ tex ];
+          phases = [ "unpackPhase" "buildPhase" "installPhase" ];
+          buildPhase = ''
+            (cd src && texlua tools.lua --standalone gendoc > ../format.html)
+          '';
+          installPhase = ''
+            mkdir -p "$out"
+            mv format.html "$out/format.html"
+          '';
+        };
       };
       devShell = pkgs.mkShell {
         buildInputs = [ tex pkgs.go ];

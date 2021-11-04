@@ -131,7 +131,7 @@ function eigenschaften.links(self)
   tex.sprint("&")
   local gsmod = data:cur("GS_mod")
   if gsmod ~= "" then
-    common.render_delta(gsmod)
+    eigenschaften.render_mod(gsmod)
   end
   tex.sprint([[&&\cellcolor{white}]])
   if gsmod ~= "" then

@@ -1,7 +1,53 @@
+html {
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  margin: 0;
+}
+
+nav > ul {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding: 20px;
+  background: #333;
+  margin: 0;
+  padding: 0;
+}
+
+nav > ul > li {
+  list-style: none;
+  padding: .25em .75em;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+nav > ul > li:hover,
+nav > ul > li:active {
+  background: #555;
+}
+
+nav > ul > li > a {
+  text-decoration: none;
+  color: #eee;
+}
+
 article.doc {
   max-width: 960px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: .5em;
 }
 
 article.doc section {
@@ -33,6 +79,7 @@ article.doc h2 {
   padding: .25em .5em;
   background-color: rgb(141, 131, 148);
   font-size: large;
+  font-family: sans-serif;
 }
 
 article.doc h1 {
@@ -44,6 +91,7 @@ article.doc h4,
 article.doc h5,
 article.doc h6 {
   font-size: medium;
+  font-family: sans-serif;
   padding: .5em;
   margin: 0;
 }
@@ -55,6 +103,12 @@ section > pre {
   margin-right: 1.5em;
   border-radius: .67em;
   white-space: pre-wrap;
+}
+
+section > img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 div.example > pre {

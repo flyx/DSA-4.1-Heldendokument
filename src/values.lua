@@ -7,7 +7,7 @@ while i <= #arg do
   local name = arg[i]
   i = i + 1
 
-  if name == "heldendokument.tex" then
+  if name == "heldendokument.tex" or name == "heldendokument-weiss.tex" then
     break
   end
 end

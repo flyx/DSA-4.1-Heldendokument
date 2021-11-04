@@ -9,14 +9,16 @@ SOURCES = \
 
 docker: dsa41held-webui.tar
 
-doc: docs/index.html
+doc: docs/format.html
 
 dsa41held-webui.tar: build.dockerfile heldensoftware-meta.xml import.xsl flake.nix flake.lock $(shell find templates src webui img -type file)
 	docker build -f build.dockerfile -t dsa41held-build .
 	docker run --rm dsa41held-build:latest > $@
 	docker rmi $(docker images --filter=reference='dsa41held-build' --format "{{.ID}}")
 
-docs/index.html: src/schemadef.lua src/schema.lua src/tools.lua
-	cd src && texlua tools.lua --standalone gendoc > ../docs/index.html
+docs/format.html: src/schemadef.lua src/schema.lua src/tools.lua flake.nix flake.lock
+	nix build .#dsa41held-doc
+	cp result/format.html docs/format.html
+	chmod u+w docs/format.html
 
 .PHONY: doc docker
