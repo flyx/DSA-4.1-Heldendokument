@@ -22,7 +22,7 @@
         <p>Die Idee des Dokuments ist es, dass <strong>du</strong> es nach deinen Wünschen und Bedürfnissen konfigurieren kannst.
         Beispielsweise lässt sich einstellen, wie viele Zeilen für Talentgruppen zur Verfügung gestellt werden oder wie diese Talentgruppen auf dem Talentbogen sortiert sind.
         Folglich installierst du auf deinem PC einen <em>Generator</em>, der deine Konfiguration einliest und ein PDF daraus erstellt.
-        <a href="installation.html">Zur Installationsanleitung</a></p>
+        <a href="manual.html">Zur Installationsanleitung</a></p>
       </section>
       <section>
         <h2>Aussehen des Dokuments</h2>
@@ -54,14 +54,23 @@
       </section>
       <section>
         <h2>Konfiguration &amp; Dateneingabe</h2>
-        <p>Der Generator liest eine Datei ein, in der <strong>du</strong> sowohl verschiedene Layout-Optionen wie auch die Werte deines Helden angeben kannst.
+        <p>Der Generator liest eine Datei ein, in der du sowohl verschiedene Layout-Optionen wie auch die Werte deines Helden angeben kannst.
         Füllst du deinen Bogen gerne von Hand aus, kannst du nur Layout-Optionen angeben (beispielsweise, ob du einen Liturgiebogen, ein Zauberdokument usw. willst).
         Manche Formatoptionen sind allerdings nur verfügbar, wenn du auch Daten eingibst (zum Beispiel mehrzeilige Talente mit Spezialisierungen).</p>
         <p>Die eingegebene Datei benutzt die Syntax der Programmiersprache <a href="https://www.lua.org">Lua</a>; du musst aber nicht programmieren können, um sie zu schreiben.
         Die vorgegebenen <a href="https://github.com/flyx/DSA-4.1-Heldendokument/tree/master/templates">Templates</a> geben dir eine Idee, wie Eingabedateien aussehen.
         Online ist <a href="format.html">die komplette Formatspezifikation</a> verfügbar, die aber nicht als Tutorial, sondern als Nachschlagewerk gedacht ist.</p>
+        <p>Werte können nur bei der Erstellung eingegeben werden; das generierte PDF hat keine editierbaren Felder.
+        Dies verbessert die Darstellung auf mobilen Endgeräten, die oftmals keine PDF-Textfelder beherrschen.
+        Außerdem können berechenbare Werte nicht neu berechnet werden, wenn man im fertigen PDF einen Eingabewert ändert.
+        Für die Änderung des Inhalts muss immer die Eingabedatei editiert und dann ein neues PDF erzeugt werden.</p>
+        <p>Es wurde Wert darauf gelegt, dass der Benutzer größtmögliche Kontrolle über das Aussehen des erstellten Bogens hat.
+        So sind etwa auch die Basistalente beliebig sortierbar, sodass man in jeder Talentgruppe alle Talente alphabetisch ordnen kann und nicht die Basistalente oben stehen müssen.
+        Gerade der Talentbogen ist darüber hinaus konfigurierbar:
+        Die Anzahl Talente in einer Gruppe kann geändert werden, genauso die Reihenfolge der Talentgruppen.
+        Die Talentgruppe <emph>Gaben</emph> kann etwa komplett entfernt werden, wenn sie nicht benötigt wird.</p>
         <p>Es können auch Helden aus der <a href="https://www.helden-software.de/index.php/download/">Heldensoftware</a> importiert werden.
-        Dies geschieht, indem aus der Heldensoftware ein Held exportiert wird und dann mit dem Import-Script die XML-Datei in eine Lua-Datei umgewandelt wird.
+        Dies geschieht, indem aus der Heldensoftware ein Held als XML exportiert wird und dann mit dem Import-Script die XML-Datei in eine Lua-Datei umgewandelt wird.
         Die Lua-Datei kann danach nachbearbeitet werden (beispielsweise, weil die Heldensoftware gerne halbe Romane in Kultur und Profession schreibt) und schließlich dem Generator übergeben werden.</p>
         <p>Die Eingabedatei beherrscht auch Steigerungen.
         Hierfür werden die initialen Werte des Helden normal als Daten eingegeben, und danach eine Liste von Ereignissen.
@@ -69,6 +78,14 @@
         Stehen in der Eingabedatei Steigerungen, so werden diese auf die initialen Werte appliziert und im generierten Heldendokument stehen dann die neuen Werte.
         Das Heldendokument beherrscht alle üblichen Ereignisse.</p>
       </section>
+      <section>
+        <h2>Berechnete Werte</h2>
+        <p>Im Heldendokument werden alle berechenbare Werte ausgefüllt, für die die benötigten Eingabewerte vorhanden sind.
+        Beispielsweise wird die Lebensenergie berechnet, wenn <emph>KO</emph> und <emph>KK</emph> gegeben sind.
+        Berechenbare Werte können nicht explizit eingegeben werden.</p>
+        <p>Berechenbare Werte haben mitunter Abhängigkeiten von Vor- und Nachteilen oder Sonderfertigkeiten.
+        Beispielsweise hängt die AsP-Regeneration pro Ruhephase von solchen ab.
+        Während der Generator prinzipiell beliebigen Text für Vor- und Nachteile sowie Sonderfertigkeiten annimmt, werden solche mit Auswirkungen auf Berechnungen speziell eingegeben, sodass der Generator sie erkennt (siehe die Formatspezifikation).</p>
     </article>
   </body>
 </html>
