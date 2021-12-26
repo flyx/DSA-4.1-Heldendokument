@@ -887,15 +887,15 @@ function d.Primitive:set(v)
     if t ~= self.inner then
       return string.format("%s-Inhalt erwartet, bekam %s", self.inner, t)
     end
-    if self.decimals ~= nil then
-      local x = v * 10 ^ self.decimals
-      if math.abs(x - math.floor(x)) > 0.00001 then
-        return string.format("Zu viele Dezimalstellen (erlaubt sind maximal %d)", self.decimals)
+    if self.decimals ~= nil then -- identifies numbers
+      local after = string.match(string.format("%g", v), "%.(.*)")
+      if after ~= nil and #after > self.decimals + 1 then
+        return string.format("'%g': Zu viele Dezimalstellen (erlaubt sind maximal %d)", v, self.decimals)
       end
       if (self.min ~= nil and v < self.min) or (self.max ~= nil and v > self.max) then
         local minstr = self.min == nil and "-∞" or tostring(self.min)
         local maxstr = self.max == nil and "∞" or tostring(self.max)
-        return string.format("Zahl %d außerhalb des erwarteten Bereichs %d..%s", v, minstr, maxstr)
+        return string.format("Zahl %g außerhalb des erwarteten Bereichs %s..%s", v, minstr, maxstr)
       end
     end
     self.value = v
