@@ -177,19 +177,18 @@ setmetatable(getter_map.calc, {
     for i,v in ipairs(vals) do
       local x = 0
       if v == "KE" then
-        x = data.eig.KE[1]
+        if data.eig.KE[1] == 0 then
+          return ""
+        end
       else
         x = data.eig[v][3]
-      end
-      if x == 0 then
-        return ""
+        if x == 0 then
+          return ""
+        end
       end
       val = val + x
     end
     val = val / div
-    if val == 0 then
-      return ""
-    end
 
     if name == "INI" then
       val = val + data.eig.INI
@@ -275,6 +274,14 @@ function values:cur(name, div)
     end
   else
     tex.error("queried unknown value: " .. name)
+  end
+end
+
+function values.PA(talent)
+  if talent.AT ~= nil and talent.TaW ~= nil then
+    return talent.TaW - talent.AT
+  else
+    return nil
   end
 end
 

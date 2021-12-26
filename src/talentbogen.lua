@@ -90,8 +90,9 @@ function talent.nah(v)
   tex.sprint([[& ]])
   tex.sprint(-2, v.AT)
   tex.sprint([[& ]])
-  if v.TaW ~= nil and v.AT ~= nil then
-    tex.sprint(-2, v.TaW - v.AT)
+  local pa = data.PA(v)
+  if pa ~= nil then
+    tex.sprint(-2, pa)
   end
   tex.sprint([[& ]])
   tex.sprint(-2, v.TaW)
