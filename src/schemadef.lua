@@ -1107,7 +1107,7 @@ function d.Multivalue:proto_param_values(printer)
 end
 
 function d.Multivalue:documentation(printer)
-  printer:p(string.format("Ein einzelner oder eine Liste von %s-Werten.", self.inner.name))
+  printer:p(string.format("Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ %s oder einen Typen in <i>known</i> haben.", self.inner.name))
 end
 
 function d:singleton(tc, o, ...)
@@ -1246,7 +1246,7 @@ function d:typeclass_docs()
   })
   doc_printer:p([[
     <em>Numbered</em> definiert Typen mit zusammengesetzten Inhalt (<code><span class="sym">{</span><span class="metasym">...</span><span class="sym">}</span></code>).
-    Der Inhalt darf nur unbenamte Wert enthalten, und alle Werte müssen Ganzzahlen zwischen 1 und <em>max</em> sein.
+    Der Inhalt darf nur unbenamte Werte enthalten, und alle Werte müssen Ganzzahlen zwischen 1 und <em>max</em> sein.
     Die Ganzzahlen müssen typlos sein.
   ]])
   doc_printer:p([[

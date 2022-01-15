@@ -80,29 +80,38 @@
          für die Vor- und Nachteile, die das Heldendokument „kennt“, weil sie
          Einfluss auf die Berechnung von Werten haben.
     -->
-    <vn name="Aberglaube" nachteil="1"/>
+    <vn name="Aberglaube" schlechteEigenschaft="1"/>
     <vn name="Affinität zu" magisch="1"/>
     <vn name="Akademische Ausbildung (Magier)" magisch="1"/>
     <vn name="Albino" nachteil="1"/>
-    <vn name="Angst vor" nachteil="1"/>
+    <vn name="Angst vor (häufiger Auslöser)" schlechteEigenschaft="1.5"/>
+    <vn name="Angst vor (seltener Auslöser)" schlechteEigenschaft="1"/>
+    <vn name="Angst vor Feuer" schlechteEigenschaft="1"/>
+    <vn name="Angst vor Menschenmassen" schlechteEigenschaft="1"/>
+    <vn name="Angst vor Nagetieren" schlechteEigenschaft="1.5"/>
+    <vn name="Angst vor Pelztieren" schlechteEigenschaft="1"/>
+    <vn name="Angst vor Reptilien" schlechteEigenschaft="1"/>
+    <vn name="Angst vor Spinnen" schlechteEigenschaft="1"/>
+    <vn name="Angst vor Wasser" schlechteEigenschaft="1.5"/>
     <vn name="Animalische Magie" nachteil="1" magisch="1"/>
-    <vn name="Arroganz" nachteil="1"/>
+    <vn name="Arkanophobie" schlechteEigenschaft="1.5"/>
+    <vn name="Arroganz" schlechteEigenschaft="1"/>
     <vn name="Artefaktgebunden" nachteil="1" magisch="1"/>
     <vn name="Astrale Regeneration" magisch="1"/>
     <vn name="Astraler Block" nachteil="1" magisch="1"/>
     <vn name="Astralmacht" magisch="1"/>
     <vn name="Ausdauernder Zauberer" magisch="1"/>
-    <vn name="Autoritätsgläubig" nachteil="1"/>
+    <vn name="Autoritätsgläubig" schlechteEigenschaft="0.5"/>
     <vn name="Begabung für [Merkmal]" magisch="1" merkmale="1" id="BegabungFuerMerkmal"/>
     <vn name="Begabung für [Ritual]" magisch="1" liste="1"/>
     <vn name="Begabung für [Zauber]" magisch="1" liste="1" id="BegabungFuerZauber"/>
     <vn name="Begabung für [Talentgruppe]" liste="1" id="BegabungFuerTalentgruppe"/>
     <vn name="Begabung für [Talent]" liste="1" id="BegabungFuerTalent"/>
     <vn name="Behäbig" nachteil="1"/>
-    <vn name="Blutdurst" nachteil="1"/>
+    <vn name="Blutdurst" schlechteEigenschaft="0.5"/>
     <vn name="Blutrausch" nachteil="1"/>
-    <vn name="Brünstigkeit" nachteil="1"/>
-    <vn name="Dunkelangst" nachteil="1"/>
+    <vn name="Brünstigkeit" schlechteEigenschaft="0.5"/>
+    <vn name="Dunkelangst" schlechteEigenschaft="2"/>
     <vn name="Eigeboren" magisch="1"/>
     <vn name="Einarmig" nachteil="1"/>
     <vn name="Einäugig" nachteil="1"/>
@@ -112,7 +121,7 @@
     <vn name="Einhändig" nachteil="1"/>
     <vn name="Eisenaffine Aura" magisch="1"/>
     <vn name="Eisern"/>
-    <vn name="Eitelkeit" nachteil="1"/>
+    <vn name="Eitelkeit" schlechteEigenschaft="1"/>
     <vn name="Elfische Weltsicht" nachteil="1"/>
     <vn name="Ererbte Knochenkeule" magisch="1"/>
     <vn name="Farbenblind" nachteil="1"/>
@@ -123,24 +132,24 @@
     <vn name="Fettleibig" nachteil="1"/>
     <vn name="Flink" id="Flink" numbered="2"/>
     <vn name="Fluch der Finsternis" nachteil="1" magisch="1"/>
-    <vn name="Geiz" nachteil="1"/>
-    <vn name="Gerechtigkeitswahn" nachteil="1"/>
+    <vn name="Geiz" schlechteEigenschaft="0.5"/>
+    <vn name="Gerechtigkeitswahn" schlechteEigenschaft="0.5"/>
     <vn name="Gesucht" nachteil="1"/>
     <vn name="Glasknochen" nachteil="1"/>
-    <vn name="Goldgier" nachteil="1"/>
-    <vn name="Größenwahn" nachteil="1"/>
+    <vn name="Goldgier" schlechteEigenschaft="1"/>
+    <vn name="Größenwahn" schlechteEigenschaft="0.5"/>
     <vn name="Halbzauberer" magisch="1"/>
     <vn name="Heimwehkrank" nachteil="1"/>
     <vn name="Hitzeempfindlichkeit" nachteil="1"/>
     <vn name="Höhenangst" nachteil="1"/>
     <vn name="Impulsiv" nachteil="1"/>
-    <vn name="Jähzorn" nachteil="1"/>
+    <vn name="Jähzorn" schlechteEigenschaft="1.5"/>
     <vn name="Kälteempfindlichkeit" nachteil="1"/>
     <vn name="Kältestarre" nachteil="1"/>
     <vn name="Kein Vertrauter" nachteil="1" magisch="1"/>
     <vn name="Kleinwüchsig" nachteil="1"/>
     <vn name="Körpergebundene Kraft" nachteil="1" magisch="1"/>
-    <vn name="Krankhafte Reinlichkeit" nachteil="1"/>
+    <vn name="Krankhafte Reinlichkeit" schlechteEigenschaft="1"/>
     <vn name="Krankheitsanfällig" nachteil="1"/>
     <vn name="Kristallgebunden" nachteil="1" magisch="1"/>
     <vn name="Kurzatmig" nachteil="1"/>
@@ -151,25 +160,25 @@
     <vn name="Machtvoller Vertrauter" magisch="1"/>
     <vn name="Madas Fluch" nachteil="1" magisch="1"/>
     <vn name="Medium" nachteil="1"/>
-    <vn name="Meeresangst" nachteil="1"/>
+    <vn name="Meeresangst" schlechteEigenschaft="1"/>
     <vn name="Meisterhandwerk" id="Meisterhandwerk" magisch="1" liste="1"/>
     <vn name="Miserable Eigenschaft" nachteil="1"/>
     <vn name="Mondsüchtig" nachteil="1"/>
     <vn name="Moralkodex" nachteil="1"/>
     <vn name="Nachtblind" nachteil="1"/>
     <vn name="Nahrungsrestriktion" nachteil="1"/>
-    <vn name="Neid" nachteil="1"/>
-    <vn name="Neugier" nachteil="1"/>
+    <vn name="Neid" schlechteEigenschaft="0.5"/>
+    <vn name="Neugier" schlechteEigenschaft="1"/>
     <vn name="Niedrige Astralkraft" nachteil="1" magisch="1"/>
     <vn name="Niedrige Lebenskraft" nachteil="1"/>
     <vn name="Niedrige Magieresistenz" nachteil="1"/>
     <vn name="Pechmagnet" nachteil="1"/>
-    <vn name="Platzangst" nachteil="1"/>
+    <vn name="Platzangst" schlechteEigenschaft="1.5"/>
     <vn name="Prinzipientreue" nachteil="1"/>
-    <vn name="Rachsucht" nachteil="1"/>
+    <vn name="Rachsucht" schlechteEigenschaft="1"/>
     <vn name="Randgruppe" nachteil="1"/>
     <vn name="Raubtiergeruch" nachteil="1"/>
-    <vn name="Raumangst" nachteil="1"/>
+    <vn name="Raumangst" schlechteEigenschaft="1.5"/>
     <vn name="Rückschlag" nachteil="1" magisch="1"/>
     <vn name="Schlafstörungen" nachteil="1"/>
     <vn name="Schlafwandler" nachteil="1"/>
@@ -183,20 +192,20 @@
     <vn name="Schwanzlos" nachteil="1"/>
     <vn name="Seffer Manich" nachteil="1"/>
     <vn name="Selbstgespräche" nachteil="1"/>
-    <vn name="Sensibler Geruchssinn" nachteil="1"/>
+    <vn name="Sensibler Geruchssinn" schlechteEigenschaft="1.5"/>
     <vn name="Sippenlosigkeit" nachteil="1"/>
-    <vn name="Sonnensucht" nachteil="1"/>
+    <vn name="Sonnensucht" schlechteEigenschaft="1.5"/>
     <vn name="Speisegebote" nachteil="1"/>
-    <vn name="Spielsucht" nachteil="1"/>
+    <vn name="Spielsucht" schlechteEigenschaft="1"/>
     <vn name="Sprachfehler" nachteil="1"/>
     <vn name="Spruchhemmung" nachteil="1"/>
     <vn name="Stigma" nachteil="1"/>
-    <vn name="Streitsucht" nachteil="1"/>
+    <vn name="Streitsucht" schlechteEigenschaft="0.5"/>
     <vn name="Stubenhocker" nachteil="1"/>
     <vn name="Sucht" nachteil="1"/>
     <vn name="Thesisgebunden" nachteil="1" magisch="1"/>
     <vn name="Tollpatsch" nachteil="1"/>
-    <vn name="Totenangst" nachteil="1"/>
+    <vn name="Totenangst" schlechteEigenschaft="1"/>
     <vn name="Übernatürliche Begabung" magisch="1"/>
     <vn name="Übler Geruch" nachteil="1"/>
     <vn name="Unangenehme Stimme" nachteil="1"/>
@@ -211,14 +220,15 @@
     <vn name="Vergesslichkeit" nachteil="1"/>
     <vn name="Verhüllte Aura" magisch="1"/>
     <vn name="Verpflichtungen" nachteil="1"/>
-    <vn name="Verschwendungssucht" nachteil="1"/>
-    <vn name="Verwöhnt" nachteil="1"/>
+    <vn name="Verschwendungssucht" schlechteEigenschaft="1"/>
+    <vn name="Verwöhnt" schlechteEigenschaft="1"/>
     <vn name="Viertelzauberer" magisch="1"/>
     <vn name="Vollzauberer" magisch="1"/>
-    <vn name="Vorurteile gegen" nachteil="1"/>
+    <vn name="Vorurteile gegen" schlechteEigenschaft="0.5"/>
+    <vn name="Vorurteile gegen (stark)" schlechteEigenschaft="1"/>
     <vn name="Wahnvorstellungen" nachteil="1"/>
     <vn name="Wahrer Name" nachteil="1"/>
-    <vn name="Weltfremd" nachteil="1"/>
+    <vn name="Weltfremd" schlechteEigenschaft="1"/>
     <vn name="Wesen der Nacht" magisch="1"/>
     <vn name="Widerwärtiges Aussehen" nachteil="1"/>
     <vn name="Wilde Magie" nachteil="1" magisch="1"/>

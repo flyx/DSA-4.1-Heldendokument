@@ -239,6 +239,10 @@ Nachteile {
   </xsl:apply-templates><xsl:text>
 }
 
+Nachteile.Eigenschaften {
+  </xsl:text><xsl:apply-templates select="vorteil" mode="schlechteEigenschaft"/><xsl:text>
+}
+
 Nachteile.Magisch {
   </xsl:text><xsl:apply-templates select="vorteil" mode="filter">
     <xsl:with-param name="nachteil" select="true()"/>
@@ -271,7 +275,7 @@ Nachteile.Magisch {
     <xsl:param name="nachteil" as="xs:boolean" select="false()"/>
     <xsl:variable name="name" select="@name"/>
     <xsl:variable name="def" select="$vorUndNachteile/vn[@name=$name]"/>
-    <xsl:if test="($def/@nachteil = '1') = $nachteil and ($def/@magisch = '1') = $magisch and not($def/@id)">
+    <xsl:if test="($def/@nachteil = '1') = $nachteil and ($def/@magisch = '1') = $magisch and not($def/@id) and not($def/@schlechteEigenschaft)">
       <xsl:apply-templates select="."/>
     </xsl:if>
   </xsl:template>
@@ -281,7 +285,7 @@ Nachteile.Magisch {
     <xsl:param name="nachteil" as="xs:boolean" select="false()"/>
     <xsl:variable name="name" select="@name"/>
     <xsl:variable name="def" select="$vorUndNachteile/vn[@name=$name]"/>
-    <xsl:if test="($def/@nachteil = '1') = $nachteil and ($def/@magisch = '1') = $magisch and $def/@id and not($def/@liste and ./preceding-sibling::vorteil[starts-with(@name, $name)])">
+    <xsl:if test="($def/@nachteil = '1') = $nachteil and ($def/@magisch = '1') = $magisch and $def/@id and not($def/@liste and ./preceding-sibling::vorteil[starts-with(@name, $name)]) and not($def/@schlechteEigenschaft)">
       <xsl:choose>
         <xsl:when test="$def/@numbered">
           <xsl:value-of select="concat($def/@id, '(', @value, '), ')"/>
@@ -301,6 +305,24 @@ Nachteile.Magisch {
         </xsl:otherwise>
       </xsl:choose>
     </xsl:if>
+  </xsl:template>
+  
+  <xsl:template match="vorteil" mode="schlechteEigenschaft">
+    <xsl:variable name="name" select="@name"/>
+    <xsl:variable name="def" select="$vorUndNachteile/vn[@name=$name]"/>
+    <xsl:choose>
+      <xsl:when test="not($def/@schlechteEigenschaft)"/>
+      <xsl:when test="auswahl">
+        <xsl:text>{</xsl:text>
+        <xsl:value-of select="concat('&quot;', $name, ' ', auswahl[@position=1]/@value, '&quot;, ', $def/@schlechteEigenschaft, ', ', auswahl[@position=0]/@value)"/>
+        <xsl:text>}, </xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>{</xsl:text>
+        <xsl:value-of select="concat('&quot;', $name, '&quot;, ', $def/@schlechteEigenschaft, ', ', @value)"/>
+        <xsl:text>}, </xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <func:function name="dsa:basisEig">

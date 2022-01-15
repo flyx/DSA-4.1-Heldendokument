@@ -64,6 +64,7 @@ local values = {
 }
 
 values.Vorteile.Magisch = schema.Vorteile.Magisch:instance()
+values.Nachteile.Eigenschaften = schema.Nachteile.Eigenschaften:instance()
 values.Nachteile.Magisch = schema.Nachteile.Magisch:instance()
 for k,v in pairs(schema.Talente) do
   values.Talente[k] = v:instance()
@@ -963,6 +964,37 @@ function values:aktiviere(e)
   return event, insta_steiger
 end
 
+function values:senkung(e)
+  local found = nil
+  local found_index = nil
+  local event = {"Senkung (" .. e.Name .. ")"}
+  for i, eig in ipairs(self.Nachteile.Eigenschaften.value) do
+    if eig.Name == e.Name then
+      found = eig
+      found_index = i
+      break
+    end
+  end
+  if found == nil then
+    tex.error("\n[Senkung] unbekannte Schlechte Eigenschaft: '" .. e.Name .. "'")
+  end
+  local ap = math.floor((found.Wert - e.Zielwert) * 50 * found.GP + 0.5)
+  if e.Zielwert == 0 then
+    event[1] = event[1] .. ": Schlechte Eigenschaft mit Wert " .. found.Wert .. " entfernt"
+    table.remove(self.Nachteile.Eigenschaften.value, found_index)
+  else
+    event[1] = event[1] .. " von " .. found.Wert .. " auf " .. e.Zielwert
+    found.Wert = e.Zielwert
+  end
+  event[1] = event[1] .. " mittels " .. e.Methode
+  event[2] = -1 * ap
+  event[3] = e.Methode == "Selbststudium" and skt.faktor["3/2"] or skt.faktor["1"]
+  local kosten = event[3]:apply(ap)
+  event[4] = -1 * kosten
+  event[5] = self:ap_mod(kosten)
+  return event
+end
+
 function values:spaetweihe(e)
   self.Mirakel.Liturgiekenntnis.Name = e.Gottheit
   self.Mirakel.Liturgiekenntnis.Wert = 3
@@ -1032,6 +1064,8 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
         tex.error("illegal insta_steiger: " .. imt.name)
       end
     end
+  elseif mt.name == "Senkung" then
+    event = values:senkung(e)
   elseif mt.name == "Spaetweihe" then
     event = values:spaetweihe(e)
   elseif mt.name == "Zugewinn" then

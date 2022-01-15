@@ -204,7 +204,7 @@ function schema.Vorteile.Magisch.example(printer)
 }]])
 end
 
-d:singleton(d.Multivalue, {name = "Nachteile", description = "Liste von nicht-magischen Nachteilen"}, String, {
+d:singleton(d.Multivalue, {name = "Nachteile", description = "Liste von nicht-magischen Nachteilen (außer schlechten Eigenschaften)"}, String, {
   Glasknochen = "Glasknochen",
   Behaebig = "Behäbig",
   Kleinwuechsig = "Kleinwüchsig",
@@ -216,6 +216,25 @@ d:singleton(d.Multivalue, {name = "Nachteile", description = "Liste von nicht-ma
 function schema.Nachteile.example(printer)
   printer:highlight([[Nachteile {
   "Impulsiv", "Zwergenwuchs", UnfaehigkeitFuerTalent {"Schwimmen"}
+}]])
+end
+
+local Ganzzahl = d.Primitive:def({name = "Ganzzahl", description = "Eine Zahl in Dezimalschreibweise."}, "number", false, 0)
+
+local GPjeStufe = d.Primitive:def({name="GPjeStufe", description="GP pro Stufe in der schlechten Eigenschaft (positiv). Wird verwendet, um die Kosten von Senkungen zu berechnen."}, "number", false, 1, 0.5, 2)
+
+local SchlechteEigenschaft = d.Row:def({name="SchlechteEigenschaft", description="Eine schlechte Eigenschaft, die die GP pro Stufe (0.5, 1, 1.5 oder 2) definert sowie den aktuellen Stufenwert."},
+  {"Name", String},
+  {"GP", GPjeStufe},
+  {"Wert", Ganzzahl})
+
+schema.Nachteile.Eigenschaften = d:singleton(d.List, {name = "Nachteile.Eigenschaften", description="Liste von Schlechten Eigenschaften"}, {SchlechteEigenschaft}) {}
+function schema.Nachteile.Eigenschaften.example(printer)
+  printer:highlight([[Nachteile.Eigenschaften {
+  {"Angst vor Wasser", 1.5, 6},
+  {"Dunkelangst", 2, 7},
+  {"Neid", 0.5, 8},
+  {"Vorurteile gegen Menschen", 1, 9}
 }]])
 end
 
@@ -232,8 +251,6 @@ function schema.Nachteile.Magisch.example(printer)
   "Lästige Mindergeister"
 }]])
 end
-
-local Ganzzahl = d.Primitive:def({name = "Ganzzahl", description = "Eine Zahl in Dezimalschreibweise."}, "number", false, 0)
 
 local BasisEig = d.Row:def({name = "BasisEig", description = "Eine Basiseigenschaft mit Modifikator, Startwert und aktuellem Wert."},
   {"Mod", Ganzzahl}, {"Start", Ganzzahl}, {"Aktuell", Ganzzahl})
@@ -741,6 +758,7 @@ end
 local SteigerMethode = d.Matching:def({name = "SteigerMethode", description = "Steigerungsmethode"}, "SE", "Lehrmeister", "Gegenseitig", "Selbststudium")
 local SFLernmethode = d.Matching:def({name = "SFLernmethode", description = "Lernmethode für eine Sonderfertigkeit"}, "SE", "Lehrmeister")
 local EigSteigerMethode = d.Matching:def({name = "EigSteigerMethode", description = "Steigerungsmethode für Eigenschaften"}, "SE", "Standard")
+local SenkMethode = d.Matching:def({name = "SenkMethode", description="Methode der Senkung Schlechter Eigenschaften"}, "SE", "Lehrmeister", "Selbststudium")
 
 local TaW = d.Row:def({name = "TaW", description = "Steigerung eines Talentwerts. Heißen verschiedene Talente gleich, kann der Typ angegeben werden (z.B. Sprache Tuladimya vs Schrift Tulamidya). Der Wert AT muss angegeben werden bei Nahkampftalenten mit AT/PA Verteilung und gibt an, um wie viel die AT erhöht wird."},
   {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SteigerMethode, "Gegenseitig"}, {"Typ", nil, {}}, {"AT", OptNum, {}})
@@ -785,6 +803,9 @@ local Spaetweihe = d.Row:def({name = "Spaetweihe", description = "Spätweihe ein
   {"Kosten", Ganzzahl},
   {"Methode", SFLernmethode, "Lehrmeister"})
 
+local Senkung = d.Row:def({name = "Senkung", description = "Senkung einer Schlechten Eigenschaft. Die Schlechte Eigenschaft verschwindet, wenn der Zielwert 0 ist."},
+  {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SenkMethode, "Lehrmeister"})
+
 local Zugewinn = d.Row:def({name = "Zugewinn", description = "Zugewinn von AP. Kann als Überschrift (fett) formatiert werden."},
   {"Text", String}, {"AP", Ganzzahl}, {"Fett", schema.Boolean, false})
 
@@ -792,7 +813,7 @@ local Frei = d.Row:def({name = "Frei", description = "Freie Modifikation der Cha
   {"Text", String}, {"Modifikation", schema.Function}, {"Kosten", Ganzzahl, 0})
 
 d:singleton(d.List, {name = "Ereignisse", description = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"}, {
-  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, Spaetweihe, Zugewinn, Frei
+  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, Senkung, Spaetweihe, Zugewinn, Frei
 }) {}
 function schema.Ereignisse.example(printer)
   printer:highlight([[Ereignisse {
@@ -822,6 +843,8 @@ function schema.Ereignisse.example(printer)
     Spezialisierung {"Horriphobus Schreckgestalt", "Erzwingen"},
     -- steigere den Zauber Klarum Purum auf 12 mittels Lehrmeister
     ZfW {"Klarum Purum", 12, "Lehrmeister"},
+    -- senke eine Schlechte Eigenschaft auf 3
+    Senkung {"Angst vor Spinnen", 3, "SE"}
     -- erhalte eine Spätweihe
     Spaetweihe {"Boron",
       Plus      = {"Schleichen", "Überzeugen"},

@@ -66,6 +66,14 @@ end
 
 frontseite.held = held_basis
 
+frontseite.schEig = function()
+  local ret = {}
+  for _, e in ipairs(data.Nachteile.Eigenschaften.value) do
+    table.insert(ret, e.Name .. " " .. e.Wert)
+  end
+  return {value = ret}
+end
+
 local eigenschaften = {
   label = {
     MU = "Mut", KL = "Klugheit", IN = "Intuition", CH = "Charisma",
