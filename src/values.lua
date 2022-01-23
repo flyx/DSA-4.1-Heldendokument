@@ -2,24 +2,12 @@ local d = require("schemadef")
 local schema = loadfile("schema.lua", "t")(false)
 local skt = require("skt")
 
-local i = 1
-while i <= #arg do
-  local name = arg[i]
-  i = i + 1
+local input = ...
 
-  if name == "heldendokument.tex" or name == "heldendokument-weiss.tex" then
-    break
-  end
-end
-
-if i < #arg then
-  tex.error("zu viele Argumente. Erstes überflüssiges Argument: '" .. tostring(arg[i+1]) .. "'")
-end
-
-if i == #arg then
-  local f = function() tex.error(arg[i] .. " brauchte zu lange zum Laden!") end
+if input ~= nil then
+  local f = function() tex.error(input .. " brauchte zu lange zum Laden!") end
   debug.sethook(f, "", 1e6)
-  local f, errmsg = loadfile(arg[i], "t", schema)
+  local f, errmsg = loadfile(input, "t", schema)
   if f == nil then
     tex.error(errmsg)
   end

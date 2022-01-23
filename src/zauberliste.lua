@@ -1,5 +1,5 @@
 local schema = require("schema")
-local data = require("values")
+local data = require("data")
 
 local repraesentationen = {
   label = {

@@ -1,4 +1,5 @@
-local data = require("values")
+local data = require("data")
+local schema = require("schema")
 
 local common = {}
 
@@ -194,8 +195,7 @@ function common.multiline_content(spec, ...)
   for _, values in ipairs {...} do
     if type(values) == "table" then
       for i,container in ipairs(values.value) do
-        local v = (type(container) ~= "table" or getmetatable(container) == nil)
-          and container or container:get()
+        local v = container:get()
         local is_table = type(v) == "table"
         if is_table and getmetatable(v) == nil then
           if #v ~= 0 then

@@ -51,6 +51,40 @@
             tex coreutils bash
           ];
           phases = ["unpackPhase" "installPhase"];
+          GENERATOR = ''
+            #!/bin/sh
+            set -e
+            BASE_NAME="heldendokument"
+            while :; do
+              case $1 in
+                -w|--white) BASE_NAME="heldendokument-weiss"
+                ;;
+                *) break
+              esac
+              shift
+            done
+            
+            if [ -z "$1" ]; then
+              echo "Pfad zur Heldendatei muss als Eingabe angegeben werden!"
+              exit 1
+            fi
+            
+            ABS_INPUT="$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
+            (cd "${builtins.placeholder "out"}/share" && ${tex}/bin/texlua tools.lua validate "$ABS_INPUT")
+            
+            OUTPUT=''${1%.lua}.pdf
+            
+            TMPDIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'dsa41held')
+            ${tex}/bin/latexmk -interaction=nonstopmode -output-directory=$TMPDIR -cd -file-line-error -halt-on-error -r "${builtins.placeholder "out"}/share/.latexmkrc" -lualatex="${tex}/bin/lualatex %O %S \"$ABS_INPUT\"" "${builtins.placeholder "out"}/share/$BASE_NAME.tex"
+            mv -- $TMPDIR/$BASE_NAME.pdf "$(basename $OUTPUT)"
+            rm -rf $TMPDIR
+          '';
+          EREIGNISSE = ''
+            #!/bin/sh
+            set -e
+            ABS_INPUT="$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
+            (cd "${builtins.placeholder "out"}/share" && ${tex}/bin/texlua tools.lua list "$ABS_INPUT")
+          '';
           installPhase = ''
             mkdir -p "$out"/{bin,share/fonts}
             cp src/*.{lua,tex,cls} "$out/share"
@@ -62,35 +96,9 @@
             ${pkgs.poppler_utils}/bin/pdfimages -f 2 -l 2 "${wds}" wds
             ${pkgs.imagemagick}/bin/convert wds-000.ppm "$out/share/img/wallpaper.jpg"
             
-            tee "$out/bin/dsa41held" <<EOF >/dev/null
-            #!${bash}/bin/bash
-            set -e
-            BASE_NAME="heldendokument"
-            while :; do
-              case \$1 in
-                -w|--white) BASE_NAME="heldendokument-weiss"
-                ;;
-                *) break
-              esac
-              shift
-            done
-            
-            if [ -z "\$1" ]; then
-              echo "Pfad zur Heldendatei muss als Eingabe angegeben werden!"
-              exit 1
-            fi
-            
-            ABS_INPUT="\$(cd "\$(dirname "\$1")"; pwd)/\$(basename "\$1")"
-            (cd "$out/share" && ${tex}/bin/texlua tools.lua validate "\$ABS_INPUT")
-            
-            OUTPUT=\''${1%.lua}.pdf
-            
-            TMPDIR=\$(mktemp -d 2>/dev/null || mktemp -d -t 'dsa41held')
-            ${tex}/bin/latexmk -interaction=nonstopmode -output-directory=\$TMPDIR -cd -file-line-error -halt-on-error -r "$out/share/.latexmkrc" -lualatex="${tex}/bin/lualatex %O %S \"\$ABS_INPUT\"" "$out/share/\$BASE_NAME.tex"
-            mv -- \$TMPDIR/\$BASE_NAME.pdf "\$(basename \$OUTPUT)"
-            rm -rf \$TMPDIR
-            EOF
-            chmod u+x "$out/bin/dsa41held"
+            printenv GENERATOR >$out/bin/dsa41held
+            printenv EREIGNISSE >$out/bin/ereignisse
+            chmod u+x "$out/bin/dsa41held" "$out/bin/ereignisse"
           '';
         };
         dsa41held-webui = pkgs.buildGoModule {

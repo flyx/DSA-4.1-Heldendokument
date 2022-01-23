@@ -2,6 +2,7 @@
 local standalone = false
 local gendoc = false
 local validate = false
+local list = false
 local curarg = 1
 while string.sub(arg[curarg], 1, 1) == "-" do
   if arg[curarg] == "--standalone" then
@@ -18,6 +19,12 @@ elseif arg[curarg] == "validate" then
   validate = true
   if #arg == curarg then
     io.stderr:write("validate requires at least one path to a file that should be validated\n")
+    os.exit(1)
+  end
+elseif arg[curarg] == "list" then
+  list = true
+  if #arg == curarg then
+    io.stderr:write("list requires at least one path to a file that should be listed\n")
     os.exit(1)
   end
 elseif arg[curarg] ~= nil then
@@ -113,4 +120,37 @@ if validate then
     io.stdout:write("---\n")
   end
   os.exit(res)
+end
+
+function format_len(input, len, right)
+  while #input > len do len = len + 10 end
+  if right then
+    for i=1,len-#input do io.stdout:write(" ") end
+  end
+  io.stdout:write(input)
+  if not right then
+    for i=1,len-#input do io.stdout:write(" ") end
+  end
+end
+
+if list then
+  for i = curarg + 1,#arg do
+    local f = loadfile("values.lua")
+    local data = f(arg[i])
+    io.stdout:write(arg[i] .. "\n--------------------------------------------------------------------------------")
+    for _, e in ipairs(data.Ereignisse) do
+      io.stdout:write("\n")
+      format_len(e[1], 66)
+      if e[4] < 0 then
+        io.stdout:write("| -")
+        format_len(tostring(e[4] * -1), 4, true)
+      else
+        io.stdout:write("| ")
+        format_len(tostring(e[4]), 5, true)
+      end
+      io.stdout:write("| ")
+      format_len(tostring(e[5]), 5, true)
+    end
+    io.stdout:write("\n================================================================================\n")
+  end
 end

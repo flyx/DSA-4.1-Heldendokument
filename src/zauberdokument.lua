@@ -1,4 +1,4 @@
-local data = require("values")
+local data = require("data")
 local common = require("common")
 
 local zauberdokument = {}

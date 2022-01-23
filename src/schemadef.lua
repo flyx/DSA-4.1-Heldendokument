@@ -819,9 +819,30 @@ d.Numbered = TypeClass.new({
   input_kind = "unnamed"
 })
 
+local roman = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"}
+
+function d.Numbered:tostring()
+  local str = self.label ~= nil and self.label or self.name
+  str = str .. " ("
+  local first = true
+  for i=1,self.max_items do
+    if self[i] then
+      if first then
+        first = false
+      else
+        str = str .. ", "
+      end
+      str = str .. roman[i]
+    end
+  end
+  str = str .. ")"
+  return str
+end
+
 function d.Numbered:init(max)
   self.max_items = max
   self.__index = d.Numbered.getfield
+  self.__tostring = d.Numbered.tostring
 end
 
 function d.Numbered:pre_construct()

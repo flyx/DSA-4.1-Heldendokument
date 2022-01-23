@@ -65,6 +65,10 @@ Fehler im resultierenden Dokument oder auftretende Fehlermeldungen können gerne
 
 ## Sonstige Tools
 
+### Validator
+
+TODO: Mache dies über Nix verfügbar
+
 Will man prüfen, ob eine Heldendatei Fehler enthält, lässt sich dies tun, indem man im Ordner `src` folgenden Befehl ausführt:
 
     texlua tools.lua validate ../templates/profan.lua
@@ -72,6 +76,16 @@ Will man prüfen, ob eine Heldendatei Fehler enthält, lässt sich dies tun, ind
 Der Pfad `../templates/profan.lua` muss durch den Pfad zur zu prüfenden Datei ersetzt werden.
 Die Erstellung des PDFs führt dies automatisch als ersten Schritt aus.
 `texlua` ist ein Werkzeug, das bei jeder TeX-Distribution dabei ist – statt dessen lässt sich auch `lua` verwenden.
+
+### Ereignisse
+
+Benutzt man die Ereignisse in der Eingabedatei, um den Helden zu steigern, will man vermutlich nicht jedes Mal das PDF bauen, um zu sehen, wie viele AP man noch übrig hat.
+Das Paket `dsa41held` stellt deshalb neben dem eigentlichen Generator auch ein Tool `ereignisse` zur Verfügung.
+Beispiel des Aufrufs nach `nix build github:flyx/DSA-4.1-Heldendokument#dsa41held`:
+
+    result/bin/ereignisse mein_held.lua
+
+Es wird dann auf der Kommandozeile eine Liste aller Ereignisse mit laufendem AP-Guthaben ganz hinten ausgegeben.
 
 ## Lizenz
 

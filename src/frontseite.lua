@@ -1,5 +1,6 @@
-local data = require("values")
+local data = require("data")
 local common = require("common")
+local schema = require("schema")
 
 local frontseite = {}
 
@@ -69,9 +70,9 @@ frontseite.held = held_basis
 frontseite.schEig = function()
   local ret = {}
   for _, e in ipairs(data.Nachteile.Eigenschaften.value) do
-    table.insert(ret, e.Name .. " " .. e.Wert)
+    table.insert(ret, schema.String(e.Name .. " " .. e.Wert))
   end
-  return {value = ret}
+  return {value = ret, inner = schema.String}
 end
 
 local eigenschaften = {
