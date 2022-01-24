@@ -52,7 +52,7 @@
           ];
           phases = ["unpackPhase" "installPhase"];
           GENERATOR = ''
-            #!/bin/bash
+            #!${bash}/bin/bash
             set -e
             BASE_NAME="heldendokument"
             while :; do
