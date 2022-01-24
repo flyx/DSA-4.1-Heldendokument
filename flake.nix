@@ -43,16 +43,16 @@
       '';
     in {
       packages = with pkgs; rec {
-        dsa41held = stdenvNoCC.mkDerivation {
+        dsa41held = stdenvNoCC.mkDerivation rec {
           name ="DSA-4.1-Heldendokument";
           src = self;
           buildInputs = [ ];
           propagatedBuildInputs = [
-            tex coreutils bash
+            coreutils tex coreutils bash
           ];
           phases = ["unpackPhase" "installPhase"];
           GENERATOR = ''
-            #!/bin/sh
+            #!/bin/bash
             set -e
             BASE_NAME="heldendokument"
             while :; do
@@ -69,15 +69,22 @@
               exit 1
             fi
             
+            export PATH="${lib.makeBinPath propagatedBuildInputs}"
             ABS_INPUT="$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
-            (cd "${builtins.placeholder "out"}/share" && ${tex}/bin/texlua tools.lua validate "$ABS_INPUT")
-            
-            OUTPUT=''${1%.lua}.pdf
-            
-            TMPDIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'dsa41held')
-            ${tex}/bin/latexmk -interaction=nonstopmode -output-directory=$TMPDIR -cd -file-line-error -halt-on-error -r "${builtins.placeholder "out"}/share/.latexmkrc" -lualatex="${tex}/bin/lualatex %O %S \"$ABS_INPUT\"" "${builtins.placeholder "out"}/share/$BASE_NAME.tex"
-            mv -- $TMPDIR/$BASE_NAME.pdf "$(basename $OUTPUT)"
-            rm -rf $TMPDIR
+            DIR=$(mktemp -d)
+            RES=$(pwd)/${"$" + "{1%.lua}"}.pdf
+            SOURCES="${builtins.placeholder "out"}"
+            mkdir -p "$DIR/.texcache/texmf-var"
+            env TEXHOME="$DIR/.cache" \
+                TEXMFVAR="$DIR/.cache/texmf-var" \
+                latexmk -interaction=nonstopmode -output-directory="$DIR" \
+                -pretex="\pdfvariable suppressoptionalinfo 512\relax"\
+                -usepretex -cd -file-line-error -halt-on-error \
+                -r "$SOURCES/share/.latexmkrc" \
+                -lualatex="${tex}/bin/lualatex %O %S \"$ABS_INPUT\"" \
+                "$SOURCES/share/$BASE_NAME.tex"
+            mv -- "$DIR/$BASE_NAME.pdf" "$RES"
+            rm -rf "$DIR"
           '';
           EREIGNISSE = ''
             #!/bin/sh
@@ -153,7 +160,7 @@
       options.services.dsa41generator = {
         enable = mkEnableOption "DSA 4.1 Heldendokument-Generator Webinterface";
         address = mkOption {
-          type = types.string;
+          type = types.str;
           default = ":8080";
           description = "Listen address, conforming to Go's http module";
         };
