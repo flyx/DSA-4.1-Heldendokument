@@ -114,6 +114,7 @@ func main() {
 	data = filepath.Join(filepath.Dir(filepath.Dir(srcDir)), "share")
 	
 	num_threads := flag.Int("threads", 5, "Anzahl threads, mit denen gleichzeitig Dokumente erstellt werden können")
+	addr := flag.String("addr", ":80", "Netwerkadresse, an der der Server binden soll (gemäß Go http Modul)")
 	flag.Parse()
 	if len(flag.Args()) > 0 {
 		log.Fatal("unerwarteter Parameter: " + flag.Arg(0))
@@ -143,7 +144,7 @@ func main() {
 		}
 	}()
 
-	srv := &http.Server{Addr: ":80"}
+	srv := &http.Server{Addr: *addr}
 	log.Println("Starting server")
 	go worker(srv)
 	http.HandleFunc("/", index)

@@ -5,10 +5,10 @@
     flake-utils.url = github:numtide/flake-utils;
   };
   
-  outputs = { self, nixpkgs, flake-utils }: flake-utils.lib.eachSystem flake-utils.lib.allSystems (system:
-    let
-      inherit (nixpkgs.lib) genAttrs substring;
-      version = "${substring 0 8 self.lastModifiedDate}-${self.shortRev or "dirty"}";
+  outputs = { self, nixpkgs, flake-utils }: let
+    inherit (nixpkgs.lib) genAttrs substring;
+    version = "${substring 0 8 self.lastModifiedDate}-${self.shortRev or "dirty"}";
+    systemDependents = flake-utils.lib.eachSystem flake-utils.lib.allSystems (system: let
       pkgs = nixpkgs.legacyPackages.${system};
       newg8 = pkgs.fetchzip {
         url = https://github.com/probonopd/font-newg8/releases/download/continuous/newg8-otf.zip;
@@ -42,7 +42,7 @@
         ln -s ${pkgs.bash}/bin/bash $out/bin/sh
       '';
     in {
-      packages = with import nixpkgs { system = system; }; rec {
+      packages = with pkgs; rec {
         dsa41held = stdenvNoCC.mkDerivation {
           name ="DSA-4.1-Heldendokument";
           src = self;
@@ -142,6 +142,29 @@
       devShell = pkgs.mkShell {
         buildInputs = [ tex pkgs.go ];
       };
-    }
-  );
+    });
+  in systemDependents // {
+    nixosModules.webui = {lib, pkgs, config, ...}:
+    with lib;
+    let
+      cfg = config.services.dsa41generator;
+      webui = systemDependents.packages.${config.nixpkgs.system}.dsa41held-webui;
+    in {
+      options.services.dsa41generator = {
+        enable = mkEnableOption "DSA 4.1 Heldendokument-Generator Webinterface";
+        address = mkOption {
+          type = types.string;
+          default = ":8080";
+          description = "Listen address, conforming to Go's http module";
+        };
+      };
+      config = mkIf cfg.enable {
+        systemd.services.dsa41generator = {
+          wantedBy = ["multi-user.target"];
+          after = ["network.target"];
+          serviceConfig.ExecStart = ''${webui}/bin/webui -addr "${cfg.address}"'';
+        };
+      };
+    };
+  };
 }
