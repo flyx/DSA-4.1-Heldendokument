@@ -2,90 +2,89 @@
 
 Ein LuaLaTeX-basiertes DSA 4.1 Heldendokument, das sich am original Heldendokument orientiert.
 Benutzerdokumentation ist auf [der Homepage des Projekts](https://flyx.github.io/DSA-4.1-Heldendokument/) verfügbar.
-Dieses Readme beschreibt die zugrundeliegende Magie.
+Dieses Readme enthält Entwicklerdokumentation.
 
-## Installation und Benutzung mit nix
+## Nix als Buildsystem
 
-Der Heldendokument-Generator benutzt [nix Flakes](https://nixos.wiki/wiki/Flakes) als Buildsystem und zum Management von Abhängigkeiten.
-`nix` kann auf Linux-Systemen und macOS installiert werden. Es wird mindestens Version 2.4 benötigt, um Flakes benutzen zu können.
-Für die Installation sei auf die [offizielle Anleitung](https://nixos.org/guides/install-nix.html) verwiesen.
-Wie im oben verlinkten Artikel zu Flakes beschrieben, muss eine `nix.conf`-Datei angepasst werden, um Flakes zu aktivieren.
+Die Datei `flake.nix` definiert das Buildsystem.
+Sie macht das Repository zu einer [Nix Flake](https://nixos.wiki/wiki/Flakes).
+Dadurch können alle Abhängigkeiten automatisch geladen werden.
 
-Ist `nix` installiert und Flakes aktiviert, kann der Generator direkt (ohne manuellen Download) mit diesem Befehl gebaut werden:
+Prinzipiell ist es auch möglich, das Heldendokument manuell zu bauen, wenn auf dem System alle Abhängigkeiten verfügbar sind.
+Es sei hierfür auf `dsa41held.sh.nix` verwiesen, das Template, aus dem das Skript `dsa41held` gebaut wird.
+Dies ist die *single source of truth* dafür, mit welchen Argumenten das Dokument gebaut werden muss.
 
-    nix build github:flyx/DSA-4.1-Heldendokument#dsa41held
+## Abhängigkeiten
 
-Dies erzeugt ein Skript `result/bin/dsa41held` (und sollte entsprechend in einem schreibbaren Verzeichnis ausgeführt werden).
-Dieses Script kann danach benutzt werden, um PDFs aus Eingabedatein zu generieren, etwa:
+Die offensichtliche Abhängigkeit ist [TeX Live](https://www.tug.org/texlive/), welches LuaLaTeX, `latexmk` und die benutzten LaTeX-Pakete zur Verfügung stellt.
+Die Variable `tex` in der Datei `flake.nix` listet alle `tlmgr` Pakete auf, die man installieren muss, wenn man seine TeX Live installation manuell managed.
 
-    result/bin/dsa41held templates/profan.lua
+Darüber hinaus werden die Schriftarten *NewG8*, *Mason* und *Copse* benötigt.
+Für den Bezug sei auf die in `flake.nix` gelisteten URLs verwiesen.
+Es sei darauf hingewiesen, dass man für die Weiterverbreitung von Werken, die eine Schriftart benutzen, eine Lizenz für diese Schriftart braucht, die dies erlaubt.
+Eine solche liegt nur für *Copse* vor, entsprechend wird davon abgeraten, erstellte PDFs weiterzuverbreiten.
 
-(Das Template kann aus dem Repository bezogen werden.)
-Mit `-w` kann ein Dokument mit weißem Hintergrund erstellt werden:
+Das Hintergrundbild wird aus dem WdS-Handout, das von Ulisses heruntergeladen wird, extrahiert.
+Der `pdfimages`-Aufruf, der dies tut, findet sich in der `flake.nix`.
+Das Hintergrundbild ist streng genommen eine optionale Abhängigkeit, da das Heldendokument auch mit weißem Hintergrund erzeugt werden kann.
 
-    result/bin/dsa41held -w templates/magier.lua
+Schließlich wird noch das „Fanprodukt“-Logo benötigt.
+Dieses befindet sich im DSA 4.1 Fanpaket, das von Ulisses heruntergeladen wird.
+Während das Hintergrundbild offenkundig nicht weiterverbreitet werden kann, hat das Fanpaket eine komplizierte Lizenz.
+Da wir ohnehin bereits etabliert haben, dass Weiterverbreitung schon wegen der Schriftarten nicht legal ist, müssen wir uns hierüber keinen Kopf machen.
 
-Die Erstellung eines PDFs dauert auf meinem System (MBP M1 Pro 32GB) etwa 18 Sekunden.
-Wer statt der enormen LuaLaTeX-Ausgabe lieber einen Fortschrittsbalken haben möchte, sollte das Webinterface benutzen.
+## Einzelheiten zum Aufbau der LaTeX-Quellen
 
-Das Webinterface kann gebaut werden mit
+Alle für das Dokument selbst relevante Quelldateien befinden sich im Ordner `src`.
+Der Aufbau des Dokuments funktioniert folgendermaßen:
 
-    nix build github:flyx/DSA-4.1-Heldendokument#dsa41held-webui
+ * Die eingegebene Heldendatei wird in `values.lua` geladen.
+   Dafür wird `schema.lua` verwendet, welches definiert, welche Werte in der Heldendatei stehen dürfen.
+   Aus `schema.lua` wird auch die Formatspezifikation auf der Webseite autogeneriert.
+ * `values.lua` appliziert alle Steigerungsereignisse.
+   Zurückgegeben wird eine Lua-*table*, die neben den eingegebenen Daten auch *getter*-Funktionen für die verschiedenen berechneten Werte enthält (sie werden also nicht *einmal* berechnet, sondern jedes Mal, wenn darauf zugegriffen wird).
+   `values.lua` kann auch außerhalb von LuaLaTeX verwenden werden und dies passiert auch, etwa für die Ereignisliste oder die Validierung.
+ * Für die Dokumentgenerierung wird die *table*, die von `values.lua` erzeugt wird, über `data.lua` in die LaTeX-Quellen importiert.
+   `data.lua` ist ein kleiner Hack, der es ermöglicht, die Heldendatei als zusätzlichen Parameter (neben der Hauptdatei `heldendokument.tex`) an `lualatex` zu übergeben.
+   Über Lua wird auf die Kommandozeilenargumente zugegriffen und der Name der Heldendatei an `values.lua` weitergegeben.
+ * Jede Seite des Heldendokuments ist eine eigene `.tex` Datei.
+   Üblicherweise gehört zu der `.tex`-Datei eine gleichnamige `.lua`-Datei, die `data.lua` importiert und die Seite gemäß der gegebenen Konfiguration anpasst (z.B. Zeilenanzahl für Tabellen) und mit Daten füllt.
+ * In `common.lua` importiert die Funktion `pages` die `.tex`-Dateien der gewünschten Seiten gemäß den Heldendaten.
+   Dadurch werden nur genau die Seiten erzeugt, die gewünscht werden. 
 
-Danach kann es folgendermaßen gestartet werden:
+Da das grafische Layout anspruchsvoll ist, muss LuaLaTeX dreimal über das ganze Dokument laufen, bis alles passt.
+Das liegt daran, dass manche Längenwerte im Dokument, wie beispielsweise die Breite einer Tabelle, später feststehen (etwa, nachdem der ganze Inhalt eingefügt wurde) als sie gebraucht würden (der Hintergrund der Tabelle muss gezeichnet werden, bevor der Inhalt verarbeitet wird).
+LaTeX legt diese Werte in temporären Dateien ab, sodass sie beim zweiten Durchlauf von dort geladen werden können.
+Daher werden Tabellen mit Hintergrundfarbe frühestens beim zweiten Durchlauf korrekt gerendert.
+`latexmk` lässt LuaLaTeX so lange das Dokument verarbeiten, bis sich diese Werte nicht mehr ändern.
 
-    result/bin/webui
+## Einzelheiten des Heldensoftware-Imports
 
-Es ist dann im Browser unter `http://localhost/` verfügbar.
-Beendet wird es mittels Ctrl+C.
-
-Das Docker-Image kann nur auf amd64-Systemen gebaut werden.
-Der Befehl dafür ist folgender:
-
-    nix build github:flyx/DSA-4.1-Heldendokument#dsa41held-webui-docker
-
-Dies erzeugt `result`, was ein *tar.gz*-Archiv ist.
-Man lädt es in Docker mit
-
-    gunzip -c result | docker load
-
-## Import von Helden aus der Heldensoftware
-
-Der Held muss über in der Heldensoftware über `Datei > Exportieren > Held exportieren` exportiert werden.
-Die erstellte XML-Datei (hier als Beispiel `held.xml`) kann dann folgendermaßen in Daten für den Heldenbogen (hier `held.lua`) transformiert werden:
-
-    xsltproc import.xsl held.xml > held.lua
-
-Das Import-Skript ist in XSLT 1.0 geschrieben und sollte mit jeder konformen Implementierung funktionieren, also beispielsweise auch mit der in der Windows Powershell.
+Das Import-Skript `import.xsl` ist in XSLT 1.0 geschrieben und sollte mit jeder konformen Implementierung funktionieren, also beispielsweise auch mit der in der Windows Powershell.
 Getestet wird es allerdings nur mit `xsltproc`, weshalb zur Benutzung dieses Tools geraten wird.
-Windows-Nutzer seien auf das Webinterface verwiesen, welches im Hintergrund `xsltproc` benutzt.
+
+Die Heldensoftware „kennt“ die ganzen Tabellen aus den Regelbüchern.
+Das Heldendokument kennt diese nicht; man gibt etwa die Proben für Talente, die Werte von Waffen etc. komplett von Hand ein.
+In einem Held der Heldensoftware steht also etwa, dass der Charakter einen Dolch hat, nicht aber die Werte des Dolchs (weil die der Software ja bekannt sind).
+Der Import braucht also die ganzen Tabellen, um nachschauen zu können, welche Werte ein Dolch nun hat.
+Die Tabellen dafür befinden sich in `heldensoftware-meta.xml`, von dort liest sie der Import aus.
 
 Der Import ist relativ komplex und vermutlich nicht fehlerfrei.
 Fehler im resultierenden Dokument oder auftretende Fehlermeldungen können gerne als Issues hier im Repository berichtet werden.
 
-## Sonstige Tools
+In den XML-Daten eines Helds aus der Heldensoftware stehen alle Steigerungsereignisse drin, theoretisch könnten die Ereignisse also als solche importiert werden.
+Anders als in der Lua-Datei stehen im XML allerdings die aktuellen Werte des Helden, nicht die vor den Ereignissen.
+Der Import müsste also alle Werte zurückrechnen, wenn Ereignisse importiert werden sollen.
+Ich habe derzeit keine Intention, das zu implementieren – es ist schlicht zu viel Aufwand.
 
-### Validator
+## Einzelheiten des Webinterface
 
-TODO: Mache dies über Nix verfügbar
+Das Webinterface findet sich im Ordner `webui` und ist in Go geschrieben.
+Es ruft für die einzelnen Aktionen `dsa41held` mit dem entsprechenden Kommando auf.
 
-Will man prüfen, ob eine Heldendatei Fehler enthält, lässt sich dies tun, indem man im Ordner `src` folgenden Befehl ausführt:
-
-    texlua tools.lua validate ../templates/profan.lua
-
-Der Pfad `../templates/profan.lua` muss durch den Pfad zur zu prüfenden Datei ersetzt werden.
-Die Erstellung des PDFs führt dies automatisch als ersten Schritt aus.
-`texlua` ist ein Werkzeug, das bei jeder TeX-Distribution dabei ist – statt dessen lässt sich auch `lua` verwenden.
-
-### Ereignisse
-
-Benutzt man die Ereignisse in der Eingabedatei, um den Helden zu steigern, will man vermutlich nicht jedes Mal das PDF bauen, um zu sehen, wie viele AP man noch übrig hat.
-Das Paket `dsa41held` stellt deshalb neben dem eigentlichen Generator auch ein Tool `ereignisse` zur Verfügung.
-Beispiel des Aufrufs nach `nix build github:flyx/DSA-4.1-Heldendokument#dsa41held`:
-
-    result/bin/ereignisse mein_held.lua
-
-Es wird dann auf der Kommandozeile eine Liste aller Ereignisse mit laufendem AP-Guthaben ganz hinten ausgegeben.
+Der Fortschrittsbalken wird generiert, indem die LuaLaTeX-Ausgabe gelesen wird und nach den Namen der einzelnen importierten `.tex`-Datein gescannt wird.
+Jedes Mal, wenn die nächste `.tex`-Datei eingelesen wird, läuft der Balken weiter.
+Da bekannt ist, dass `latexmk` das Dokument drei Mal generiert, kann berechnet werden, wie viele Schritte der Balken hat basierend darauf, wie viele Seiten generiert werden.
 
 ## Lizenz
 

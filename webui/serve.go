@@ -145,7 +145,7 @@ func main() {
 	}()
 
 	srv := &http.Server{Addr: *addr}
-	log.Println("Starting server")
+	log.Println("Starting server at " + *addr)
 	go worker(srv)
 	http.HandleFunc("/", index)
 	http.HandleFunc("/index.html", index)
@@ -231,7 +231,7 @@ func (p *Processor) buildPdf(c *websocket.Conn) {
 		f.Close()
 	}
 	
-	held := exec.Command("dsa41held", "held.lua")
+	held := exec.Command("dsa41held", "pdf", "held.lua")
 	checker := ProgressChecker{InitialState, c, 0, nil, strings.Builder{}, 0, "", bytes.Buffer{}}
 	held.Stdout = &checker
 	held.Stderr = &checker
