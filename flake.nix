@@ -123,7 +123,7 @@
     with lib;
     let
       cfg = config.services.dsa41generator;
-      webui = systemDependents.packages.${config.nixpkgs.system}.dsa41held-webui;
+      webui = systemDependents.packages.${config.nixpkgs.system}.dsa41held_webui;
     in {
       options.services.dsa41generator = {
         enable = mkEnableOption "DSA 4.1 Heldendokument-Generator Webinterface";
@@ -137,7 +137,7 @@
         systemd.services.dsa41generator = {
           wantedBy = ["multi-user.target"];
           after = ["network.target"];
-          serviceConfig.ExecStart = ''${webui}/bin/webui -addr "${cfg.address}"'';
+          serviceConfig.ExecStart = ''${webui}/bin/dsa41held_webui -addr "${cfg.address}"'';
         };
       };
     };
