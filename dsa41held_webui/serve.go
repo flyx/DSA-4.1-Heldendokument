@@ -7,6 +7,7 @@ import (
 	"flag"
 	"io/ioutil"
 	"log"
+	"mime/multipart"
 	"net/http"
 	"os"
 	"os/exec"
@@ -60,29 +61,41 @@ func template(w http.ResponseWriter, req *http.Request) {
 	w.Write(file)
 }
 
-func importHeld(w http.ResponseWriter, req *http.Request) {
+func expectData(w http.ResponseWriter, req *http.Request) (content []byte,
+	header *multipart.FileHeader, ok bool) {
 	if req.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
+		return nil, nil, false
 	}
 	if err := req.ParseMultipartForm(32 << 20); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
-		return
+		return nil, nil, false
 	}
-	file, _, err := req.FormFile("data")
+	var err error
+	var file multipart.File
+	file, header, err = req.FormFile("data")
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
-		return
+		return nil, nil, false
 	}
-	input, err := ioutil.ReadAll(file)
+	content, err = ioutil.ReadAll(file)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
-		return
+		return nil, nil, false
 	}
+	ok = true
+	return
+}
 
+func importHeld(w http.ResponseWriter, req *http.Request) {
+	input, header, ok := expectData(w, req)
+	if !ok {
+		return
+	}
+	
 	xsltproc := exec.Command("xsltproc", filepath.Join(data, "import.xsl"), "-")
 	xsltproc.Stdin = bytes.NewReader(input)
 	var stdout, stderr bytes.Buffer
@@ -92,6 +105,37 @@ func importHeld(w http.ResponseWriter, req *http.Request) {
 		panic(err)
 	}
 	if err := xsltproc.Wait(); err != nil {
+		res := stderr.Bytes()
+		w.Header().Add("Content-Type", "text/plain")
+		w.Header().Add("Content-Length", strconv.Itoa(len(res)))
+		w.WriteHeader(400)
+		w.Write(res)
+	} else {
+		name := strings.TrimSuffix(header.Filename, filepath.Ext(header.Filename))
+		res := stdout.Bytes()
+		w.Header().Add("Content-Type", "text/x-lua")
+		w.Header().Add(
+			"Content-Disposition", "attachment; filename=\"" + name + ".lua\"")
+		w.Header().Add("Content-Length", strconv.Itoa(len(res)))
+		w.WriteHeader(200)
+		w.Write(res)
+	}
+}
+
+func calcEvents(w http.ResponseWriter, req *http.Request) {
+	input, _, ok := expectData(w, req)
+	if !ok {
+		return
+	}
+	proc := exec.Command("dsa41held", "ereignisse", "/dev/stdin")
+	proc.Stdin = bytes.NewReader(input)
+	var stdout, stderr bytes.Buffer
+	proc.Stdout = &stdout
+	proc.Stderr = &stderr
+	if err := proc.Start(); err != nil {
+		panic(err)
+	}
+	if err := proc.Wait(); err != nil {
 		res := stderr.Bytes()
 		w.Header().Add("Content-Type", "text/plain")
 		w.Header().Add("Content-Length", strconv.Itoa(len(res)))
@@ -151,6 +195,7 @@ func main() {
 	http.HandleFunc("/index.html", index)
 	http.Handle("/process", websocket.Handler(wsHandler))
 	http.HandleFunc("/import", importHeld)
+	http.HandleFunc("/events", calcEvents)
 	http.HandleFunc("/profan", template)
 	http.HandleFunc("/geweiht", template)
 	http.HandleFunc("/magier", template)
@@ -208,6 +253,8 @@ func sendWithStatus(c *websocket.Conn, status byte, content []byte) {
 }
 
 func (p *Processor) buildPdf(c *websocket.Conn) {
+	_, white := c.Config().Location.Query()["white"]
+	
 	var input string
 	if err := websocket.Message.Receive(c, &input); err != nil {
 		os.Stderr.WriteString("websocket error: " + err.Error() + "\n")
@@ -231,8 +278,25 @@ func (p *Processor) buildPdf(c *websocket.Conn) {
 		f.Close()
 	}
 	
-	held := exec.Command("dsa41held", "pdf", "held.lua")
+	validate := exec.Command("dsa41held", "validate", "held.lua")
 	checker := ProgressChecker{InitialState, c, 0, nil, strings.Builder{}, 0, "", bytes.Buffer{}}
+	validate.Stdout = &checker
+	validate.Stderr = &checker
+	validate.Dir = p.dir
+	if err := validate.Start(); err != nil {
+		panic(err)
+	}
+	if err := validate.Wait(); err != nil {
+		log.Printf("error while validating input: %s\n", err.Error())
+		sendWithStatus(c, 1, checker.fullOutput.Bytes())
+	}
+	
+	var held *exec.Cmd
+	if white {
+		held = exec.Command("dsa41held", "pdf", "-w", "held.lua")
+	} else {
+		held = exec.Command("dsa41held", "pdf", "held.lua")
+	}
 	held.Stdout = &checker
 	held.Stderr = &checker
 	held.Dir = p.dir

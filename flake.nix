@@ -1,14 +1,15 @@
 {
   description = "Heldendokument-Generator und Webinterface dazu";
   inputs = {
-    nixpkgs.url = github:NixOS/nixpkgs/nixos-21.05;
-    flake-utils.url = github:numtide/flake-utils;
+    nixpkgs.url = github:NixOS/nixpkgs/nixos-21.11;
+    utils.url = github:numtide/flake-utils;
+    nix-filter.url = github:numtide/nix-filter;
   };
   
-  outputs = { self, nixpkgs, flake-utils }: let
+  outputs = { self, nixpkgs, utils, nix-filter }: let
     inherit (nixpkgs.lib) genAttrs substring;
     version = "${substring 0 8 self.lastModifiedDate}-${self.shortRev or "dirty"}";
-    systemDependents = flake-utils.lib.eachSystem flake-utils.lib.allSystems (system: let
+    systemDependents = utils.lib.eachSystem utils.lib.allSystems (system: let
       pkgs = nixpkgs.legacyPackages.${system};
       newg8 = pkgs.fetchzip {
         url = https://github.com/probonopd/font-newg8/releases/download/continuous/newg8-otf.zip;
@@ -41,11 +42,15 @@
         mkdir -p $out/bin $out/tmp
         ln -s ${pkgs.bash}/bin/bash $out/bin/sh
       '';
+      filtered-src = nix-filter.lib.filter {
+        root = ./.;
+        exclude = [ ./flake.nix ./flake.lock ./Readme.md ./Makefile ./dsa41held.sh.nix ./build.dockerfile ];
+      };
     in {
       packages = with pkgs; rec {
         dsa41held = stdenvNoCC.mkDerivation rec {
-          name ="DSA-4.1-Heldendokument";
-          src = self;
+          name ="dsa41held";
+          src = filtered-src;
           nativeBuildInputs = [ poppler_utils imagemagick unzip ];
           propagatedBuildInputs = [
             coreutils tex coreutils bash libxslt
@@ -71,33 +76,33 @@
             chmod u+x "$out/bin/dsa41held"
           '';
         };
-        dsa41held-webui = pkgs.buildGoModule {
-          name = "DSA-4.1-Heldendokument-WebUI";
-          src = self;
+        dsa41held_webui = pkgs.buildGoModule {
+          name = "dsa41held_webui";
+          src = filtered-src;
           vendorSha256 = "e8fc083fda5696e2d251e447cf1a7bce9582c8e1b638a03b4aeea4c16f2ee6d6";
-          modRoot = "webui";
+          modRoot = "dsa41held_webui";
           nativeBuildInputs = [ makeWrapper ];
           propagatedBuildInputs = [ bash libxslt dsa41held ];
           postInstall = ''
             mkdir "$out/share"
             cp -r index.html ../templates ../import.xsl ../heldensoftware-meta.xml "$out/share"
-            wrapProgram "$out/bin/webui" --prefix PATH : "${lib.makeBinPath [ bash libxslt dsa41held ]}"
+            wrapProgram "$out/bin/dsa41held_webui" --prefix PATH : "${lib.makeBinPath [ bash libxslt dsa41held ]}"
           '';
         };
-        dsa41held-webui-docker = pkgs.dockerTools.buildLayeredImage {
-          name = "dsa41held-webui";
+        dsa41held_webui-docker = pkgs.dockerTools.buildLayeredImage {
+          name = "dsa41held_webui-docker";
           tag = "latest";
-          contents = [ coreutils binSh dsa41held-webui ];
+          contents = [ coreutils binSh dsa41held_webui ];
           config = {
-            Cmd = "/bin/webui";
+            Cmd = "/bin/dsa41held_webui";
             ExposedPorts = {
               "80" = {};
             };
           };
         };
         dsa41held-doc = stdenvNoCC.mkDerivation {
-          name = "DSA-4.1-Heldendokument-Dokumentation";
-          src = self;
+          name = "dsa41held-doc";
+          src = filtered-src;
           buildInputs = [ tex ];
           phases = [ "unpackPhase" "buildPhase" "installPhase" ];
           buildPhase = ''

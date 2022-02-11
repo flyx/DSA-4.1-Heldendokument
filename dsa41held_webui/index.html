@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <title>DSA 4.1 Heldendokument-Generator</title>
+    <style>
+      .btn-wrapper {
+        display: flex;
+        justify-content: space-between;
+      }
+      h1 {
+        font-size: larger;
+        margin: .5em;
+      }
+      .command {
+        background-color: coral;
+        border-radius: 3px;
+        margin: .5em;
+        padding: 0;
+      }
+      .command > h2 {
+        padding: .25em .33em;
+        margin: 0;
+        font-size: medium;
+      }
+      .command > .content {
+        margin: 3px;
+        padding: 3px;
+        background-color: white;
+      }
+      .step p {
+        margin: 0.25em;
+        max-width: 720px;
+        text-align: justify;
+      }
+      html {
+        margin: 0;
+      }
+      body {
+        min-height: 100vh;
+        box-sizing: border-box;
+        margin: 0;
+        padding: .5em;
+        
+      }
+      header {
+        width: 100%;
+      }
+      ul {
+        list-style-position: inside;
+      }
+      div#commands {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: start;
+      }
+      #overlay {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1;
+        background-color: rgba(0, 0, 0, 0.5);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        min-height: 100vh;
+      }
+      #msg {
+        text-align: center;
+        padding: .5em;
+        border-radius: .5em;
+        background-color: white;
+        z-index: 2;
+      }
+      #errorDisplay {
+        min-width: 80vw;
+        min-height: 80vh;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>DSA 4.1 Heldendokument-Generator</h1>
+    </header>
+    <div id="commands">
+      <section class="command">
+        <h2>Importiere aus der Heldensoftware</h2>
+        <form method="post" action="/import" id="import-form" enctype="multipart/form-data" class="content">
+          <label for="data">XML-Datei:</label>
+          <input id="import" type="file" name="data" />
+        </form>
+      </section>
+      <section class="command">
+        <h2>Generiere einen Helden</h2>
+        <form action="#" id="main" class="content">
+          <input type="checkbox" name="white" id="white" />
+          <label for="white">weißer Hintergrund (statt Karte)</label><br />
+          <label for="data">Lua-Datei:</label>
+          <input id="luadata" name="data" type="file" />
+        </form>
+      </section>
+      <section class="command">
+        <h2>Lade ein Template</h2>
+        <ul class="content">
+          <li><a role="button" download="profan.lua" href="/profan">Profan</a></li>
+          <li><a role="button" download="geweiht.lua" href="/geweiht">Geweiht</a></li>
+          <li><a role="button" download="magier.lua" href="/magier">Magier</a></li>
+        </ul>
+      </section>
+      <section class="command">
+        <h2>Zeige Kosten von Steigerungsereignissen</h2>
+        <form class="content" id="event-form">
+          <label for="data">Lua-Datei:</label>
+          <input id="eventfile" type="file" name="data" />
+        </form>
+      </section>
+      <section class="command">
+        <h2>Siehe auch</h2>
+        <p class="content"><a href="https://flyx.github.io/DSA-4.1-Heldendokument/">Formatspezifikation</a></p>
+      </section>
+    </div>
+    <div>
+      <pre id="output"></pre>
+    </div>
+    
+    <div id="overlay" style="display: none;">
+      <div id="msg">
+        <div id="processing">
+          <p>Dokument wird erstellt, bitte warten (kann etwas dauern)</p>
+          <progress id="progress" max="100"></progress>
+        </div>
+        <div id="error" style="display: none;">
+          <p>Fehler beim Verarbeiten! Ausgabe unten. <button id="closeError">Schließen</button></p>
+          <textarea id="errorDisplay"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      const importForm = document.getElementById("import-form");
+      const eventForm = document.getElementById("event-form");
+      const output = document.getElementById("output")
+      document.getElementById("import").onchange = function(e) {
+        e.preventDefault();
+        output.innerText = "";
+        importForm.submit();
+        e.target.value = "";
+      }
+      document.getElementById("eventfile").onchange = function(e) {
+        e.preventDefault();
+        output.innerText = "";
+        const formData = new FormData(eventForm);
+        fetch("/events", {
+          method: 'POST',
+          body: formData,
+        }).then((resp) => {
+          if (!resp.ok) {
+            throw new Error(`HTTP error! status: ${resp.status}`);
+          }
+          return resp.text();
+        }).then((text) => {
+          output.innerText = text;
+        });
+      }
+      function renderFile(name, content) {
+        const overlay = document.getElementById("overlay");
+        const progress = document.getElementById("progress");
+        const loc = window.location;
+        let ws_uri = (loc.protocol === "https:") ? "wss:" : "ws:";
+        ws_uri += "//" + loc.host + "/process";
+        if (document.getElementById("white").checked) {
+          ws_uri += "?white";
+        }
+        socket = new WebSocket(ws_uri);
+        socket.binaryType = "arraybuffer";
+        socket.addEventListener("error", function (event) {
+          console.group("websocket error!");
+          console.error(event);
+          console.groupEnd();
+        });
+        socket.addEventListener('open', function (event) {
+          progress.value = "";
+          overlay.style.display = "flex";
+          socket.send(content);
+        });
+        socket.addEventListener('message', function (event) {
+          const arr = new Uint8Array(event.data);
+          const status = arr[arr.length - 1];
+          switch (status) {
+            case 0:
+              progress.value = arr[0];
+              return false;
+            case 1:
+              document.getElementById("errorDisplay").value = new TextDecoder().decode(arr.slice(0, arr.length - 1));
+              document.getElementById("error").style.display = "";
+              document.getElementById("processing").style.display = "none";
+              return true;
+            case 2:
+              const link = document.createElement("a");
+              const pdf = new Blob([arr.slice(0, arr.length - 1)], {type: 'octet/stream'});
+              const url = URL.createObjectURL(pdf)
+              link.href = url;
+              const nameWithoutExt = name.substring(0, name.lastIndexOf('.')) || name;
+              link.download = nameWithoutExt + ".pdf";
+              link.click();
+              URL.revokeObjectURL(url);
+              break;
+            case 3:
+              document.getElementById("errorDisplay").value = "Server überlastet – bitte versuche es später noch einmal.";
+              document.getElementById("error").style.display = "";
+              document.getElementById("processing").style.display = "none";
+              return true;
+          }
+          overlay.style.display = "none";
+          return true;
+        });
+        return false;
+      }
+      
+      document.getElementById("luadata").onchange = function(e) {
+        e.preventDefault();
+        output.innerText = "";
+        const input = e.target;
+        if (input.files.length == 0) return;
+        let file = input.files[0];
+        let reader = new FileReader();
+        
+        reader.addEventListener('load', function (e) {
+          input.value = "";
+          renderFile(file.name, e.target.result);
+        });
+        reader.readAsBinaryString(file);
+      }
+      
+      document.getElementById("closeError").onclick = function(event) {
+        document.getElementById("error").style.display = "none";
+        document.getElementById("processing").style.display = "";
+        document.getElementById("overlay").style.display = "none";
+      }
+    </script>
+  </body>
+</html>

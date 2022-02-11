@@ -1,4 +1,4 @@
-module github.com/flyx/DSA-4.1-Heldendokument/webui
+module github.com/flyx/DSA-4.1-Heldendokument/dsa41held_webui
 
 go 1.16
 
