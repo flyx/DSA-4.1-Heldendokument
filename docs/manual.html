@@ -19,7 +19,7 @@
       <h1>DSA 4.1 Heldendokument: Installation &amp; Bedienung</h1>
       <p>Der Generator des Heldendokuments unterstützt <strong>macOS</strong> und <strong>Linux</strong>.
          Das Webinterface lässt sich in einem Docker-Container auch unter <strong>Windows</strong> betreiben.
-         Um den Generator auf der Kommandozeile zu benutzen, müssen Windows-Nutzer auf WSL zurückgreifen, was hier nicht erläutert wird.</p>
+         Um den Generator auf der Kommandozeile zu benutzen, müssen Windows-Nutzer auf <a href="https://docs.microsoft.com/en-us/windows/wsl/about">WSL</a> zurückgreifen, was hier nicht erläutert wird.</p>
       
       <p>Der Generator benutzt verschiedene Werke, die zwar kostenlos aus dem Internet geladen werden können, deren Lizenz aber keine Weiterverbreitung erlaubt.
       Aus diesem Grund kann der fertige Generator nicht zum Download angeboten werden.
@@ -28,15 +28,17 @@
     </section>
     
     <section>
-      <h2>Generator auf der Kommandozeile</h2>
+      <h2>Installation</h2>
+      
+      <h3>Generator auf der Kommandozeile</h3>
       
       <p>Der Generator selbst ist ein Script, das sich von der Kommandozeile aus ausführen lässt.
-         Wenn du die Kommandozeile nicht gewohnt bist oder generell lieber ein Webinterface haben willst, überspringe diesen Abschnitt einfach und installiere statt dessen das Webinterface.</p>
+         Wenn du die Kommandozeile nicht gewohnt bist oder generell lieber ein Webinterface haben willst, installiere statt dessen das Webinterface.</p>
       
-      <h3>Installation</h3>
-      
-      <p>Du benötigst Nix auf deinem System; dies ist ein Paketmanager, der die Abhängigkeiten des Generators verwaltet und den Generator erstellt.
-         Um Nix zu installieren, sei auf die <a href="https://nixos.org/guides/install-nix.html">offizielle Anleitung</a> verwiesen.</p>
+      <p>Du benötigst <a href="https://nixos.org">Nix</a> auf deinem System; dies ist ein Paketmanager, der die Abhängigkeiten des Generators verwaltet und den Generator erstellt.
+         Benutzt du NixOS, hast du Nix bereits zur Verfügung.
+         Der Paketmanager lässt sich aber auch auf anderen Linux-System und macOS installieren.
+         Es sei auf die <a href="https://nixos.org/guides/install-nix.html">offizielle Installationsanleitung</a> verwiesen.</p>
       <p>Der Generator benutzt die experimentellen <a href="https://nixos.wiki/wiki/Flakes">Nix Flakes</a>.
          Auf der verlinkten Seite ist beschrieben, was zu tun ist, um dieses Feature in einer Nix-Installation zu aktivieren.</p>
       
@@ -45,88 +47,114 @@
       <pre><code>nix build github:flyx/DSA-4.1-Heldendokument#dsa41held</code></pre>
       
       <p>Dies erzeugt einen Ordner <code>result</code> (der tatsächlich ein symlink ist), in dem sich der Generator unter <code>bin/dsa41held</code> befindet.
-         Du kannst das Paket natürlich wie gewohnt in dein System installieren, wenn du ohnehin Nix/NixOS benutzt.
-         Alternativ kannst du das <code>bin</code>-Verzeichnis (nach Auflösung des symlinks) in deinen <code>PATH</code> hinzufügen, um den Generator einfach aufrufen zu können.</p>
+         Damit ist das Script nicht in deinem System installiert (sodass du es nur mit <code>dsa41held</code> ohne kompletten Pfad ausführen könntest).
+         Wie alle Nix-Pakete lebt das Script im Verzeichnis <code>/nix/store</code>, zusammen mit allen Abhängigkeiten.
+         Du kannst es mit <code>nix-collect-garbage</code> von deinem System entfernen.</p>
+         
+      <p>Für regelmäßige Nutzung empfiehlt es sich, das Paket mit <a href="https://nixos.org/manual/nix/stable/command-ref/new-cli/nix3-profile.html">nix profile</a>, <a href="https://nixos.wiki/wiki/Home_Manager">Home Manager</a>, oder auf NixOS über <code>environment.systemPackages</code> zu installieren.
+         Mir ist klar, dass das für Nutzer, die sonst kein Nix benutzen, nicht ideal ist, aber die Zielgruppe für den Kommandozeilenclient scheint mir zu klein, um Zeit und Energie in andere Optionen zu investieren, wenn Nix fast überall funktioniert.</p>
       
-      <h3>Benutzung</h3>
+      <h3>Web-Interface</h3>
       
-      <h4>PDF-Generierung</h4>
+      <p>Das Webinterface ist eine Go-Anwendung, die über HTTP erreichbar ist.
+         Es stellt dieselben Funktionen zur Verfügung wie das Kommandozeileninterface.
+         Es kann entweder direkt mit Nix gebaut werden oder als OCI (vulgo Docker) Image.</p>
+         
+      <p>Das Nix-Paket ist wie üblich über die Flake verfügbar:</p>
       
-      <p>Die PDF-Generierung ist als Unterkommando verfügbar:</p>
+      <pre><code><span style="color: gray;"># baut die Applikation direkt:</span>
+nix build github:flyx/DSA-4.1-Heldendokument#dsa41held_webui
+<span style="color: gray;"># baut das Docker-Image:</span>
+nix build github:flyx/DSA-4.1-Heldendokument#dsa41held_webui-docker
+</code></pre>
+      
+      <p>Alternativ lässt sich das Docker-Image auch ohne Nix bauen.
+         Dafür musst du <a href="https://www.docker.com/get-started">Docker Desktop</a> installieren (sofern du es nicht ohnehin auf deinem System hast).
+         Starte Docker nach der Installation.
+         (Linux-Nutzer können statt dessen auch <a href="https://podman.io">podman</a> benutzen; dies wird hier nicht erläutert, funktioniert aber ähnlich.)</p>
+      
+      <p>Lade das <a href="https://github.com/flyx/DSA-4.1-Heldendokument/archive/refs/heads/master.zip">aktuelle zip-Archiv</a> des Projekts herunter, entpacke es, öffne eine Kommandozeile und wechsle in den entpackten Ordner.
+         Führe dort folgende Befehle aus:</p>
+      
+      <pre><code>
+docker build -f build.dockerfile -t dsa41held-build .
+docker run --rm dsa41held-build:latest > dsa41held_webui.tar
+docker load -i dsa41held_webui.tar</code></pre>
+
+      <p>Der erste Befehl baut ein Docker-Image, in dem Nix verfügbar ist und der dazu dient, das Ziel-Image zu bauen.
+         Der zweite Befehl baut den Generator und braucht dafür mehrere Minuten – es mag so aussehen als ob er hängen bleibt, aber das ist nicht der Fall!
+         Warte einfach, bis der Befehl fertig ist.
+         Mit dem dritten Befehl installierst du das <emph>image</emph>, in dem der Generator installiert ist, in Docker und kannst es damit zukünftig ausführen.</p>
+      
+      <p>Das generierte Docker-Image kann folgendermaßen von der Kommandozeile aus gestartet werden, wenn Docker läuft (man muss in der Kommandozeile nicht zu einem Ordner navigieren):</p>
+      <pre><code>docker run -p 80:80 --rm dsa41held-webui:latest</code></pre>
+      <p>Solange dieser Befehl läuft, kann das Webinterface im Browser über die URL <a href="http://localhost/">http://localhost/</a> aufgerufen werden.
+      Um das Webinterface zu beenden, drücke in der Konsole Ctrl+C.</p>
+      
+      <h4>Installation auf NixOS</h4>
+            
+      <p>NixOS-Nutzer, die das Webinterface als Service laufen lassen wollen, können einfach aus der Flake dieses Repositories das Modul <code>nixosModules.webui</code> importieren und dann in ihrer Konfiguration folgendes angeben:</p>
+            
+      <pre><code>services.dsa41generator = {
+  enable = true;
+  address = "127.0.0.1:8080";
+};</code></pre>
+        
+            <p>Für Remote-Erreichbarkeit muss die public IP angegeben und der Port in der Firewall freigeschaltet werden!</p>
+    </section>
+    
+    <section>
+      <h2>Benutzung</h2>
+      
+      <p>Die Funktionen sind für beide Interfaces (Kommandozeile und Web) identisch.
+         Bei jeder Funktion wird der Kommandozeilenaufruf angegeben.
+         Auf der Weboberfläche werden Aktionen gestartet, indem die Quelldatei im entsprechenden Steuerelement ausgewählt wird.</p>
+      
+      <h3>Heldensoftware-Import</h3>
+            
+      <p>Du musst den Helden aus der Heldensoftware einzeln als XML-Datei exportieren.
+         Danach kannst du ihn folgendermaßen importieren:</p>
+  
+      <pre><code>dsa41held import held.xml > held.lua</code></pre>
+            
+      <p>Dies erzeugt eine Datei <code>held.lua</code>, welche der Formatspezifikation genügt und die Werte aus dem Eingabeheld enthält.
+         Du kannst sie manuell editieren, bevor du daraus ein PDF erzeugst.
+         Der Import importiert den aktuellen Stand des Helden als „Basisdaten“, hast du den Held in der Software gesteigert, sind diese Steigerungen fest eingerechnet und nicht als Steigerungsereignisse verfügbar (das ist für das Resultat egal).</p>
+      
+      <h3>PDF-Generierung</h3>
       
       <pre><code>dsa41held pdf [-w] &lt;heldendatei&gt;</code></pre>
       
-      <p>Gib <code>-w</code> an, um weißen Hintergrund zu bekommen.
-         Die Heldendatei muss eine Lua-Datei sein, die dem <a href="format.html">Formatspezifikation</a> genügt.
+      <p>Gib <code>-w</code> an, um weißen Hintergrund (statt der Karte) zu bekommen.
+         Die Heldendatei muss eine Lua-Datei sein, die der <a href="format.html">Formatspezifikation</a> genügt.
+         Die Formatspezifikation ist relativ komplex und dem durchschnittlichen Nutzer wird empfohlen, einfach den Import aus der Heldensoftware zu benutzen, um die Lua-Datei zu erzeugen.
+         Die Modifikation des Layouts (z.B. andere Reihenfolge der Talentgruppen, andere Zeilenanzahl in verschiedenen Tabellen usw.) ist allerdings nur direkt in der Lua-Eingabe möglich.
          Die Erstellung eines PDFs dauert etwas länger (auf meinem System – MBP M1 Pro 32GB – etwa 18 Sekunden).
-         Wer statt der enormen LuaLaTeX-Ausgabe lieber einen Fortschrittsbalken haben möchte, sollte das Webinterface benutzen.</p>
+         Wer statt der enormen LuaLaTeX-Ausgabe auf der Kommandozeile lieber einen Fortschrittsbalken haben möchte, sollte das Webinterface benutzen.</p>
       
-      <h4>Steigerung</h4>
+      <h3>Steigerungsereignisse</h3>
       
       <p>Du kannst im Heldendokument <a href="format.html#Ereignisse">Steigerungsereignisse</a> angeben.
          Diese werden auf die angegebenen Anfangswerte appliziert bei der Erstellung des PDFs.
-         Die Ereignisse berechnen ihre AP-Kosten großteils automatisch, sprich du hast bei der Eingabe keinen direkten Indikator, wie viele AP du noch übrig hast.</p>
+         Es ist eine Alternative zur Steigerung in der Heldensoftware.
+         Dieses Feature habe ich eingebaut, um einen Charakter unabhängig von der Heldensoftware steigern zu können.
+         Warum ich das will?
+         Eine Lua-Datei lässt sich einfacher in Versionskontrolle verwalten als ein gezippter XML-Blob.
+         Es ist angedacht, für den Generator ein Feature zu implementieren, mit dem man den Charakterbogen mit einer definierten AP-Anzahl generieren kann – also praktisch frühere Versionen des Charakters.
+         Das ist für Conventions hilfreich, wo man oft einen Charakter in einem bestimmten AP-Bereich braucht.
+         Dies wird dann nur funktionieren, wenn man die Steigerung in der Lua-Datei vorgenommen hat.</p>
       
-      <p>Im erstellten PDF steht es nachher natürlich, aber weil das etwas braucht, gibt es ein Kommando, das dir auf der Kommandozeile die Steigerungsereignisse mit laufenden AP-Kosten ausgibt:</p>
+      <p>Der große Nachteil beim Steigern im Lua-Dokument ist, dass man die einzelnen Ereignisse eingibt, aber erst bei der Erstellung des PDFs sieht, wie viel AP man verbraucht hat (und möglicherweise mehr ausgibt als man hat).
+         Weil die PDF-Erstellung länger braucht, gibt es ein Werkzeug, um sofort die resultierenden AP-Kosten aller Steigerungsereignisse auszugeben:</p>
       
       <pre><code>dsa41held ereignisse &lt;heldendatei&gt;</code></pre>
       
       <p>In der letzten Spalte stehen die übrigen AP nach jedem Ereignis.</p>
       
-      <h4>Heldensoftware-Import</h4>
+      <h3>Templates</h3>
       
-      <p>Du musst den Helden aus der Heldensoftware als XML-Datei exportieren.
-         Danach kannst du ihn folgendermaßen importieren:</p>
-      
-      <pre><code>dsa41held import held.xml > held.lua</code></pre>
-      
-      <p>Dies erzeugt eine Datei <code>held.lua</code>, welche der Formatspezifikation genügt.
-         Du kannst sie manuell editieren, bevor du daraus ein PDF erzeugst.
-         Der Import importiert den aktuellen Stand des Helden als „Basisdaten“, hast du den Held in der Software gesteigert, sind diese Steigerungen fest eingerechnet und nicht als Steigerungsereignisse verfügbar.</p>
-    </section>
-  
-    <section>
-      <h2>Webinterface</h2>
-      
-      <p>Das Webinterface bietet eine einfache Möglichkeit, den Generator einmal zu installieren und der ganzen Rollenspielgruppe zur Verfügung zu stellen.
-         Außerdem ist es mit Abstand die einfachste Möglichkeit, den Generator auf Windows zu betreiben.</p>
-      
-      <h3>Installation</h3>
-      
-      <p>Zunächst musst du <a href="https://www.docker.com/get-started">Docker Desktop</a> installieren (sofern du es nicht ohnehin auf deinem System hast).
-         Starte Docker nach der Installation.
-         (Linux-Nutzer können statt dessen <a href="https://podman.io">podman</a> benutzen, wenn sie sich damit auskennen – hier muss kein Service laufen.)</p>
-      <p>Lade das <a href="https://github.com/flyx/DSA-4.1-Heldendokument/archive/refs/heads/master.zip">aktuelle zip-Archiv</a> des Projekts herunter, entpacke es, öffne eine Kommandozeile und wechsle in den entpackten Ordner.
-         Führe dort folgende Befehle aus:</p>
-      <pre>
-        <code>
-docker build -f build.dockerfile -t dsa41held-build .
-docker run --rm dsa41held-build:latest > dsa41held-webui.tar
-docker load -i dsa41held-webui.tar
-        </code>
-      </pre>
-      <p>Der erste Befehl baut ein Docker-Image, das die Werkzeuge bereit stellt, die benötigt werden, um den Generator zu bauen.
-         Der zweite Befehl baut den Generator und braucht dafür mehrere Minuten – es mag so aussehen als ob er hängen bleibt, aber das ist nicht der Fall!
-         Warte einfach, bis der Befehl fertig ist.
-         Mit dem dritten Befehl installierst du das <emph>image</emph>, in dem der Generator installiert ist, in Docker und kannst es damit zukünftig ausführen.</p>
-
-      <h3>Benutzung</h3>
-      <p>Das generierte Docker-Image kann folgendermaßen von der Kommandozeile aus gestartet werden, wenn Docker läuft (man muss in der Kommandozeile nicht zu einem Ordner navigieren):</p>
-      <pre><code>docker run -p 80:80 --rm dsa41held-webui:latest</code></pre>
-      <p>Solange dieser Befehl läuft, kann das Webinterface im Browser über die URL <a href="http://localhost/">http://localhost/</a> aufgerufen werden.
-      Um das Webinterface zu beenden, drücke in der Konsole Ctrl+C.</p>
-      <p>Das Webinterface ist minimal und dafür gedacht, den Inhalt der Helden-Datei ins Textfeld einzufügen und dann abzusenden. Es eignet sich nicht als Editor und speichert die Eingabe nicht ab. Die Generierung kann mehrere Minuten dauern, ein simpler Fortschrittsbalken wird währenddessen angezeigt. Das Webinterface inkludiert die Option, einen Held aus der Heldensoftware zu importieren.</p>
-      
-      <h3>Installation auf NixOS</h3>
-      
-      <p>NixOS-Nutzer, die das Webinterface als Service laufen lassen wollen, können einfach aus der Flake dieses Repositories das Modul <code>nixosModules.webui</code> importieren und dann in ihrer Konfiguration folgendes angeben:</p>
-      
-      <pre><code>services.dsa41generator = {
-    enable = true;
-    address = "127.0.0.1:8080";
-  };</code></pre>
-  
-      <p>Für Remote-Erreichbarkeit muss die public IP angegeben und der Port in der Firewall freigeschaltet werden!</p>
+      <p>Im Verzeichnis <code>templates</code> stehen Vorlagen für einen profanen, einen geweihten, und einen magischen Charakter zur Verfügung.
+         Man kann sie auch aus dem Webinterface herunterladen.</p>
     </section>
   </article>
   </body>
