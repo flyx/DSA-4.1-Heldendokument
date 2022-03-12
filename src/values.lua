@@ -831,7 +831,7 @@ function values:aktiviere(e)
     ziel_taw = e.Subjekt.TaW
     e.Subjekt.TaW = 0
     ap = skt:kosten(skt.spalte:effektiv(self:talent_schwierigkeit(e.Subjekt, "Koerper"), 0, e.Methode), 0)
-    self.Talente.Koerper:append(e.Subject, e.Sortierung)
+    self.Talente.Koerper:append(e.Subjekt, e.Sortierung)
     event[1] = "Talentaktivierung ("
   elseif smt.name == "Zweitsprache" or smt.name == "Sprache" then
     ziel_taw = e.Subjekt.TaW
