@@ -231,7 +231,7 @@
           input.value = "";
           renderFile(file.name, e.target.result);
         });
-        reader.readAsBinaryString(file);
+        reader.readAsArrayBuffer(file);
       }
       
       document.getElementById("closeError").onclick = function(event) {
