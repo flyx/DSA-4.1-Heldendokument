@@ -689,14 +689,14 @@ function schema.Mirakel.Liturgien.example(printer)
 end
 
 local Merkmale = d.Multivalue:def({name = "Merkmale", description = "Liste von Merkmalen eines Zaubers."}, String, {
-  Elementar = Elementar,
-  Daemonisch = Daemonisch
+  Elementar = {Elementar, d.multi.merge},
+  Daemonisch = {Daemonisch, d.multi.merge}
 })
 
 local function merkmale(name, doc)
   return d:singleton(d.Multivalue, {name = name, description = doc}, String, {
-    Elementar = Elementar,
-    Daemonisch = Daemonisch
+    Elementar = {Elementar, d.multi.merge},
+    Daemonisch = {Daemonisch, d.multi.merge}
   }) {}
 end
 
@@ -803,6 +803,11 @@ local Spaetweihe = d.Row:def({name = "Spaetweihe", description = "Spätweihe ein
   {"Kosten", Ganzzahl},
   {"Methode", SFLernmethode, "Lehrmeister"})
 
+local MerkmalSF = d.Row:def({name = "MerkmalSF", description = "Erlernen einer oder mehrerer Merkmalskenntnisse. Als Kosten ist die Summe aller Merkmalskenntnisse, die neu gelernt werden, anzugeben."},
+  {"Merkmale", Merkmale},
+  {"Kosten", Ganzzahl},
+  {"Methode", SFLernmethode, "Lehrmeister"})
+
 local Senkung = d.Row:def({name = "Senkung", description = "Senkung einer Schlechten Eigenschaft. Die Schlechte Eigenschaft verschwindet, wenn der Zielwert 0 ist."},
   {"Name", String}, {"Zielwert", Ganzzahl}, {"Methode", SenkMethode, "Lehrmeister"})
 
@@ -813,7 +818,7 @@ local Frei = d.Row:def({name = "Frei", description = "Freie Modifikation der Cha
   {"Text", String}, {"Modifikation", schema.Function}, {"Kosten", Ganzzahl, 0})
 
 d:singleton(d.List, {name = "Ereignisse", description = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"}, {
-  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, Senkung, Spaetweihe, Zugewinn, Frei
+  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, MerkmalSF, Senkung, Spaetweihe, Zugewinn, Frei
 }) {}
 function schema.Ereignisse.example(printer)
   printer:highlight([[Ereignisse {
@@ -843,6 +848,8 @@ function schema.Ereignisse.example(printer)
     Spezialisierung {"Horriphobus Schreckgestalt", "Erzwingen"},
     -- steigere den Zauber Klarum Purum auf 12 mittels Lehrmeister
     ZfW {"Klarum Purum", 12, "Lehrmeister"},
+    -- erlerne eine Merkmalskenntnis
+    MerkmalSF {{Daemonisch {"Blakharaz"}}, 
     -- senke eine Schlechte Eigenschaft auf 3
     Senkung {"Angst vor Spinnen", 3, "SE"}
     -- erhalte eine Spätweihe

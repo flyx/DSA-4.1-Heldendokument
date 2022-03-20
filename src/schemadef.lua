@@ -585,6 +585,16 @@ function d.List:append(v, sort)
   table.insert(self.value, index + 1, v)
 end
 
+function d.List:merge(v)
+  assert(self ~= v)
+  for _, item in ipairs(v.value) do
+    local msg = self:append(item)
+    if msg ~= nil then
+      return msg
+    end
+  end
+end
+
 function d.List:getfield(key)
   if type(key) == "number" then
     local v = self.value[key]
@@ -1068,6 +1078,7 @@ function d.Multivalue:append(v)
 end
 
 function d.Multivalue:merge(v)
+  assert(self ~= v)
   for _, item in ipairs(v) do
     local msg = self:append(item)
     if msg ~= nil then

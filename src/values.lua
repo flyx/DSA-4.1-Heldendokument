@@ -952,6 +952,52 @@ function values:aktiviere(e)
   return event, insta_steiger
 end
 
+function values:merkmalskenntnis(e)
+  local msg = self.Magie.Merkmalskenntnis:merge(e.Merkmale)
+  if msg ~= nil then
+    tex.error("[Merkmalskenntnis] " .. msg)
+  end
+  local ap = e.Kosten
+  if e.Methode == "SE" then
+    ap = ap / 2
+  end
+  local faktor = skt.faktor["1"]
+  if self.Vorteile:getlist("AkademischeAusbildung")[1] == "Magier" or
+      self.Vorteile:getlist("AkademischeAusbildung")[1] == "Magierin" then
+    faktor = skt.faktor["3/4"]
+  end
+  local event = {}
+  event[1] = "Erlernen von Merkmalskenntnis ("
+  for index, merkmal in ipairs(e.Merkmale) do
+    if index > 1 then
+      event[1] = event[1] .. ", "
+    end
+    local mt = getmetatable(merkmal)
+    if mt.name == "Daemonisch" or mt.name == "Elementar" then
+      if mt.name == "Daemonisch" then
+        event[1] = event[1] .. "Dämonisch ("
+      else
+        event[1] = event[1] .. mt.name .. " ("
+      end
+      for jndex, v in ipairs(merkmal) do
+        if jndex > 1 then
+          event[1] = event[1] .. ", "
+        end
+        event[1] = event[1] .. v
+      end
+    else
+      event[1] = event[1] .. merkmal
+    end
+  end
+  event[1] = event[1] .. ") mittels " .. e.Methode
+  event[2] = -1 * ap
+  event[3] = faktor
+  local kosten = faktor:apply(ap)
+  event[4] = -1 * kosten
+  event[5] = self:ap_mod(kosten)
+  return event
+end
+
 function values:senkung(e)
   local found = nil
   local found_index = nil
@@ -1056,6 +1102,8 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
     event = values:senkung(e)
   elseif mt.name == "Spaetweihe" then
     event = values:spaetweihe(e)
+  elseif mt.name == "MerkmalSF" then
+    event = values:merkmalskenntnis(e)
   elseif mt.name == "Zugewinn" then
     event = values:zugewinn(e)
   elseif mt.name == "Frei" then
