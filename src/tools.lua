@@ -85,29 +85,18 @@ local pages_source = {
   Ereignisliste     = "ereignisse.tex",
 }
 
+tex = {}
+function tex.error(msg)
+  io.stderr:write(msg)
+  os.exit(1)
+end
+
 if validate then
   local res = 0
   local prev_pcount = 0
+  local values = loadfile("values.lua")
   for i = curarg + 1,#arg do
-    local f = function() error(arg[i] .. " did load too long!") end
-    debug.sethook(f, "", 1e6)
-    local f, errmsg = loadfile(arg[i], "t", schema)
-    if f == nil then
-      debug.sethook()
-      io.stderr:write(errmsg)
-      res = 1
-    else
-      local ret = f()
-      debug.sethook()
-      if d.Poison.count ~= prev_pcount then
-        res = 1
-        prev_pcount = d.Poison.count
-      end
-      if ret ~= nil then
-        io.stderr:write(arg[i] .. ": unexpected return value: " .. type(ret) .. "\n")
-        res = 1
-      end
-    end
+    values(arg[i])
   end
   if res == 0 then
     io.stdout:write("all files validated successfully! This input will process the following files:\n---\n")

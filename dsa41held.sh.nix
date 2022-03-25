@@ -1,5 +1,6 @@
 {pkgs, lib, propagatedBuildInputs, tex}: ''
 #!${pkgs.bash}/bin/bash
+set -e
 
 export PATH="${lib.makeBinPath propagatedBuildInputs}"
 

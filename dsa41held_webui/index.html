@@ -148,21 +148,25 @@
         importForm.submit();
         e.target.value = "";
       }
+      function showError(msg) {
+        document.getElementById("errorDisplay").value = msg;
+        document.getElementById("error").style.display = "";
+        document.getElementById("processing").style.display = "none";
+        document.getElementById("overlay").style.display = "flex";
+      }
       document.getElementById("eventfile").onchange = function(e) {
         e.preventDefault();
         output.innerText = "";
         const formData = new FormData(eventForm);
         fetch("/events", {
-          method: 'POST',
+          method: "POST",
           body: formData,
         }).then((resp) => {
-          if (!resp.ok) {
-            throw new Error(`HTTP error! status: ${resp.status}`);
-          }
+          if (!resp.ok) return resp.text().then((msg) => {throw msg;});
           return resp.text();
         }).then((text) => {
           output.innerText = text;
-        });
+        }).catch(showError);
       }
       function renderFile(name, content) {
         const overlay = document.getElementById("overlay");
@@ -180,12 +184,12 @@
           console.error(event);
           console.groupEnd();
         });
-        socket.addEventListener('open', function (event) {
+        socket.addEventListener("open", function (event) {
           progress.value = "";
           overlay.style.display = "flex";
           socket.send(content);
         });
-        socket.addEventListener('message', function (event) {
+        socket.addEventListener("message", function (event) {
           const arr = new Uint8Array(event.data);
           const status = arr[arr.length - 1];
           switch (status) {
@@ -193,13 +197,11 @@
               progress.value = arr[0];
               return false;
             case 1:
-              document.getElementById("errorDisplay").value = new TextDecoder().decode(arr.slice(0, arr.length - 1));
-              document.getElementById("error").style.display = "";
-              document.getElementById("processing").style.display = "none";
+              showError(new TextDecoder().decode(arr.slice(0, arr.length - 1)));
               return true;
             case 2:
               const link = document.createElement("a");
-              const pdf = new Blob([arr.slice(0, arr.length - 1)], {type: 'octet/stream'});
+              const pdf = new Blob([arr.slice(0, arr.length - 1)], {type: "octet/stream"});
               const url = URL.createObjectURL(pdf)
               link.href = url;
               const nameWithoutExt = name.substring(0, name.lastIndexOf('.')) || name;
@@ -208,9 +210,7 @@
               URL.revokeObjectURL(url);
               break;
             case 3:
-              document.getElementById("errorDisplay").value = "Server überlastet – bitte versuche es später noch einmal.";
-              document.getElementById("error").style.display = "";
-              document.getElementById("processing").style.display = "none";
+              showError("Server überlastet – bitte versuche es später noch einmal.");
               return true;
           }
           overlay.style.display = "none";
@@ -227,7 +227,7 @@
         let file = input.files[0];
         let reader = new FileReader();
         
-        reader.addEventListener('load', function (e) {
+        reader.addEventListener("load", function (e) {
           input.value = "";
           renderFile(file.name, e.target.result);
         });
