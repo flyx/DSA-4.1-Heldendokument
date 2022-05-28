@@ -97,7 +97,7 @@
     <vn name="Arkanophobie" schlechteEigenschaft="1.5"/>
     <vn name="Arroganz" schlechteEigenschaft="1"/>
     <vn name="Artefaktgebunden" nachteil="1" magisch="1"/>
-    <vn name="Astrale Regeneration" magisch="1"/>
+    <vn name="Astrale Regeneration" magisch="1" id="AstraleRegeneration" numbered="2"/>
     <vn name="Astraler Block" nachteil="1" magisch="1"/>
     <vn name="Astralmacht" magisch="1"/>
     <vn name="Ausdauernder Zauberer" magisch="1"/>
@@ -1035,7 +1035,7 @@
     <z n="Höllenpein" m="Einfluss"/>
     <z n="Holterdipolter" m="Umwelt"/>
     <z n="Horriphobus" m="Einfluss"/>
-    <z n="Ingifaxius" m="Schaden" e="Feuer"/>
+    <z n="Ignifaxius" m="Schaden" e="Feuer"/>
     <z n="Ignisphaero" m="Schaden,Telekinese" e="Feuer" s="124"/>
     <z n="Ignorantia" m="Einfluss,Illusion"/>
     <z n="Illusion auflösen" m="Antimagie,Illusion"/>

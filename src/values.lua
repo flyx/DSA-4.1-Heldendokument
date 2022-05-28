@@ -213,7 +213,12 @@ function values:cur(name, div)
     local ge = self:cur("GE")
     if ge ~= "" then
       local gsmod = 0
-      for i,v in ipairs({{"Kleinwuechsig", -1}, {"Zwergenwuchs", -2}, {"Behaebig", -1}}) do
+      for i,v in ipairs({
+        {"Kleinwuechsig", -1},
+        {"Zwergenwuchs", -2},
+        {"Behaebig", -1},
+        {"Lahm", -1},
+      }) do
         if self.Nachteile[v[1]] then
           gsmod = gsmod + v[2]
         end
