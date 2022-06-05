@@ -391,6 +391,14 @@ function kampfbogen.ausweichen()
   tex.sprint(-2, val)
 end
 
+function kampfbogen.silhouette()
+  if data.Held.Geschlecht == "weiblich" then
+    tex.print([[\input{silhouette-w}]])
+  else
+    tex.print([[\input{silhouette-m}]])
+  end
+end
+
 function kampfbogen.energieleiste(label, val)
   tex.sprint(-2, label)
   num = tonumber(val)
