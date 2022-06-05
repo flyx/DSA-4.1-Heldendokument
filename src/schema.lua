@@ -538,9 +538,9 @@ local Fernkampfwaffe = d.Row:def({name = "Fernkampfwaffe", description = "Eine F
   {"TP/Entfernung1", OptNum, {}}, {"TP/Entfernung2", OptNum, {}}, {"TP/Entfernung3", OptNum, {}}, {"TP/Entfernung4", OptNum, {}}, {"TP/Entfernung5", OptNum, {}},
   {"Geschosse1", OptNum, {}}, {"Geschosse2", OptNum, {}}, {"Geschosse3", OptNum, {}}, {"Art", String, ""})
 local Schild = d.Row:def({name = "Schild", description = "Ein Schild."},
-  {"Name", String}, {"INI", Ganzzahl}, {"WM AT", Ganzzahl}, {"WM PA", Ganzzahl}, {"BF1", OptNum, {}}, {"BF2", OptNum, {}}, {"Art", String, ""})
+  {"Name", String}, {"INI", OptNum, {}}, {"WM AT", OptNum, {}}, {"WM PA", OptNum, {}}, {"BF1", OptNum, {}}, {"BF2", OptNum, {}}, {"Art", String, ""})
 local Parierwaffe = d.Row:def({name = "Parierwaffe", description = "Eine Parierwaffe."},
-  {"Name", String}, {"INI", Ganzzahl}, {"WM AT", Ganzzahl}, {"WM PA", Ganzzahl}, {"BF1", OptNum, {}}, {"BF2", OptNum, {}}, {"Art", String, ""})
+  {"Name", String}, {"INI", OptNum, {}}, {"WM AT", OptNum, {}}, {"WM PA", OptNum, {}}, {"BF1", OptNum, {}}, {"BF2", OptNum, {}}, {"Art", String, ""})
 local Zonenruestung = d.Primitive:def({name = "Zonenruestung", description = "Zonenrüstungswert eines Rüstungsteils mit bis zu zwei Dezimalstellen"}, "number", false, 2, 0)
 local Ruestungsteil = d.Row:def({name = "Ruestungsteil", description = "Ein Rüstungsteil."},
   {"Name", String}, {"gRS", Zonenruestung}, {"gBE", Zonenruestung},

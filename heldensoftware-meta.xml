@@ -813,7 +813,7 @@
       <w name="Kampfdiskus" tp="1W+5" rw="10/20/30/45/60" tprw="+1/0/0/0/0" />
     </fernkampf>
     <schildeParier>
-      <s name="Einfacher Holzschild" typ="S" wm="-1/+3" ini="-1" bf="3" />
+      <s name="Holzschild" typ="S" wm="-1/+3" ini="-1" bf="3" />
       <s name="Verstärkter Holzschild" typ="S" wm="-2/+3" ini="-1" bf="0" />
       <s name="Lederschild" typ="S" wm="-1/+3" ini="0" bf="5" />
       <s name="Mattenschild" typ="S" wm="-1/+4" ini="0" bf="6" />

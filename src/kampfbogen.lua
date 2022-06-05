@@ -298,6 +298,8 @@ local schilde_render = {
       return
     end
     if getmetatable(v).name == "Schild" then
+      local wm = v["WM PA"]
+      if type(wm) ~= "number" then return end
       local val = data:cur("PA")
       if val == "" then
         return
@@ -310,9 +312,10 @@ local schilde_render = {
           val = val + 2
         end
       end
-      tex.sprint(-2, val + v["WM PA"])
+      tex.sprint(-2, val + wm)
     else
       local val = v["WM PA"]
+      if type(val) ~= "number" then return end
       if data.SF.Nahkampf:getlist("Parierwaffen")[2] then
         val = val + 2
       elseif data.SF.Nahkampf:getlist("Parierwaffen")[1] then
