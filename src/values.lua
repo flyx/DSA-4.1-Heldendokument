@@ -526,12 +526,14 @@ function values:steigerSF(tname, e, faktorMod, target)
   for _, m in ipairs(faktorMod) do
     if type(m[1]) == "table" then
       local l = self.Vorteile[m[1][1]]
-      for i=2,#m[1] do
-        for _, item in ipairs(l) do
-          if item == m[1][i] then
-            possible = skt.faktor[m[2]]
-            subset = m[3]
-            goto foundmod
+      if l ~= nil then
+        for i=2,#m[1] do
+          for _, item in ipairs(l) do
+            if item == m[1][i] then
+              possible = skt.faktor[m[2]]
+              subset = m[3]
+              goto foundmod
+            end
           end
         end
       end
@@ -903,7 +905,7 @@ function values:aktiviere(e)
       base = 25
     end
     local nach_grad = 0
-    for _, g in ipairs(e.Subjekt.Grad) do
+    for _, g in ipairs(e.Subjekt.Grade) do
       if nach_grad < g then
         nach_grad = g
       end

@@ -216,6 +216,7 @@
     <vn name="Unfähigkeit für [Talent]" nachteil="1" liste="1" id="UnfaehigkeitFuerTalent"/>
     <vn name="Unfrei" nachteil="1"/>
     <vn name="Ungebildet" nachteil="1"/>
+    <vn name="Unstet" nachteil="1"/>
     <vn name="Unverträglichkeit mit verarbeitetem Metall" nachteil="1"/>
     <vn name="Vergesslichkeit" nachteil="1"/>
     <vn name="Verhüllte Aura" magisch="1"/>

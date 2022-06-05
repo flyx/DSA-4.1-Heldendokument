@@ -243,9 +243,11 @@ local waffenlos_render = {
     if talent == nil or #talent < 4 or atb == "" or #v < 3 then
       return
     end
+    local added = 0
     for _, t in ipairs(data.SF.Waffenlos:getlist("Kampfstil")) do
-      if v.Name == t.VerbessertesTalent then
+      if v.Name == t.VerbessertesTalent and added < 2 then
         atb = atb + 1
+        added = added + 1
       end
     end
     tex.sprint(-2, atpa_mod(atb - common.round(ebe/2, true), talent.AT, v["TP/KK Schwelle"], v["TP/KK Schritt"], 0))
@@ -255,9 +257,11 @@ local waffenlos_render = {
     if talent == nil or #talent < 4 or pab == "" or #v < 3 then
       return
     end
+    local added = 0
     for _, t in ipairs(data.SF.Waffenlos:getlist("Kampfstil")) do
-      if v.Name == t.VerbessertesTalent then
+      if v.Name == t.VerbessertesTalent and added < 2 then
         pab = pab + 1
+        added = added + 1
       end
     end
     tex.sprint(-2, atpa_mod(pab - common.round(ebe/2), data.PA(talent), v["TP/KK Schwelle"], v["TP/KK Schritt"], 0))

@@ -504,7 +504,7 @@ function common.schaden.mod(tp, schwelle, schritt)
       tp.num = tp.num - 1
       cur_kk = cur_kk + schritt
     end
-    while cur_kk > schwelle + schritt do
+    while cur_kk >= schwelle + schritt do
       tp.num = tp.num + 1
       cur_kk = cur_kk - schritt
     end
