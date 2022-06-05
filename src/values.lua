@@ -140,6 +140,7 @@ getter_map:reg("basic", "MU", "KL", "IN", "CH", "FF", "GE", "KO", "KK")
 getter_map:reg("calculated", "LE", "AU", "AE", "MR", "KE", "INI", "AT", "PA", "FK")
 getter_map:reg("gs_mod", "GS_mod")
 getter_map:reg("gs", "GS")
+getter_map:reg("egs", "eGS")
 getter_map:reg("rs", "RS")
 getter_map:reg("be", "BE")
 getter_map:reg("be_voll", "BE_voll")
@@ -241,6 +242,13 @@ function values:cur(name, div)
       return ""
     end
     return 8 + gsmod
+  elseif kind == "egs" then
+    local gs = self:cur("GS")
+    local be = self:cur("BE")
+    if type(gs) == "number" and type(be) == "number" then
+      gs = gs - be
+    end
+    return gs
   elseif kind == "rs" then
     return sum_and_round(self.Waffen.Ruestung, 2)
   elseif kind == "be" or kind == "be_voll" then

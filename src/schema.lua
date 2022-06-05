@@ -467,6 +467,7 @@ schema.SF.Nahkampf = d:singleton(d.Multivalue, {name = "SF.Nahkampf", descriptio
   Ausweichen = d.Numbered:def({name = "Ausweichen", description = "Die SF Ausweichen, unterteilt in I, II und III.", skip = true}, 3),
   Kampfgespuer = "Kampfgespür",
   Kampfreflexe = "Kampfreflexe",
+  Klingentaenzer = "Klingentänzer",
   Linkhand = "Linkhand",
   Parierwaffen = d.Numbered:def({name = "Parierwaffen", description = "Die SF Parierwaffen, unterteilt in I und II.", skip = true}, 2),
   Ruestungsgewoehnung = d.Numbered:def({name = "Ruestungsgewoehnung", description = "Die SF Rüstungsgewöhnung, unterteilt in I, II und III.", label = "Rüstungsgewöhnung", skip = true}, 3),

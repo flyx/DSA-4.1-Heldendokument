@@ -289,7 +289,7 @@ end
 local value_line = {
   labels = {
     AT = "AT-Basiswert", PA = "PA-Basiswert", FK = "FK-Basiswert",
-    INI = "Initiative-Basiswert", BE = {"BE", data:cur("BE")},
+    eGS = "Effektive GS", BE = "BE",
     AP_Gesamt = {"Gesamt", data.AP.Gesamt},
     AP_Eingesetzt = {"Eingesetzt", data.AP.Eingesetzt},
     AP_Guthaben = {"Guthaben", data:cur("AP")}

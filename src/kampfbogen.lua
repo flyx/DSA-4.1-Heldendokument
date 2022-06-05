@@ -415,4 +415,19 @@ function kampfbogen.optionalleiste(label, val)
   end
 end
 
+function kampfbogen.ini()
+  local val = data:cur("INI")
+  if val ~= "" then
+    tex.sprint(-2, val)
+    tex.sprint(-2, " + Waffen-INI − BE + ")
+    local w
+    if data.SF.Nahkampf.Klingentaenzer then
+      w = common.schaden.parse("2W6")
+    else
+      w = common.schaden.parse("1W6")
+    end
+    common.schaden.render(w)
+  end
+end
+
 return kampfbogen

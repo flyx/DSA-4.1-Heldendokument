@@ -4,9 +4,9 @@
 \renewcommand{\arraystretch}{1}
  \setlength{\tabcolsep}{1pt}
 
-\vspace*{4pt}
+\vspace*{-13pt}
 \begin{dsaSheetBox}[\textwidth]
-    \directlua{common.value_line:render({"AT", "PA", "FK", "INI"}, "18pt")}
+    \directlua{common.value_line:render({"AT", "PA", "FK", "eGS"}, "32pt")}
 \end{dsaSheetBox}
 
 \vspace{-16pt}
@@ -319,6 +319,16 @@
         \directlua{kampfbogen.optionalleiste("Astralenergie", data:cur("AE"))}
         \directlua{kampfbogen.optionalleiste("Karmaenergie", data:cur("KE"))}
     \end{NiceTabular}
+\end{dsaSheetBox}
+
+\begin{dsaSheetBox}
+    \vspace*{-4pt}
+    \large{}
+    \setlength\fboxsep{3pt}
+    \parbox{3cm}{\bfseries\textmansontt{Initiative:}}
+    \colorbox{white}{\parbox[c]{15.4cm}{\directlua{kampfbogen.ini()}}}
+    
+    \vspace*{-0pt}
 \end{dsaSheetBox}
 
 \end{dsaCharacterSheet}
