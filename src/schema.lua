@@ -184,7 +184,7 @@ function schema.Vorteile.example(printer)
 end
 
 schema.Vorteile.Magisch = d:singleton(d.Multivalue, {name = "Vorteile.Magisch", description = "Liste von magischen Vorteilen."}, String, {
-  AstraleRegeneration = d.Primitive:def({name = "AstraleRegeneration", description = "Astrale Regeneration I, II oder III", label = "Astrale Regeneretaion"}, "number", false, 0, 1, 3),
+  AstraleRegeneration = d.Primitive:def({name = "AstraleRegeneration", description = "Astrale Regeneration I, II oder III", label = "Astrale Regeneration"}, "number", false, 0, 1, 3),
   Eigeboren = "Eigeboren",
   Viertelzauberer = "Viertelzauberer",
   Halbzauberer = "Halbzauberer",
