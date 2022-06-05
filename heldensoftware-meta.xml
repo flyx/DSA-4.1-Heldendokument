@@ -17,6 +17,7 @@
          Kann eine Muttersprache oder Zweitsprache bei der Generierung
          gewählt werden, ist sie hier nicht aufgeführt, weil sie dann im
          Helden-XML steht. -->
+    <k name="helden.model.kultur.Mittelreich" muttersprache="Garethi"/>
     <k name="helden.model.kultur.Garetien" muttersprache="Garethi"/>
     <k name="helden.model.kultur.AndergastNostria" muttersprache="Garethi"/>
     <k name="helden.model.kultur.Bornland" muttersprache="Garethi"/>
