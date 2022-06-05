@@ -920,6 +920,78 @@ SF.Magisch {
     <xsl:param name="input" />
     <func:result select="concat(dsa:singleval(substring-before($input, '/')), ', ', dsa:singleval(substring-after($input, '/')))"/>
   </func:function>
+  
+  <func:function name="dsa:tp">
+    <xsl:param name="explicit"/>
+    <xsl:param name="meta"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$explicit">
+          <xsl:value-of select="concat($explicit/@mul, 'W', $explicit/@w, '+', $explicit/@sum)"/>
+        </xsl:when>
+        <xsl:when test="$meta">
+          <xsl:value-of select="$meta/@tp"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>{}</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+  
+  <func:function name="dsa:tpkk">
+    <xsl:param name="explicit"/>
+    <xsl:param name="meta"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$explicit">
+          <xsl:value-of select="concat($explicit/@kk, ', ', $explicit/@schrittweite)"/>
+        </xsl:when>
+        <xsl:when test="$meta">
+          <xsl:value-of select="dsa:doubleval($meta/@tpkk)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>{}, {}</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+  
+  <func:function name="dsa:ini">
+    <xsl:param name="explicit"/>
+    <xsl:param name="meta"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$explicit">
+          <xsl:value-of select="$explicit/@ini"/>
+        </xsl:when>
+        <xsl:when test="$meta">
+          <xsl:value-of select="dsa:singleval($meta/@ini)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>{}</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+  
+  <func:function name="dsa:wm">
+    <xsl:param name="explicit"/>
+    <xsl:param name="meta"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$explicit">
+          <xsl:value-of select="concat($explicit/@at, ', ', $explicit/@pa)"/>
+        </xsl:when>
+        <xsl:when test="$meta">
+          <xsl:value-of select="dsa:doubleval($meta/@wm)"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>{}, {}</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
 
   <xsl:template match="ausrüstungen" mode="nahkampf">
     <xsl:text>
@@ -936,9 +1008,16 @@ Waffen.Nahkampf {</xsl:text>
     <xsl:text>
   {</xsl:text>
     <xsl:value-of select="concat(dsa:stringVal($name), ', ', dsa:stringVal($talent), ', ')"/>
+    <xsl:variable name="slot" select="@slot"/>
+    <xsl:variable name="nkwaffe" select="../../gegenstände/gegenstand[@slot=$slot]/Nahkampfwaffe"/>
     <xsl:variable name="def" select="$ausruestung/nahkampf[@typ=$talent]/w[@name=$name]"/>
+    <xsl:value-of select="concat(dsa:tp($nkwaffe/trefferpunkte, $def), ', ')"/>
+    <xsl:value-of select="concat(dsa:tpkk($nkwaffe/tpkk, $def), ', ')"/>
+    <xsl:value-of select="concat(dsa:ini($nkwaffe/inimod, $def), ', ')"/>
+    <xsl:value-of select="concat(dsa:wm($nkwaffe/wm, $def), ', ')"/>
+    
     <xsl:if test="$def">
-      <xsl:value-of select="concat(dsa:stringVal($def/@dk), ', ', dsa:stringVal($def/@tp), ', ', dsa:doubleval($def/@tpkk), ', ', dsa:singleval($def/@ini), ', ', dsa:doubleval($def/@wm), ', ', @bfmin)"/>
+      <xsl:value-of select="@bfmin"/>
     </xsl:if>
     <xsl:text>},</xsl:text>
   </xsl:template>
