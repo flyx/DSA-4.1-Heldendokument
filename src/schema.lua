@@ -208,6 +208,7 @@ d:singleton(d.Multivalue, {name = "Nachteile", description = "Liste von nicht-ma
   Glasknochen = "Glasknochen",
   Behaebig = "Behäbig",
   Kleinwuechsig = "Kleinwüchsig",
+  Lahm = "Lahm",
   Zwergenwuchs = "Zwergenwuchs",
   UnfaehigkeitFuerTalentgruppe = d.List:def({name = "UnfaehigkeitFuerTalentgruppe", description = "Unfähigkeit für eine oder mehrere Talentgruppen", label = "Unfähigkeit für Talentgruppe"}, {Talentgruppe}),
   UnfaehigkeitFuerTalent = d.List:def({name = "UnfaehigkeitFuerTalent", description = "Unfähigkeit für ein oder mehrere bestimmte Talente", label = "Unfähigkeit für Talent"}, {String}),
