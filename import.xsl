@@ -95,11 +95,11 @@
     </xsl:choose>
     <xsl:if test="zauberliste/zauber[@repraesentation != 'Magiedilletant']">
       <xsl:text>
-  Zauberdokument {},</xsl:text>
+  Zauberliste {},</xsl:text>
     </xsl:if>
     <xsl:if test="talentliste/talent[starts-with(@name, 'Ritualkenntnis')]">
       <xsl:text>
-  Zauberliste {},</xsl:text>
+  Zauberdokument {},</xsl:text>
     </xsl:if>
     <xsl:text>
 }
@@ -518,6 +518,17 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
       </xsl:apply-templates>
     </xsl:if>
   </xsl:template>
+  
+  <func:function name="dsa:talentname">
+    <xsl:param name="talent"/>
+    <xsl:variable name="sub" select="$meta/talente/namen/sub[@von = $talent/@name]"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$sub"><xsl:value-of select="dsa:stringVal($sub/@zu)"/></xsl:when>
+        <xsl:otherwise><xsl:value-of select="dsa:stringVal($talent/@name)"/></xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
 
   <xsl:template match="talent" mode="kampf">
     <xsl:variable name="name" select="@name"/>
@@ -529,7 +540,7 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
     </xsl:if>
 
     <xsl:text>
-  </xsl:text><xsl:value-of select="concat($def/@typ, ' {', dsa:stringVal(@name), ', ', dsa:stringVal($def/@steigern), ', ', dsa:stringVal($def/@be), ', ')"/>
+  </xsl:text><xsl:value-of select="concat($def/@typ, ' {', dsa:talentname(.), ', ', dsa:stringVal($def/@steigern), ', ', dsa:stringVal($def/@be), ', ')"/>
     <xsl:if test="$def/@typ = 'Nah'">
       <xsl:variable name="kampfwerte" select="../../kampf/kampfwerte[@name=$name]"/>
       <xsl:value-of select="number($kampfwerte/attacke/@value) - number(//eigenschaft[@name='at']/@value)"/>
@@ -551,7 +562,7 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
   <xsl:template match="talent" mode="koerper">
     <xsl:text>
   {</xsl:text>
-    <xsl:value-of select="concat(dsa:stringVal(@name), ', ', dsa:probe(@probe), ', ')"/>
+    <xsl:value-of select="concat(dsa:talentname(.), ', ', dsa:probe(@probe), ', ')"/>
     <xsl:choose>
       <xsl:when test="starts-with(@be, 'BE')">
         <xsl:value-of select="dsa:stringVal(@be)"/>
@@ -568,7 +579,7 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
   <xsl:template match="talent">
     <xsl:text>
   {</xsl:text>
-    <xsl:value-of select="concat(dsa:stringVal(@name), ', ', dsa:probe(@probe), ', ', @value)"/>
+    <xsl:value-of select="concat(dsa:talentname(.), ', ', dsa:probe(@probe), ', ', @value)"/>
     <xsl:apply-templates select="." mode="spezialisierungen"/>
     <xsl:text>},</xsl:text>
   </xsl:template>

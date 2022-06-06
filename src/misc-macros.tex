@@ -168,12 +168,12 @@
 
 \newcommand{\Liturgien}{%
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
-        {\normalfont\normalsize%
-        \begin{tabular}{p{3.7cm}@{(}x{3.7cm}@{):\hspace{1pt}}x{0.7cm}}
-            \large\mansontt\bfseries Liturgiekenntnis & \directlua{tex.sprint(-2, data.Mirakel.Liturgiekenntnis.Name)} & \cellcolor{white}\directlua{tex.sprint(-2, data.Mirakel.Liturgiekenntnis.Wert)} \\
-        \end{tabular}}
+        {\normalfont\normalsize\setlength{\arrayrulewidth}{1pt}%
+        \begin{NiceTabular}{p{3.7cm}@{(}x{3.6cm}@{):\hspace{2pt}}x{0.7cm}}
+            \large\mansontt\bfseries Liturgiekenntnis & \directlua{tex.sprint(-2, data.Mirakel.Liturgiekenntnis.Name)} & \directlua{tex.sprint(-2, data.Mirakel.Liturgiekenntnis.Wert)} \\ \cline{3-3}
+        \end{NiceTabular}}
 
-        \vspace{1.08pt}
+        \vspace{0.08pt}
         \renewcommand{\arraystretch}{1}
         \setlength{\tabcolsep}{2pt}
         \normalfont\fontsize{8}{12}\selectfont

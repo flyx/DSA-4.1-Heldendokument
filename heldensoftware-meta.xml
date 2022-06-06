@@ -8,11 +8,11 @@
          1) Die Muttersprache eines Helden aus Garetien ist immer Garethi.
          2) „Wilde Magie“ ist ein magischer Nachteil.
       Das Import-Script muss diese Informationen kennen, um den Helden korrekt
-      verarbeiten zu könnenn. Daher werden sie in dieser Datei vorgehalten.
+      verarbeiten zu können. Daher werden sie in dieser Datei vorgehalten.
   -->
   <kulturen>
     <!-- Diese Liste wird benutzt, um die Muttersprache und eventuell
-         Zeitsprache des Helden herauszufinden.
+         Zweitsprache des Helden herauszufinden.
          Die langen Namen kommen von der Heldensoftware.
          Kann eine Muttersprache oder Zweitsprache bei der Generierung
          gewählt werden, ist sie hier nicht aufgeführt, weil sie dann im
@@ -87,7 +87,8 @@
     <vn name="Albino" nachteil="1"/>
     <vn name="Angst vor (häufiger Auslöser)" schlechteEigenschaft="1.5"/>
     <vn name="Angst vor (seltener Auslöser)" schlechteEigenschaft="1"/>
-    <vn name="Angst vor Feuer" schlechteEigenschaft="1"/>
+    <vn name="Angst vor Feuer" schlechteEigenschaft="1.5"/>
+    <vn name="Angst vor Insekten" schlechteEigenschaft="1.5"/>
     <vn name="Angst vor Menschenmassen" schlechteEigenschaft="1"/>
     <vn name="Angst vor Nagetieren" schlechteEigenschaft="1.5"/>
     <vn name="Angst vor Pelztieren" schlechteEigenschaft="1"/>
@@ -207,7 +208,7 @@
     <vn name="Thesisgebunden" nachteil="1" magisch="1"/>
     <vn name="Tollpatsch" nachteil="1"/>
     <vn name="Totenangst" schlechteEigenschaft="1"/>
-    <vn name="Übernatürliche Begabung" magisch="1"/>
+    <vn name="Übernatürliche Begabung" id="UebernatuerlicheBegabung" magisch="1" liste="1"/>
     <vn name="Übler Geruch" nachteil="1"/>
     <vn name="Unangenehme Stimme" nachteil="1"/>
     <vn name="Unansehnlich" nachteil="1"/>
@@ -243,6 +244,27 @@
   </vorUndNachteile>
 
   <talente>
+    <namen>
+      <!-- Die Heldensoftware benutzt andere Groß- und Kleinschreibung als
+           das WdS: „Sich Verstecken“ etwa ist in der Software „Sich verstecken“.
+           Außerdem wird mitunter Interpunktion geändert.
+           Das Heldendokument kennt zwar die Namen von Talenten ohnehin nicht,
+           aber aus Gründen der Einheitlichkeit wird die Schreibweise des WdS
+           substituiert wo nötig. Die Substitutionen sind hier angeführt. -->
+      <sub von="Sich verstecken" zu="Sich Verstecken"/>
+      <sub von="Stimmen imitieren" zu="Stimmen Imitieren"/>
+      <sub von="Sich verkleiden" zu="Sich Verkleiden"/>
+      <sub von="Götter und Kulte" zu="Götter/Kulte"/>
+      <sub von="Sagen und Legenden" zu="Sagen/Legenden"/>
+      <sub von="Boote fahren" zu="Boote Fahren"/>
+      <sub von="Fahrzeug lenken" zu="Fahrzeug Lenken"/>
+      <sub von="Heilkunde: Gift" zu="Heilkunde Gift"/>
+      <sub von="Heilkunde: Krankheiten" zu="Heilkunde Krankheiten"/>
+      <sub von="Heilkunde: Seele" zu="Heilkunde Seele"/>
+      <sub von="Heilkunde: Wunden" zu="Heilkunde Wunden"/>
+      <sub von="Schlösser knacken" zu="Schlösser Knacken"/>
+      <sub von="Schnaps brennen" zu="Schnaps Brennen"/>
+    </namen>
     <kampf>
       <!-- Die Kampftalente werden für Unterscheidung Nah/Fern, die
           Steigerungsschwierigkeit und die BE benötigt. -->
@@ -506,6 +528,7 @@
     <sf name="Ritualkenntnis" art="ignore" named="1"/>
     <sf name="Runenkunde" art="magisch"/>
     <sf name="Rüstungsgewöhnung" art="nahkampf" id="Ruestungsgewoehnung" roman="3"/>
+    <sf name="Schalenzauber" art="ritual" named="1"/>
     <sf name="Scharfschütze" art="fernkampf" sub="talent" container="Scharfschuetze"/>
     <sf name="Schildkampf" art="nahkampf" id="Schildkampf" roman="2"/>
     <sf name="Schildspalter" art="nahkampf"/>
@@ -1216,7 +1239,7 @@
     <minus gott="Angrosch">Akrobatik|Fliegen|Gaukeleien|Schwimmen|Boote Fahren|Seefahrt</minus>
     <plus gott="Aves">IN|CH|GE|KO|Ausweichen|Gefahreninstinkt|Athletik|Klettern|Sinnesschärfe|Gassenwissen|Menschenkenntnis|Überreden|Überzeugen|Orientierung|Wettervorhersage|Wildnisleben|Geographie|Sprachenkunde|Handel|Instrumentenbauer|Musizieren|Kartographie</plus>
     <minus gott="Aves">Kampf (Nah, bewaffnet)|Kriegskunst</minus>
-    <plus gott="Boron">MU|KL|IN|CH|MR|Prophezeien|Schleichen|Selbstbeherrschung|Lehren|Menschenkenntnis|Überzeugen|Geschichtswissen|Götter und Kulte|Pflanzenkunde|Alchimie|Heilkunde Krankheiten|Heilkunde Seele</plus>
+    <plus gott="Boron">MU|KL|IN|CH|MR|Prophezeien|Schleichen|Selbstbeherrschung|Lehren|Menschenkenntnis|Überzeugen|Geschichtswissen|Götter/Kulte|Pflanzenkunde|Alchimie|Heilkunde Krankheiten|Heilkunde Seele</plus>
     <minus gott="Boron">Gaukeleien|Singen|Stimmen Imitieren|Tanzen|Betören|Schauspielerei|Glücksspiel|Instrumentenbauer|Musizieren</minus>
     <plus gott="Efferd">IN|GE|KK|KO|Schwimmen|Sinnesschärfe|Überzeugen|Fesseln/Entfesseln|Fischen/Angeln|Orientierung|Wettervorhersage|Boote Fahren|Seefahrt|Zimmermann</plus>
     <minus gott="Efferd">Alchimie|Glaskunst|Grobschmied|Hüttenkunde|Kochen|Metallguss</minus>
@@ -1226,12 +1249,12 @@
     <minus gott="Firun">Gaukeleien|Singen|Tanzen|Falschspiel|Musizieren|Betören|Etikette|Gassenwissen|Menschenkenntnis|Schauspielerei|Schriftlicher Ausdruck|Sich Verkleiden|Überreden|Überzeugen</minus>
     <plus gott="Gravesh">IN|FF|KO|KK|Selbstbeherrschung|Überreden|Gesteinskunde|Hüttenkunde|Mechanik|Rechnen|Schätzen|Feuersteinbearbeitung|Grobschmied|Holzbearbeitung|Lederarbeiten|Steinmetz</plus>
     <minus gott="Gravesh">Gaukeleien|Etikette|Falschspiel</minus>
-    <plus gott="Hesinde">KL|IN|CH|MR|Etikette|Lehren|Menschenkenntnis|Überzeugen|Geschichtswissen|Götter und Kulte|Magiekunde|Pflanzenkunde|Sternkunde|Tierkunde|Alchimie</plus>
+    <plus gott="Hesinde">KL|IN|CH|MR|Etikette|Lehren|Menschenkenntnis|Überzeugen|Geschichtswissen|Götter/Kulte|Magiekunde|Pflanzenkunde|Sternkunde|Tierkunde|Alchimie</plus>
     <wahl gott="Hesinde">Wissenstalent</wahl>
     <minus gott="Hesinde">Zechen|Überreden (Lügen)</minus>
     <plus gott="Himmelswölfe">MU|IN|GE|KK|Gefahreninstinkt|Selbstbeherrschung|Sinnesschärfe|Stimmen Imitieren|Lehren|Menschenkenntnis|Fährtensuchen|Orientierung|Wettervorhersage|Wildnisleben|Sagen/Legenden|Abrichten</plus>
     <minus gott="Himmelswölfe">Falschspiel|Kriegskunst|Gerber/Kürschner</minus>
-    <plus gott="H'Szint">MU|KL|IN|CH|Lehren|Menschenkenntnis|Überzeugen|Götter und Kulte|Magiekunde|Pflanzenkunde|Rechnen|Sternkunde|Tirekunde</plus>
+    <plus gott="H'Szint">MU|KL|IN|CH|Lehren|Menschenkenntnis|Überzeugen|Götter/Kulte|Magiekunde|Pflanzenkunde|Rechnen|Sternkunde|Tirekunde</plus>
     <wahl gott="H'Szint" num="3">Geschichtswissen|Gesteinskunde|Kryptographie|Alchimie|Heilkunde Gift|Heilkunde Krankheiten|Heilkunde Wunden|Holzbearbeitung|Lederarbeiten|Steinschneider|Juwelier|Töpfern</wahl>
     <minus>Kampf (Nah)|Überreden (Lügen)</minus>
     <plus gott="Ifirn">MU|IN|CH|GE|Gefahreninstinkt</plus>
@@ -1246,13 +1269,13 @@
     <wahl gott="Kor">bewaffnetes Nahkampftalent</wahl>
     <minus gott="Kor">Heilkunde Gift|Heilkunde Krankheiten|Heilkunde Wunden|Gefahreninstinkt</minus>
     <plus gott="Nandus">KL|IN|CH|FF|Lehren|Menschenkenntnis|Überreden|Überzeugen|Kryptographie|Philosophie|Rechnen|Sternkunde</plus>
-    <wahl gott="Nandus" num="4">Alchimie|Brett- und Kartenspiel|Gassenwissen|Geschichtswissen|Götter und Kulte|Kartographie|Schriftlicher Ausdruck|Sprachenkunde</wahl>
+    <wahl gott="Nandus" num="4">Alchimie|Brett- und Kartenspiel|Gassenwissen|Geschichtswissen|Götter/Kulte|Kartographie|Schriftlicher Ausdruck|Sprachenkunde</wahl>
     <minus gott="Nandus">Kampf (Nah, bewaffnet)</minus>
     <plus gott="Peraine">KL|IN|CH|FF|Ausweichen|Lehren|Menschenkenntnis|Überzeugen|Pflanzenkunde|Tierkunde|Ackerbau|Hauswirtschaft|Heilkunde Krankheiten|Heilkunde Wunden|Kochen|Viehzucht</plus>
     <minus gott="Peraine">Kampf (Nah, bewaffnet)|Betören|Fallenstellen|Kriegskunst|Falschspiel|Schlösser Knacken</minus>
     <plus gott="Phex">MU|IN|FF|GE|Körperbeherrschung|Schleichen|Sich Verstecken|Gassenwissen|Menschenkenntnis|Überreden|Mechanik|Rechtskunde|Sternkunde|Handel</plus>
     <wahl gott="Phex">Betören|Falschspiel|Gaukeleien|Klettern|Schlösser Knacken|Sich Verkleiden|Taschendiebstahl</wahl>
-    <plus gott="Praios">MU|IN|CH|MR|Selbstbeherrschung|Etikette|Lehren|Menschenkenntnis|Überzeugen|Götter und Kulte|Rechtskunde|Staatskunst</plus>
+    <plus gott="Praios">MU|IN|CH|MR|Selbstbeherrschung|Etikette|Lehren|Menschenkenntnis|Überzeugen|Götter/Kulte|Rechtskunde|Staatskunst</plus>
     <wahl gott="Praios" num="4">Abrichten|Baukunst|Brettspiel|Hauswirtschaft|Heilkunde Seele|Heraldik|Magiekunde</wahl>
     <minus gott="Praios">Fliegen|Gaukeleien|Schleichen|Sich Verstecken|Stimmen Imitieren|Taschendiebstahl|Überreden (Betteln, Lügen)|Sich Verkleiden|Falschspiel|Schlösser Knacken</minus>
     <plus gott="Rahja">MU|IN|CH|GE|Ausweichen|Körperbeherrschung|Reiten|Sinnesschärfe|Zechen|Betören|Lehren|Menschenkenntnis|Überreden|Überzeugen</plus>

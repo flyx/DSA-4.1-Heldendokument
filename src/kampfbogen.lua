@@ -76,11 +76,10 @@ local function kampfwerte(items, render, typ_index, num_values, num_rows)
     local talent = nil
     local ebe = 0
     if typ_index > 0 then
-      local pattern = "^" .. v[typ_index]
+      local given_name = v[typ_index]
       for i,t in ipairs(data.Talente.Kampf) do
         if #t >= 1 then
-          found, _ = string.find(t.Name, pattern)
-          if found ~= nil then
+          if given_name == t.Name then
             talent = t
             if #talent >= 3 then
               ebe = calc_be(talent.BE)

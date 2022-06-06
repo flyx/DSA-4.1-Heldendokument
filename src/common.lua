@@ -270,20 +270,21 @@ function common.round(v, down)
 end
 
 function common.ritualkenntnis(items, count)
-  tex.sprint([[{\normalfont\normalsize\begin{tabular}{p{3.7cm}@{(}x{3.6cm}@{):\hspace{2pt}}x{0.7cm}x{0.5cm}}]])
+  tex.sprint([[{\normalfont\normalsize\setlength{\arrayrulewidth}{1pt}
+    \begin{NiceTabular}{p{3.7cm}@{(}x{3.2cm}@{):\hspace{2pt}}x{0.7cm}x{0.5cm}}]])
   for i,v in ipairs(items) do
-    tex.sprint(string.format([[\large\mansontt\bfseries Ritualkenntnis & %s & \cellcolor{white}%s & \color{gray}\bfseries %s \\]], v.Name, v.Wert, v.Steigerung))
+    tex.sprint(string.format([[\large\mansontt\bfseries Ritualkenntnis & %s & %s & \color{gray}\bfseries %s \\ \cline{3-3} ]], v.Name, v.Wert, v.Steigerung))
     if i ~= count then
-      tex.sprint([[\multicolumn{3}{c}{}\\[-9pt] ]])
+      tex.sprint([[\multicolumn{3}{c}{}\\[-12pt] ]])
     end
   end
   for i=#items+1,count do
-    tex.sprint([[\large\mansontt\bfseries Ritualkenntnis & & \cellcolor{white} & \\]])
+    tex.sprint([[\large\mansontt\bfseries Ritualkenntnis & & & \\ \cline{3-3} ]])
     if i ~= count then
       tex.sprint([[\multicolumn{3}{c}{}\\[-9pt] ]])
     end
   end
-  tex.sprint([[\end{tabular}}]])
+  tex.sprint([[\end{NiceTabular}}]])
 end
 
 local value_line = {

@@ -37,9 +37,11 @@
     \normalfont\fontsize{8}{12}\selectfont
 
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
+        \vspace*{-1pt}
         \directlua{
             common.ritualkenntnis(data.Magie.Ritualkenntnis, common.current_page.Ritualkenntnis)
         }
+        \vspace*{1pt}
 	\end{dsaSheetBox}
 
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
@@ -73,7 +75,15 @@
                 }, data.SF.Magisch)
             } \hline
 
-            \raggedright\normalsize \textmansontt{\textbf{Regeneration:}} \colorbox{white}{\parbox[c]{3cm}{\normalfont\centering\directlua{zauberdokument.asp_regeneration()}}} \textmansontt{\textbf{pro Phase}}
+            \begin{minipage}[c][24.35pt][c]{8cm}
+                \setlength{\arrayrulewidth}{1pt}
+                \normalsize
+                \begin{NiceTabular}{lp{2cm}l}
+                    \textmansontt{\textbf{Regeneration:}} &
+                    \centering\directlua{zauberdokument.asp_regeneration()} &
+                    AsP pro Phase \\ \cline{2-2}
+                \end{NiceTabular}
+            \end{minipage}
         \end{tabular}
     \end{dsaSheetBox}
 
@@ -94,13 +104,12 @@
         \end{tabular}
     \end{dsaSheetBox}
 
-    \vspace{12pt}
     \begin{dsaSheetBox}[.5\textwidth-.5\columnsep]
         \begin{center}
             \textmansontt{\large\bfseries Notizen}
         \end{center}
 
-        \vspace{-5pt}
+        \vspace{-4.2pt}
         \begin{tabular}{p{\textwidth-.5\fboxsep}} \hline
             \directlua{
                 common.multiline_content({

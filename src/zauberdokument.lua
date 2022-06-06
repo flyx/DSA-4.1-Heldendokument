@@ -27,7 +27,6 @@ function zauberdokument.asp_regeneration()
       end
       common.schaden.render(val)
     end
-    tex.sprint(" AsP")
   end
 end
 
