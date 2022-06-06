@@ -545,11 +545,13 @@ local Schild = d.Row:def({name = "Schild", description = "Ein Schild."},
 local Parierwaffe = d.Row:def({name = "Parierwaffe", description = "Eine Parierwaffe."},
   {"Name", String}, {"INI", OptNum, {}}, {"WM AT", OptNum, {}}, {"WM PA", OptNum, {}}, {"BF1", OptNum, {}}, {"BF2", OptNum, {}}, {"Art", String, ""})
 local Zonenruestung = d.Primitive:def({name = "Zonenruestung", description = "Zonenrüstungswert eines Rüstungsteils mit bis zu zwei Dezimalstellen"}, "number", false, 2, 0)
+local Ruestungsverarbeitung = d.Primitive:def({name = "Ruestungsverarbeitung", description="Wie gut die Rüstung verarbeitet ist. Entspricht den Sternen in der Zonenrüstungstabelle, WdS 110."}, "number", false, 0, 0)
 local Ruestungsteil = d.Row:def({name = "Ruestungsteil", description = "Ein Rüstungsteil."},
-  {"Name", String}, {"gRS", Zonenruestung}, {"gBE", Zonenruestung},
+  {"Name", String},
   {"Kopf", Zonenruestung, 0}, {"Brust", Zonenruestung, 0}, {"Ruecken", Zonenruestung, 0},
-  {"LArm", Zonenruestung, 0}, {"RArm", Zonenruestung, 0}, {"Bauch", Zonenruestung, 0},
-  {"LBein", Zonenruestung, 0}, {"RBein", Zonenruestung, 0})
+  {"Bauch", Zonenruestung, 0}, {"LArm", Zonenruestung, 0}, {"RArm", Zonenruestung, 0},
+  {"LBein", Zonenruestung, 0}, {"RBein", Zonenruestung, 0}, {"Z", schema.Boolean, false},
+  {"Sterne", Ruestungsverarbeitung, 0})
 
 schema.Waffen = {
   Nahkampf = d:singleton(d.List, {name = "Waffen.Nahkampf", description = "Liste von Nahkampfwaffen."}, {Nahkampfwaffe}) {},
@@ -567,7 +569,7 @@ function schema.Waffen.Nahkampf.example(printer)
 end
 function schema.Waffen.Fernkampf.example(printer)
   printer:highlight([[Waffen.Fernkampf {
-  {"Langbogen", "Bogen", "1W+6", 10, 25, 50, 100, 200, 3, 2, 1, 0, -1}
+  {"Langbogen", "Bogen", "1W+6", 10, 25, 50, 100, 200, 3, 2, 1, 0, -1, VerminderteWS=true}
 }]])
 end
 function schema.Waffen.SchildeUndParierwaffen.example(printer)
@@ -578,8 +580,8 @@ function schema.Waffen.SchildeUndParierwaffen.example(printer)
 end
 function schema.Waffen.Ruestung.example(printer)
   printer:highlight([[Waffen.Ruestung {
-  {"Leichte Platte", 3.2, 2.2, Brust=5, Ruecken=4, LBein=2, RBein=2},
-  {"Panzerhandschuhe (Paar)", 0.2, 0.2, LArm=2, RArm=2},
+  {"Leichte Platte", Brust=5, Ruecken=4, LBein=2, RBein=2, Sterne=1},
+  {"Panzerhandschuhe (Paar)", LArm=2, RArm=2, Z=true},
 }]])
 end
 

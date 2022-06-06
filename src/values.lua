@@ -74,23 +74,6 @@ if values.Talente.SprachenUndSchriften.Muttersprache == nil then
   tex.error("[Talente.SprachenUndSchriften] Muttersprache fehlt")
 end
 
-local function sum_and_round(items, pos)
-  local cur = nil
-  for i,v in ipairs(items) do
-    if #v >= pos then
-      local num = tonumber(v[pos])
-      if num == nil then
-        return ""
-      elseif cur == nil then
-        cur = num
-      else
-        cur = cur + num
-      end
-    end
-  end
-  return cur == nil and "" or tonumber(string.format("%.0f", cur + 0.0001)) -- round up at 0.5
-end
-
 local getter_map = {
   calc = {
     LE = function() return {"KO", "KO", "KK", div=2} end,
@@ -249,25 +232,24 @@ function values:cur(name, div)
       gs = gs - be
     end
     return gs
-  elseif kind == "rs" then
-    return sum_and_round(self.Waffen.Ruestung, 2)
-  elseif kind == "be" or kind == "be_voll" then
-    local val = sum_and_round(self.Waffen.Ruestung, 3)
-    if val == "" then
-      return val
+  elseif kind == "rs" or kind == "be" or kind == "be_voll" then
+    local rs, be = self:gesamtRuestung(self.Waffen.Ruestung)
+    if kind == "rs" then
+      if rs == nil then return "" else return rs end
     end
-    if kind == "be" then
-      local rg = self.SF.Nahkampf:getlist("Ruestungsgewoehnung")
-      if rg[3] then
-        val = val - 2
-      elseif rg[1] then
-        val = val - 1
-      end
-      if val < 0 then
-        val = 0
-      end
+    if kind == "be_voll" or be == nil then
+      if be == nil then return "" else return be end
     end
-    return val
+    local rg = self.SF.Nahkampf:getlist("Ruestungsgewoehnung")
+    if rg[3] then
+      be = be - 2
+    elseif rg[1] then
+      be = be - 1
+    end
+    if be < 0 then
+      be = 0
+    end
+    return be
   elseif kind == "ap" then
     if type(self.AP.Gesamt) == "number" and type(self.AP.Eingesetzt) == "number" then
       return self.AP.Gesamt - self.AP.Eingesetzt
@@ -491,6 +473,49 @@ function values:schrift_schwierigkeit(schrift)
     end
   end
   return skt.spalte:name(x + self:tgruppe_schwierigkeit_mod("SprachenUndSchriften"))
+end
+
+local rsFaktor = {
+  0, -- Name hat keinen Faktor
+  2, 4, 4, 4, 1, 1, 2, 2
+}
+
+-- gibt gRS und gBE aller Ruestungsteile in `teile` zurück.
+-- decimals == true gibt Dezimalstellen zurück.
+function values:gesamtRuestung(teile, decimals)
+  local gRS = nil
+  local gBE = nil
+  local sterne = 0
+  for _, teil in ipairs(teile) do
+    local sum = nil
+    for i=2,9 do
+      if teil[i] ~= nil then
+        local add = teil[i] * rsFaktor[i]
+        if sum == nil then sum = add else sum = sum + add end
+      end
+    end
+    if sum ~= nil then
+      if gRS == nil then gRS = sum else gRS = gRS + sum end
+      local s = teil.Sterne or 0
+      if teil.Z then
+        for j=1,s do
+          sum = sum / 2
+        end
+      else
+        sterne = sterne + s
+      end
+      if gBE == nil then gBE = sum else gBE = gBE + sum end
+    end
+  end
+  if gRS == nil then return nil, nil end
+  gRS = gRS/20
+  gBE = gBE/20 - sterne
+  if gBE < 0 then gBE = 0 end
+  if decimals then
+    return gRS, gBE
+  else
+    return tonumber(string.format("%.0f", gRS + 0.0001)), tonumber(string.format("%.0f", gBE + 0.0001))
+  end
 end
 
 function values:ap_mod(kosten)

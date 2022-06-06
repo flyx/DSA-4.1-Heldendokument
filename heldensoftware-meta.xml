@@ -856,103 +856,103 @@
       <s name="Langdolch" typ="P" wm="0/+1" ini="0" bf="1" />
     </schildeParier>
     <ruestung>
-      <r name="Anaurak" ko="1" br="1" ru="1" ba="1" la="1" ra="1" lb="1" rb="1" grs="1" gbe="4" />
-      <r name="Dicke Kleidung" br="1" ru="1" ba="1" la="1" ra="1" lb="1" rb="1" grs="0.9" gbe="0.9" />
-      <r name="Fellumhang" br="1" ru="2" ba="0" la="1" ra="1" lb="1" rb="1" grs="0.9" gbe="0.9" />
-      <r name="Fuhrmannsmantel"  br="1" ru="2" la="1" ra="1" lb="1" rb="1" grs="0.9" gbe="0.9" />
-      <r name="Lederhose" ba="1" lb="1" rb="1" grs="0.4" gbe="0.4" />
-      <r name="Lederweste" br="1" ru="1" ba="1" lb="1" rb="1" grs="0.8" gbe="0.8" />
-      <r name="Pelzweste" br="1" ru="1" ba="1" lb="1" rb="1" grs="0.8" gbe="0.8" />
-      <r name="Hohe Stiefel" lb="1" rb="1" grs="0.2" gbe="0.2" />
-      <r name="Gambeson" br="2" ru="2" ba="2" la="1" ra="1" lb="1" rb="1" grs="1.5" gbe="1.5" />
-      <r name="Mattenrücken" ko="1" br="1" ru="3" grs="0.9" gbe="0.9" />
-      <r name="Tuchrüstung" br="2" ru="2" ba="2" grs="1.2" gbe="1.2" />
-      <r name="Unterzeug mit Kettenteilen" br="2" ru="2" ba="1" la="2" ra="2" lb="1" rb="1" grs="1.4" gbe="1.4"/>
-      <r name="Wattierte Kappe" ko="1" grs="0.1" gbe="0.1" />
-      <r name="Wattiertes Unterzeug" br="1" ru="1" ba="1" la="1" ra="1" lb="1" rb="1" grs="0.9" gbe="0.9" />
-      <r name="Armschiene (links), Leder" la="1" grs="0.1" gbe="0.1"/>
-      <r name="Armschiene (rechts), Leder" ra="1" grs="0.1" gbe="0.1"/>
-      <r name="Armschienen (Paar), Leder" la="1" ra="1" grs="0.1" gbe="0.1"/>
-      <r name="Beinschiene (links), Leder" lb="1" grs="0.1" gbe="0.1"/>
-      <r name="Beinschiene (rechts), Leder" rb="1" grs="0.1" gbe="0.1"/>
-      <r name="Beinschienen (Paar), Leder" lb="1" rb="1" grs="0.2" gbe="0.2"/>
-      <r name="Brustplatte, Leder" br="2" ba="1" grs="0.6" gbe="0.6"/>
-      <r name="Iryanrüstung" br="3" ru="2" ba="2" lb="1" rb="1" grs="1.6" gbe="0.6" />
-      <r name="Krötenhaut" br="3" ru="2" ba="2" la="1" ra="1" grs="1.5" gbe="0.5" />
-      <r name="Lederharnisch" br="3" ru="3" ba="3" grs="1.8" gbe="1.8" />
-      <r name="Lederhelm" ko="2" grs="0.2" gbe="0.2" />
-      <r name="Lederhelm, verstärkt" ko="3" grs="0.3" gbe="0.3" />
-      <r name="Streifenschurz" ba="2" lb="2" rb="2" grs="0.8" gbe="0.4" />
-      <r name="Mammutonpanzer" br="4" ru="4" ba="4" la="2" ra="2" lb="2" rb="2" grs="3" gbe="2" />
-      <r name="Hartholzharnisch" br="4" ru="4" ba="4" la="1" ra="1" lb="1" rb="1" grs="2.7" gbe="1.7"/>
-      <r name="Ringmantel (Brabakmantel)" br="3" ru="3" ba="3" la="2" ra="2" lb="2" rb="2" grs="2.4" gbe="1.4" />
-      <r name="Brigantina" br="5" ru="4" ba="4" la="2" ra="2" grs="2.8" gbe="2.8" />
-      <r name="Eisenmantel" br="5" ru="5" ba="5" la="2" ra="2" lb="2" rb="2" grs="2.8" gbe="2.8" />
-      <r name="Fünflagenharnisch" br="5" ru="5" ba="4" lb="1" rb="1" grs="3" gbe="3" />
-      <r name="Kettenbeinling (links)" lb="4" grs="0.4" gbe="0.4" />
-      <r name="Kettenbeinling (rechts)" rb="4" grs="0.4" gbe="0.4" />
-      <r name="Kettenbeinlinge (Paar)" lb="4" rb="4" grs="0.8" gbe="0.8" />
-      <r name="Kettenhandschuh (links)" la="1" grs="0.1" gbe="0.1" />
-      <r name="Kettenhandschuh (rechts)" ra="1" grs="0.1" gbe="0.1" />
-      <r name="Kettenhandschuhe (Paar)" la="1" ra="1" grs="0.1" gbe="0.1" />
-      <r name="Kettenhaube" ko="3" br="1" ru="1" grs="0.7" gbe="0.7" />
-      <r name="Kettenhaube mit Gesichtsschutz" ko="4" br="1" ru="1" grs="0.8" gbe="0.8"/>
-      <r name="Kettenhemd, Halbarm" br="4" ru="4" ba="4" la="2" ra="2" lb="1" rb="1" grs="2.8" gbe="1.8" />
-      <r name="Kettenhemd, Lang" br="4" ru="4" ba="4" la="3" ra="3" lb="2" rb="2" grs="3.1" gbe="2.1" />
-      <r name="Kettenmantel" br="4" ru="4" ba="4" la="3" ra="3" lb="3" rb="3" grs="3.3" gbe="2.3" />
-      <r name="Kettenkragen" ko="2" br="1" ru="1" grs="0.6" gbe="0.3" />
-      <r name="Kettenweste" br="4" ru="4" ba="4" grs="2.4" gbe="1.4" />
-      <r name="Löwenmähne" ko="2" br="2" ru="2" la="1" ra="1" grs="1.1" gbe="0.55" />
-      <r name="Ringelpanzer" br="4" ru="4" ba="4" la="3" ra="3" lb="1" rb="1" grs="2.9" gbe="1.9" />
-      <r name="Schuppenpanzer" br="5" ru="5" ba="5" la="3" ra="3" lb="3" rb="3" grs="3.9" gbe="3.9" />
-      <r name="Schuppenpanzer, Lang" br="5" ru="5" ba="5" la="3" ra="3" lb="4" rb="4" grs="4.1" gbe="4.1" />
-      <r name="Spiegelpanzer" br="5" ru="5" ba="5" la="3" ra="3" lb="2" rb="2" grs="3.7" gbe="2.7" />
-      <r name="Amazonenrüstung (kompl)" ko="3" br="5" ru="3" ba="5" la="2" ra="2" rb="3" lb="3" grs="3.7" gbe="1.7"/>
-      <r name="Armschiene (links), Bronze" la="2" grs="0.1" gbe="0.1" />
-      <r name="Armschiene (rechts), Bronze" ra="2" grs="0.1" gbe="0.1" />
-      <r name="Armschienen (Paar), Bronze" la="2" ra="2" grs="0.2" gbe="0.2" />
-      <r name="Armschiene (links), Stahl" la="3" grs="0.15" gbe="0.15" />
-      <r name="Armschiene (rechts), Stahl" ra="3" grs="0.15" gbe="0.15" />
-      <r name="Armschienen (Paar), Stahl" la="3" ra="3" grs="0.3" gbe="0.3" />
-      <r name="Baburiner Hut" ko="4" ru="1" grs="0.6" gbe="0.3" />
-      <r name="Bart / Halsberge" ko="4" br="1" ru="1" grs="0.6" gbe="0.6" />
-      <r name="Beinschiene (links), Bronze" lb="2" grs="0.2" gbe="0.2" />
-      <r name="Beinschiene (rechts), Bronze" rb="2" grs="0.2" gbe="0.2" />
-      <r name="Beinschienen (Paar), Bronze" lb="2" rb="2" grs="0.4" gbe="0.4" />
-      <r name="Beinschiene (links), Bronze" lb="3" grs="0.3" gbe="0.3" />
-      <r name="Beinschiene (rechts), Bronze" rb="3" grs="0.3" gbe="0.3" />
-      <r name="Beinschienen (Paar), Bronze" lb="3" rb="3" grs="0.6" gbe="0.6" />
-      <r name="Beintaschen / Schürze" ba="2" lb="2" rb="2" grs="0.8" gbe="0.8" />
-      <r name="Bronzeharnisch" br="5" ru="4" ba="4" grs="2.6" gbe="2.6" />
-      <r name="Brustplatte" br="2" ba="1" grs="0.6" gbe="0.6" />
-      <r name="Brustschalen" br="2" grs="0.4" gbe="0.4" />
-      <r name="Drachenhelm" ko="3" ru="1" grs="0.5" gbe="0.5" />
-      <r name="Garether Platte" br="6" ru="5" ba="6" la="5" ra="5" lb="4" rb="4" grs="4.7" gbe="3.7" />
-      <r name="Gestechrüstung" ko="8" br="8" ru="7" ba="8" la="7" ra="7" lb="7" rb="7" gra="7.5" gbe="7.5" />
-      <r name="Gladiatorenschulter" br="3" ru="2" la="3" grs="1.15" gbe="0.15" />
-      <r name="Horasischer Reiterharnisch" ko="3" br="7" ru="5" ba="7" la="5" ra="5" lb="5" rb="5" grs="5.6" gbe="3.6"/>
-      <r name="Kürass" br="5" ru="1" ba="2" grs="1.6" gbe="0.6" />
-      <r name="Kusliker Lamellar" br="5" ru="4" ba="4" la="1" ra="1" lb="1" rb="1" grs="2.9" gbe="2.9" />
-      <r name="Leichte Platte" br="5" ru="4" ba="5" lb="2" rb="2"  grs="3.2" gbe="2.2" />
-      <r name="Morion" ko="3" grs="0.3" gbe="0.15" />
-      <r name="Panzerbein (links)" lb="4" grs="0.4" gbe="0.4"/>
-      <r name="Panzerbein (rechts)" rb="4" grs="0.4" gbe="0.4"/>
-      <r name="Panzerbeine (Paar)" lb="4" rb="4" grs="0.8" gbe="0.8"/>
-      <r name="Panzerhandschuh (links)" la="2" grs="0.1" gbe="0.1"/>
-      <r name="Panzerhandschuh (rechts)" ra="2" grs="0.1" gbe="0.1"/>
-      <r name="Panzerhandschuhe (Paar)" la="2" ra="2" grs="0.2" gbe="0.2"/>
-      <r name="Panzerschuh (links)" lb="1" grs="0.1" gbe="0.1"/>
-      <r name="Panzerschuh (rechts)" rb="1" grs="0.1" gbe="0.1"/>
-      <r name="Panzerschuhe (Paar)" lb="1" rb="1" grs="0.2" gbe="0.2"/>
-      <r name="Plattenschultern (Paar)" br="1" ru="1" la="2" ra="2" grs="0.6" gbe="0.6" />
-      <r name="Plattenarm (links)" la="5" grs="0.25" gbe="0.25" />
-      <r name="Plattenarm (rechts)" ra="5" grs="0.25" gbe="0.25" />
-      <r name="Plattenarme (Paar)" la="5" ra="5" grs="0.5" gbe="0.5" />
-      <r name="Schaller" ko="4" grs="0.4" gbe="0.2" />
-      <r name="Stechhelm / Visierhelm" ko="5" grs="0.5" gbe="0.5" />
-      <r name="Sturmhaube" ko="3" grs="0.3" gbe="0.15" />
-      <r name="Tellerhelm" ko="2" grs="0.2" gbe="0.2" />
-      <r name="Topfhelm" ko="5" grs="0.5" gbe="0.5" />
+      <r name="Anaurak" ko="1" br="1" ru="1" ba="1" la="1" ra="1" lb="1" rb="1" />
+      <r name="Dicke Kleidung" br="1" ru="1" ba="1" la="1" ra="1" lb="1" rb="1" />
+      <r name="Fellumhang" br="1" ru="2" ba="0" la="1" ra="1" lb="1" rb="1" z="1"/>
+      <r name="Fuhrmannsmantel"  br="1" ru="2" la="1" ra="1" lb="1" rb="1" z="1"/>
+      <r name="Lederhose" ba="1" lb="1" rb="1" z="1"/>
+      <r name="Lederweste" br="1" ru="1" ba="1" lb="1" rb="1" />
+      <r name="Pelzweste" br="1" ru="1" ba="1" lb="1" rb="1" />
+      <r name="Hohe Stiefel" lb="1" rb="1" z="1"/>
+      <r name="Gambeson" br="2" ru="2" ba="2" la="1" ra="1" lb="1" rb="1" />
+      <r name="Mattenrücken" ko="1" br="1" ru="3" />
+      <r name="Tuchrüstung" br="2" ru="2" ba="2" />
+      <r name="Unterzeug mit Kettenteilen" br="2" ru="2" ba="1" la="2" ra="2" lb="1" rb="1"/>
+      <r name="Wattierte Kappe" ko="1" z="1"/>
+      <r name="Wattiertes Unterzeug" br="1" ru="1" ba="1" la="1" ra="1" lb="1" rb="1"/>
+      <r name="Armschiene (links), Leder" la="1" z="1"/>
+      <r name="Armschiene (rechts), Leder" ra="1" z="1"/>
+      <r name="Armschienen (Paar), Leder" la="1" ra="1" z="1"/>
+      <r name="Beinschiene (links), Leder" lb="1" z="1"/>
+      <r name="Beinschiene (rechts), Leder" rb="1" z="1"/>
+      <r name="Beinschienen (Paar), Leder" lb="1" rb="1" z="1"/>
+      <r name="Brustplatte, Leder" br="2" ba="1"/>
+      <r name="Iryanrüstung" br="3" ru="2" ba="2" lb="1" rb="1" sterne="1" />
+      <r name="Krötenhaut" br="3" ru="2" ba="2" la="1" ra="1" sterne="1" />
+      <r name="Lederharnisch" br="3" ru="3" ba="3" />
+      <r name="Lederhelm" ko="2" z="1" />
+      <r name="Lederhelm, verstärkt" ko="3" z="1" />
+      <r name="Streifenschurz" ba="2" lb="2" rb="2" z="1" sterne="1" />
+      <r name="Mammutonpanzer" br="4" ru="4" ba="4" la="2" ra="2" lb="2" rb="2" sterne="1" />
+      <r name="Hartholzharnisch" br="4" ru="4" ba="4" la="1" ra="1" lb="1" rb="1" sterne="1" />
+      <r name="Ringmantel (Brabakmantel)" br="3" ru="3" ba="3" la="2" ra="2" lb="2" rb="2" sterne="1" />
+      <r name="Brigantina" br="5" ru="4" ba="4" la="2" ra="2" />
+      <r name="Eisenmantel" br="5" ru="5" ba="5" la="2" ra="2" lb="2" rb="2" sterne="1" />
+      <r name="Fünflagenharnisch" br="5" ru="5" ba="4" lb="1" rb="1" />
+      <r name="Kettenbeinling (links)" lb="4" z="1" />
+      <r name="Kettenbeinling (rechts)" rb="4" z="1" />
+      <r name="Kettenbeinlinge (Paar)" lb="4" rb="4" z="1" />
+      <r name="Kettenhandschuh (links)" la="1" z="1" />
+      <r name="Kettenhandschuh (rechts)" ra="1" z="1" />
+      <r name="Kettenhandschuhe (Paar)" la="1" ra="1" z="1" />
+      <r name="Kettenhaube" ko="3" br="1" ru="1" z="1" />
+      <r name="Kettenhaube mit Gesichtsschutz" ko="4" br="1" ru="1" z="1"/>
+      <r name="Kettenhemd, Halbarm" br="4" ru="4" ba="4" la="2" ra="2" lb="1" rb="1" sterne="1" />
+      <r name="Kettenhemd, Lang" br="4" ru="4" ba="4" la="3" ra="3" lb="2" rb="2" sterne="1" />
+      <r name="Kettenmantel" br="4" ru="4" ba="4" la="3" ra="3" lb="3" rb="3" sterne="1" />
+      <r name="Kettenkragen" ko="2" br="1" ru="1" sterne="1" z="1" />
+      <r name="Kettenweste" br="4" ru="4" ba="4" sterne="1" />
+      <r name="Löwenmähne" ko="2" br="2" ru="2" la="1" ra="1" sterne="1" z="1" />
+      <r name="Ringelpanzer" br="4" ru="4" ba="4" la="3" ra="3" lb="1" rb="1" sterne="1" />
+      <r name="Schuppenpanzer" br="5" ru="5" ba="5" la="3" ra="3" lb="3" rb="3" />
+      <r name="Schuppenpanzer, Lang" br="5" ru="5" ba="5" la="3" ra="3" lb="4" rb="4" />
+      <r name="Spiegelpanzer" br="5" ru="5" ba="5" la="3" ra="3" lb="2" rb="2" sterne="1" />
+      <r name="Amazonenrüstung (kompl)" ko="3" br="5" ru="3" ba="5" la="2" ra="2" rb="3" lb="3" sterne="2"/>
+      <r name="Armschiene (links), Bronze" la="2" z="1" />
+      <r name="Armschiene (rechts), Bronze" ra="2" z="1" />
+      <r name="Armschienen (Paar), Bronze" la="2" ra="2" z="1" />
+      <r name="Armschiene (links), Stahl" la="3" z="1" />
+      <r name="Armschiene (rechts), Stahl" ra="3" z="1" />
+      <r name="Armschienen (Paar), Stahl" la="3" ra="3" z="1" />
+      <r name="Baburiner Hut" ko="4" ru="1" sterne="1" z="1" />
+      <r name="Bart / Halsberge" ko="4" br="1" ru="1" z="1" />
+      <r name="Beinschiene (links), Bronze" lb="2" z="1" />
+      <r name="Beinschiene (rechts), Bronze" rb="2" z="1" />
+      <r name="Beinschienen (Paar), Bronze" lb="2" rb="2" z="1" />
+      <r name="Beinschiene (links), Bronze" lb="3" z="1" />
+      <r name="Beinschiene (rechts), Bronze" rb="3" z="1" />
+      <r name="Beinschienen (Paar), Bronze" lb="3" rb="3" z="1" />
+      <r name="Beintaschen / Schürze" ba="2" lb="2" rb="2" z="1" />
+      <r name="Bronzeharnisch" br="5" ru="4" ba="4" />
+      <r name="Brustplatte" br="2" ba="1" />
+      <r name="Brustschalen" br="2" z="1" />
+      <r name="Drachenhelm" ko="3" ru="1" z="1" />
+      <r name="Garether Platte" br="6" ru="5" ba="6" la="5" ra="5" lb="4" rb="4" sterne="1" />
+      <r name="Gestechrüstung" ko="8" br="8" ru="7" ba="8" la="7" ra="7" lb="7" rb="7" />
+      <r name="Gladiatorenschulter" br="3" ru="2" la="3" sterne="1" />
+      <r name="Horasischer Reiterharnisch" ko="3" br="7" ru="5" ba="7" la="5" ra="5" lb="5" rb="5" sterne="2"/>
+      <r name="Kürass" br="5" ru="1" ba="2" sterne="1" />
+      <r name="Kusliker Lamellar" br="5" ru="4" ba="4" la="1" ra="1" lb="1" rb="1" />
+      <r name="Leichte Platte" br="5" ru="4" ba="5" lb="2" rb="2"  sterne="1" />
+      <r name="Morion" ko="3" sterne="1" z="1" />
+      <r name="Panzerbein (links)" lb="4" z="1"/>
+      <r name="Panzerbein (rechts)" rb="4" z="1"/>
+      <r name="Panzerbeine (Paar)" lb="4" rb="4" z="1"/>
+      <r name="Panzerhandschuh (links)" la="2" z="1"/>
+      <r name="Panzerhandschuh (rechts)" ra="2" z="1"/>
+      <r name="Panzerhandschuhe (Paar)" la="2" ra="2" z="1"/>
+      <r name="Panzerschuh (links)" lb="1" z="1"/>
+      <r name="Panzerschuh (rechts)" rb="1" z="1"/>
+      <r name="Panzerschuhe (Paar)" lb="1" rb="1" z="1"/>
+      <r name="Plattenschultern (Paar)" br="1" ru="1" la="2" ra="2" z="1" />
+      <r name="Plattenarm (links)" la="5" z="1" />
+      <r name="Plattenarm (rechts)" ra="5" z="1" />
+      <r name="Plattenarme (Paar)" la="5" ra="5" z="1" />
+      <r name="Schaller" ko="4" z="1" sterne="1" />
+      <r name="Stechhelm / Visierhelm" ko="5" z="1" />
+      <r name="Sturmhaube" ko="3" z="1" sterne="1" />
+      <r name="Tellerhelm" ko="2" z="1" />
+      <r name="Topfhelm" ko="5" z="1" />
     </ruestung>
   </ausruestung>
   <zauber>

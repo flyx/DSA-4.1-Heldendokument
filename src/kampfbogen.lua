@@ -340,7 +340,12 @@ function kampfbogen.schilde()
 end
 
 function kampfbogen.ruestungsteile()
-  common.inner_rows(data.Waffen.Ruestung, 3, common.current_page.Ruestung)
+  local items = {}
+  for _, teil in ipairs(data.Waffen.Ruestung) do
+    local rs, be = data:gesamtRuestung({teil}, true)
+    table.insert(items, {teil.Name, rs, be})
+  end
+  common.inner_rows(items, 3, common.current_page.Ruestung)
 end
 
 function kampfbogen.ruestung(name)
