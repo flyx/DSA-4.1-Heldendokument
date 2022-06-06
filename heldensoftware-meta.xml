@@ -87,7 +87,8 @@
     <vn name="Albino" nachteil="1"/>
     <vn name="Angst vor (häufiger Auslöser)" schlechteEigenschaft="1.5"/>
     <vn name="Angst vor (seltener Auslöser)" schlechteEigenschaft="1"/>
-    <vn name="Angst vor Feuer" schlechteEigenschaft="1"/>
+    <vn name="Angst vor Feuer" schlechteEigenschaft="1.5"/>
+    <vn name="Angst vor Insekten" schlechteEigenschaft="1.5"/>
     <vn name="Angst vor Menschenmassen" schlechteEigenschaft="1"/>
     <vn name="Angst vor Nagetieren" schlechteEigenschaft="1.5"/>
     <vn name="Angst vor Pelztieren" schlechteEigenschaft="1"/>
@@ -207,7 +208,7 @@
     <vn name="Thesisgebunden" nachteil="1" magisch="1"/>
     <vn name="Tollpatsch" nachteil="1"/>
     <vn name="Totenangst" schlechteEigenschaft="1"/>
-    <vn name="Übernatürliche Begabung" magisch="1"/>
+    <vn name="Übernatürliche Begabung" id="UebernatuerlicheBegabung" magisch="1" liste="1"/>
     <vn name="Übler Geruch" nachteil="1"/>
     <vn name="Unangenehme Stimme" nachteil="1"/>
     <vn name="Unansehnlich" nachteil="1"/>
@@ -527,6 +528,7 @@
     <sf name="Ritualkenntnis" art="ignore" named="1"/>
     <sf name="Runenkunde" art="magisch"/>
     <sf name="Rüstungsgewöhnung" art="nahkampf" id="Ruestungsgewoehnung" roman="3"/>
+    <sf name="Schalenzauber" art="ritual" named="1"/>
     <sf name="Scharfschütze" art="fernkampf" sub="talent" container="Scharfschuetze"/>
     <sf name="Schildkampf" art="nahkampf" id="Schildkampf" roman="2"/>
     <sf name="Schildspalter" art="nahkampf"/>

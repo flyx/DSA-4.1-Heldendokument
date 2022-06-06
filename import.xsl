@@ -95,11 +95,11 @@
     </xsl:choose>
     <xsl:if test="zauberliste/zauber[@repraesentation != 'Magiedilletant']">
       <xsl:text>
-  Zauberdokument {},</xsl:text>
+  Zauberliste {},</xsl:text>
     </xsl:if>
     <xsl:if test="talentliste/talent[starts-with(@name, 'Ritualkenntnis')]">
       <xsl:text>
-  Zauberliste {},</xsl:text>
+  Zauberdokument {},</xsl:text>
     </xsl:if>
     <xsl:text>
 }

@@ -196,6 +196,7 @@ schema.Vorteile.Magisch = d:singleton(d.Multivalue, {name = "Vorteile.Magisch", 
   BegabungFuerRitual = d.List:def({name = "BegabungFuerRitual", description = "Begabung für ein oder mehrere Rituale", label = "Begabung für Ritual"}, {String}),
   BegabungFuerZauber = d.List:def({name = "BegabungFuerZauber", description = "Begabung für einen oder mehrere Zauber", label = "Begabung für Zauber"}, {String}),
   Meisterhandwerk = d.List:def({name = "Meisterhandwerk", description = "Liste von Talenten, für die ein Meisterhandwerk existiert."}, {String}),
+  UebernatuerlicheBegabung = d.List:def({name = "UebernatuerlicheBegabung", description = "Liste von Talenten, für die eine Übernatürliche Begabung existiert.", label = "Übernatürliche Begabung"}, {String}),
 }) {}
 function schema.Vorteile.Magisch.example(printer)
   printer:highlight([[Vorteile.Magisch {
