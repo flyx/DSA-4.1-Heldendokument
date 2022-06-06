@@ -65,7 +65,7 @@ local Zauberdokument = d.Record:def({name = "Zauberdokument", description = "Zau
   {"Rituale", Zeilen, 30},
   {"Ritualkenntnis", Zeilen, 2},
   {"Artefakte", Zeilen, 9},
-  {"Notizen", Zeilen, 6})
+  {"Notizen", Zeilen, 7})
 
 local Zauberliste = d.Primitive:def({name = "Zauberliste", description = "Zauberliste."}, "void", true)
 local Ereignisliste = d.Primitive:def({name = "Ereignisliste", description = "Ereignisliste."}, "void", true)
