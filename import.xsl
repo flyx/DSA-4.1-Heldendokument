@@ -938,14 +938,35 @@ SF.Magisch {
     <func:result>
       <xsl:choose>
         <xsl:when test="$explicit">
-          <xsl:value-of select="concat($explicit/@mul, 'W', $explicit/@w, '+', $explicit/@sum)"/>
+          <xsl:value-of select="concat('&quot;', $explicit/@mul, 'W', $explicit/@w, '+', $explicit/@sum, '&quot;')"/>
         </xsl:when>
         <xsl:when test="$meta">
-          <xsl:value-of select="$meta/@tp"/>
+          <xsl:value-of select="dsa:stringVal($meta/@tp)"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>{}</xsl:text>
         </xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+  
+  <func:function name="dsa:dk">
+    <xsl:param name="explicit"/>
+    <xsl:param name="meta"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$explicit">
+          <xsl:text>"</xsl:text>
+          <xsl:if test="$explicit/distanzklasse[@value='Handgemenge']">H</xsl:if>
+          <xsl:if test="$explicit/distanzklasse[@value='Nah']">N</xsl:if>
+          <xsl:if test="$explicit/distanzklasse[@value='Stangenwaffe']">S</xsl:if>
+          <xsl:if test="$explicit/distanzklasse[@value='Pike']">P</xsl:if>
+          <xsl:text>"</xsl:text>
+        </xsl:when>
+        <xsl:when test="$meta">
+          <xsl:value-of select="dsa:stringVal($meta/@dk)"/>
+        </xsl:when>
+        <xsl:otherwise><xsl:text>{}</xsl:text></xsl:otherwise>
       </xsl:choose>
     </func:result>
   </func:function>
@@ -1022,6 +1043,7 @@ Waffen.Nahkampf {</xsl:text>
     <xsl:variable name="slot" select="@slot"/>
     <xsl:variable name="nkwaffe" select="../../gegenstände/gegenstand[@slot=$slot]/Nahkampfwaffe"/>
     <xsl:variable name="def" select="$ausruestung/nahkampf[@typ=$talent]/w[@name=$name]"/>
+    <xsl:value-of select="concat(dsa:dk($nkwaffe/distanzklassen, $def), ', ')"/>
     <xsl:value-of select="concat(dsa:tp($nkwaffe/trefferpunkte, $def), ', ')"/>
     <xsl:value-of select="concat(dsa:tpkk($nkwaffe/tpkk, $def), ', ')"/>
     <xsl:value-of select="concat(dsa:ini($nkwaffe/inimod, $def), ', ')"/>
@@ -1061,17 +1083,69 @@ Waffen.Fernkampf {</xsl:text>
       </xsl:if>
     </func:result>
   </func:function>
+  
+  <func:function name="dsa:entfernungen">
+    <xsl:param name="explicit"/>
+    <xsl:param name="meta"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$explicit">
+          <xsl:value-of select="concat($explicit/@E0, ', ', $explicit/@E1, ', ', $explicit/@E2, ', ', $explicit/@E3, ', ', $explicit/@E4)"/>
+        </xsl:when>
+        <xsl:when test="$meta">
+          <xsl:value-of select="dsa:partition($meta/@rw)"/>
+        </xsl:when>
+        <xsl:otherwise><xsl:text>{},{},{},{},{}</xsl:text></xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+  
+  <func:function name="dsa:tpmod">
+    <xsl:param name="explicit"/>
+    <xsl:param name="meta"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$explicit">
+          <xsl:value-of select="concat($explicit/@M0, ', ', $explicit/@M1, ', ', $explicit/@M2, ', ', $explicit/@M3, ', ', $explicit/@M4)"/>
+        </xsl:when>
+        <xsl:when test="$meta">
+          <xsl:value-of select="dsa:partition($meta/@tprw)"/>
+        </xsl:when>
+        <xsl:otherwise><xsl:text>{},{},{},{},{}</xsl:text></xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+  
+  <func:function name="dsa:laden">
+    <xsl:param name="explicit"/>
+    <xsl:param name="meta"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$explicit">
+          <xsl:value-of select="$explicit/@aktionen"/>
+        </xsl:when>
+        <xsl:when test="$meta">
+          <xsl:value-of select="$meta/@laden"/>
+        </xsl:when>
+        <xsl:otherwise><xsl:text>{}</xsl:text></xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
 
   <xsl:template match="heldenausruestung" mode="fernkampf">
     <xsl:variable name="name" select="@waffenname" />
     <xsl:variable name="talent" select="@talent" />
+    <xsl:variable name="slot" select="@slot"/>
+    <xsl:variable name="fkwaffe" select="../../gegenstände/gegenstand[@slot=$slot]/Fernkampfwaffe"/>
     <xsl:text>
   {</xsl:text>
     <xsl:value-of select="concat(dsa:stringVal($name), ', ', dsa:stringVal($talent), ', ')"/>
     <xsl:variable name="def" select="$ausruestung/fernkampf[@typ=$talent]/w[@name=$name]"/>
-    <xsl:if test="$def">
-      <xsl:value-of select="concat(dsa:stringVal($def/@tp), ', ', dsa:partition($def/@rw), ', ', dsa:partition($def/@tprw))"/>
-    </xsl:if>
+    <xsl:value-of select="concat(dsa:tp($fkwaffe/trefferpunkte, $def), ', ')"/>
+    <xsl:value-of select="concat(dsa:entfernungen($fkwaffe/entfernung, $def), ', ')"/>
+    <xsl:value-of select="concat(dsa:tpmod($fkwaffe/tpmod, $def), ', ')"/>
+    <xsl:value-of select="dsa:laden($fkwaffe/laden, $def)"/>
+    <xsl:if test="$def/@verminderteWS"><xsl:text>, VerminderteWS=true</xsl:text></xsl:if>
     <xsl:text>},</xsl:text>
   </xsl:template>
 

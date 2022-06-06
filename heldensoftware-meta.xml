@@ -795,9 +795,9 @@
       <w name="Granatapfel" tp="4W6" rw="0/5/10/15/20" tprw="-/-/-/-/-" />
       <w name="Holzspeer" tp="1W+2" rw="5/10/15/25/40" tprw="+1/0/0/-1/-2" />
       <w name="Speer" tp="1W+3" rw="5/10/15/25/40" tprw="+1/0/0/-1/-2" />
-      <w name="Speerschleuder" tp="1W+3" rw="0/15/30/60/100" tprw="-/+1/0/0/-1" laden="2" />
+      <w name="Speerschleuder" tp="1W+3" rw="0/15/30/60/100" tprw="-/+1/0/0/-1" laden="2" verminderteWS="1"/>
       <w name="Stabschleuder" tp="1W+3" rw="0/5/20/40/60" tprw="-/0/0/0/0" laden="2" />
-      <w name="Wurfspeer" tp="1W+4" rw="5/10/15/25/40" tprw="+3/+1/0/-1/-1" />
+      <w name="Wurfspeer" tp="1W+4" rw="5/10/15/25/40" tprw="+3/+1/0/-1/-1" verminderteWS="1"/>
     </fernkampf>
     <fernkampf typ="Wurfbeil">
       <w name="Schneidzahn" tp="1W+4" rw="0/5/10/15/30" tprw="-/+1/+1/0/-1" />
@@ -805,22 +805,22 @@
       <w name="Wurfkeule" tp="2W+4(A)" rw="0/5/15/25/40" tprw="-/+1/+1/+1/0" />
     </fernkampf>
     <fernkampf typ="Armbrust">
-      <w name="Arbalette" tp="2W+5" rw="10/20/30/60/100" tprw="+2/+1/0/-1/-2" laden="30" />
-      <w name="Arbalone" tp="3W+6" rw="15/30/60/120/250" tprw="+4/+2/0/-1/-3" laden="40"/>
-      <w name="Balestra" tp="2W+2" rw="10/20/30/50/60" tprw="+2/+1/0/0/-1" laden="12" />
+      <w name="Arbalette" tp="2W+5" rw="10/20/30/60/100" tprw="+2/+1/0/-1/-2" laden="30" verminderteWS="1"/>
+      <w name="Arbalone" tp="3W+6" rw="15/30/60/120/250" tprw="+4/+2/0/-1/-3" laden="40" verminderteWS="1"/>
+      <w name="Balestra" tp="2W+2" rw="10/20/30/50/60" tprw="+2/+1/0/0/-1" laden="12" verminderteWS="1"/>
       <w name="Balestrina" tp="1W+4" rw="2/4/8/15/25" tprw="+2/+1/0/0/-1" laden="4" />
       <w name="Balläster" tp="1W+4" rw="10/20/30/60/100" tprw="+3/+1/0/-1/-1" laden="8" />
-      <w name="Eisenwalder" tp="1W+3" rw="5/10/15/20/40" tprw="+1/0/0/0/-1" laden="3 (20)" />
-      <w name="Leichte Armbrust" tp="1W+6" rw="10/15/25/40/60" tprw="+1/0/0/0/-1" laden="15"/>
-      <w name="Windenarmbrust" tp="2W+6" rw="10/30/60/100/180" tprw="+4/+2/0/-1/-3" laden="30" />
+      <w name="Eisenwalder" tp="1W+3" rw="5/10/15/20/40" tprw="+1/0/0/0/-1" laden="3" verminderteWS="1"/>
+      <w name="Leichte Armbrust" tp="1W+6" rw="10/15/25/40/60" tprw="+1/0/0/0/-1" laden="15" verminderteWS="1"/>
+      <w name="Windenarmbrust" tp="2W+6" rw="10/30/60/100/180" tprw="+4/+2/0/-1/-3" laden="30" verminderteWS="1"/>
     </fernkampf>
     <fernkampf typ="Bogen">
-      <w name="Elfenbogen" tp="1W+5" rw="10/25/50/100/200" tprw="+3/+2/+1/+1/0" laden="3" />
-      <w name="Kompositbogen" tp="1W+5" rw="10/20/35/50/80" tprw="+2/+1/+1/0/0" laden="3" />
-      <w name="Kriegsbogen" tp="1W+7" rw="10/20/40/80/150" tprw="+3/+2/+1/0/0" laden="4" />
-      <w name="Kurzbogen" tp="1W+4" rw="5/15/25/40/60" tprw="+1/+1/0/0/-1" laden="2" />
-      <w name="Langbogen" tp="1W+6" rw="10/25/50/100/200" tprw="+3/+2/+1/0/-1" laden="4" />
-      <w name="Orkischer Reiterbogen" tp="1W+5" rw="5/15/30/60/100" tprw="+3/+1/0/-1/-2" laden="3" />
+      <w name="Elfenbogen" tp="1W+5" rw="10/25/50/100/200" tprw="+3/+2/+1/+1/0" laden="3" verminderteWS="1"/>
+      <w name="Kompositbogen" tp="1W+5" rw="10/20/35/50/80" tprw="+2/+1/+1/0/0" laden="3" verminderteWS="1"/>
+      <w name="Kriegsbogen" tp="1W+7" rw="10/20/40/80/150" tprw="+3/+2/+1/0/0" laden="4" verminderteWS="1"/>
+      <w name="Kurzbogen" tp="1W+4" rw="5/15/25/40/60" tprw="+1/+1/0/0/-1" laden="2" verminderteWS="1"/>
+      <w name="Langbogen" tp="1W+6" rw="10/25/50/100/200" tprw="+3/+2/+1/0/-1" laden="4" verminderteWS="1"/>
+      <w name="Orkischer Reiterbogen" tp="1W+5" rw="5/15/30/60/100" tprw="+3/+1/0/-1/-2" laden="3" verminderteWS="1"/>
     </fernkampf>
     <fernkampf typ="Schleuder">
       <w name="Fledermaus" tp="1W+6" rw="0/5/10/15/25" tprw="-/0/0/0/-1" laden="1" />
@@ -834,7 +834,7 @@
     <fernkampf typ="Diskus">
       <w name="Diskus" tp="1W+3" rw="5/10/20/30/60" tprw="+1/0/0/0/-1" />
       <w name="Jagddiskus" tp="2W+4(A)" rw="5/10/20/30/60" tprw="+1/0/0/0/-1" />
-      <w name="Kampfdiskus" tp="1W+5" rw="10/20/30/45/60" tprw="+1/0/0/0/0" />
+      <w name="Kampfdiskus" tp="1W+5" rw="10/20/30/45/60" tprw="+1/0/0/0/0" verminderteWS="1"/>
     </fernkampf>
     <schildeParier>
       <s name="Holzschild" typ="S" wm="-1/+3" ini="-1" bf="3" />

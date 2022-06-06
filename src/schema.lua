@@ -539,7 +539,7 @@ local Fernkampfwaffe = d.Row:def({name = "Fernkampfwaffe", description = "Eine F
   {"Name", String, ""}, {"Talent", String, ""}, {"TP", Schaden, ""},
   {"Entfernung1", OptNum, {}}, {"Entfernung2", OptNum, {}}, {"Entfernung3", OptNum, {}}, {"Entfernung4", OptNum, {}}, {"Entfernung5", OptNum, {}},
   {"TP/Entfernung1", OptNum, {}}, {"TP/Entfernung2", OptNum, {}}, {"TP/Entfernung3", OptNum, {}}, {"TP/Entfernung4", OptNum, {}}, {"TP/Entfernung5", OptNum, {}},
-  {"Geschosse1", OptNum, {}}, {"Geschosse2", OptNum, {}}, {"Geschosse3", OptNum, {}}, {"Art", String, ""})
+  {"Ladezeit", OptNum, {}}, {"Geschosse", OptNum, {}}, {"VerminderteWS", schema.Boolean, false})
 local Schild = d.Row:def({name = "Schild", description = "Ein Schild."},
   {"Name", String}, {"INI", OptNum, {}}, {"WM AT", OptNum, {}}, {"WM PA", OptNum, {}}, {"BF1", OptNum, {}}, {"BF2", OptNum, {}}, {"Art", String, ""})
 local Parierwaffe = d.Row:def({name = "Parierwaffe", description = "Eine Parierwaffe."},

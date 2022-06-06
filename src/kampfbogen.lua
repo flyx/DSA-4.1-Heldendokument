@@ -106,7 +106,7 @@ local function kampfwerte(items, render, typ_index, num_values, num_rows)
         if render == nil then
           tex.sprint(-2, val)
         else
-          render(val)
+          render(val, v)
         end
         input_index = input_index + 1
       elseif talent ~= false or typ_index <= 0 then
@@ -189,6 +189,12 @@ function kampfbogen.nahkampf()
 end
 
 local fernkampf_render = {
+  [1]= {true, function(v, all)
+    tex.sprint(-2, v)
+    if all.VerminderteWS then
+      tex.sprint([[\hfill\faHeartBroken−2]])
+    end
+  end},
   [2]= {true, function(v)
     if v == "Belagerungswaffen" then
       tex.sprint("Belager")
@@ -225,7 +231,7 @@ local fernkampf_render = {
       fk = fk + 2
     end
     tex.sprint(-2, fk)
-  end}
+  end},
 }
 
 for i=10,14 do
@@ -233,7 +239,7 @@ for i=10,14 do
 end
 
 function kampfbogen.fernkampf()
-  kampfwerte(data.Waffen.Fernkampf, fernkampf_render, 2, 18, common.current_page.Fernkampf.Waffen)
+  kampfwerte(data.Waffen.Fernkampf, fernkampf_render, 2, 17, common.current_page.Fernkampf.Waffen)
 end
 
 local waffenlos_render = {
