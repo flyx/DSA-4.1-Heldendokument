@@ -1041,17 +1041,14 @@ Waffen.Nahkampf {</xsl:text>
   {</xsl:text>
     <xsl:value-of select="concat(dsa:stringVal($name), ', ', dsa:stringVal($talent), ', ')"/>
     <xsl:variable name="slot" select="@slot"/>
-    <xsl:variable name="nkwaffe" select="../../gegenstände/gegenstand[@slot=$slot]/Nahkampfwaffe"/>
+    <xsl:variable name="nkwaffe" select="../../gegenstände/gegenstand[@name = $name and @slot = $slot]/Nahkampfwaffe"/>
     <xsl:variable name="def" select="$ausruestung/nahkampf[@typ=$talent]/w[@name=$name]"/>
     <xsl:value-of select="concat(dsa:dk($nkwaffe/distanzklassen, $def), ', ')"/>
     <xsl:value-of select="concat(dsa:tp($nkwaffe/trefferpunkte, $def), ', ')"/>
     <xsl:value-of select="concat(dsa:tpkk($nkwaffe/tpkk, $def), ', ')"/>
     <xsl:value-of select="concat(dsa:ini($nkwaffe/inimod, $def), ', ')"/>
     <xsl:value-of select="concat(dsa:wm($nkwaffe/wm, $def), ', ')"/>
-    
-    <xsl:if test="$def">
-      <xsl:value-of select="@bfmin"/>
-    </xsl:if>
+    <xsl:value-of select="@bfmin"/>
     <xsl:text>},</xsl:text>
   </xsl:template>
 
@@ -1136,7 +1133,7 @@ Waffen.Fernkampf {</xsl:text>
     <xsl:variable name="name" select="@waffenname" />
     <xsl:variable name="talent" select="@talent" />
     <xsl:variable name="slot" select="@slot"/>
-    <xsl:variable name="fkwaffe" select="../../gegenstände/gegenstand[@slot=$slot]/Fernkampfwaffe"/>
+    <xsl:variable name="fkwaffe" select="../../gegenstände/gegenstand[@name = $name and @slot = $slot]/Fernkampfwaffe"/>
     <xsl:text>
   {</xsl:text>
     <xsl:value-of select="concat(dsa:stringVal($name), ', ', dsa:stringVal($talent), ', ')"/>
@@ -1160,6 +1157,8 @@ Waffen.SchildeUndParierwaffen {</xsl:text>
 
   <xsl:template match="heldenausruestung" mode="schilde">
     <xsl:variable name="name" select="@schildname" />
+    <xsl:variable name="slot" select="@slot"/>
+    <xsl:variable name="schild" select="../../gegenstände/gegenstand[@name = $name and @slot = $slot]/Schild"/>
     <xsl:text>
   </xsl:text>
     <xsl:choose>
@@ -1172,9 +1171,14 @@ Waffen.SchildeUndParierwaffen {</xsl:text>
     </xsl:choose>
     <xsl:value-of select="concat(dsa:stringVal($name), ', ')"/>
     <xsl:variable name="def" select="$ausruestung/schildeParier/s[@name=$name]"/>
-    <xsl:if test="$def">
-      <xsl:value-of select="concat(dsa:singleval($def/@ini), ', ', dsa:doubleval($def/@wm), ', ', $def/@bf)"/>
-    </xsl:if>
+    <xsl:value-of select="concat(dsa:ini($schild/inimod, $def), ', ')"/>
+    <xsl:value-of select="concat(dsa:wm($schild/wm, $def), ', ')"/>
+    <xsl:choose>
+      <xsl:when test="$schild"><xsl:value-of select="$schild/bf/@min"/></xsl:when>
+      <xsl:when test="$def"><xsl:value-of select="$def/@bf"/></xsl:when>
+      <xsl:otherwise><xsl:text>{}</xsl:text></xsl:otherwise>
+    </xsl:choose>
+    <xsl:value-of select="@bfmin"/>
     <xsl:text>},</xsl:text>
   </xsl:template>
 

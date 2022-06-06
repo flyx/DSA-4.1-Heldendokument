@@ -432,7 +432,7 @@ function kampfbogen.ini()
   local val = data:cur("INI")
   if val ~= "" then
     tex.sprint(-2, val)
-    tex.sprint(-2, " + Waffen-INI − BE + ")
+    tex.sprint(-2, " + INI(Waffe, Schild, Parierwaffe) − BE + ")
     local w
     if data.SF.Nahkampf.Klingentaenzer then
       w = common.schaden.parse("2W6")
