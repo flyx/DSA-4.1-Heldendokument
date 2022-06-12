@@ -1,0 +1,28 @@
+\documentclass{standalone}
+
+\usepackage{tikz}
+\usepackage{calc}
+\usetikzlibrary{positioning,fit,calc,backgrounds}
+
+\usepackage{fontspec}
+
+\setmainfont{NewG8}[
+  Path           = fonts/,
+  Extension      = .otf,
+  UprightFont    = NewG8-Reg,
+  BoldFont       = NewG8-Bol,
+  BoldItalicFont = NewG8-BolIta,
+  ItalicFont     = NewG8-Ita
+]
+
+\def\RS#1{
+  \makebox(.7cm,.8em)[c]{\normalfont 3}
+}
+
+\begin{document}
+  \fontsize{8}{12}\selectfont\bfseries
+  \directlua{
+    silhouette = require("silhouette")
+    silhouette("\SilKind", "\SilVariant")
+  }
+\end{document}

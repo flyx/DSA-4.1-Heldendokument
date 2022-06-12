@@ -2,6 +2,7 @@ local data = require("data")
 local common = require("common")
 local schemadef = require("schemadef")
 local schema = require("schema")
+local silhouette = require("silhouette")
 
 local kampfbogen = {}
 
@@ -401,12 +402,8 @@ function kampfbogen.ausweichen()
   tex.sprint(-2, val)
 end
 
-function kampfbogen.silhouette()
-  if data.Held.Geschlecht == "weiblich" then
-    tex.print([[\input{silhouette-w}]])
-  else
-    tex.print([[\input{silhouette-m}]])
-  end
+function kampfbogen.trefferzonen()
+  silhouette(data:silhouette(common.current_page))
 end
 
 function kampfbogen.energieleiste(label, val)

@@ -1,6 +1,6 @@
 \begin{tikzpicture}
   \begin{scope}[on background layer]
-      \node[anchor=south west,inner sep=0, opacity=0.8] at (0,0) {\includegraphics[width=6cm]{img/silhouette-w.png}};
+      \node[anchor=south west,inner sep=0, opacity=0.8] at (0,0) {\includegraphics[width=6cm]{\directlua{kampfbogen.silhouette()}}};
   \end{scope}
 
   \node(kopf) at (2.75, 11) {\RS{Kopf}};

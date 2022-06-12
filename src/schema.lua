@@ -40,7 +40,8 @@ local Kampfbogen = d.Record:def({name = "Kampfbogen", description = "Kampfbogen.
   {"Waffenlos", d.Record:def({name = "Waffenlos", description = "Zeilen für waffenlose Manöver."},
     {"SF", Zeilen, 3}), {}},
   {"Schilde", Zeilen, 2},
-  {"Ruestung", Zeilen, 6})
+  {"Ruestung", Zeilen, 6},
+  {"Regenbogen", schema.Boolean, false})
 
 local Ausruestungsbogen = d.Record:def({name = "Ausruestungsbogen", description = "Ausrüstungsbogen."},
   {"Kleidung", Zeilen, 5},

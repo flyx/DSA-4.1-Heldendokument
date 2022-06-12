@@ -475,6 +475,12 @@ function values:schrift_schwierigkeit(schrift)
   return skt.spalte:name(x + self:tgruppe_schwierigkeit_mod("SprachenUndSchriften"))
 end
 
+function values:silhouette(page)
+  local kind = (self.Held.Geschlecht == "weiblich") and "generic-w" or "generic-m"
+  local variant = page.Regenbogen and "Regenbogen" or "Standard"
+  return kind, variant
+end
+
 local rsFaktor = {
   0, -- Name hat keinen Faktor
   2, 4, 4, 4, 1, 1, 2, 2
