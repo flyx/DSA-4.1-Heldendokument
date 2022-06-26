@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Created-By: flyx
+HeldenPluginClass: dsa41held.Plugin.class
+Main-Class: dsa41held.Plugin.class

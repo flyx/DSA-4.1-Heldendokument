@@ -44,7 +44,7 @@
       '';
       filtered-src = nix-filter.lib.filter {
         root = ./.;
-        exclude = [ ./flake.nix ./flake.lock ./Readme.md ./Makefile ./dsa41held.sh.nix ./build.dockerfile ];
+        exclude = [ ./flake.nix ./flake.lock ./Readme.md ./Makefile ./dsa41held.sh.nix ./build.dockerfile ./plugin ];
       };
     in {
       packages = with pkgs; rec {
@@ -148,6 +148,20 @@
           installPhase = ''
             mkdir -p "$out"
             mv format.html "$out/format.html"
+          '';
+        };
+        dsa41held_plugin = stdenvNoCC.mkDerivation {
+          pname = "dsa41held-plugin";
+          inherit version;
+          nativeBuildInputs = [ jdk11 ];
+          src = ./plugin;
+          buildPhase = ''
+            shopt -s globstar
+            ${jdk11}/bin/javac **/*.java
+            ${jdk11}/bin/jar cMf dsa41held.jar **/*.class META-INF
+          '';
+          installPhase = ''
+            cp dsa41held.jar $out
           '';
         };
       };
