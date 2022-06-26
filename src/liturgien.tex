@@ -1,11 +1,28 @@
 
 \begin{dsaCharacterSheet}
+
 \setlength{\tabcolsep}{1pt}
+
+\vspace*{-26pt}
+\begin{center}
+    \begin{dsaSheetBox}[.55\textwidth]%
+        \begin{tabular}{p{3.2cm}lx{.66cm}lx{.66cm}lx{.66cm}l}
+            \textmansontt{\bfseries Mirakelprobe:} & \textmansontt{\bfseries MU (} &
+            \directlua{tex.sprint(data:cur("MU"))} &
+            \textmansontt{\bfseries ) • IN (} &
+            \directlua{tex.sprint(data:cur("IN"))} &
+            \textmansontt{\bfseries ) • CH (} &
+            \directlua{tex.sprint(data:cur("CH"))} &
+            \textmansontt{\bfseries )}
+        \end{tabular}
+    \end{dsaSheetBox}
+\end{center}
+
 \renewcommand{\arraystretch}{1.25}
 
-\vspace*{-20pt}
+\vspace*{-24pt}
 \dsaHeading{Liturgiekenntnis \& Ausrüstung}
-\vspace{-8pt}
+\vspace*{-12pt}
 
 \Kleidung
 
@@ -20,7 +37,7 @@
     \ProvVermoeg
 \end{multicols}
 
-\vspace{-12pt}
+\vspace*{-26pt}
 \Tiere
 
 \end{dsaCharacterSheet}
