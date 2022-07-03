@@ -83,14 +83,29 @@ function zauberliste.seite(start)
       tex.sprint("&")
       tex.sprint(-2, z.Name)
       if #z.Spezialisierungen > 0 then
-        tex.sprint(-2, " (")
-        for j, s in ipairs(z.Spezialisierungen) do
-          if j > 1 then
-            tex.sprint(-2, ", ")
+        local j = 1
+        if type(z.Spezialisierungen[j]) == "table" then
+          tex.sprint([[\newline\hspace*{-4pt}]])
+          j = j + 1
+        else
+          tex.sprint(" ")
+        end
+        tex.sprint("(")
+        local first = true
+        while j <= #z.Spezialisierungen do
+          if first then first = false else tex.sprint(", ") end
+          while type(z.Spezialisierungen[j]) == "table" do
+            tex.sprint([[\newline]])
+            j = j + 1
           end
-          tex.sprint(-2, s)
+          if j > #z.Spezialisierungen then break end
+          tex.sprint(-2, z.Spezialisierungen[j])
+          j = j + 1
         end
         tex.sprint(-2, ")")
+      end
+      if z.Hauszauber then
+        tex.sprint([[\hfill\faHome]])
       end
       tex.sprint("&")
       for j=3,7 do
@@ -124,9 +139,6 @@ function zauberliste.seite(start)
       tex.sprint(-2, z.Repraesentation)
       tex.sprint("&")
       tex.sprint(-2, data:lernschwierigkeit(z))
-      if z.Hauszauber then
-        tex.sprint([[\hfill\faHome]])
-      end
     end
     if i ~= start+48 then
       tex.sprint([[\\ \hline]])
