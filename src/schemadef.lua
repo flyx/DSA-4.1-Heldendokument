@@ -504,21 +504,11 @@ end
 
 function d.List:append(v, sort)
   local mt = getmetatable(v)
-  if (mt == nil or mt == string_metatable) and #self.items == 1 then
+  if mt == nil or mt == string_metatable then
     v = self.items[1](v)
     mt = getmetatable(v)
   end
-  if mt == nil or mt == string_metatable then
-    local e = "("
-    for i,t in ipairs(self.items) do
-      if i > 1 then
-        e = e .. ","
-      end
-      e = e .. t.name
-    end
-    e = e .. ')'
-    return string.format("unerlaubter Wert ohne Typ. erlaubt sind: %s", e)
-  elseif mt == d.Poison then
+  if mt == d.Poison then
     return
   end
 

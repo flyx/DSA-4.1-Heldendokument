@@ -1237,13 +1237,13 @@
     <plus gott="Angrosch">KL|FF|KO|KK|Selbstbeherrschung|Menschenkenntnis|Überzeugen|Gesteinskunde|Hüttenkunde|Mechanik|Rechnen|Schätzen</plus>
     <wahl gott="Angrosch" num="4">Baukunst|Bergbau|Feinmechanik|Feuersteinbearbeitung|Glaskunst|Grobschmied|Holzbearbeitung|Kristallzucht|Metallguss|Steinmetz|Steinschneider|Juwelier|Zimmermann</wahl>
     <minus gott="Angrosch">Akrobatik|Fliegen|Gaukeleien|Schwimmen|Boote Fahren|Seefahrt</minus>
-    <plus gott="Aves">IN|CH|GE|KO|Ausweichen|Gefahreninstinkt|Athletik|Klettern|Sinnesschärfe|Gassenwissen|Menschenkenntnis|Überreden|Überzeugen|Orientierung|Wettervorhersage|Wildnisleben|Geographie|Sprachenkunde|Handel|Instrumentenbauer|Musizieren|Kartographie</plus>
+    <plus gott="Aves">IN|CH|GE|KO|Ausweichen|Gefahreninstinkt|Athletik|Klettern|Sinnenschärfe|Gassenwissen|Menschenkenntnis|Überreden|Überzeugen|Orientierung|Wettervorhersage|Wildnisleben|Geographie|Sprachenkunde|Handel|Instrumentenbauer|Musizieren|Kartographie</plus>
     <minus gott="Aves">Kampf (Nah, bewaffnet)|Kriegskunst</minus>
     <plus gott="Boron">MU|KL|IN|CH|MR|Prophezeien|Schleichen|Selbstbeherrschung|Lehren|Menschenkenntnis|Überzeugen|Geschichtswissen|Götter/Kulte|Pflanzenkunde|Alchimie|Heilkunde Krankheiten|Heilkunde Seele</plus>
     <minus gott="Boron">Gaukeleien|Singen|Stimmen Imitieren|Tanzen|Betören|Schauspielerei|Glücksspiel|Instrumentenbauer|Musizieren</minus>
-    <plus gott="Efferd">IN|GE|KK|KO|Schwimmen|Sinnesschärfe|Überzeugen|Fesseln/Entfesseln|Fischen/Angeln|Orientierung|Wettervorhersage|Boote Fahren|Seefahrt|Zimmermann</plus>
+    <plus gott="Efferd">IN|GE|KK|KO|Schwimmen|Sinnenschärfe|Überzeugen|Fesseln/Entfesseln|Fischen/Angeln|Orientierung|Wettervorhersage|Boote Fahren|Seefahrt|Zimmermann</plus>
     <minus gott="Efferd">Alchimie|Glaskunst|Grobschmied|Hüttenkunde|Kochen|Metallguss</minus>
-    <plus gott="Firun">MU|GE|KO|KK|Gefahreninstinkt|Körperbeherrschung|Schleichen|Selbstbeherrschung|Sich Verstecken|Sinnesschärfe|Fährtensuchen|Orientierung|Wettervorhersage|Wildnisleben</plus>
+    <plus gott="Firun">MU|GE|KO|KK|Gefahreninstinkt|Körperbeherrschung|Schleichen|Selbstbeherrschung|Sich Verstecken|Sinnenschärfe|Fährtensuchen|Orientierung|Wettervorhersage|Wildnisleben</plus>
     <wahl gott="Firun">Fernkampftalent</wahl>
     <wahl gott="Firun" num="1">Fischen/Angeln|Pflanzenkunde|Tierkunde|Abrichten|Bogenbau|Boote Fahren|Fahrzeug Lenken|Feuersteinbearbeitung|Gerber/Kürschner|Heilkunde Wunden|Holzbearbeitung|Lederarbeiten|Seefahrt|Zimmermann</wahl>
     <minus gott="Firun">Gaukeleien|Singen|Tanzen|Falschspiel|Musizieren|Betören|Etikette|Gassenwissen|Menschenkenntnis|Schauspielerei|Schriftlicher Ausdruck|Sich Verkleiden|Überreden|Überzeugen</minus>
@@ -1252,7 +1252,7 @@
     <plus gott="Hesinde">KL|IN|CH|MR|Etikette|Lehren|Menschenkenntnis|Überzeugen|Geschichtswissen|Götter/Kulte|Magiekunde|Pflanzenkunde|Sternkunde|Tierkunde|Alchimie</plus>
     <wahl gott="Hesinde">Wissenstalent</wahl>
     <minus gott="Hesinde">Zechen|Überreden (Lügen)</minus>
-    <plus gott="Himmelswölfe">MU|IN|GE|KK|Gefahreninstinkt|Selbstbeherrschung|Sinnesschärfe|Stimmen Imitieren|Lehren|Menschenkenntnis|Fährtensuchen|Orientierung|Wettervorhersage|Wildnisleben|Sagen/Legenden|Abrichten</plus>
+    <plus gott="Himmelswölfe">MU|IN|GE|KK|Gefahreninstinkt|Selbstbeherrschung|Sinnenschärfe|Stimmen Imitieren|Lehren|Menschenkenntnis|Fährtensuchen|Orientierung|Wettervorhersage|Wildnisleben|Sagen/Legenden|Abrichten</plus>
     <minus gott="Himmelswölfe">Falschspiel|Kriegskunst|Gerber/Kürschner</minus>
     <plus gott="H'Szint">MU|KL|IN|CH|Lehren|Menschenkenntnis|Überzeugen|Götter/Kulte|Magiekunde|Pflanzenkunde|Rechnen|Sternkunde|Tirekunde</plus>
     <wahl gott="H'Szint" num="3">Geschichtswissen|Gesteinskunde|Kryptographie|Alchimie|Heilkunde Gift|Heilkunde Krankheiten|Heilkunde Wunden|Holzbearbeitung|Lederarbeiten|Steinschneider|Juwelier|Töpfern</wahl>
@@ -1263,9 +1263,9 @@
     <plus gott="Ingerimm">MU|FF|KO|KK|Selbstbeherrschung|Lehren|Überzeugen|Gesteinskunde|Hüttenkunde|Mechanik|Rechnen|Schätzen|Bergbau|Steinmetz</plus>
     <wahl gott="Ingerimm" num="2">Alchimie|Baukunst|Bogenbau|Feinmechanik|Glaskunst|Grobschmied|Holzbearbeitung|Instrumentenbauer|Maurer|Metallguss|Steinschneider|Juwelier|Zimmermann</wahl>
     <minus gott="Ingerimm">Fischen/Angeln|Gaukeleien|Schwimmen|Seefahrt</minus>
-    <plus gott="Kamaluq">MU|IN|CH|KO|Gefahreninstinkt|Schleichen|Selbstbeherrschung|Sich Verstecken|Sinnesschärfe|Lehren|Menschenkenntnis|Überzeugen|Fährtensuchen|Orientierung|Wettervorhersage|Wildnisleben</plus>
+    <plus gott="Kamaluq">MU|IN|CH|KO|Gefahreninstinkt|Schleichen|Selbstbeherrschung|Sich Verstecken|Sinnenschärfe|Lehren|Menschenkenntnis|Überzeugen|Fährtensuchen|Orientierung|Wettervorhersage|Wildnisleben</plus>
     <minus gott="Kamaluq">Betören|Falschspiel|Überreden (Lügen)|Feinmechanik|Drucker</minus>
-    <plus gott="Kor">MU|GE|KO|KK|Ausweichen|Infanteriewaffen|Athletik|Körperbeherrschung|Reiten|Selbtbeherrschung|Sinnesschärfe|Menschenkenntnis|Überzeugen|Kriegskunst|Fahrzeug Lenken (Streitwagen)</plus>
+    <plus gott="Kor">MU|GE|KO|KK|Ausweichen|Infanteriewaffen|Athletik|Körperbeherrschung|Reiten|Selbtbeherrschung|Sinnenschärfe|Menschenkenntnis|Überzeugen|Kriegskunst|Fahrzeug Lenken (Streitwagen)</plus>
     <wahl gott="Kor">bewaffnetes Nahkampftalent</wahl>
     <minus gott="Kor">Heilkunde Gift|Heilkunde Krankheiten|Heilkunde Wunden|Gefahreninstinkt</minus>
     <plus gott="Nandus">KL|IN|CH|FF|Lehren|Menschenkenntnis|Überreden|Überzeugen|Kryptographie|Philosophie|Rechnen|Sternkunde</plus>
@@ -1278,20 +1278,20 @@
     <plus gott="Praios">MU|IN|CH|MR|Selbstbeherrschung|Etikette|Lehren|Menschenkenntnis|Überzeugen|Götter/Kulte|Rechtskunde|Staatskunst</plus>
     <wahl gott="Praios" num="4">Abrichten|Baukunst|Brettspiel|Hauswirtschaft|Heilkunde Seele|Heraldik|Magiekunde</wahl>
     <minus gott="Praios">Fliegen|Gaukeleien|Schleichen|Sich Verstecken|Stimmen Imitieren|Taschendiebstahl|Überreden (Betteln, Lügen)|Sich Verkleiden|Falschspiel|Schlösser Knacken</minus>
-    <plus gott="Rahja">MU|IN|CH|GE|Ausweichen|Körperbeherrschung|Reiten|Sinnesschärfe|Zechen|Betören|Lehren|Menschenkenntnis|Überreden|Überzeugen</plus>
+    <plus gott="Rahja">MU|IN|CH|GE|Ausweichen|Körperbeherrschung|Reiten|Sinnenschärfe|Zechen|Betören|Lehren|Menschenkenntnis|Überreden|Überzeugen</plus>
     <wahl gott="Rahja" num="2">Abrichten|Akrobatik|Brauer|Etikette|Gaukeleien|Heilkunde Seele|Musizieren|Schnaps Brennen|Singen|Steinmetz|Steinscheinder/Juwelier|Stoffe Färben|Tanzen|Tätowieren|Winzer</wahl>
     <minus gott="Rahja">Kampf (bewaffnet)|Kriegskunst</minus>
     <plus gott="Rondra">MU|GE|KO|KK|Athletik|Körperbeherrschung|Reiten|Selbstbeherrschung|Kriegskunst</plus>
     <wahl gott="Rondra">zwei bewaffnete Nahkampftalente</wahl>
-    <wahl gott="Rondra" num="5">Brettspiel|Fahrzeug Lenken|Grobschmied|Heilkunde Wunden|Heraldik|Rechtskunde|Sinnesschärfe|Staatskunst|Überzeugen</wahl>
+    <wahl gott="Rondra" num="5">Brettspiel|Fahrzeug Lenken|Grobschmied|Heilkunde Wunden|Heraldik|Rechtskunde|Sinnenschärfe|Staatskunst|Überzeugen</wahl>
     <minus gott="Rondra">Kampf (Fern)|Schleichen|Sich Verstecken|Sich Verkleiden|Überreden|Bogenbau|Falschspiel</minus>
     <plus gott="Swafnir">MU|GE|KO|KK|Körperbeherrschung|Schwimmen|Selbstbeherrschung|Zechen|Lehren|Orientierung|Wettervorhersage|Seefahrt</plus>
     <wahl gott="Swafnir" num="1">Raufen|Ringen</wahl>
     <wahl gott="Swafnir" num="3">Athletik|Boote Fahren|Fesseln/Entfesseln|Fischen/Angeln|Rechtskunde|Sagen/Legenden|Tierkunde|Zimmermann</wahl>
     <minus gott="Swafnir">Überreden (Lügen)|Kryptographie|Magiekunde|Mechanik</minus>
-    <plus gott="Tairach">MU|CH|KO|KK|Athletik|Selbstbeherrschung|Sinnesschärfe|Lehren|Menschenkenntnis|Überzeugen|Orientierung|Wettervorhersage|Pflanzenkunde|Sagen/Legenden|Tierkunde</plus>
+    <plus gott="Tairach">MU|CH|KO|KK|Athletik|Selbstbeherrschung|Sinnenschärfe|Lehren|Menschenkenntnis|Überzeugen|Orientierung|Wettervorhersage|Pflanzenkunde|Sagen/Legenden|Tierkunde</plus>
     <minus gott="Tairach">Heilkunde Gift|Heilkunde Krankheiten|Heilkunde Seele|Heilkunde Wunden|Überreden (Lügen)</minus>
-    <plus gott="Travia">MU|IN|CH|FF|Selbstbeherrschung|Sinnesschärfe|Zechen|Lehren|Menschenkenntnis|Überzeugen|Sagen/Legenden|Hauswirtschaft|Helikunde Krankheiten|Heilkunde Seele|Kochen|Viehzucht</plus>
+    <plus gott="Travia">MU|IN|CH|FF|Selbstbeherrschung|Sinnenschärfe|Zechen|Lehren|Menschenkenntnis|Überzeugen|Sagen/Legenden|Hauswirtschaft|Helikunde Krankheiten|Heilkunde Seele|Kochen|Viehzucht</plus>
     <minus gott="Travia">Kampf (Fern)|Schleichen|Taschendiebstahl|Betören|Überreden (Lügen)|Bogenbau|Falschspiel</minus>
     <plus gott="Tsa">IN|CH|FF|GE|Sich Verkleiden|Singen|Tanzen|Menschenkenntnis|Überreden|Überzeugen|Philosophie|Sagen/Legenden</plus>
     <wahl gott="Tsa" num="4">Abrichten|Brauer|Feinmechanik|Glaskunst|Grobschmied|Holzbearbeitung|Instrumentenbauer|Lehren|Malen/Zeichnen|Maurer|Metallguss|Pflanzenkunde|Schätzen|Schnaps Brennen|Schneidern|Seiler|Steinmetz|Steinschneider/Juwelier|Stellmacher|Stoffe Färben|Tätowieren|Tierkunde|Töpfern|Webkunst|Winzer|Zimmermann|Heilkunde Gift|Heilkunde Krankheiten|Heilkunde Seele|Heilkunde Wunden</wahl>

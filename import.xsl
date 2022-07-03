@@ -10,10 +10,10 @@
   <xsl:param name="min_kampf" as="xs:integer" select="12"/>
   <xsl:param name="min_koerper" as="xs:integer" select="17"/>
   <xsl:param name="min_gesellschaft" as="xs:integer" select="10"/>
-  <xsl:param name="min_natur" as="xs:integer" select="7"/>
-  <xsl:param name="min_wissen" as="xs:integer" select="17"/>
+  <xsl:param name="min_natur" as="xs:integer" select="10"/>
+  <xsl:param name="min_wissen" as="xs:integer" select="16"/>
   <xsl:param name="min_sprachen" as="xs:integer" select="10"/>
-  <xsl:param name="min_handwerk" as="xs:integer" select="15"/>
+  <xsl:param name="min_handwerk" as="xs:integer" select="13"/>
   <xsl:param name="min_waffen_nk" as="xs:integer" select="5"/>
   <xsl:param name="min_waffen_fk" as="xs:integer" select="3"/>
   <xsl:param name="min_schilde" as="xs:integer" select="2"/>
@@ -438,7 +438,10 @@ Talente.Koerper {</xsl:text><xsl:apply-templates select="$koerper" mode="koerper
 Talente.Gesellschaft {</xsl:text><xsl:apply-templates select="$gesellschaft"/><xsl:text>
 }
 
-Talente.Natur {</xsl:text><xsl:apply-templates select="$natur"/><xsl:text>
+Talente.Natur {</xsl:text>
+  <xsl:apply-templates select="$natur"/>
+  <xsl:apply-templates select="../ausrüstungen" mode="meta"/>
+<xsl:text>
 }
 
 Talente.Wissen {</xsl:text><xsl:apply-templates select="$wissen"/><xsl:text>
@@ -582,6 +585,24 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
     <xsl:value-of select="concat(dsa:talentname(.), ', ', dsa:probe(@probe), ', ', @value)"/>
     <xsl:apply-templates select="." mode="spezialisierungen"/>
     <xsl:text>},</xsl:text>
+  </xsl:template>
+  
+  <xsl:template match="ausrüstungen" mode="meta">
+    <xsl:variable name="jw" select="heldenausruestung[@name='jagtwaffe' and @set='0']"/>
+    <xsl:if test="$jw and ../talentliste/talent[@name='Tierkunde'] and ../talentliste/talent[@name='Fährtensuchen']">
+      <xsl:text>
+  Meta {"Pirschjagd", "MU", "IN", "GE", {"Wildnisleben", "Tierkunde", "Fährtensuchen", "Schleichen", </xsl:text>
+      <xsl:variable name="ha" select="heldenausruestung[@name=concat('fkwaffe', $jw/@nummer) and @set='0']"/>
+      <xsl:value-of select="concat('&quot;', $ha/@talent, '&quot;')"/>
+      <xsl:text>}},</xsl:text>
+      <xsl:text>
+    Meta {"Ansitzjagd", "MU", "IN", "GE", {"Wildnisleben", "Tierkunde", "Fährtensuchen", "Sich Verstecken", </xsl:text>
+      <xsl:value-of select="concat('&quot;', $ha/@talent, '&quot;')"/>
+      <xsl:text>}},</xsl:text>
+    </xsl:if>
+    <xsl:if test="../talentliste/talent[@name='Pflanzenkunde']">
+    Meta {"Nahrung Sammeln / Kräuter Suchen", "MU", "IN", "FF", {"Wildnisleben", "Sinnenschärfe", "Pflanzenkunde"}},
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="talent" mode="sprachen-schriften">
@@ -944,7 +965,7 @@ SF.Magisch {
           <xsl:value-of select="dsa:stringVal($meta/@tp)"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>{}</xsl:text>
+          <xsl:text>""</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </func:result>

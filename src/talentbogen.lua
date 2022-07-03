@@ -1,5 +1,6 @@
 local schema = require("schema")
 local data = require("data")
+local common = require("common")
 
 local talent = {}
 
@@ -19,6 +20,8 @@ function talent.render(value)
     talent.sprache(value, "")
   elseif mt.name == "Schrift" then
     talent.schrift(value)
+  elseif mt.name == "Meta" then
+    talent.meta(value)
   else
     talent.sonstige(value)
   end
@@ -155,6 +158,36 @@ function talent.schrift(v, mod)
   for i=3,4 do
     tex.sprint("& ")
     tex.sprint(-2, v[i])
+  end
+end
+
+function talent.meta(v)
+  tex.sprint([[& \hspace{-8pt}\faShapes{} ]])
+  tex.sprint(-2, v[1])
+  tex.sprint(" & ")
+  for i=2,4 do
+    tex.sprint(-2, v[i])
+    tex.sprint(" & ")
+  end
+  local sum = 0
+  for _, tn in ipairs(v[5]) do
+    for _, g in ipairs({"Gaben", "Kampf", "Koerper", "Gesellschaft", "Natur", "Wissen", "SprachenUndSchriften", "Handwerk"}) do
+      for _, t in ipairs(data.Talente[g]) do
+        if t.Name == tn then
+          if type(t.TaW) == "number" and sum ~= nil then
+            sum = sum + t.TaW
+          else
+            sum = nil
+          end
+          goto found
+        end
+      end
+    end
+    tex.error("[Naturtalente] Metatalent '" .. v[1] .. "' referenziert unbekanntes Talent '" .. tn .. "'")
+    ::found::
+  end
+  if sum ~= nil and #v[5] > 0 then
+    tex.sprint(-2, common.round(sum / #v[5]))
   end
 end
 

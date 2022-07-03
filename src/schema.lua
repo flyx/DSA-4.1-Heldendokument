@@ -107,10 +107,10 @@ function schema.Layout.example(printer)
     Kampf(13),
     Koerper(17),
     Gesellschaft(9),
-    Natur(7),
-    Wissen(17),
+    Natur(10),
+    Wissen(16),
     SprachenUndSchriften(10),
-    Handwerk(15)
+    Handwerk(13)
   },
   Kampfbogen {},
   Ausruestungsbogen {},
@@ -319,6 +319,10 @@ d.Row:def({name = "KoerperTalent", description = "Ein Talent aus der Gruppe der 
   {"Name", String}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""}, {"BE", Behinderung, ""}, {"TaW", OptNum, {}}, {"Spezialisierungen", Spezialisierungen, {}})
 d.Row:def({name = "Talent", description = "Ein allgemeines Talent."},
   {"Name", String}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""}, {"TaW", OptNum, {}}, {"Spezialisierungen", Spezialisierungen, {}})
+d.List:def({name = "Talentreferenzen", description = "Liste von Talenten (referenziert über deren Namen), aus denen sich ein Metatalent zusammensetzt"}, {String})
+d.Row:def({name = "Meta", description = "Ein Metatalent."},
+  {"Name", String}, {"Probe1", BasisEig, ""}, {"Probe2", BasisEig, ""}, {"Probe3", BasisEig, ""},
+  {"Talente", schema.Talentreferenzen, {}})
 
 d.List:def({name = "Familie", description = "Liste von Sprachen oder Schriften in einer Familie."}, {String})
 d.Row:def({name = "Muttersprache", description = "Die Muttersprache des Helden. Anders als andere Sprachen definiert eine Muttersprache Listen der verwandten Sprachen und Schriften, welche nicht ausgegeben werden, sondern nur zur Berechnung der Steigerungsschwierigkeit anderer Sprachen und Schriften dienen."},
@@ -358,7 +362,7 @@ schema.Talente = {
     {"Menschenkenntnis", "KL", "IN", "CH"},
     {"Überreden",        "MU", "IN", "CH"},
   },
-  Natur = d:singleton(d.List, {name = "Talente.Natur", description = "Liste von Naturtalenten."}, {schema.Talent}) {
+  Natur = d:singleton(d.List, {name = "Talente.Natur", description = "Liste von Naturtalenten und Metatalenten.", item_name = "NaturTalent"}, {schema.Talent, schema.Meta}) {
     {"Fährtensuchen", "KL", "IN", "IN"},
     {"Orientierung",  "KL", "IN", "IN"},
     {"Wildnisleben",  "IN", "GE", "KO"},
