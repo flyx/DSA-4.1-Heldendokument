@@ -799,7 +799,7 @@
       <w name="Stabschleuder" tp="1W+3" rw="0/5/20/40/60" tprw="-/0/0/0/0" laden="2" />
       <w name="Wurfspeer" tp="1W+4" rw="5/10/15/25/40" tprw="+3/+1/0/-1/-1" verminderteWS="1"/>
     </fernkampf>
-    <fernkampf typ="Wurfbeil">
+    <fernkampf typ="Wurfbeile">
       <w name="Schneidzahn" tp="1W+4" rw="0/5/10/15/30" tprw="-/+1/+1/0/-1" />
       <w name="Wurfbeil" tp="1W+3" rw="0/5/10/15/25" tprw="-/+1/+1/0/-1" />
       <w name="Wurfkeule" tp="2W+4(A)" rw="0/5/15/25/40" tprw="-/+1/+1/+1/0" />

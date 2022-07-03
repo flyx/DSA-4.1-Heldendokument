@@ -1155,7 +1155,7 @@ Waffen.Fernkampf {</xsl:text>
         <xsl:when test="$explicit">
           <xsl:value-of select="$explicit/@aktionen"/>
         </xsl:when>
-        <xsl:when test="$meta">
+        <xsl:when test="$meta/@laden">
           <xsl:value-of select="$meta/@laden"/>
         </xsl:when>
         <xsl:otherwise><xsl:text>{}</xsl:text></xsl:otherwise>
