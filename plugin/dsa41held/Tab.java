@@ -19,7 +19,7 @@ public class Tab extends JPanel implements ChangeListener {
     MirakelLine(String talent) {
       super(BoxLayout.LINE_AXIS);
       this.setAlignmentX(Component.LEFT_ALIGNMENT);
-      var val = props.mirakel.get(talent);
+      var val = mirakel.data.get(talent);
       if (val == null) {
         button = new JButton(" ");
       } else switch (val) {
@@ -38,21 +38,21 @@ public class Tab extends JPanel implements ChangeListener {
       button.setPreferredSize(size);
       button.setMaximumSize(size);
       button.addActionListener(e -> {
-        var cur = props.mirakel.get(talent);
+        var cur = mirakel.data.get(talent);
         if (cur == null) {
-          props.mirakel.put(talent, Props.Mirakel.PLUS);
+          mirakel.data.put(talent, Mirakel.Art.PLUS);
           button.setText("+");
         } else switch (cur) {
           case PLUS:
-            props.mirakel.put(talent, Props.Mirakel.MINUS);
+            mirakel.data.put(talent, Mirakel.Art.MINUS);
             button.setText("-");
             break;
           case MINUS:
-            props.mirakel.remove(talent);
+            mirakel.data.remove(talent);
             button.setText(" ");
             break;
         }
-        props.save(Plugin.dai);
+        mirakel.save();
       });
       this.add(button);
       
@@ -62,13 +62,14 @@ public class Tab extends JPanel implements ChangeListener {
   }
 
   private Box box;
-  private Props props;
+  private Mirakel mirakel;
+  private Talentbogen tb;
   private boolean hasFocus;
   
   public Tab(DatenAustausch3Interface dai) {
     this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
     
-    this.props = new Props(dai);
+    this.mirakel = new Mirakel();
     this.box = Box.createVerticalBox();
     this.hasFocus = false;
     
@@ -77,11 +78,28 @@ public class Tab extends JPanel implements ChangeListener {
       JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     sp.setBorder(BorderFactory.createTitledBorder("Mirakel"));
     this.add(sp);
-    this.add(Box.createHorizontalGlue());
-    this.updateList(dai);
+    this.updateMirakel(dai);
+    
+    this.tb = new Talentbogen();
+    tb.load();
+    final JTable table = new JTable(tb);
+    final JScrollPane tsp = new JScrollPane(table);
+    table.setFillsViewportHeight(true);
+    table.setDragEnabled(true);
+    table.setDropMode(DropMode.INSERT_ROWS);
+    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    table.setTransferHandler(new Talentbogen.DragHandler(table));
+    
+    final var tbb = Box.createVerticalBox();
+    tbb.setBorder(BorderFactory.createTitledBorder("Talentgruppen"));
+    final var label = new JLabel("<html>Du kannst hier die Tabellen auf dem Talentbogen modifizieren. Die Anzahl Zeilen pro Tabelle ist editierbar; bedenke jedoch, dass immer mindestens so viele Zeilen ausgegeben werden wie Talente bekannt sind. Du kannst die Reihenfolge mittels drag & drop editieren; die gegebene Reihenfolge wird automatisch zuerst in die linke und dann in die rechte Spalte des Talentbogens verteilt.</html>");
+    label.setPreferredSize(new Dimension(70, 90));
+    tbb.add(label);
+    tbb.add(tsp);
+    this.add(tbb);
   }
   
-  private void updateList(DatenAustausch3Interface dai) {
+  private void updateMirakel(DatenAustausch3Interface dai) {
     this.box.removeAll();
     Document held = Plugin.getHeld();
     if (held == null) return;
@@ -99,24 +117,23 @@ public class Tab extends JPanel implements ChangeListener {
     }
   }
   
+  private void refresh() {
+    mirakel.load();
+    updateMirakel(Plugin.dai);
+    tb.load();
+  }
+  
   @Override
   public void stateChanged(ChangeEvent e) {
     if (e.getSource().equals("Focus")) {
       hasFocus = true;
-      props.load(Plugin.dai);
-      updateList(Plugin.dai);
+      refresh();
     } else if (e.getSource().equals("Kein Focus")) {
       hasFocus = false;
     } else if (e.getSource().equals("Änderung")) {
-      if (hasFocus) {
-        props.load(Plugin.dai);
-        updateList(Plugin.dai);
-      }
+      if (hasFocus) refresh();
     } else if (e.getSource().equals("neuer Held")) {
-      if (hasFocus) {
-        props.load(Plugin.dai);
-        updateList(Plugin.dai);
-      }
+      if (hasFocus) refresh();
     }
   }
 }

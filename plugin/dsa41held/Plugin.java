@@ -147,4 +147,42 @@ public class Plugin implements HeldenXMLDatenPlugin3 {
     final org.w3c.dom.Document doc = (org.w3c.dom.Document) dai.exec(request);
     return doc;
   }
+  
+  public static String getHeldData(String name) {
+    Document request;
+    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    try {
+      request = factory.newDocumentBuilder().newDocument();
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+    Element requestElement = request.createElement("action");
+    request.appendChild(requestElement);
+    requestElement.setAttribute("action", "getHeldProperties");
+    requestElement.setAttribute("heldenkey", "selected");
+    requestElement.setAttribute("key", "dsa41held-" + name);
+    Document doc = (Document) dai.exec(request);
+    String value = (doc == null) ? "" : doc.getChildNodes().item(0).getTextContent();
+    System.out.println("getHeldData(\"" + name + "\") -> \"" + value + "\"");
+    return value;
+  }
+  
+  public static void setHeldData(String name, String content) {
+    Document request;
+    final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    try {
+      request = factory.newDocumentBuilder().newDocument();
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+    
+    final Element actionElement = request.createElement("action");
+    request.appendChild(actionElement);
+    actionElement.setAttribute("action", "setHeldProperties");
+    actionElement.setAttribute("heldenkey", "selected");
+    actionElement.setAttribute("key", "dsa41held-" + name);
+    actionElement.setTextContent(content);  
+    final Document ret = (org.w3c.dom.Document) dai.exec(request);
+    System.out.println("setHeldData(\"" + name + "\", \"" + content + "\")");
+  }
 }
