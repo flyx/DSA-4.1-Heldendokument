@@ -13,13 +13,13 @@ import javax.xml.xpath.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-public class Tab extends JPanel implements ChangeListener {
+public class Tab extends JPanel {
   private class MirakelLine extends Box {
     private JButton button;
     MirakelLine(String talent) {
       super(BoxLayout.LINE_AXIS);
       this.setAlignmentX(Component.LEFT_ALIGNMENT);
-      var val = mirakel.data.get(talent);
+      var val = data.mirakel.data.get(talent);
       if (val == null) {
         button = new JButton(" ");
       } else switch (val) {
@@ -38,21 +38,21 @@ public class Tab extends JPanel implements ChangeListener {
       button.setPreferredSize(size);
       button.setMaximumSize(size);
       button.addActionListener(e -> {
-        var cur = mirakel.data.get(talent);
+        var cur = data.mirakel.data.get(talent);
         if (cur == null) {
-          mirakel.data.put(talent, Mirakel.Art.PLUS);
+          data.mirakel.data.put(talent, Mirakel.Art.PLUS);
           button.setText("+");
         } else switch (cur) {
           case PLUS:
-            mirakel.data.put(talent, Mirakel.Art.MINUS);
+            data.mirakel.data.put(talent, Mirakel.Art.MINUS);
             button.setText("-");
             break;
           case MINUS:
-            mirakel.data.remove(talent);
+            data.mirakel.data.remove(talent);
             button.setText(" ");
             break;
         }
-        mirakel.save();
+        data.save();
       });
       this.add(button);
       
@@ -62,14 +62,13 @@ public class Tab extends JPanel implements ChangeListener {
   }
 
   private Box box;
-  private Mirakel mirakel;
-  private Talentbogen tb;
+  private Data data;
   private boolean hasFocus;
   
-  public Tab(DatenAustausch3Interface dai) {
+  public Tab(DatenAustausch3Interface dai, Data data) {
     this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
     
-    this.mirakel = new Mirakel();
+    this.data = data;
     this.box = Box.createVerticalBox();
     this.hasFocus = false;
     
@@ -80,9 +79,7 @@ public class Tab extends JPanel implements ChangeListener {
     this.add(sp);
     this.updateMirakel(dai);
     
-    this.tb = new Talentbogen();
-    tb.load();
-    final JTable table = new JTable(tb);
+    final JTable table = new JTable(data.talentbogen);
     final JScrollPane tsp = new JScrollPane(table);
     table.setFillsViewportHeight(true);
     table.setDragEnabled(true);
@@ -117,23 +114,12 @@ public class Tab extends JPanel implements ChangeListener {
     }
   }
   
-  private void refresh() {
-    mirakel.load();
-    updateMirakel(Plugin.dai);
-    tb.load();
+  public void refresh() {
+    if (hasFocus) updateMirakel(Plugin.dai);
   }
   
-  @Override
-  public void stateChanged(ChangeEvent e) {
-    if (e.getSource().equals("Focus")) {
-      hasFocus = true;
-      refresh();
-    } else if (e.getSource().equals("Kein Focus")) {
-      hasFocus = false;
-    } else if (e.getSource().equals("Änderung")) {
-      if (hasFocus) refresh();
-    } else if (e.getSource().equals("neuer Held")) {
-      if (hasFocus) refresh();
-    }
+  public void setHasFocus(boolean value) {
+    hasFocus = value;
+    refresh();
   }
 }

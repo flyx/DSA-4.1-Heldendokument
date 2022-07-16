@@ -4,6 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.io.File;
 
 public class Dialog extends JDialog {
   private JFrame hf;
@@ -46,8 +47,14 @@ public class Dialog extends JDialog {
           Dialog.this.pack();
         } else {
           Dialog.this.setVisible(false);
-          new GeneratePDF(Dialog.this.hf, url);
-          Dialog.this.dispose();
+          var chooser = new JFileChooser();
+          chooser.setDialogTitle("Speichern unter");
+          chooser.setSelectedFile(new File(Plugin.getHeldName().replaceAll("\\W+", "") + ".pdf"));
+          
+          if (chooser.showSaveDialog(new JFrame()) == JFileChooser.APPROVE_OPTION) {
+            new GeneratePDF(Dialog.this.hf, url, chooser.getSelectedFile());
+            Dialog.this.dispose();
+          }
         }
       });
       add(generate);

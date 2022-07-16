@@ -9,6 +9,9 @@ import javax.swing.JTable;
 
 import java.util.ArrayList;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 public class Talentbogen extends AbstractTableModel {
   static enum Gruppe {
     SONDERFERTIGKEITEN, GABEN, BEGABUNGEN, KAMPF, KOERPER, GESELLSCHAFT, NATUR, WISSEN, SPRACHEN, HANDWERK;
@@ -108,6 +111,40 @@ public class Talentbogen extends AbstractTableModel {
     Plugin.setHeldData("talentgruppen", builder.toString());
   }
   
+  public Element toXML(Document doc) {
+    final var root = doc.createElement("talentbogen");
+    for (final var item : data) {
+      final var group = doc.createElement("gruppe");
+      group.setAttribute("id", item.g.label());
+      group.setAttribute("zeilen", String.valueOf(item.zeilen));
+      root.appendChild(group);
+    }
+    return root;
+  }
+  
+  public void fromXML(Element input) {
+    final var expected = new ArrayList<Gruppe>();
+    for (var g : Gruppe.values()) expected.add(g);
+    
+    int pos = 0;
+    for (int i = 0; i < input.getChildNodes().getLength(); i++) {
+      Element cur = (Element) input.getChildNodes().item(i);
+      var g = Gruppe.from(cur.getAttribute("gruppe"));
+      var zeilen = Integer.parseInt(cur.getAttribute("zeilen"));
+      if (expected.remove(g)) {
+        data[pos].g = g;
+        data[pos].zeilen = zeilen;
+        pos++;
+      }
+    }
+    for (final var g : expected) {
+      data[pos].g = g;
+      data[pos].zeilen = g.defaultZeilen();
+      pos++;
+    }
+    fireTableDataChanged();
+  }
+  
   // AbstractTableModel implementation
   
   @Override
@@ -151,8 +188,8 @@ public class Talentbogen extends AbstractTableModel {
   @Override
   public void setValueAt(Object value, int row, int col) {
     data[row].zeilen = (Integer) value;
+    Plugin.data.save();
     fireTableCellUpdated(row, col);
-    save();
   }
   
   // TransferHandler implementation 
@@ -208,7 +245,7 @@ public class Talentbogen extends AbstractTableModel {
         }
       }
       tb.data[index] = item;
-      tb.save();
+      Plugin.data.save();
       tb.fireTableDataChanged();
       return true;
     }
