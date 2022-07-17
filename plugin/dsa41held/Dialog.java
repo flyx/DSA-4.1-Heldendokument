@@ -16,6 +16,7 @@ public class Dialog extends JDialog {
   
     {
       url = new JTextField(35);
+      url.setText(Plugin.props.getServerUrl());
       urlError = new JLabel("ungültige URL");
       urlError.setForeground(Color.RED);
     
@@ -52,6 +53,8 @@ public class Dialog extends JDialog {
           chooser.setSelectedFile(new File(Plugin.getHeldName().replaceAll("\\W+", "") + ".pdf"));
           
           if (chooser.showSaveDialog(new JFrame()) == JFileChooser.APPROVE_OPTION) {
+            Plugin.props.setServerUrl(Dialog.this.form.url.getText());
+          
             new GeneratePDF(Dialog.this.hf, url, chooser.getSelectedFile());
             Dialog.this.dispose();
           }

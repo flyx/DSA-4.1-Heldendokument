@@ -15,6 +15,8 @@ public class Data implements ChangeListener {
   final public Talentbogen talentbogen = new Talentbogen();
   final public Mirakel mirakel = new Mirakel();
   
+  private boolean hasFocus = false;
+  
   private Element getOrEmpty(Document doc, String tagName) {
     var list = doc.getElementsByTagName(tagName);
     return list.getLength() == 0 ? doc.createElement(tagName) : (Element) list.item(0);
@@ -62,15 +64,19 @@ public class Data implements ChangeListener {
   public void stateChanged(ChangeEvent e) {
     switch ((String) e.getSource()) {
     case "Focus":
-      Plugin.tab.setHasFocus(true);
+      // Talente können sich ändern, wenn Tab nicht den Fokus hat.
+      mirakel.updateTalente();
+      load();
+      hasFocus = true;
       break;
     case "Kein Focus":
-      Plugin.tab.setHasFocus(false);
+      hasFocus = false;
       break;
-    case "Änderung":
     case "neuer Held":
-      load();
-      Plugin.tab.refresh();
+      if (hasFocus) mirakel.updateTalente();
+      // fallthrough
+    case "Änderung":
+      if (hasFocus) load();
       break;
     }
   }

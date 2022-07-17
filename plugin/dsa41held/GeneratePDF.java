@@ -77,9 +77,7 @@ public class GeneratePDF extends JDialog {
         WebSocket ws = HttpClient.newHttpClient().newWebSocketBuilder()
           .header("Origin", baseUrl.toString())
           .buildAsync(uri, this).join();
-        System.out.println("[ws] opened to " + uri.toString());
         ws.sendBinary(ByteBuffer.wrap(luaData), true).join();
-        System.out.println("[ws] sent lua data");
         latch.await();
       } catch (ConnectException e) {
         msg = String.format("Konnte keine Verbindung zu %s aufbauen", uri.toString());
@@ -93,7 +91,6 @@ public class GeneratePDF extends JDialog {
     @Override
     protected void process(List<Integer> chunks) {
       var progress = chunks.get(chunks.size() - 1);
-      System.out.println("progress: " + String.valueOf(progress));
       if (progress == 101) {
         if (unexpectedEx != null) {
           dispose();
@@ -112,7 +109,7 @@ public class GeneratePDF extends JDialog {
     
     @Override
     public void onError(WebSocket ws, Throwable error) {
-      System.out.println("[ws] error:");
+      System.out.println("[WebSocket] error:");
       error.printStackTrace();
       WebSocket.Listener.super.onError(ws, error);
     }

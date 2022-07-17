@@ -76,41 +76,6 @@ public class Talentbogen extends AbstractTableModel {
     }
   }
   
-  public void load() {
-    final var expected = new ArrayList<Gruppe>();
-    for (var g : Gruppe.values()) expected.add(g);
-  
-    int pos = 0;
-    for (final var input : Plugin.getHeldData("talentgruppen").split("\\|")) {
-      var parts = input.split(":");
-      var g = Gruppe.from(parts[0]);
-      var index = expected.indexOf(g);
-      if (index != -1) {
-        data[pos].g = g;
-        data[pos].zeilen = Integer.parseInt(parts[1]);
-        pos++;
-        expected.remove(index);
-      }
-    }
-    for (final var g : expected) {
-      data[pos].g = g;
-      data[pos].zeilen = g.defaultZeilen();
-      pos++;
-    }
-    fireTableDataChanged();
-  }
-  
-  public void save() {
-    var builder = new StringBuilder();
-    for (final var item : data) {
-      if (builder.length() > 0) builder.append("|");
-      builder.append(item.g.label());
-      builder.append(":");
-      builder.append(item.zeilen);
-    }
-    Plugin.setHeldData("talentgruppen", builder.toString());
-  }
-  
   public Element toXML(Document doc) {
     final var root = doc.createElement("talentbogen");
     for (final var item : data) {
@@ -129,8 +94,9 @@ public class Talentbogen extends AbstractTableModel {
     int pos = 0;
     for (int i = 0; i < input.getChildNodes().getLength(); i++) {
       Element cur = (Element) input.getChildNodes().item(i);
-      var g = Gruppe.from(cur.getAttribute("gruppe"));
+      var g = Gruppe.from(cur.getAttribute("id"));
       var zeilen = Integer.parseInt(cur.getAttribute("zeilen"));
+      
       if (expected.remove(g)) {
         data[pos].g = g;
         data[pos].zeilen = zeilen;

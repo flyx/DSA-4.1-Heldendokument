@@ -21,13 +21,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-/**
- * Diese Klasse hat absichtlich keine absurd klobigen und nutzlosen JavaDoc-Kommentare.
- */
+/** Basis-Klasse des Plugins. Praktisch ein Singleton. */
 public class Plugin implements HeldenXMLDatenPlugin3 {
   public static DatenAustausch3Interface dai;
   public static Tab tab;
   public static Data data;
+  public static Props props;
   private JFrame hf;
   
   public Plugin() {
@@ -102,8 +101,10 @@ public class Plugin implements HeldenXMLDatenPlugin3 {
     this.hf = hf;
     this.data = new Data();
     this.data.load();
+    this.data.mirakel.updateTalente();
     dai.addChangeListener(this.data);
     this.tab = new Tab(dai, data);
+    this.props = new Props(dai);
   }
   
   public static org.w3c.dom.Document getHeld() {
@@ -128,9 +129,8 @@ public class Plugin implements HeldenXMLDatenPlugin3 {
     var held = getHeld();
     try {
       XPath xPath = XPathFactory.newInstance().newXPath();
-      String expression = "/daten/angaben/name";
-      var name = (Node)xPath.compile(expression).evaluate(held, XPathConstants.NODE);
-      return name.getTextContent();
+      String expression = "/daten/angaben/name/text()";
+      return xPath.compile(expression).evaluate(held);
     } catch (Exception e) {
       e.printStackTrace();
       return null;
