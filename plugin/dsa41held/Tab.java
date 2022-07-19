@@ -161,9 +161,39 @@ public class Tab extends JPanel {
       });
     }
   }
+  
+  private class Silhouette extends JPanel {
+    JComboBox sCombo;
+    JComboBox vCombo;
+    
+    Silhouette() {
+      setBorder(BorderFactory.createTitledBorder("Silhouette"));
+      setLayout(new GridLayout(0, 2));
+      
+      add(new JLabel("Name:"));
+      add(new JLabel("Variante:"));
+      
+      sCombo = new JComboBox(data.silhouette.werte);
+      sCombo.setSelectedIndex(data.silhouette.silhouette);
+      sCombo.addActionListener(e -> {
+        data.silhouette.silhouette = sCombo.getSelectedIndex();
+        data.save();
+      });
+      add(sCombo);
+      
+      vCombo = new JComboBox(data.silhouette.varianten);
+      vCombo.setSelectedIndex(data.silhouette.variante);
+      vCombo.addActionListener(e -> {
+        data.silhouette.variante = vCombo.getSelectedIndex();
+        data.save();
+      });
+      add(vCombo);
+    }
+  }
 
   private Box box;
   private Data data;
+  private Silhouette silhouette;
   
   public Tab(DatenAustausch3Interface dai, Data data) {
     this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
@@ -177,11 +207,20 @@ public class Tab extends JPanel {
     
     final var tbb = Box.createVerticalBox();
     tbb.setBorder(BorderFactory.createTitledBorder("Talentgruppen"));
-    final var label = new JLabel("<html>Du kannst hier die Tabellen auf dem Talentbogen modifizieren. Die Anzahl Zeilen pro Tabelle ist editierbar; bedenke jedoch, dass immer mindestens so viele Zeilen ausgegeben werden wie Talente bekannt sind. Du kannst die Reihenfolge mittels drag & drop editieren; die gegebene Reihenfolge wird automatisch zuerst in die linke und dann in die rechte Spalte des Talentbogens verteilt.</html>");
-    label.setPreferredSize(new Dimension(70, 90));
+    final var label = new JLabel("Reihenfolge editierbar per Drag & Drop");
     tbb.add(label);
     final JScrollPane tsp = new JScrollPane(new TalentgruppenTable(data.talentbogen));
     tbb.add(tsp);
-    this.add(tbb);
+    this.box.add(tbb);
+    
+    this.silhouette = new Silhouette();
+    this.box.add(this.silhouette);
+    
+    this.add(this.box);
+  }
+  
+  public void refresh() {
+    this.silhouette.sCombo.setSelectedIndex(data.silhouette.silhouette);
+    this.silhouette.vCombo.setSelectedIndex(data.silhouette.variante);
   }
 }

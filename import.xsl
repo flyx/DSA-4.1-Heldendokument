@@ -34,8 +34,6 @@
   <xsl:variable name="mirakel" select="$meta/mirakel"/>
   <xsl:variable name="liturgien" select="$meta/liturgien"/>
 
-  <xsl:variable name="talentbogen" select="/helden/held[1]/plugindata/data[@name='dsa41held-']"/>
-
   <xsl:template match="/">
     <xsl:apply-templates select="helden/held[1]"/>
   </xsl:template>
@@ -43,9 +41,18 @@
   <func:function name="dsa:page">
     <xsl:param name="name"/>
     <xsl:param name="value"/>
+    <xsl:variable name="outName">
+      <xsl:choose>
+        <xsl:when test="$name = 'Körper'">Koerper</xsl:when>
+        <xsl:when test="$name = 'Sprachen'">SprachenUndSchriften</xsl:when>
+        <xsl:otherwise><xsl:value-of select="$name"/></xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
     <func:result>
-      <xsl:text>
-    </xsl:text><xsl:value-of select="concat($name, '(', $value, '),')"/>
+      <xsl:if test="not($value = '0')">
+        <xsl:text>
+    </xsl:text><xsl:value-of select="concat($outName, '(', $value, '),')"/>
+      </xsl:if>
     </func:result>
   </func:function>
 
@@ -54,8 +61,8 @@
   Front {},
   Talentliste {</xsl:text>
     <xsl:choose>
-      <xsl:when test="plugindata/data[@name='dsa41held-talentgruppen']">
-        <xsl:apply-templates select="plugindata/data[@name='dsa41held-talentgruppen']" mode="talentgruppen"/>
+      <xsl:when test="extention/dsa41held">
+        <xsl:apply-templates select="extention/dsa41held/talentbogen"/>
       </xsl:when>
       <xsl:otherwise>
         <xsl:value-of select="dsa:page('Sonderfertigkeiten', $sf_zeilen)"/>
@@ -92,7 +99,13 @@
     </xsl:choose>
     <xsl:text>
   },
-  Kampfbogen {},
+  Kampfbogen {</xsl:text>
+    <xsl:if test="extention/dsa41held/silhouette/@variante = 'Regenbogen'">
+      <xsl:text>
+    Regenbogen = true,
+  </xsl:text>
+    </xsl:if>
+  <xsl:text>},
   </xsl:text>
     <xsl:choose>
       <xsl:when test="vt/vorteil[starts-with(@name, 'Geweiht')] or sf/sonderfertigkeit[starts-with(@name, 'Spätweihe')]">
@@ -155,38 +168,10 @@ Magie.Merkmalskenntnis {
     </xsl:if>
   </xsl:template>
   
-  <func:function name="dsa:talentgruppen">
-    <xsl:param name="input"/>
-    <func:result>
-      <xsl:if test="string-length($input) &gt; 0">
-        <xsl:variable name="cur">
-          <xsl:choose>
-            <xsl:when test="contains($input, '|')">
-              <xsl:value-of select="substring-before($input, '|')"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="$input"/>
-            </xsl:otherwise>
-          </xsl:choose>
-        </xsl:variable>
-        <xsl:variable name="group" select="substring-before($cur, ':')"/>
-        <xsl:if test="not(substring-after($cur, ':') = '0')">
-          <xsl:text>
-    </xsl:text>
-          <xsl:choose>
-            <xsl:when test="$group = 'Körper'">Koerper</xsl:when>
-            <xsl:when test="$group = 'Sprachen'">SprachenUndSchriften</xsl:when>
-            <xsl:otherwise><xsl:value-of select="$group"/></xsl:otherwise>
-          </xsl:choose>
-          <xsl:value-of select="concat('(', substring-after($cur, ':'), '),')"/>
-        </xsl:if>
-        <xsl:value-of select="dsa:talentgruppen(substring-after($input, '|'))"/>
-      </xsl:if>
-    </func:result>
-  </func:function>
-  
-  <xsl:template match="data" mode="talentgruppen">
-    <xsl:value-of select="dsa:talentgruppen(text())"/>
+  <xsl:template match="talentbogen">
+    <xsl:for-each select="gruppe">
+      <xsl:value-of select="dsa:page(@id, @zeilen)"/>
+    </xsl:for-each>
   </xsl:template>
 
   <func:function name="dsa:stringVal">
@@ -1273,6 +1258,17 @@ Waffen.Ruestung {</xsl:text>
     <xsl:text>},</xsl:text>
   </xsl:template>
 
+  <func:function name="dsa:talentRef">
+    <xsl:param name="input"/>
+    <xsl:variable name="sub" select="$meta/talente/namen/sub[@von = $input]"/>
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$sub"><xsl:value-of select="dsa:stringVal($sub/@zu)"/></xsl:when>
+        <xsl:otherwise><xsl:value-of select="dsa:stringVal($input)"/></xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+
   <xsl:template match="talent" mode="liturgiekenntnis">
     <xsl:text>
 Mirakel.Liturgiekenntnis {</xsl:text>
@@ -1282,33 +1278,33 @@ Mirakel.Liturgiekenntnis {</xsl:text>
     <xsl:text>
 
 Mirakel.Plus {</xsl:text>
-    <xsl:call-template name="list-mirakel">
-      <xsl:with-param name="input">
-        <xsl:choose>
-          <xsl:when test="../../plugindata/data[@name='dsa41held-mirakel-PLUS']">
-             <xsl:value-of select="../../plugindata/data[@name='dsa41held-mirakel-PLUS']/text()"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="$mirakel/plus[@gott = $gott]/text()"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:with-param>
-    </xsl:call-template>
+    <xsl:choose>
+      <xsl:when test="../../extention/dsa41held">
+        <xsl:for-each select="../../extention/dsa41held/mirakel/plus">
+          <xsl:value-of select="concat(dsa:talentRef(@talent), ', ')"/>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="list-mirakel">
+          <xsl:with-param name="input" select="$mirakel/plus[@gott = $gott]/text()"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>}
 
 Mirakel.Minus {</xsl:text>
-    <xsl:call-template name="list-mirakel">
-      <xsl:with-param name="input">
-        <xsl:choose>
-          <xsl:when test="../../plugindata/data[@name='dsa41held-mirakel-MINUS']">
-             <xsl:value-of select="../../plugindata/data[@name='dsa41held-mirakel-MINUS']/text()"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:value-of select="$mirakel/minus[@gott = $gott]/text()"/>
-          </xsl:otherwise>
-        </xsl:choose>
-      </xsl:with-param>
-    </xsl:call-template>
+    <xsl:choose>
+      <xsl:when test="../../extention/dsa41held">
+        <xsl:for-each select="../../extention/dsa41held/mirakel/minus">
+          <xsl:value-of select="concat(dsa:talentRef(@talent), ', ')"/>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="list-mirakel">
+          <xsl:with-param name="input" select="$mirakel/plus[@gott = $gott]/text()"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>}
 </xsl:text>
   </xsl:template>
@@ -1326,11 +1322,7 @@ Mirakel.Minus {</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:variable>
-      <xsl:variable name="sub" select="$meta/talente/namen/sub[@von = $item]"/>
-      <xsl:choose>
-        <xsl:when test="$sub"><xsl:value-of select="concat(dsa:stringVal($sub/@zu), ', ')"/></xsl:when>
-        <xsl:otherwise><xsl:value-of select="concat(dsa:stringVal($item), ', ')"/></xsl:otherwise>
-      </xsl:choose>
+      <xsl:value-of select="concat(dsa:talentRef($item), ', ')"/>
       <xsl:call-template name="list-mirakel">
         <xsl:with-param name="input" select="substring-after($input, '|')"/>
       </xsl:call-template>

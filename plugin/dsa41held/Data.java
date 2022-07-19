@@ -12,8 +12,42 @@ import org.w3c.dom.Element;
  *  Singleton, wird neu befüllt wenn anderer Held ausgewählt wird.
  */
 public class Data implements ChangeListener {
+  public static class Silhouette {
+    public final static String[] werte = new String[]{"auto", "generic-m", "generic-w"};
+    public final static String[] varianten = new String[]{"Standard", "Regenbogen"};
+    
+    int silhouette = 0;
+    int variante = 0;
+    
+    public void fromXML(Element data) {
+      silhouette = 0;
+      for (int i = 0; i < werte.length; i++) {
+        if (werte[i].equals(data.getAttribute("name"))) {
+          silhouette = i;
+          break;
+        }
+      }
+      
+      variante = 0;
+      for (int i = 0; i < varianten.length; i++) {
+        if (varianten[i].equals(data.getAttribute("variante"))) {
+          variante = i;
+          break;
+        }
+      }
+    }
+    
+    public Element toXML(Document doc) {
+      var ret = doc.createElement("silhouette");
+      ret.setAttribute("name", werte[silhouette]);
+      ret.setAttribute("variante", varianten[variante]);
+      return ret;
+    }
+  }
+
   final public Talentbogen talentbogen = new Talentbogen();
   final public Mirakel mirakel = new Mirakel();
+  final public Silhouette silhouette = new Silhouette();
   
   private boolean hasFocus = false;
   
@@ -38,6 +72,7 @@ public class Data implements ChangeListener {
     Document result = (Document) Plugin.dai.exec(request);
     mirakel.fromXML(getOrEmpty(result, "mirakel"));
     talentbogen.fromXML(getOrEmpty(result, "talentbogen"));
+    silhouette.fromXML(getOrEmpty(result, "silhouette"));
   }
   
   public void save() {
@@ -55,6 +90,7 @@ public class Data implements ChangeListener {
     final Element root = request.createElement("dsa41held");
     root.appendChild(talentbogen.toXML(request));
     root.appendChild(mirakel.toXML(request));
+    root.appendChild(silhouette.toXML(request));
     action.appendChild(root);
     
     Plugin.dai.exec(request);
@@ -67,6 +103,7 @@ public class Data implements ChangeListener {
       // Talente können sich ändern, wenn Tab nicht den Fokus hat.
       mirakel.updateTalente();
       load();
+      Plugin.tab.refresh();
       hasFocus = true;
       break;
     case "Kein Focus":
@@ -76,7 +113,10 @@ public class Data implements ChangeListener {
       if (hasFocus) mirakel.updateTalente();
       // fallthrough
     case "Änderung":
-      if (hasFocus) load();
+      if (hasFocus) {
+        load();
+        Plugin.tab.refresh();
+      }
       break;
     }
   }
