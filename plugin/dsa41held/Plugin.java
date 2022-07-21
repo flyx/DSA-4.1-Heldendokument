@@ -27,6 +27,7 @@ public class Plugin implements HeldenXMLDatenPlugin3 {
   public static Tab tab;
   public static Data data;
   public static Props props;
+  public static DockerRunner dockerRunner;
   private JFrame hf;
   
   public Plugin() {
@@ -105,6 +106,7 @@ public class Plugin implements HeldenXMLDatenPlugin3 {
     dai.addChangeListener(this.data);
     this.tab = new Tab(dai, data);
     this.props = new Props(dai);
+    this.dockerRunner = new DockerRunner();
   }
   
   public static org.w3c.dom.Document getHeld() {

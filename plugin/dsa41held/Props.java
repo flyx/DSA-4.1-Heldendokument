@@ -11,6 +11,7 @@ import helden.plugin.datenxmlplugin.DatenAustausch3Interface;
 /** Globale Properties des Plugins */
 public class Props {
   private String serverUrl;
+  private int serverSelection;
   
   private String propVal(Document doc, String name) {
     try {
@@ -32,6 +33,7 @@ public class Props {
       requestElement.setAttribute("pluginName", "dsa41held");
       var res = (Document) dai.exec(request);
       serverUrl = propVal(res, "serverUrl");
+      serverSelection = "1".equals(propVal(res, "serverSelection")) ? 1 : 0;
     } catch (Exception ex) {
       ex.printStackTrace();
       serverUrl = "";
@@ -40,6 +42,15 @@ public class Props {
 
   public String getServerUrl() {
     return serverUrl;
+  }
+  
+  public int getServerSelection() {
+    return serverSelection;
+  }
+  
+  public void setServerSelection(int value) {
+    serverSelection = value;
+    save();
   }
   
   public void setServerUrl(String value) {
@@ -62,6 +73,7 @@ public class Props {
       action.setAttribute("action", "saveProperties");
       action.setAttribute("pluginName", "dsa41held");
       action.appendChild(propEl(request, "serverUrl", serverUrl));
+      action.appendChild(propEl(request, "serverSelection", String.valueOf(serverSelection)));
       Plugin.dai.exec(request);
     } catch (Exception ex) {
       ex.printStackTrace();

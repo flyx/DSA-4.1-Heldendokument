@@ -46,6 +46,7 @@
         root = ./.;
         exclude = [ ./flake.nix ./flake.lock ./Readme.md ./Makefile ./dsa41held.sh.nix ./build.dockerfile ./plugin ];
       };
+      build-dockerfile = ./build.dockerfile;
     in {
       packages = with pkgs; rec {
         silhouette = stdenvNoCC.mkDerivation rec {
@@ -158,7 +159,8 @@
           buildPhase = ''
             shopt -s globstar
             ${jdk11}/bin/javac **/*.java
-            ${jdk11}/bin/jar cMf dsa41held.jar **/*.class META-INF
+            cp ${build-dockerfile} ./build.dockerfile
+            ${jdk11}/bin/jar cMf dsa41held.jar **/*.class META-INF build.dockerfile
           '';
           installPhase = ''
             cp dsa41held.jar $out
