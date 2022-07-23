@@ -87,7 +87,7 @@
     <div id="commands">
       <section class="command">
         <h2>Importiere aus der Heldensoftware</h2>
-        <form method="post" action="/import" id="import-form" enctype="multipart/form-data" class="content">
+        <form method="post" action="import" id="import-form" enctype="multipart/form-data" class="content">
           <label for="data">XML-Datei:</label>
           <input id="import" type="file" name="data" />
         </form>
@@ -104,9 +104,9 @@
       <section class="command">
         <h2>Lade ein Template</h2>
         <ul class="content">
-          <li><a role="button" download="profan.lua" href="/profan">Profan</a></li>
-          <li><a role="button" download="geweiht.lua" href="/geweiht">Geweiht</a></li>
-          <li><a role="button" download="magier.lua" href="/magier">Magier</a></li>
+          <li><a role="button" download="profan.lua" href="profan">Profan</a></li>
+          <li><a role="button" download="geweiht.lua" href="geweiht">Geweiht</a></li>
+          <li><a role="button" download="magier.lua" href="magier">Magier</a></li>
         </ul>
       </section>
       <section class="command">
@@ -158,7 +158,7 @@
         e.preventDefault();
         output.innerText = "";
         const formData = new FormData(eventForm);
-        fetch("/events", {
+        fetch("events", {
           method: "POST",
           body: formData,
         }).then((resp) => {
@@ -173,7 +173,11 @@
         const progress = document.getElementById("progress");
         const loc = window.location;
         let ws_uri = (loc.protocol === "https:") ? "wss:" : "ws:";
-        ws_uri += "//" + loc.host + "/process";
+        if (loc.pathname.endsWith("/")) {
+          ws_uri += "//" + loc.host + loc.pathname + "process";
+        } else {
+          ws_uri += "//" + loc.host + loc.pathname + "/process";
+        }
         if (document.getElementById("white").checked) {
           ws_uri += "?white";
         }
