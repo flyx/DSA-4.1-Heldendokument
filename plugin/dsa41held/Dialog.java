@@ -101,7 +101,7 @@ public class Dialog extends JDialog {
         add(button, cell(1, 1));
       }
       add(new JLabel("Container"), cell(0, 2));
-      runButton = new JButton("Start");
+      runButton = new JButton(Plugin.dockerRunner.isRunning() ? "Stop" : "Start");
       runButton.addActionListener(e -> {
         if (Plugin.dockerRunner.isRunning()) {
           Plugin.dockerRunner.stop();

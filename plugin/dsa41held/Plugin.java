@@ -11,6 +11,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+import java.lang.Runtime;
+
 import javax.xml.transform.*;
 import javax.xml.transform.dom.*;
 import javax.xml.transform.stream.StreamResult;
@@ -107,6 +109,12 @@ public class Plugin implements HeldenXMLDatenPlugin3 {
     this.tab = new Tab(dai, data);
     this.props = new Props(dai);
     this.dockerRunner = new DockerRunner();
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      @Override
+      public void run() {
+        dockerRunner.stop();
+      }
+    });
   }
   
   public static org.w3c.dom.Document getHeld() {

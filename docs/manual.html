@@ -17,23 +17,38 @@
   <article class="doc">
     <section>
       <h1>DSA 4.1 Heldendokument: Installation &amp; Bedienung</h1>
-      <p>Der Generator des Heldendokuments unterstützt <strong>macOS</strong> und <strong>Linux</strong>.
-         Das Webinterface lässt sich in einem Docker-Container auch unter <strong>Windows</strong> betreiben.
-         Um den Generator auf der Kommandozeile zu benutzen, müssen Windows-Nutzer auf <a href="https://docs.microsoft.com/en-us/windows/wsl/about">WSL</a> zurückgreifen, was hier nicht erläutert wird.</p>
-      
-      <p>Der Generator benutzt verschiedene Werke, die zwar kostenlos aus dem Internet geladen werden können, deren Lizenz aber keine Weiterverbreitung erlaubt.
-      Aus diesem Grund kann der fertige Generator nicht zum Download angeboten werden.
-      Statt dessen wird ein Script zur Verfügung gestellt, mit dem du den Generator vollautomatisch auf deinem PC bauen kannst.
-      Das Script lädt alle relevanten Dateien aus dem Internet und erstellt dir daraus den Generator.</p>
+      <p>Der Generator selbst ist ein Kommandozeilen-Werkzeug, das <strong>macOS</strong> und <strong>Linux</strong> unterstützt.
+        Das Webinterface benutzt hinter den Kulissen dieses Kommandozeilen-Werkzeug.
+        <strong>Windows</strong>-Nutzer können es in einem Docker-Container betreiben.
+        Wer auf Windows das Kommandozeilen-Werkzeug direkt verwenden will, muss auf <a href="https://docs.microsoft.com/en-us/windows/wsl/about">WSL</a> zurückgreifen, was hier nicht erläutert wird.</p>
+      <p>Die Erweiterung für die Heldensoftware erstellt für dich den Docker-Container, in dem der Generator läuft, kann ihn starten und stoppen, und benutzt ihn, um direkt das PDF zu erzeugen.
+        Benutzern ohne viel IT-Wissen wird dazu geraten, die Erweiterung zu benutzen.</p>
+      <p>Der Generator (beziehungsweise der Docker-Container) lädt bei der Installation offizielles Bildmaterial von Ulisses herunter.
+        Da ich keine Lizenz zur Weiterverbreitung dieses Materials habe, kann ich keinen fertigen Container zum Download anbieten.
+        Das Installationsskript bzw. die Heldensoftware-Erweiterung automatisieren alle notwendigen Schritte.</p>
     </section>
     
     <section>
       <h2>Installation</h2>
       
+      <h3>Heldensoftware-Plugin</h3>
+      
+      <p>Lade die aktuelle Version des Heldensoftware-Plugins herunter und lege sie im Ordner <emph>plugins</emph> im Ordner der Heldensoftware (üblicherweise <emph>helden</emph> in deinem Benutzerverzeichnis) ab.
+      Starte dann die Heldensoftware</p>
+      <p>Unter dem <emph>Erweiterungen</emph>-Menü hast du nun einen Eintrag <emph>DSA 4.1 Heldendokument LaTeX</emph>, der dich zu einem Dialogfenster bringt.
+        Dort kannst du entweder eine Server-Adresse eintragen, über die das PDF erstellt werden soll, oder lokal einen Docker-Container erzeugen.
+        Den Server könnte zum Beispiel ein Mitglied deiner Gruppe zur Verfügung stellen; es gibt keinen öffentlichen Server wegen der Urheberrechtsthematik (ein privater Server wäre vom Recht auf Privatkopie gedeckt).
+        Möchtest du das PDF lokal erzeugen, wählst du die Variante mit lokalem Docker-Container aus.
+        <a href="https://docs.docker.com/get-docker/">Docker Desktop</a> muss auf deinem System installiert sein und laufen.</p>
+      <p>Du musst einmalig ein <emph>Image</emph> erstellen, das den Generator und alle nötigen Dateien enthält. Dies dauert mehrere Minuten, benötigt eine Internetverbindung und belegt etwa 500MB auf deinem System.
+        Nach der Erstellung bleibt das Image auf deinem System verfügbar und kann verwendet werden, bis du es über die Docker Desktop-Anwendung löschst.</p>
+      <p>Schließlich musst du einen <emph>Container</emph> starten. Dieser läuft bis du die Software beendest oder den Container manuell stoppst.
+        Der Container ist ein Hintergrundprozess, der nur Ressourcen braucht, wenn er für dich gerade ein PDF erzeugt.
+        Läuft der Container, kannst du aus der Heldensoftware heraus das PDF für deinen Helden erstellen.</p>
+      
       <h3>Generator auf der Kommandozeile</h3>
       
-      <p>Der Generator selbst ist ein Script, das sich von der Kommandozeile aus ausführen lässt.
-         Wenn du die Kommandozeile nicht gewohnt bist oder generell lieber ein Webinterface haben willst, installiere statt dessen das Webinterface.</p>
+      <p>Diese Anleitung macht ein Kommandozeilen-Werkzeug auf deinem System verfügbar, mit dem du das PDF erzeugen kannst. Das ist die „kompakteste“ Version des Generators, braucht aber immer noch ~300MB Speicherplatz, weil sie LaTeX und einige Bibliotheken dafür installiert.</p>
       
       <p>Du benötigst <a href="https://nixos.org">Nix</a> auf deinem System; dies ist ein Paketmanager, der die Abhängigkeiten des Generators verwaltet und den Generator erstellt.
          Benutzt du NixOS, hast du Nix bereits zur Verfügung.
@@ -60,7 +75,7 @@
          Es stellt dieselben Funktionen zur Verfügung wie das Kommandozeileninterface.
          Es kann entweder direkt mit Nix gebaut werden oder als OCI (vulgo Docker) Image.</p>
          
-      <p>Das Nix-Paket ist wie üblich über die Flake verfügbar:</p>
+      <p>Das Paket für das Web-Interface ist wie auch das Kommandozeilen-Werkzeug über die Nix Flake verfügbar:</p>
       
       <pre><code><span style="color: gray;"># baut die Applikation direkt:</span>
 nix build github:flyx/DSA-4.1-Heldendokument#dsa41held_webui
@@ -87,7 +102,7 @@ docker load -i dsa41held_webui.tar</code></pre>
          Mit dem dritten Befehl installierst du das <emph>image</emph>, in dem der Generator installiert ist, in Docker und kannst es damit zukünftig ausführen.</p>
       
       <p>Das generierte Docker-Image kann folgendermaßen von der Kommandozeile aus gestartet werden, wenn Docker läuft (man muss in der Kommandozeile nicht zu einem Ordner navigieren):</p>
-      <pre><code>docker run -p 80:80 --rm dsa41held-webui:latest</code></pre>
+      <pre><code>docker run -p 80:80 --rm dsa41held_webui-docker:latest</code></pre>
       <p>Solange dieser Befehl läuft, kann das Webinterface im Browser über die URL <a href="http://localhost/">http://localhost/</a> aufgerufen werden.
       Um das Webinterface zu beenden, drücke in der Konsole Ctrl+C.</p>
       
@@ -100,11 +115,31 @@ docker load -i dsa41held_webui.tar</code></pre>
   address = "127.0.0.1:8080";
 };</code></pre>
         
-            <p>Für Remote-Erreichbarkeit muss die public IP angegeben und der Port in der Firewall freigeschaltet werden!</p>
+      <p>Für Remote-Erreichbarkeit muss die public IP angegeben und der Port in der Firewall freigeschaltet werden!
+        Ich empfehle statt dessen, über <emph>nginx</emph> per Reverse-Proxy das Webinterface per HTTPS verfügbar zu machen.</p>
     </section>
     
     <section>
-      <h2>Benutzung</h2>
+      <h2>Benutzung des Heldensoftware-Plugins</h2>
+      
+      <p>Der bereits beschriebene Menüeintrag öffnet den Dialog zum Erstellen des PDFs.
+        Daneben stellt das Plugin auch einen Tab bei den Heldendaten zur Verfügung, um Einstellungen für das Dokument vorzunehmen.
+        Folgende Einstellungen können vorgenommen werden:</p>
+      <ul>
+        <li><strong>Mirakel</strong>: Für geweihte Helden können hier die Mirakel+ und Mirakel- Talente eingegeben werden. Die Einstellungen werden für nicht-geweihte Helden ignoriert.</li>
+        <li><strong>Talentgruppen</strong>: Hier kann die Reihenfolge der Talentgruppen auf dem Talentbogen per Drag & Drop eingegeben werden und eingestellt werden, wie viele Zeilen die einzelnen Gruppen haben. Werden die Zeilen auf 0 gesetzt, wird die Gruppe gar nicht ausgegeben.
+        Die angegebene Zeilenanzahl ist allerdings das <emph>Minimum</emph> – kennt der Held mehr Talente als Zeilen verfügbar sind, werden mehr Zeilen generiert als angegeben.</li>
+        <li><strong>Silhouette</strong>: Hier kann definiert werden, welche Silhouette (momentan männlich oder weiblich) in welcher Variante auf dem Kampfbogen angezeigt wird. <emph>auto</emph> wählt die Silhouette auf der Basis des Geschlechts des Helden aus.</li>
+      </ul>
+      <p>Alle Einstellungen im Tab werden mit dem Helden gespeichert.</p>
+      
+      <p><strong>Fehler melden</strong>: Falls etwas nicht funktioniert, starte die Heldensoftware über die Kommandozeile:</p>
+      
+      <pre><code>java -jar pfad/zu/helden.jar</code></pre>
+      
+      <p>(Sollte auch mit der .exe-Version gehen, dann ohne <code>java -jar</code>.) Hier kannst du dann auf der Kommandozeile mögliche Details sehen, wenn etwas schief geht. Fehler können dann, möglichst mit den Infos von der Kommandozeile, <a href="https://github.com/flyx/DSA-4.1-Heldendokument/issues">auf GitHub</a> gemeldet werden.</p>
+    <section>
+      <h2>Benutzung von Kommandozeile und Webinterface</h2>
       
       <p>Die Funktionen sind für beide Interfaces (Kommandozeile und Web) identisch.
          Bei jeder Funktion wird der Kommandozeilenaufruf angegeben.
@@ -119,7 +154,8 @@ docker load -i dsa41held_webui.tar</code></pre>
             
       <p>Dies erzeugt eine Datei <code>held.lua</code>, welche der Formatspezifikation genügt und die Werte aus dem Eingabeheld enthält.
          Du kannst sie manuell editieren, bevor du daraus ein PDF erzeugst.
-         Der Import importiert den aktuellen Stand des Helden als „Basisdaten“, hast du den Held in der Software gesteigert, sind diese Steigerungen fest eingerechnet und nicht als Steigerungsereignisse verfügbar (das ist für das Resultat egal).</p>
+         Der Import importiert den aktuellen Stand des Helden als „Basisdaten“, hast du den Held in der Software gesteigert, sind diese Steigerungen fest eingerechnet und nicht als Steigerungsereignisse verfügbar (das ist für das Resultat egal).
+         Falls du die Erweiterung für die Heldensoftware benutzt, werden die Einstellungen aus dem Erweiterungs-Tab mit importiert. Falls nicht, werden Standard-Werte gesetzt, die du in der Lua-Datei nach Wunsch editieren kannst.</p>
       
       <h3>PDF-Generierung</h3>
       
