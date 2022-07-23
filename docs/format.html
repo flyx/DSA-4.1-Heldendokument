@@ -160,10 +160,10 @@ einzelnen Seiten beschrieben.</p>
     Kampf(<span class="num">13</span>)<span class="sym">,</span>
     Koerper(<span class="num">17</span>)<span class="sym">,</span>
     Gesellschaft(<span class="num">9</span>)<span class="sym">,</span>
-    Natur(<span class="num">7</span>)<span class="sym">,</span>
-    Wissen(<span class="num">17</span>)<span class="sym">,</span>
+    Natur(<span class="num">10</span>)<span class="sym">,</span>
+    Wissen(<span class="num">16</span>)<span class="sym">,</span>
     SprachenUndSchriften(<span class="num">10</span>)<span class="sym">,</span>
-    Handwerk(<span class="num">15</span>)
+    Handwerk(<span class="num">13</span>)
   <span class="sym">},</span>
   Kampfbogen <span class="sym">{},</span>
   Ausruestungsbogen <span class="sym">{},</span>
@@ -268,7 +268,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Zeilen für Handwerkstalente</p>
 
-<h3 id="Kampfbogen">Kampfbogen (<a href="#Record">Record</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>Nahkampf</li><li><a href="#NahkampfWaffenUndSF">NahkampfWaffenUndSF</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Fernkampf</li><li><a href="#FernkampfWaffenUndSF">FernkampfWaffenUndSF</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Waffenlos</li><li><a href="#Waffenlos">Waffenlos</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Schilde</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">2</span></code></ul><ul class="rowitem"><li>Ruestung</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">6</span></code></ul></td></tr></table>
+<h3 id="Kampfbogen">Kampfbogen (<a href="#Record">Record</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>Nahkampf</li><li><a href="#NahkampfWaffenUndSF">NahkampfWaffenUndSF</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Fernkampf</li><li><a href="#FernkampfWaffenUndSF">FernkampfWaffenUndSF</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Waffenlos</li><li><a href="#Waffenlos">Waffenlos</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Schilde</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">2</span></code></ul><ul class="rowitem"><li>Ruestung</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">6</span></code></ul><ul class="rowitem"><li>Regenbogen</li><li><a href="#Boolean">Boolean</a></li><li><code><span class="sym">false</span></code></ul></td></tr></table>
 
 <p>Kampfbogen.</p>
 
@@ -283,6 +283,12 @@ einzelnen Seiten beschrieben.</p>
 <h4 id="Waffenlos">Waffenlos (<a href="#Record">Record</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>SF</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">3</span></code></ul></td></tr></table>
 
 <p>Zeilen für waffenlose Manöver.</p>
+
+<h4 id="Boolean">Boolean (<a href="#Primitive">Primitive</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>boolean</td></tr>
+<tr><th>optional</th><td>nil</td></tr>
+</table>
+
+
 
 <h3 id="Ausruestungsbogen">Ausruestungsbogen (<a href="#Record">Record</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>Kleidung</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">5</span></code></ul><ul class="rowitem"><li>Gegenstaende</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">33</span></code></ul><ul class="rowitem"><li>Proviant</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">8</span></code></ul><ul class="rowitem"><li>Vermoegen</li><li><a href="#Vermoegensbox">Vermoegensbox</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Verbindungen</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">9</span></code></ul><ul class="rowitem"><li>Notizen</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">7</span></code></ul><ul class="rowitem"><li>Tiere</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">4</span></code></ul></td></tr></table>
 
@@ -300,7 +306,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Zeilen für Proviant & Vermögen Box.</p>
 
-<h3 id="Zauberdokument">Zauberdokument (<a href="#Record">Record</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>VorUndNachteile</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">5</span></code></ul><ul class="rowitem"><li>Sonderfertigkeiten</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">5</span></code></ul><ul class="rowitem"><li>Rituale</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">30</span></code></ul><ul class="rowitem"><li>Ritualkenntnis</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">2</span></code></ul><ul class="rowitem"><li>Artefakte</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">9</span></code></ul><ul class="rowitem"><li>Notizen</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">6</span></code></ul></td></tr></table>
+<h3 id="Zauberdokument">Zauberdokument (<a href="#Record">Record</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>VorUndNachteile</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">5</span></code></ul><ul class="rowitem"><li>Sonderfertigkeiten</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">5</span></code></ul><ul class="rowitem"><li>Rituale</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">30</span></code></ul><ul class="rowitem"><li>Ritualkenntnis</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">2</span></code></ul><ul class="rowitem"><li>Artefakte</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">9</span></code></ul><ul class="rowitem"><li>Notizen</li><li><a href="#Zeilen">Zeilen</a></li><li><code><span class="num">7</span></code></ul></td></tr></table>
 
 <p>Zauberdokument.</p>
 
@@ -357,13 +363,33 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
-</section><section><h2 id="Vorteile">Vorteile (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#BegabungFuerEigenschaft">BegabungFuerEigenschaft</a>, <em>merge</em>), (<a href="#BegabungFuerTalent">BegabungFuerTalent</a>, <em>merge</em>), (<a href="#Flink">Flink</a>, <em>forbid</em>), (<a href="#AkademischeAusbildung">AkademischeAusbildung</a>, <em>merge</em>), (<a href="#BegabungFuerTalentgruppe">BegabungFuerTalentgruppe</a>, <em>merge</em>), <code>"Eidetisches Gedächtnis"</code>, <code>"Eisern"</code>, <code>"Gutes Gedächtnis"</code></td></tr></table>
+</section><section><h2 id="Vorteile">Vorteile (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Eisern"</code>, (<a href="#BegabungFuerTalentgruppe">BegabungFuerTalentgruppe</a>, <em>merge</em>), (<a href="#AkademischeAusbildung">AkademischeAusbildung</a>, <em>merge</em>), (<a href="#BegabungFuerTalent">BegabungFuerTalent</a>, <em>merge</em>), (<a href="#BegabungFuerEigenschaft">BegabungFuerEigenschaft</a>, <em>merge</em>), <code>"Eidetisches Gedächtnis"</code>, <code>"Gutes Gedächtnis"</code>, (<a href="#Flink">Flink</a>, <em>forbid</em>)</td></tr></table>
 
 <p>Liste von nicht-magischen Vorteilen.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
 <div class="example"><h4>Beispiel</h4><pre><code>Vorteile <span class="sym">{</span>
   <span class="sym">"</span><span class="metasym">Balance</span><span class="sym">"</span><span class="sym">,</span> BegabungFuerTalentgruppe <span class="sym">{</span><span class="sym">"</span><span class="metasym">Nahkampf</span><span class="sym">"</span><span class="sym">},</span> <span class="sym">"</span><span class="metasym">Eisern</span><span class="sym">"</span><span class="sym">,</span> Flink(<span class="num">1</span>)<span class="sym">,</span> <span class="sym">"</span><span class="metasym">Verbindungen 5</span><span class="sym">"</span>
 <span class="sym">}</span></code></pre></div>
+
+<h3 id="BegabungFuerTalentgruppe">BegabungFuerTalentgruppe (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talentgruppe">Talentgruppe</a></table>
+
+<p>Begabung für eine oder mehrere Talentgruppen.</p>
+
+<h4 id="Talentgruppe">Talentgruppe (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>Kampf</code>, <code>Nahkampf</code>, <code>Fernkampf</code>, <code>Koerper</code>, <code>Gesellschaft</code>, <code>Natur</code>, <code>Wissen</code>, <code>SprachenUndSchriften</code>, <code>Handwerk</code></td></tr></table>
+
+<p>Eine der existierenden Talentgruppen</p>
+
+<h3 id="AkademischeAusbildung">AkademischeAusbildung (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Ausbildungsname">Ausbildungsname</a><tr><th>min</th><td>0</td></tr><tr><th>max</th><td>1</td></tr></table>
+
+<p>Akademische Ausbildung</p>
+
+<h4 id="Ausbildungsname">Ausbildungsname (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>Gelehrter?</code>, <code>Magier</code>, <code>Magierin</code>, <code>Krieger</code>, <code>Kriegerin</code></td></tr></table>
+
+<p>Name einer akademischen Ausbildung</p>
+
+<h3 id="BegabungFuerTalent">BegabungFuerTalent (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
+
+<p>Begabung für ein oder mehrere Talente</p>
 
 <h3 id="BegabungFuerEigenschaft">BegabungFuerEigenschaft (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#EigName">EigName</a></table>
 
@@ -372,10 +398,6 @@ einzelnen Seiten beschrieben.</p>
 <h4 id="EigName">EigName (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>MU</code>, <code>KL</code>, <code>IN</code>, <code>CH</code>, <code>FF</code>, <code>GE</code>, <code>KO</code>, <code>KK</code>, <code>LE</code>, <code>AU</code>, <code>AE</code>, <code>MR</code></td></tr></table>
 
 <p>Name einer steigerbaren Eigenschaft</p>
-
-<h3 id="BegabungFuerTalent">BegabungFuerTalent (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
-
-<p>Begabung für ein oder mehrere Talente</p>
 
 <h3 id="Flink">Flink (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
 <tr><th>optional</th><td>false</td></tr>
@@ -386,23 +408,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Flink(2) ist exklusiv für Goblins, die es zweimal wählen dürfen.</p>
 
-<h3 id="AkademischeAusbildung">AkademischeAusbildung (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Ausbildungsname">Ausbildungsname</a><tr><th>min</th><td>0</td></tr><tr><th>max</th><td>1</td></tr></table>
-
-<p>Akademische Ausbildung</p>
-
-<h4 id="Ausbildungsname">Ausbildungsname (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>Gelehrter?</code>, <code>Magier</code>, <code>Magierin</code>, <code>Krieger</code>, <code>Kriegerin</code></td></tr></table>
-
-<p>Name einer akademischen Ausbildung</p>
-
-<h3 id="BegabungFuerTalentgruppe">BegabungFuerTalentgruppe (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talentgruppe">Talentgruppe</a></table>
-
-<p>Begabung für eine oder mehrere Talentgruppen.</p>
-
-<h3 id="Talentgruppe">Talentgruppe (<a href="#Matching">Matching</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>Kampf</code>, <code>Nahkampf</code>, <code>Fernkampf</code>, <code>Koerper</code>, <code>Gesellschaft</code>, <code>Natur</code>, <code>Wissen</code>, <code>SprachenUndSchriften</code>, <code>Handwerk</code></td></tr></table>
-
-<p>Eine der existierenden Talentgruppen</p>
-
-</section><section><h2 id="Vorteile.Magisch">Vorteile.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Vollzauberer"</code>, <code>"Viertelzauberer"</code>, <code>"Eigeboren"</code>, (<a href="#AstraleRegeneration">AstraleRegeneration</a>, <em>forbid</em>), <code>"Halbzauberer"</code>, (<a href="#BegabungFuerZauber">BegabungFuerZauber</a>, <em>merge</em>), (<a href="#BegabungFuerMerkmal">BegabungFuerMerkmal</a>, <em>merge</em>), (<a href="#BegabungFuerRitual">BegabungFuerRitual</a>, <em>merge</em>), (<a href="#Meisterhandwerk">Meisterhandwerk</a>, <em>merge</em>)</td></tr></table>
+</section><section><h2 id="Vorteile.Magisch">Vorteile.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Vollzauberer"</code>, <code>"Viertelzauberer"</code>, <code>"Eigeboren"</code>, (<a href="#BegabungFuerMerkmal">BegabungFuerMerkmal</a>, <em>merge</em>), (<a href="#Meisterhandwerk">Meisterhandwerk</a>, <em>merge</em>), (<a href="#BegabungFuerRitual">BegabungFuerRitual</a>, <em>merge</em>), (<a href="#BegabungFuerZauber">BegabungFuerZauber</a>, <em>merge</em>), <code>"Halbzauberer"</code>, (<a href="#UebernatuerlicheBegabung">UebernatuerlicheBegabung</a>, <em>merge</em>), (<a href="#AstraleRegeneration">AstraleRegeneration</a>, <em>forbid</em>)</td></tr></table>
 
 <p>Liste von magischen Vorteilen.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
@@ -410,6 +416,42 @@ einzelnen Seiten beschrieben.</p>
   BegabungFuerMerkmal <span class="sym">{</span><span class="sym">"</span><span class="metasym">Antimagie</span><span class="sym">"</span><span class="sym">,</span> Elementar <span class="sym">{</span><span class="sym">"</span><span class="metasym">Eis</span><span class="sym">"</span><span class="sym">}},</span>
   Meisterhandwerk <span class="sym">{</span><span class="sym">"</span><span class="metasym">Alchimie</span><span class="sym">"</span><span class="sym">},</span> <span class="sym">"</span><span class="metasym">Feste Matrix</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">Vollzauberer</span><span class="sym">"</span>
 <span class="sym">}</span></code></pre></div>
+
+<h3 id="BegabungFuerMerkmal">BegabungFuerMerkmal (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Elementar">Elementar</a>, <em>merge</em>), (<a href="#Daemonisch">Daemonisch</a>, <em>merge</em>)</td></tr></table>
+
+<p>Begabung für ein oder mehrere Merkmale.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
+
+<h4 id="Elementar">Elementar (<a href="#List">List</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Element">Element</a></table>
+
+<p>Spezifikation elementarer Merkmale.</p>
+
+<h5 id="Element">Element (<a href="#Matching">Matching</a>)</h5><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>gesamt</code>, <code>Eis</code>, <code>Humus</code>, <code>Feuer</code>, <code>Wasser</code>, <code>Luft</code>, <code>Erz</code></td></tr></table>
+
+<p>Name eines Elements, oder 'gesamt'.</p>
+
+<h4 id="Daemonisch">Daemonisch (<a href="#List">List</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Domaene">Domaene</a></table>
+
+<p>Spezifikation dämonischer Merkmale.</p>
+
+<h4 id="Domaene">Domaene (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>gesamt</code>, <code>Blakharaz</code>, <code>Belhalhar</code>, <code>Charyptoroth</code>, <code>Lolgramoth</code>, <code>Thargunitoth</code>, <code>Amazeroth</code>, <code>Belshirash</code>, <code>Asfaloth</code>, <code>Tasfarelel</code>, <code>Belzhorash</code>, <code>Agrimoth</code>, <code>Belkelel</code></td></tr></table>
+
+<p>Name einer Domäne, oder 'gesamt'</p>
+
+<h3 id="Meisterhandwerk">Meisterhandwerk (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
+
+<p>Liste von Talenten, für die ein Meisterhandwerk existiert.</p>
+
+<h3 id="BegabungFuerRitual">BegabungFuerRitual (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
+
+<p>Begabung für ein oder mehrere Rituale</p>
+
+<h3 id="BegabungFuerZauber">BegabungFuerZauber (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
+
+<p>Begabung für einen oder mehrere Zauber</p>
+
+<h3 id="UebernatuerlicheBegabung">UebernatuerlicheBegabung (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
+
+<p>Liste von Talenten, für die eine Übernatürliche Begabung existiert.</p>
 
 <h3 id="AstraleRegeneration">AstraleRegeneration (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
 <tr><th>optional</th><td>false</td></tr>
@@ -420,39 +462,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Astrale Regeneration I, II oder III</p>
 
-<h3 id="BegabungFuerZauber">BegabungFuerZauber (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
-
-<p>Begabung für einen oder mehrere Zauber</p>
-
-<h3 id="BegabungFuerMerkmal">BegabungFuerMerkmal (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Daemonisch">Daemonisch</a>, <em>merge</em>), (<a href="#Elementar">Elementar</a>, <em>merge</em>)</td></tr></table>
-
-<p>Begabung für ein oder mehrere Merkmale.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
-
-<h4 id="Daemonisch">Daemonisch (<a href="#List">List</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Domaene">Domaene</a></table>
-
-<p>Spezifikation dämonischer Merkmale.</p>
-
-<h5 id="Domaene">Domaene (<a href="#Matching">Matching</a>)</h5><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>gesamt</code>, <code>Blakharaz</code>, <code>Belhalhar</code>, <code>Charyptoroth</code>, <code>Lolgramoth</code>, <code>Thargunitoth</code>, <code>Amazeroth</code>, <code>Belshirash</code>, <code>Asfaloth</code>, <code>Tasfarelel</code>, <code>Belzhorash</code>, <code>Agrimoth</code>, <code>Belkelel</code></td></tr></table>
-
-<p>Name einer Domäne, oder 'gesamt'</p>
-
-<h4 id="Elementar">Elementar (<a href="#List">List</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Element">Element</a></table>
-
-<p>Spezifikation elementarer Merkmale.</p>
-
-<h4 id="Element">Element (<a href="#Matching">Matching</a>)</h4><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>patterns</th><td><code>gesamt</code>, <code>Eis</code>, <code>Humus</code>, <code>Feuer</code>, <code>Wasser</code>, <code>Luft</code>, <code>Erz</code></td></tr></table>
-
-<p>Name eines Elements, oder 'gesamt'.</p>
-
-<h3 id="BegabungFuerRitual">BegabungFuerRitual (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
-
-<p>Begabung für ein oder mehrere Rituale</p>
-
-<h3 id="Meisterhandwerk">Meisterhandwerk (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
-
-<p>Liste von Talenten, für die ein Meisterhandwerk existiert.</p>
-
-</section><section><h2 id="Nachteile">Nachteile (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Behäbig"</code>, (<a href="#UnfaehigkeitFuerTalentgruppe">UnfaehigkeitFuerTalentgruppe</a>, <em>merge</em>), <code>"Glasknochen"</code>, <code>"Kleinwüchsig"</code>, <code>"Unstet"</code>, (<a href="#UnfaehigkeitFuerTalent">UnfaehigkeitFuerTalent</a>, <em>merge</em>), <code>"Zwergenwuchs"</code></td></tr></table>
+</section><section><h2 id="Nachteile">Nachteile (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Zwergenwuchs"</code>, <code>"Glasknochen"</code>, <code>"Lahm"</code>, <code>"Kleinwüchsig"</code>, <code>"Behäbig"</code>, (<a href="#UnfaehigkeitFuerTalent">UnfaehigkeitFuerTalent</a>, <em>merge</em>), (<a href="#UnfaehigkeitFuerTalentgruppe">UnfaehigkeitFuerTalentgruppe</a>, <em>merge</em>), <code>"Unstet"</code></td></tr></table>
 
 <p>Liste von nicht-magischen Nachteilen (außer schlechten Eigenschaften)</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
@@ -460,13 +470,13 @@ einzelnen Seiten beschrieben.</p>
   <span class="sym">"</span><span class="metasym">Impulsiv</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">Zwergenwuchs</span><span class="sym">"</span><span class="sym">,</span> UnfaehigkeitFuerTalent <span class="sym">{</span><span class="sym">"</span><span class="metasym">Schwimmen</span><span class="sym">"</span><span class="sym">}</span>
 <span class="sym">}</span></code></pre></div>
 
-<h3 id="UnfaehigkeitFuerTalentgruppe">UnfaehigkeitFuerTalentgruppe (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talentgruppe">Talentgruppe</a></table>
-
-<p>Unfähigkeit für eine oder mehrere Talentgruppen</p>
-
 <h3 id="UnfaehigkeitFuerTalent">UnfaehigkeitFuerTalent (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
 
 <p>Unfähigkeit für ein oder mehrere bestimmte Talente</p>
+
+<h3 id="UnfaehigkeitFuerTalentgruppe">UnfaehigkeitFuerTalentgruppe (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talentgruppe">Talentgruppe</a></table>
+
+<p>Unfähigkeit für eine oder mehrere Talentgruppen</p>
 
 </section><section><h2 id="Nachteile.Eigenschaften">Nachteile.Eigenschaften (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#SchlechteEigenschaft">SchlechteEigenschaft</a></table>
 
@@ -499,7 +509,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Eine Zahl in Dezimalschreibweise.</p>
 
-</section><section><h2 id="Nachteile.Magisch">Nachteile.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Astraler Block"</code>, (<a href="#UnfaehigkeitFuerMerkmal">UnfaehigkeitFuerMerkmal</a>, <em>merge</em>)</td></tr></table>
+</section><section><h2 id="Nachteile.Magisch">Nachteile.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#UnfaehigkeitFuerMerkmal">UnfaehigkeitFuerMerkmal</a>, <em>merge</em>), <code>"Astraler Block"</code></td></tr></table>
 
 <p>Liste von magischen Nachteilen.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
@@ -508,7 +518,7 @@ einzelnen Seiten beschrieben.</p>
   <span class="sym">"</span><span class="metasym">Lästige Mindergeister</span><span class="sym">"</span>
 <span class="sym">}</span></code></pre></div>
 
-<h3 id="UnfaehigkeitFuerMerkmal">UnfaehigkeitFuerMerkmal (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Daemonisch">Daemonisch</a>, <em>merge</em>), (<a href="#Elementar">Elementar</a>, <em>merge</em>)</td></tr></table>
+<h3 id="UnfaehigkeitFuerMerkmal">UnfaehigkeitFuerMerkmal (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Elementar">Elementar</a>, <em>merge</em>), (<a href="#Daemonisch">Daemonisch</a>, <em>merge</em>)</td></tr></table>
 
 <p>Unfähigkeit für ein oder mehrere Merkmale.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
@@ -638,14 +648,22 @@ einzelnen Seiten beschrieben.</p>
   <span class="sym">{</span><span class="sym">"</span><span class="metasym">Überreden</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">MU</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">IN</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">CH</span><span class="sym">"</span><span class="sym">,</span> <span class="num">9</span><span class="sym">},</span>
 <span class="sym">}</span></code></pre></div>
 
-</section><section><h2 id="Talente.Natur">Talente.Natur (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talent">Talent</a></table>
+</section><section><h2 id="Talente.Natur">Talente.Natur (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talent">Talent</a>, <a href="#Meta">Meta</a></table>
 
-<p>Liste von Naturtalenten.</p>
+<p>Liste von Naturtalenten und Metatalenten.</p>
 
 <div class="example"><h4>Beispiel</h4><pre><code>Talente.Natur <span class="sym">{</span>
   <span class="sym">{</span><span class="sym">"</span><span class="metasym">Orientierung</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">KL</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">IN</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">IN</span><span class="sym">"</span><span class="sym">,</span> <span class="num">3</span><span class="sym">},</span>
   <span class="sym">{</span><span class="sym">"</span><span class="metasym">Wildnisleben</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">IN</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">GE</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">KO</span><span class="sym">"</span><span class="sym">,</span> <span class="num">2</span><span class="sym">},</span>
 <span class="sym">}</span></code></pre></div>
+
+<h3 id="Meta">Meta (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>Name</li><li><a href="#String">String</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>Probe1</li><li><a href="#BasisEig">BasisEig</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul><ul class="rowitem"><li>Probe2</li><li><a href="#BasisEig">BasisEig</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul><ul class="rowitem"><li>Probe3</li><li><a href="#BasisEig">BasisEig</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul><ul class="rowitem"><li>Talente</li><li><a href="#Talentreferenzen">Talentreferenzen</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul></td></tr></table>
+
+<p>Ein Metatalent.</p>
+
+<h3 id="Talentreferenzen">Talentreferenzen (<a href="#List">List</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#String">String</a></table>
+
+<p>Liste von Talenten (referenziert über deren Namen), aus denen sich ein Metatalent zusammensetzt</p>
 
 </section><section><h2 id="Talente.Wissen">Talente.Wissen (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#Talent">Talent</a></table>
 
@@ -721,7 +739,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Liste von Kulturen, für die Kulturkunde besteht.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
-</section><section><h2 id="SF.Nahkampf">SF.Nahkampf (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Kampfgespür"</code>, (<a href="#Schildkampf">Schildkampf</a>, <em>merge</em>), <code>"Kampfreflexe"</code>, (<a href="#Parierwaffen">Parierwaffen</a>, <em>merge</em>), (<a href="#Ruestungsgewoehnung">Ruestungsgewoehnung</a>, <em>merge</em>), (<a href="#Ausweichen">Ausweichen</a>, <em>merge</em>), <code>"Linkhand"</code></td></tr></table>
+</section><section><h2 id="SF.Nahkampf">SF.Nahkampf (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Ruestungsgewoehnung">Ruestungsgewoehnung</a>, <em>merge</em>), (<a href="#Schildkampf">Schildkampf</a>, <em>merge</em>), (<a href="#Ausweichen">Ausweichen</a>, <em>merge</em>), (<a href="#Parierwaffen">Parierwaffen</a>, <em>merge</em>), <code>"Kampfreflexe"</code>, <code>"Kampfgespür"</code>, <code>"Klingentänzer"</code>, <code>"Linkhand"</code></td></tr></table>
 
 <p>Liste von Nahkampf-Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
@@ -729,23 +747,23 @@ einzelnen Seiten beschrieben.</p>
   <span class="sym">"</span><span class="metasym">Aufmerksamkeit</span><span class="sym">"</span><span class="sym">,</span> Ausweichen <span class="sym">{</span>I<span class="sym">,</span> II<span class="sym">},</span> <span class="sym">"</span><span class="metasym">Kampfreflexe</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">Wuchtschlag</span><span class="sym">"</span>
 <span class="sym">}</span></code></pre></div>
 
-<h3 id="Schildkampf">Schildkampf (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>2</td></tr></table>
-
-<p>Die SF Schildkampf, unterteilt in I und II.</p>
-
-<h3 id="Parierwaffen">Parierwaffen (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>2</td></tr></table>
-
-<p>Die SF Parierwaffen, unterteilt in I und II.</p>
-
 <h3 id="Ruestungsgewoehnung">Ruestungsgewoehnung (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>3</td></tr></table>
 
 <p>Die SF Rüstungsgewöhnung, unterteilt in I, II und III.</p>
+
+<h3 id="Schildkampf">Schildkampf (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>2</td></tr></table>
+
+<p>Die SF Schildkampf, unterteilt in I und II.</p>
 
 <h3 id="Ausweichen">Ausweichen (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>3</td></tr></table>
 
 <p>Die SF Ausweichen, unterteilt in I, II und III.</p>
 
-</section><section><h2 id="SF.Fernkampf">SF.Fernkampf (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Geschützmeister"</code>, (<a href="#Schnellladen">Schnellladen</a>, <em>merge</em>), (<a href="#Scharfschuetze">Scharfschuetze</a>, <em>merge</em>), (<a href="#Meisterschuetze">Meisterschuetze</a>, <em>merge</em>)</td></tr></table>
+<h3 id="Parierwaffen">Parierwaffen (<a href="#Numbered">Numbered</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>max</th><td>2</td></tr></table>
+
+<p>Die SF Parierwaffen, unterteilt in I und II.</p>
+
+</section><section><h2 id="SF.Fernkampf">SF.Fernkampf (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Geschützmeister"</code>, (<a href="#Meisterschuetze">Meisterschuetze</a>, <em>merge</em>), (<a href="#Scharfschuetze">Scharfschuetze</a>, <em>merge</em>), (<a href="#Schnellladen">Schnellladen</a>, <em>merge</em>)</td></tr></table>
 
 <p>Liste von Fernkampf-Sonderfertigkeiten.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
@@ -753,17 +771,17 @@ einzelnen Seiten beschrieben.</p>
   <span class="sym">"</span><span class="metasym">Geschützmeister</span><span class="sym">"</span><span class="sym">,</span> Schnellladen <span class="sym">{</span><span class="sym">"</span><span class="metasym">Bogen</span><span class="sym">"</span><span class="sym">}</span>
 <span class="sym">}</span></code></pre></div>
 
-<h3 id="Schnellladen">Schnellladen (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
+<h3 id="Meisterschuetze">Meisterschuetze (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<p>Liste von Talenten, für die Schnellladen gilt.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
+<p>Liste von Talenten, für die Meisterschütze gilt.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
 <h3 id="Scharfschuetze">Scharfschuetze (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
 <p>Liste von Talenten, für die Scharfschütze gilt.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
-<h3 id="Meisterschuetze">Meisterschuetze (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
+<h3 id="Schnellladen">Schnellladen (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
-<p>Liste von Talenten, für die Meisterschütze gilt.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
+<p>Liste von Talenten, für die Schnellladen gilt.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
 </section><section><h2 id="SF.Waffenlos">SF.Waffenlos (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Kampfstil">Kampfstil</a>, <em>allow</em>)</td></tr></table>
 
@@ -781,7 +799,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Raufen oder Ringen</p>
 
-</section><section><h2 id="SF.Magisch">SF.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><code>"Gefäß der Sterne"</code>, (<a href="#MeisterlicheRegeneration">MeisterlicheRegeneration</a>, <em>forbid</em>), (<a href="#Regeneration">Regeneration</a>, <em>merge</em>)</td></tr></table>
+</section><section><h2 id="SF.Magisch">SF.Magisch (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#MeisterlicheRegeneration">MeisterlicheRegeneration</a>, <em>forbid</em>), <code>"Gefäß der Sterne"</code>, (<a href="#Regeneration">Regeneration</a>, <em>merge</em>)</td></tr></table>
 
 <p>Liste magischer Sonderfertigkeiten</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
@@ -825,10 +843,10 @@ einzelnen Seiten beschrieben.</p>
 <p>Liste von Fernkampfwaffen.</p>
 
 <div class="example"><h4>Beispiel</h4><pre><code>Waffen.Fernkampf <span class="sym">{</span>
-  <span class="sym">{</span><span class="sym">"</span><span class="metasym">Langbogen</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">Bogen</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">1W+6</span><span class="sym">"</span><span class="sym">,</span> <span class="num">10</span><span class="sym">,</span> <span class="num">25</span><span class="sym">,</span> <span class="num">50</span><span class="sym">,</span> <span class="num">100</span><span class="sym">,</span> <span class="num">200</span><span class="sym">,</span> <span class="num">3</span><span class="sym">,</span> <span class="num">2</span><span class="sym">,</span> <span class="num">1</span><span class="sym">,</span> <span class="num">0</span><span class="sym">,</span> -<span class="num">1</span><span class="sym">}</span>
+  <span class="sym">{</span><span class="sym">"</span><span class="metasym">Langbogen</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">Bogen</span><span class="sym">"</span><span class="sym">,</span> <span class="sym">"</span><span class="metasym">1W+6</span><span class="sym">"</span><span class="sym">,</span> <span class="num">10</span><span class="sym">,</span> <span class="num">25</span><span class="sym">,</span> <span class="num">50</span><span class="sym">,</span> <span class="num">100</span><span class="sym">,</span> <span class="num">200</span><span class="sym">,</span> <span class="num">3</span><span class="sym">,</span> <span class="num">2</span><span class="sym">,</span> <span class="num">1</span><span class="sym">,</span> <span class="num">0</span><span class="sym">,</span> -<span class="num">1</span><span class="sym">,</span> VerminderteWS<span class="sym">=</span>true<span class="sym">}</span>
 <span class="sym">}</span></code></pre></div>
 
-<h3 id="Fernkampfwaffe">Fernkampfwaffe (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>Name</li><li><a href="#String">String</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul><ul class="rowitem"><li>Talent</li><li><a href="#String">String</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul><ul class="rowitem"><li>TP</li><li><a href="#Schaden">Schaden</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul><ul class="rowitem"><li>Entfernung1</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Entfernung2</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Entfernung3</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Entfernung4</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Entfernung5</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>TP/Entfernung1</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>TP/Entfernung2</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>TP/Entfernung3</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>TP/Entfernung4</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>TP/Entfernung5</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Geschosse1</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Geschosse2</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Geschosse3</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Art</li><li><a href="#String">String</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul></td></tr></table>
+<h3 id="Fernkampfwaffe">Fernkampfwaffe (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>Name</li><li><a href="#String">String</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul><ul class="rowitem"><li>Talent</li><li><a href="#String">String</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul><ul class="rowitem"><li>TP</li><li><a href="#Schaden">Schaden</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul><ul class="rowitem"><li>Entfernung1</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Entfernung2</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Entfernung3</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Entfernung4</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Entfernung5</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>TP/Entfernung1</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>TP/Entfernung2</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>TP/Entfernung3</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>TP/Entfernung4</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>TP/Entfernung5</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Ladezeit</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Geschosse</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>VerminderteWS</li><li><a href="#Boolean">Boolean</a></li><li><code><span class="sym">false</span></code></ul><ul class="rowitem"><li>Art</li><li><a href="#String">String</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul></td></tr></table>
 
 <p>Eine Fernkampfwaffe.</p>
 
@@ -841,11 +859,11 @@ einzelnen Seiten beschrieben.</p>
   Parierwaffe <span class="sym">{</span><span class="sym">"</span><span class="metasym">Buckler (Vollmetall)</span><span class="sym">"</span><span class="sym">,</span> <span class="num">0</span><span class="sym">,</span> <span class="num">0</span><span class="sym">,</span> <span class="num">2</span><span class="sym">,</span> -<span class="num">2</span><span class="sym">}</span>
 <span class="sym">}</span></code></pre></div>
 
-<h3 id="Schild">Schild (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>Name</li><li><a href="#String">String</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>INI</li><li><a href="#Ganzzahl">Ganzzahl</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>WM AT</li><li><a href="#Ganzzahl">Ganzzahl</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>WM PA</li><li><a href="#Ganzzahl">Ganzzahl</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>BF1</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>BF2</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Art</li><li><a href="#String">String</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul></td></tr></table>
+<h3 id="Schild">Schild (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>Name</li><li><a href="#String">String</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>INI</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>WM AT</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>WM PA</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>BF1</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>BF2</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Art</li><li><a href="#String">String</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul></td></tr></table>
 
 <p>Ein Schild.</p>
 
-<h3 id="Parierwaffe">Parierwaffe (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>Name</li><li><a href="#String">String</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>INI</li><li><a href="#Ganzzahl">Ganzzahl</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>WM AT</li><li><a href="#Ganzzahl">Ganzzahl</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>WM PA</li><li><a href="#Ganzzahl">Ganzzahl</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>BF1</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>BF2</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Art</li><li><a href="#String">String</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul></td></tr></table>
+<h3 id="Parierwaffe">Parierwaffe (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>Name</li><li><a href="#String">String</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>INI</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>WM AT</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>WM PA</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>BF1</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>BF2</li><li><a href="#OptNum">OptNum</a></li><li><code><span class="sym">{</span><span class="sym">}</span></code></ul><ul class="rowitem"><li>Art</li><li><a href="#String">String</a></li><li><code><span class="sym">"</span><span class="sym">"</span></code></ul></td></tr></table>
 
 <p>Eine Parierwaffe.</p>
 
@@ -854,11 +872,11 @@ einzelnen Seiten beschrieben.</p>
 <p>Liste von Rüstungsteilen.</p>
 
 <div class="example"><h4>Beispiel</h4><pre><code>Waffen.Ruestung <span class="sym">{</span>
-  <span class="sym">{</span><span class="sym">"</span><span class="metasym">Leichte Platte</span><span class="sym">"</span><span class="sym">,</span> <span class="num">3</span>.<span class="num">2</span><span class="sym">,</span> <span class="num">2</span>.<span class="num">2</span><span class="sym">,</span> Brust<span class="sym">=</span><span class="num">5</span><span class="sym">,</span> Ruecken<span class="sym">=</span><span class="num">4</span><span class="sym">,</span> LBein<span class="sym">=</span><span class="num">2</span><span class="sym">,</span> RBein<span class="sym">=</span><span class="num">2</span><span class="sym">},</span>
-  <span class="sym">{</span><span class="sym">"</span><span class="metasym">Panzerhandschuhe (Paar)</span><span class="sym">"</span><span class="sym">,</span> <span class="num">0</span>.<span class="num">2</span><span class="sym">,</span> <span class="num">0</span>.<span class="num">2</span><span class="sym">,</span> LArm<span class="sym">=</span><span class="num">2</span><span class="sym">,</span> RArm<span class="sym">=</span><span class="num">2</span><span class="sym">},</span>
+  <span class="sym">{</span><span class="sym">"</span><span class="metasym">Leichte Platte</span><span class="sym">"</span><span class="sym">,</span> Brust<span class="sym">=</span><span class="num">5</span><span class="sym">,</span> Ruecken<span class="sym">=</span><span class="num">4</span><span class="sym">,</span> LBein<span class="sym">=</span><span class="num">2</span><span class="sym">,</span> RBein<span class="sym">=</span><span class="num">2</span><span class="sym">,</span> Sterne<span class="sym">=</span><span class="num">1</span><span class="sym">},</span>
+  <span class="sym">{</span><span class="sym">"</span><span class="metasym">Panzerhandschuhe (Paar)</span><span class="sym">"</span><span class="sym">,</span> LArm<span class="sym">=</span><span class="num">2</span><span class="sym">,</span> RArm<span class="sym">=</span><span class="num">2</span><span class="sym">,</span> Z<span class="sym">=</span>true<span class="sym">},</span>
 <span class="sym">}</span></code></pre></div>
 
-<h3 id="Ruestungsteil">Ruestungsteil (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>Name</li><li><a href="#String">String</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>gRS</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>gBE</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>Kopf</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>Brust</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>Ruecken</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>LArm</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>RArm</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>Bauch</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>LBein</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>RBein</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul></td></tr></table>
+<h3 id="Ruestungsteil">Ruestungsteil (<a href="#Row">Row</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><ul class="rowitem"><li>Name</li><li><a href="#String">String</a></li><li><em>kein default</em></ul><ul class="rowitem"><li>Kopf</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>Brust</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>Ruecken</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>Bauch</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>LArm</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>RArm</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>LBein</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>RBein</li><li><a href="#Zonenruestung">Zonenruestung</a></li><li><code><span class="num">0</span></code></ul><ul class="rowitem"><li>Z</li><li><a href="#Boolean">Boolean</a></li><li><code><span class="sym">false</span></code></ul><ul class="rowitem"><li>Sterne</li><li><a href="#Ruestungsverarbeitung">Ruestungsverarbeitung</a></li><li><code><span class="num">0</span></code></ul></td></tr></table>
 
 <p>Ein Rüstungsteil.</p>
 
@@ -869,6 +887,14 @@ einzelnen Seiten beschrieben.</p>
 </table>
 
 <p>Zonenrüstungswert eines Rüstungsteils mit bis zu zwei Dezimalstellen</p>
+
+<h3 id="Ruestungsverarbeitung">Ruestungsverarbeitung (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>number</td></tr>
+<tr><th>optional</th><td>false</td></tr>
+<tr><th>decimals</th><td>0</td></tr>
+<tr><th>min</th><td>0</td></tr>
+</table>
+
+<p>Wie gut die Rüstung verarbeitet ist. Entspricht den Sternen in der Zonenrüstungstabelle, WdS 110.</p>
 
 </section><section><h2 id="Kleidung">Kleidung (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td><em>keine</em></td></tr></table>
 
@@ -1048,7 +1074,7 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Name einer Repräsentation.</p>
 
-</section><section><h2 id="Magie.Merkmalskenntnis">Magie.Merkmalskenntnis (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Daemonisch">Daemonisch</a>, <em>merge</em>), (<a href="#Elementar">Elementar</a>, <em>merge</em>)</td></tr></table>
+</section><section><h2 id="Magie.Merkmalskenntnis">Magie.Merkmalskenntnis (<a href="#Multivalue">Multivalue</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Elementar">Elementar</a>, <em>merge</em>), (<a href="#Daemonisch">Daemonisch</a>, <em>merge</em>)</td></tr></table>
 
 <p>Liste gelernter Merkmalskenntnisse</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
 
@@ -1069,15 +1095,9 @@ einzelnen Seiten beschrieben.</p>
 
 <p>Ein Zauber.</p>
 
-<h3 id="Merkmale">Merkmale (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Daemonisch">Daemonisch</a>, <em>merge</em>), (<a href="#Elementar">Elementar</a>, <em>merge</em>)</td></tr></table>
+<h3 id="Merkmale">Merkmale (<a href="#Multivalue">Multivalue</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>known</th><td>(<a href="#Elementar">Elementar</a>, <em>merge</em>), (<a href="#Daemonisch">Daemonisch</a>, <em>merge</em>)</td></tr></table>
 
 <p>Liste von Merkmalen eines Zaubers.</p><p>Ein einzelner oder eine Liste von Werten, die jeweils entweder den Typ String oder einen Typen in <i>known</i> haben.</p>
-
-<h3 id="Boolean">Boolean (<a href="#Primitive">Primitive</a>)</h3><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>inner</th><td>boolean</td></tr>
-<tr><th>optional</th><td>nil</td></tr>
-</table>
-
-
 
 </section><section><h2 id="Ereignisse">Ereignisse (<a href="#List">List</a>)</h2><p>Werte der Prototypenparameter:</p><table class="protoparam"><tr><th>items</th><td><a href="#TaW">TaW</a>, <a href="#ZfW">ZfW</a>, <a href="#Spezialisierung">Spezialisierung</a>, <a href="#ProfaneSF">ProfaneSF</a>, <a href="#NahkampfSF">NahkampfSF</a>, <a href="#FernkampfSF">FernkampfSF</a>, <a href="#WaffenlosSF">WaffenlosSF</a>, <a href="#Eigenschaft">Eigenschaft</a>, <a href="#RkW">RkW</a>, <a href="#LkW">LkW</a>, <a href="#Aktiviere">Aktiviere</a>, <a href="#MerkmalSF">MerkmalSF</a>, <a href="#Senkung">Senkung</a>, <a href="#Spaetweihe">Spaetweihe</a>, <a href="#Zugewinn">Zugewinn</a>, <a href="#Frei">Frei</a></table>
 
