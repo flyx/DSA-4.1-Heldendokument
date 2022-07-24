@@ -517,6 +517,7 @@ end
 
 schema.SF.Magisch = d:singleton(d.Multivalue, {name = "SF.Magisch", description = "Liste magischer Sonderfertigkeiten"}, String, {
   GefaessDerSterne = "Gefäß der Sterne",
+  Matrixregeneration = d.Numbered:def({name = "Matrixregeneration", description = "Die Sonderfertigkeit Matrixregeneration I und II"}, 2),
   MeisterlicheRegeneration = d.Matching:def({name = "MeisterlicheRegeneration", description = "Meisterliche Regeneration; gibt die Leiteigenschaft an, auf deren Basis die nächtliche Regeneration berechnet wird.", label = "Meisterliche Regeneration"}, "KL", "IN", "CH"),
   Regeneration = d.Numbered:def({name = "Regeneration", description = "Die Sonderfertigkeit Regenetation I und II"}, 2),
 }) {}
@@ -806,6 +807,20 @@ local Sortiere = d.Multivalue:def({name = "Sortiere", description = "Definiert, 
 local Aktiviere = d.Row:def({name = "Aktiviere", description = "Aktiviert ein Talent, einen Zauber, eine Liturgie oder ein Ritual. Ist der gegebene Wert des Talents oder des Zaubers größer 0, wird anschließend eine Steigerung durchgeführt. Für Gesellschafts-, Natur-, Wissens- und Handwerkstalente muss die Talentgruppe angegeben werden; in allen anderen Fällen wird sie ignoriert."},
   {"Subjekt", nil}, {"Methode", SteigerMethode, "Lehrmeister"}, {"Sortierung", Sortiere, "Name"}, {"Talentgruppe", String, ""})
 
+local PermanentEig = d.Matching:def({name = "PermanentEig", description = "Eigenschaft, für die permanente Punkte ausgegeben werden können"}, "AE", "KE")
+
+local Permanent = d.Row:def({name = "Permanent", description = "Permanent ausgegebene AsP oder KaP"},
+  {"Subjekt", PermanentEig}, {"Anzahl", Ganzzahl})
+
+local Leiteigenschaft = d.Matching:def({name = "Leiteigenschaft", description = "Leiteigenschaft, aufgrund der sich AE-Zugewinn berechnet."}, "KL", "IN", "CH")
+
+local GrosseMeditation = d.Row:def({name = "GrosseMeditation", description = "Durchführung einer Großen Meditation."},
+  {"Leiteigenschaft", Leiteigenschaft}, {"RkP*", Ganzzahl})
+
+local Karmalqueste = d.Row:def({name = "Karmalqueste", description = "Durchführung einer Karmalqueste. Setzt die permanenten KaP zurück auf 0, da sie nicht zurückgekauft werden können, sondern nur als Erleichterung auf die Mirakelprobe für die nächste Karmalqueste gelten."},
+  {"LkP*", Ganzzahl}
+)
+
 local Spaetweihe = d.Row:def({name = "Spaetweihe", description = "Spätweihe eines Charakters. Die angegebenen Kosten schließen alle gegebenen Segnungen und Liturgien mit ein; SE halbiert die gegebenen Kosten. Liturgiekenntnis wird auf 3 gesetzt."},
   {"Gottheit", String},
   {"Liturgien", d.List:def({name = "Spaetweihe.Liturgien", description = "Liste von Liturgien, die durch die Spätweihe erlernt werden.", item_name = "Liturgie"}, {Segnung, Liturgie}), {}},
@@ -829,7 +844,7 @@ local Frei = d.Row:def({name = "Frei", description = "Freie Modifikation der Cha
   {"Text", String}, {"Modifikation", schema.Function}, {"Kosten", Ganzzahl, 0})
 
 d:singleton(d.List, {name = "Ereignisse", description = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"}, {
-  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, MerkmalSF, Senkung, Spaetweihe, Zugewinn, Frei
+  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, MerkmalSF, Senkung, Permanent, GrosseMeditation, Karmalqueste, Spaetweihe, Zugewinn, Frei
 }) {}
 function schema.Ereignisse.example(printer)
   printer:highlight([[Ereignisse {
@@ -862,7 +877,15 @@ function schema.Ereignisse.example(printer)
     -- erlerne eine Merkmalskenntnis
     MerkmalSF {{Daemonisch {"Blakharaz"}}, 
     -- senke eine Schlechte Eigenschaft auf 3
-    Senkung {"Angst vor Spinnen", 3, "SE"}
+    Senkung {"Angst vor Spinnen", 3, "SE"},
+    -- gebe drei permanente Karmalpunkte aus.
+    Permanent {"KE", -3},
+    -- kaufe zwei permanente Astralpunkte zurück (kostet AP)
+    Permanent {"AE", 2},
+    -- Führe eine Große Meditation mit 12 RkP* durch
+    GrosseMeditation {"KL", 12},
+    -- Führe eine Karmalqueste mit 7 LkP* durch
+    Karmalqueste {7},
     -- erhalte eine Spätweihe
     Spaetweihe {"Boron",
       Plus      = {"Schleichen", "Überzeugen"},

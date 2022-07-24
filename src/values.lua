@@ -150,7 +150,7 @@ setmetatable(getter_map.calc, {
     for i,v in ipairs(vals) do
       local x = 0
       if v == "KE" then
-        if data.eig.KE[1] == 0 then
+        if data.eig.KE.Mod == 0 then
           return ""
         end
       else
@@ -1075,6 +1075,45 @@ function values:senkung(e)
   return event
 end
 
+function values:permanent(e)
+  local event = {(e.Anzahl > 0 and "Rückkauf: " or "Verlust: ") .. e.Anzahl .. " " .. e.Subjekt}
+  self.eig[e.Subjekt].Permanent = self.eig[e.Subjekt].Permanent - e.Anzahl
+  local kosten = 0
+  if e.Anzahl > 0 then
+    kosten = 50
+    local reg = self.SF.Magisch:getlist("Matrixregeneration")
+    for i=1,2 do
+      if reg[i] then kosten = kosten - 10 end
+    end
+    kosten = kosten * e.Anzahl
+  end
+  event[2] = -1 * kosten
+  event[3] = skt.faktor["1"]
+  event[4] = event[2]
+  event[5] = self:ap_mod(kosten)
+  return event 
+end
+
+function values:grosseMeditation(e)
+  local punkte = self.sparse(self.eig[e.Leiteigenschaft].Aktuell, 3) + self.sparse(e["RkP*"], 10)
+  self.eig["AE"].Mod = self.eig["AE"].Mod + punkte
+  return {"Große Meditation: AE+" .. punkte, -400, skt.faktor["1"], -400, self:ap_mod(400)}
+end
+
+local alveranischeGoetter = {
+  Praios = true, Rondra = true, Efferd = true, Travia = true,
+  Boron = true, Hesinde = true, Firun = true, Tsa = true,
+  Phex = true, Peraine = true, Ingerimm = true, Rahja = true  
+}
+
+function values:karmalqueste(e)
+  local div = alveranischeGoetter[self.Mirakel.Liturgiekenntnis.Name] and 4 or 5
+  local punkte = self.sparse(self.eig["IN"].Aktuell, div) + self.sparse(e["LkP*"], 10)
+  self.eig["KE"].Mod = self.eig["KE"].Mod + punkte
+  local kosten = alveranischeGoetter[self.Mirakel.Liturgiekenntnis.Name] and 300 or 250
+  return {"Karmalqueste: KE+" .. punkte, -1 * kosten, skt.faktor["1"], -1 * kosten, self:ap_mod(kosten)}
+end
+
 function values:spaetweihe(e)
   self.Mirakel.Liturgiekenntnis.Name = e.Gottheit
   self.Mirakel.Liturgiekenntnis.Wert = 3
@@ -1083,6 +1122,8 @@ function values:spaetweihe(e)
       self.Mirakel[n]:append(v)
     end
   end
+  self.eig.KE.Mod = alveranischeGoetter[e.Gottheit] and 24 or 12
+    
   return {"Spätweihe (" .. e.Gottheit .. ")", -1 * e.Kosten, skt.faktor["1"], -1 * e.Kosten, self:ap_mod(e.Kosten)}
 end
 
@@ -1146,6 +1187,12 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
     end
   elseif mt.name == "Senkung" then
     event = values:senkung(e)
+  elseif mt.name == "Permanent" then
+    event = values:permanent(e)
+  elseif mt.name == "GrosseMeditation" then
+    event = values:grosseMeditation(e)
+  elseif mt.name == "Karmalqueste" then
+    event = values:karmalqueste(e)
   elseif mt.name == "Spaetweihe" then
     event = values:spaetweihe(e)
   elseif mt.name == "MerkmalSF" then
