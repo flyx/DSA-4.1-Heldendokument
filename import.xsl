@@ -97,7 +97,7 @@
       <xsl:text>
   Zauberliste {},</xsl:text>
     </xsl:if>
-    <xsl:if test="talentliste/talent[starts-with(@name, 'Ritualkenntnis')]">
+    <xsl:if test="talentliste/talent[starts-with(@name, 'Ritualkenntnis')] or zauberliste/zauber[@repraesentation != 'Magiedilletant']">
       <xsl:text>
   Zauberdokument {},</xsl:text>
     </xsl:if>
@@ -589,10 +589,10 @@ Talente.Handwerk {</xsl:text><xsl:apply-templates select="$handwerk"/><xsl:text>
   
   <xsl:template match="ausrüstungen" mode="meta">
     <xsl:variable name="jw" select="heldenausruestung[@name='jagtwaffe' and @set='0']"/>
-    <xsl:if test="$jw and ../talentliste/talent[@name='Tierkunde'] and ../talentliste/talent[@name='Fährtensuchen']">
+    <xsl:variable name="ha" select="heldenausruestung[@name=concat('fkwaffe', $jw/@nummer) and @set='0']"/>
+    <xsl:if test="$ha/@talent and ../talentliste/talent[@name='Tierkunde'] and ../talentliste/talent[@name='Fährtensuchen']">
       <xsl:text>
   Meta {"Pirschjagd", "MU", "IN", "GE", {"Wildnisleben", "Tierkunde", "Fährtensuchen", "Schleichen", </xsl:text>
-      <xsl:variable name="ha" select="heldenausruestung[@name=concat('fkwaffe', $jw/@nummer) and @set='0']"/>
       <xsl:value-of select="concat('&quot;', $ha/@talent, '&quot;')"/>
       <xsl:text>}},</xsl:text>
       <xsl:text>
@@ -1428,7 +1428,7 @@ Mirakel.Liturgien {</xsl:text>
         <xsl:value-of select="$def/@s"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:text>""</xsl:text>
+        <xsl:text>{}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
     <xsl:choose>
