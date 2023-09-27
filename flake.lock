@@ -1,5 +1,17 @@
 {
   "nodes": {
+    "fanpaket": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-uZbUMfQj4teiX8sTlrXipIerwtXomLSysR3qMTySKeM=",
+        "type": "tarball",
+        "url": "https://dsa-satinavsketten.de/fileadmin/downloads/offiziell/Das_Schwarze_Auge_Fanpaket_2011_08_19.zip"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://dsa-satinavsketten.de/fileadmin/downloads/offiziell/Das_Schwarze_Auge_Fanpaket_2011_08_19.zip"
+      }
+    },
     "nix-filter": {
       "locked": {
         "lastModified": 1653590866,
@@ -17,25 +29,27 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1653565689,
-        "narHash": "sha256-xdJ6bmPxDPIMItZJWsDxopPXUTAFPWMkNkyOOcptWSc=",
+        "lastModified": 1695559356,
+        "narHash": "sha256-kXZ1pUoImD9OEbPCwpTz4tHsNTr4CIyIfXb3ocuR8sI=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "9bc0e974545d5bc4c24e1ed047be0dc4e30e494b",
+        "rev": "261abe8a44a7e8392598d038d2e01f7b33cf26d0",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-21.11",
+        "ref": "nixos-23.05",
         "repo": "nixpkgs",
         "type": "github"
       }
     },
     "root": {
       "inputs": {
+        "fanpaket": "fanpaket",
         "nix-filter": "nix-filter",
         "nixpkgs": "nixpkgs",
-        "utils": "utils"
+        "utils": "utils",
+        "wds-handouts": "wds-handouts"
       }
     },
     "utils": {
@@ -51,6 +65,18 @@
         "owner": "numtide",
         "repo": "flake-utils",
         "type": "github"
+      }
+    },
+    "wds-handouts": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-VWJEBDn1xmh9LTYh0r5RUP0/rTNDL5xWh3QK/q7/t1E=",
+        "type": "file",
+        "url": "https://dsa-satinavsketten.de/fileadmin/downloads/offiziell/Regelmaterial%26Errata/WdS-Handouts.pdf"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://dsa-satinavsketten.de/fileadmin/downloads/offiziell/Regelmaterial%26Errata/WdS-Handouts.pdf"
       }
     }
   },
