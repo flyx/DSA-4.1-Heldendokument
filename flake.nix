@@ -138,7 +138,7 @@
               name = "dsa41held_webui";
               src = filtered-src;
               vendorSha256 =
-                "e8fc083fda5696e2d251e447cf1a7bce9582c8e1b638a03b4aeea4c16f2ee6d6";
+                "sha256-7Ou7AxKh5beuBl//8ptVEwKXNMY3fod4LF29HLmoaDU=";
               modRoot = "dsa41held_webui";
               nativeBuildInputs = [ makeWrapper ];
               propagatedBuildInputs = [ bash libxslt dsa41held ];
