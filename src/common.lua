@@ -426,6 +426,16 @@ function common.proviant_vermoegen()
   common.inner_rows(content, 4)
 end
 
+-- Truncating integer division
+function common.div_trunc(numerator, denominator)
+  local quotient = numerator // denominator
+  if quotient < 0 and numerator % denominator ~= 0 then
+    quotient = quotient + 1
+  end
+  return quotient
+end
+
+
 common.schaden = {}
 
 function common.schaden.parse(input)
@@ -501,14 +511,7 @@ function common.schaden.mod(tp, schwelle, schritt)
     return nil
   end
   if schwelle ~= nil and schritt ~= nil and schritt > 0 then
-    while cur_kk < schwelle do
-      tp.num = tp.num - 1
-      cur_kk = cur_kk + schritt
-    end
-    while cur_kk >= schwelle + schritt do
-      tp.num = tp.num + 1
-      cur_kk = cur_kk - schritt
-    end
+    tp.num = tp.num + common.div_trunc(cur_kk - schwelle, schritt)
   end
   return tp
 end
