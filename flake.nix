@@ -6,7 +6,7 @@
     nix-filter.url = "github:numtide/nix-filter";
     wds-handouts = {
       url =
-        "https://dsa-satinavsketten.de/fileadmin/downloads/offiziell/Regelmaterial%26Errata/WdS-Handouts.pdf";
+        "https://dsa-satinavsketten.de/fileadmin/downloads/offiziell/Regelmaterial&Errata/WdS-Handouts.pdf";
       flake = false;
     };
     fanpaket = {
