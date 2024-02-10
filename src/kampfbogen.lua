@@ -34,10 +34,7 @@ local function atpa_mod(basis, talent, schwelle, schritt, wm, art, spez)
   local val = basis
   local cur_kk = data:cur("KK")
   if cur_kk ~= "" and schwelle ~= nil and schritt ~= nil and schritt > 0 then
-    while cur_kk < schwelle do
-      val = val - 1
-      cur_kk = cur_kk + schritt
-    end
+    val = val + common.div_trunc(cur_kk - schwelle, schritt)
   end
   if art ~= nil and spez ~= nil then
     for _, s in ipairs(spez) do
@@ -151,8 +148,7 @@ nahkampf_render[3]= {false, function(v, talent, ebe)
   end
 end}
 nahkampf_render[5]= {true, function(v)
-  local tp = common.schaden.parse(v)
-  common.schaden.render(tp)
+  common.schaden.render(common.schaden.parse(v))
 end}
 for i=8,10 do
   nahkampf_render[i] = {true, common.render_delta}
