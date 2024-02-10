@@ -601,7 +601,11 @@ function values:steigerSF(tname, e, faktorMod, target)
   if msg ~= nil then
     tex.error("\n[" .. tname .. "] " .. name .. ": " .. msg)
   end
-  local kosten = faktor:apply(e.Kosten)
+  local ap = e.Kosten
+  if e.Methode == "SE" then
+    ap = ap / 2
+  end
+  local kosten = faktor:apply(ap)
   return {
     "Sonderfertigkeit (" .. e.Methode .. "): " .. descr,
     -1 * e.Kosten, faktor, -1 * kosten, self:ap_mod(kosten)
