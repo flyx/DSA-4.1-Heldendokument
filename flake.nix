@@ -1,7 +1,7 @@
 {
   description = "Heldendokument-Generator und Webinterface dazu";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     utils.url = "github:numtide/flake-utils";
     nix-filter.url = "github:numtide/nix-filter";
     wds-handouts = {
