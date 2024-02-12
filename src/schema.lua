@@ -792,6 +792,9 @@ local FernkampfSF = d.Row:def({name = "FernkampfSF", description = "Erlernen ein
 
 local WaffenlosSF = d.Row:def({name = "WaffenlosSF", description = "Erlernen einer Waffenlosen Sonderfertigkeit."},
   {"SF", nil}, {"Kosten", Ganzzahl}, {"Methode", SFLernmethode, "Lehrmeister"})
+  
+local MagischeSF = d.Row:def({name = "MagischeSF", descriptiono = "Erlernen einen magischen Sonderfertigkeit."},
+  {"SF", nil}, {"Kosten", Ganzzahl}, {"Methode", SFLernmethode, "Lehrmeister"})
 
 local Eigenschaft = d.Row:def({name = "Eigenschaft", description = "Steigern einer Basis-Eigenschaft oder Zukauf von Punkten zu einer abgeleiteten Eigenschaft."},
   {"Eigenschaft", EigName}, {"Zielwert", Ganzzahl}, {"Methode", EigSteigerMethode, "Standard"})
@@ -844,7 +847,7 @@ local Frei = d.Row:def({name = "Frei", description = "Freie Modifikation der Cha
   {"Text", String}, {"Modifikation", schema.Function}, {"Kosten", Ganzzahl, 0})
 
 d:singleton(d.List, {name = "Ereignisse", description = "Liste von Ereignissen, die auf den Grundcharakter appliziert werden sollen.", item_name = "Ereignis"}, {
-  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, Eigenschaft, RkW, LkW, Aktiviere, MerkmalSF, Senkung, Permanent, GrosseMeditation, Karmalqueste, Spaetweihe, Zugewinn, Frei
+  TaW, ZfW, Spezialisierung, ProfaneSF, NahkampfSF, FernkampfSF, WaffenlosSF, MagischeSF, Eigenschaft, RkW, LkW, Aktiviere, MerkmalSF, Senkung, Permanent, GrosseMeditation, Karmalqueste, Spaetweihe, Zugewinn, Frei
 }) {}
 function schema.Ereignisse.example(printer)
   printer:highlight([[Ereignisse {

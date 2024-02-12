@@ -1170,6 +1170,8 @@ for _, e in ipairs(schema.Ereignisse:instance()) do
     event = values:steigerSF("FernkampfSF", e, {{{"AkademischeAusbildung", "Krieger", "Kriegerin"}, "3/4"}}, values.SF.Fernkampf)
   elseif mt.name == "WaffenlosSF" then
     event = values:steigerSF("WaffenlosSF", e, {{{"AkademischeAusbildung", "Krieger", "Kriegerin"}, "3/4"}}, values.SF.Waffenlos)
+  elseif mt.name == "MagischeSF" then
+    event = values:steigerSF("MagischeSF", e, {{{"AkademischeAusbildung", "Magier", "Magierin"}, "3/4"}}, values.SF.Magisch)
   elseif mt.name == "Eigenschaft" then
     event = values:eig_steigerung(e)
   elseif mt.name == "RkW" then
