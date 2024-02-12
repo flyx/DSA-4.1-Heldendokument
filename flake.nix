@@ -137,8 +137,8 @@
             dsa41held_webui = pkgs.buildGoModule {
               name = "dsa41held_webui";
               src = filtered-src;
-              vendorSha256 =
-                "sha256-7Ou7AxKh5beuBl//8ptVEwKXNMY3fod4LF29HLmoaDU=";
+              vendorHash =
+                "sha256-SnM7NYq8kquzzDyOmafMu7rR6QrjDToqx7kNVO/GC5Y=";
               modRoot = "dsa41held_webui";
               nativeBuildInputs = [ makeWrapper ];
               propagatedBuildInputs = [ bash libxslt dsa41held ];
