@@ -1,0 +1,16 @@
+name: "Check Flake"
+on: [ pull_request, push ]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: cachix/install-nix-action@v22
+      with:
+        github_access_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Check whether Flake evaluates
+      run: nix flake check
+    - name: Check whether dsa41held builds
+      run: nix build .#dsa41held
+    - name: Check whether webui builds
+      run: nix build .#dsa41held_webui
