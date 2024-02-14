@@ -79,6 +79,9 @@
 \usepackage{calc}
 \usetikzlibrary{positioning,fit,calc,backgrounds}
 
+\DeclareGraphicsRule{.jp2}{jpg}{.jp2}{}
+\DeclareGraphicsExtensions{.pdf,.png,.jbig2,.jb2,.jp2,.jpg,.jpeg,.mps}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % font selection
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
