@@ -110,20 +110,26 @@
 % environments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\newlength\dsaOldParindent
+\renewcommand{\ThisCenterWallPaper}[3][]{%
+  \AddToShipoutPicture*{\put(\LenToUnit{\wpXoffset},\LenToUnit{\wpYoffset}){%
+    \parbox[b][\paperheight]{\paperwidth}{%
+      \vfill
+      \centering
+      \includegraphics[width=#2\paperwidth,height=#2\paperheight,keepaspectratio,#1]{#3}%
+      \vfill
+  }}}
+}
+
 \newenvironment{dsaCharacterSheet}{
   \pagebreak
-  \setlength{\dsaOldParindent}{\parindent}
   \setlength{\parindent}{0pt}
   \ifbgwallpaper
     \ClearWallPaper
     \setlength{\wpXoffset}{-0.3cm}%
     \setlength{\wpYoffset}{-0.1cm}%
-    \ThisCenterWallPaper{1.0275}{img/wallpaper.jpg}%
+    \ThisCenterWallPaper[decodearray={1 0 }]{1.0275}{img/wallpaper.jp2}%
   \fi
-}{
-  \setlength{\parindent}{\dsaOldParindent}
-}
+}{}
 
 % Set default value for border spacing within character sheet boxes
 \setlength{\fboxsep}{3mm}
