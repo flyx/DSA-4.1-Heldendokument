@@ -1,5 +1,5 @@
 local d = require("schemadef")
-local schema = loadfile("schema.lua", "t")(false)
+local schema = assert(loadfile("schema.lua", "t"))(false)
 local skt = require("skt")
 
 local input = ...
