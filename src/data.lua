@@ -12,4 +12,4 @@ if i < #arg then
   tex.error("zu viele Argumente. Erstes überflüssiges Argument: '" .. tostring(arg[i+1]) .. "'")
 end
 
-return loadfile("values.lua", "t")(arg[i])
+return assert(loadfile("values.lua", "t"))(arg[i])

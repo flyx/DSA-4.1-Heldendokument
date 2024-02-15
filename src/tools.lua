@@ -33,7 +33,7 @@ elseif arg[curarg] ~= nil then
 end
 
 local d = require("schemadef")
-local schema = loadfile("schema.lua", "t")(true)
+local schema = assert(loadfile("schema.lua", "t"))(true)
 
 if gendoc then
   if standalone then
@@ -94,7 +94,7 @@ end
 if validate then
   local res = 0
   local prev_pcount = 0
-  local values = loadfile("values.lua")
+  local values = assert(loadfile("values.lua", "t"))
   for i = curarg + 1,#arg do
     values(arg[i])
   end
