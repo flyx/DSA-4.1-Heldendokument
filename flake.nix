@@ -126,8 +126,8 @@
                 cp ${copse} "$out/share/fonts/Copse-Regular.ttf"
                 cp ${mason} "$out/share/fonts/Mason-Bold.ttf"
                 cp "${fanpaket}/DSA_Fanpaket_PNG/Fan-Produkt-Logo.png" "$out/share/img/logo-fanprodukt.png"
-                ${poppler_utils}/bin/pdfimages -f 2 -l 2 "${wds-handouts}" wds
-                ${imagemagick}/bin/convert wds-000.ppm "$out/share/img/wallpaper.jpg"
+                ${poppler_utils}/bin/pdfimages -jp2 -f 2 -l 2 "${wds-handouts}" wds
+                mv wds-000.jp2 "$out/share/img/wallpaper.jp2"
                 cp import.xsl heldensoftware-meta.xml "$out/share"
 
                 printenv GENERATOR >$out/bin/dsa41held
