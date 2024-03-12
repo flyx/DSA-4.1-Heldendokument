@@ -265,11 +265,6 @@ function common.checkboxlist(items)
   end
 end
 
-function common.round(v, down)
-  local delta = down and -0.0001 or 0.0001 -- round up at 0.5 unless down given
-  return tonumber(string.format("%.0f", v + delta))
-end
-
 function common.ritualkenntnis(items, count)
   tex.sprint([[{\normalfont\normalsize\setlength{\arrayrulewidth}{1pt}
     \begin{NiceTabular}{p{3.7cm}@{(}x{3.2cm}@{):\hspace{2pt}}x{0.7cm}x{0.5cm}}]])
