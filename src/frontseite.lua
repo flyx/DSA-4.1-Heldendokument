@@ -1,6 +1,7 @@
 local data = require("data")
 local common = require("common")
 local schema = require("schema")
+require("stdext")
 
 local frontseite = {}
 
@@ -213,7 +214,7 @@ function eigenschaften.rechts(self)
                 if data.Nachteile.Glasknochen then
                   base = base - 2
                 end
-                tex.sprint(-2, common.round(base))
+                tex.sprint(-2, math.round(base))
               end
             end
             tex.sprint([[\\\hline\end{tabular}}\egroup\par]])

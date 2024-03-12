@@ -1,3 +1,4 @@
+require("stdext")
 local d = require("schemadef")
 local schema = assert(loadfile("schema.lua", "t"))(false)
 local skt = require("skt")
@@ -134,7 +135,7 @@ function getter_map.sparse(val, div)
   if val == 0 then
     return ""
   end
-  return tonumber(string.format("%.0f", val/div + 0.0001)) -- round up at 0.5
+  return math.round(val / div)
 end
 
 values.sparse = getter_map.sparse

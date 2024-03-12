@@ -1,6 +1,7 @@
 local schema = require("schema")
 local data = require("data")
 local common = require("common")
+require("stdext")
 
 local talent = {}
 
@@ -187,7 +188,7 @@ function talent.meta(v)
     ::found::
   end
   if sum ~= nil and #v[5] > 0 then
-    tex.sprint(-2, common.round(sum / #v[5]))
+    tex.sprint(-2, math.round(sum / #v[5]))
   end
 end
 

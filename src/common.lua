@@ -1,3 +1,4 @@
+require("stdext")
 local data = require("data")
 local schema = require("schema")
 
@@ -501,7 +502,7 @@ function common.schaden.render(tp)
     elseif tp.die ~= nil then
       tex.sprint(-2, "+")
     end
-    tex.sprint(-2, common.round(math.abs(tp.num)))
+    tex.sprint(-2, math.round(math.abs(tp.num)))
   end
 end
 
