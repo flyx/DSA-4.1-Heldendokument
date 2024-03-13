@@ -516,13 +516,12 @@ function values:gesamtRuestung(teile, decimals)
   end
   if gRS == nil then return nil, nil end
   gRS = gRS/20
-  gBE = gBE/20 - sterne
-  if gBE < 0 then gBE = 0 end
-  if decimals then
-    return gRS, gBE
-  else
-    return tonumber(string.format("%.0f", gRS + 0.0001)), tonumber(string.format("%.0f", gBE + 0.0001))
+  gBE = math.max(gBE/20 - sterne, 0)
+  if not decimals then
+    gRS = math.round(gRS)
+    gBE = math.round(gBE)
   end
+  return gRS, gBE
 end
 
 function values:ap_mod(kosten)
@@ -757,9 +756,11 @@ function values:spezialisierung(e)
   end
   event[1] = event[1] .. e.Fertigkeit .. ", " .. e.Methode .. "): " .. e.Name
   ziel.Spezialisierungen:append(e.Name)
-  local ap = #ziel.Spezialisierungen * 20 * math.floor(skt.spalte[skt.spalte:num(spalte)].f + 0.5)
+  local ap = (
+    #ziel.Spezialisierungen * 20
+      * math.round(skt.spalte[skt.spalte:num(spalte)].f))
   if e.Methode == "SE" then
-    ap = math.floor(ap / 2 + 0.5)
+    ap = math.round(ap / 2)
   end
   event[2] = -1 * ap
   event[3] = faktor
@@ -925,7 +926,7 @@ function values:aktiviere(e)
   elseif smt.name == "Ritual" then
     ap = e.Subjekt.Lernkosten
     if e.Methode == "SE" then
-      ap = math.floor((ap / 2) + 0.51)
+      ap = math.round(ap / 2)
     end
     faktor = self:tgruppe_faktor("Zauber")
     self.Magie.Rituale:append(e.Subjekt, e.Sortierung)
@@ -1063,7 +1064,7 @@ function values:senkung(e)
   if found == nil then
     tex.error("\n[Senkung] unbekannte Schlechte Eigenschaft: '" .. e.Name .. "'")
   end
-  local ap = math.floor((found.Wert - e.Zielwert) * 50 * found.GP + 0.5)
+  local ap = math.round((found.Wert - e.Zielwert) * 50 * found.GP)
   if e.Zielwert == 0 then
     event[1] = event[1] .. ": Schlechte Eigenschaft mit Wert " .. found.Wert .. " entfernt"
     table.remove(self.Nachteile.Eigenschaften.value, found_index)
