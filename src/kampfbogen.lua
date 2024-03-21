@@ -159,14 +159,14 @@ nahkampf_render[11]= {false, function(v, talent, ebe)
   if talent == nil or #talent < 4 or atb == "" or #v < 8 then
     return
   end
-  tex.sprint(-2, atpa_mod(atb - math.round(ebe/2, true), talent.AT, v["TP/KK Schwelle"], v["TP/KK Schritt"], v["WM AT"], art(v), talent.Spezialisierungen))
+  tex.sprint(-2, atpa_mod(atb - ebe // 2, talent.AT, v["TP/KK Schwelle"], v["TP/KK Schritt"], v["WM AT"], art(v), talent.Spezialisierungen))
 end}
 nahkampf_render[12]= {false, function(v, talent, ebe)
   local pab = data:cur("PA")
   if talent == nil or #talent < 5 or pab == "" or #v < 9 then
     return
   end
-  tex.sprint(-2, atpa_mod(pab - math.round(ebe/2), data.PA(talent), v["TP/KK Schwelle"], v["TP/KK Schritt"], v["WM PA"], art(v), talent.Spezialisierungen))
+  tex.sprint(-2, atpa_mod(pab - (ebe + 1) // 2, data.PA(talent), v["TP/KK Schwelle"], v["TP/KK Schritt"], v["WM PA"], art(v), talent.Spezialisierungen))
 end}
 nahkampf_render[13]= {false, function(v, talent, ebe)
   if #v < 6 then
@@ -253,7 +253,7 @@ local waffenlos_render = {
         added = added + 1
       end
     end
-    tex.sprint(-2, atpa_mod(atb - math.round(ebe/2, true), talent.AT, v["TP/KK Schwelle"], v["TP/KK Schritt"], 0))
+    tex.sprint(-2, atpa_mod(atb - ebe // 2, talent.AT, v["TP/KK Schwelle"], v["TP/KK Schritt"], 0))
   end},
   [6]= {false, function(v, talent, ebe)
     local pab = data:cur("PA")
@@ -267,7 +267,7 @@ local waffenlos_render = {
         added = added + 1
       end
     end
-    tex.sprint(-2, atpa_mod(pab - math.round(ebe/2), data.PA(talent), v["TP/KK Schwelle"], v["TP/KK Schritt"], 0))
+    tex.sprint(-2, atpa_mod(pab - (ebe + 1) // 2, data.PA(talent), v["TP/KK Schwelle"], v["TP/KK Schritt"], 0))
   end},
   [7]= {false, function(v, talent, ebe)
     tp = common.schaden.mod({dice=1, die=6, num=0}, v["TP/KK Schwelle"], v["TP/KK Schritt"])
