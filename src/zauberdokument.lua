@@ -1,3 +1,4 @@
+require("stdext")
 local data = require("data")
 local common = require("common")
 
@@ -16,7 +17,7 @@ function zauberdokument.asp_regeneration()
     end
     local mr = data.SF.Magisch.MeisterlicheRegeneration
     if mr ~= nil then
-      val.num = val.num + 3 + math.floor((data:cur(mr) + 1)/3)
+      val.num = val.num + 3 + math.round(data:cur(mr) / 3)
       tex.sprint(-2, val.num)
     else
       local reg = data.SF.Magisch:getlist("Regeneration")

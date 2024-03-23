@@ -1,3 +1,5 @@
+require("stdext")
+
 local skt = {
   spalte = {
     {n="A*", f=1}, {n="A", f=1, [31] = 50}, {n="B", f=2}, {n="C", f=3}, {n="D", f=4, [28] = 170, [31] = 200}, {n="E", f=5, [8] = 48}, {n="F", f=7.5, [30] = 350, [31] = 375}, {n="G", f=10, [30] = 480, [31] = 500}, {n="H", f=20, [2] = 35, [6] = 140, [24] = 720, [27] = 830, [31] = 1000}
@@ -52,7 +54,7 @@ function skt.spalte:effektiv(basis, zielwert, methode)
 end
 
 function skt.faktor:apply(value)
-  return math.floor(value * self[1] + 0.5)
+  return math.round(value * self[1])
 end
 
 for _, f in ipairs(skt.faktor) do
@@ -61,11 +63,9 @@ end
 
 function skt:kosten(spalte, zielwert)
   local index = self.spalte:num(spalte)
-  if zielwert > 31 then
-    zielwert = 31
-  end
+  zielwert = math.min(zielwert, 31)
   if zielwert <= 0 then
-    return 5 * math.floor(self.spalte[index].f + 0.5)
+    return 5 * math.round(self.spalte[index].f)
   end
   if index == 1 then
     return math.max(self:kosten("A", zielwert) - 2, 1)
@@ -74,12 +74,12 @@ function skt:kosten(spalte, zielwert)
   if explicit ~= nil then
     return explicit
   end
-  local val = tonumber(string.format("%.0f", 0.8 * self.spalte[index].f * zielwert^1.2))
+  local val = math.round(0.8 * self.spalte[index].f * zielwert^1.2)
 
   if val > 200 then
-    val = math.floor((val + 5) / 10) * 10
+    val = math.round(val / 10) * 10
   elseif val > 50 then
-    val = math.floor((val + 2) / 5) * 5
+    val = math.round(val / 5) * 5
   end
   return val
 end

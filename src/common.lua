@@ -1,3 +1,4 @@
+require("stdext")
 local data = require("data")
 local schema = require("schema")
 
@@ -264,11 +265,6 @@ function common.checkboxlist(items)
   end
 end
 
-function common.round(v, down)
-  local delta = down and -0.0001 or 0.0001 -- round up at 0.5 unless down given
-  return tonumber(string.format("%.0f", v + delta))
-end
-
 function common.ritualkenntnis(items, count)
   tex.sprint([[{\normalfont\normalsize\setlength{\arrayrulewidth}{1pt}
     \begin{NiceTabular}{p{3.7cm}@{(}x{3.2cm}@{):\hspace{2pt}}x{0.7cm}x{0.5cm}}]])
@@ -355,15 +351,17 @@ end
 
 function common.render_delta(input)
   if type(input) == "number" then
-    if input < 0 then
-      tex.sprint(-2, "−")
-    elseif input > 0 then
-      tex.sprint(-2, "+")
+    local sign
+    if input >= 0.5 then
+      sign = "+"
+    elseif input <= -0.5 then
+      sign = "−"
+    else
+      sign = ""
     end
-    tex.sprint(common.round(math.abs(input)))
-  else
-    tex.sprint(-2, input)
+    input = string.format("%s%d", sign, math.round(math.abs(input)))
   end
+  tex.sprint(-2, input)
 end
 
 function common.merkmalliste(input, zauber)
@@ -501,7 +499,7 @@ function common.schaden.render(tp)
     elseif tp.die ~= nil then
       tex.sprint(-2, "+")
     end
-    tex.sprint(-2, common.round(math.abs(tp.num)))
+    tex.sprint(-2, math.round(math.abs(tp.num)))
   end
 end
 
