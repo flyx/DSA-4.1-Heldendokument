@@ -40,7 +40,7 @@ return function(kind, variant)
   \begin{tikzpicture}
     \begin{scope}[on background layer]
       \node[anchor=south west, inner sep=0, opacity=]] .. var_data[2] .. [[] at (0, 0) {
-        \includegraphics[width=6cm]{]] .. img_path .. [[}
+        \includesvg[inkscapelatex=false,inkscapearea=page,width=6cm]{]] .. img_path .. [[}
       };
     \end{scope}
   ]])
