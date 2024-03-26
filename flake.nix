@@ -94,7 +94,7 @@
                     SOURCE_DATE_EPOCH=$(date -r "$INPUT/share/silhouette.tex" +%s) \
                     latexmk -interaction=nonstopmode -output-directory="$DIR" \
                     -pretex="\pdfvariable suppressoptionalinfo 512\relax\def\SilKind{$1}\def\SilVariant{$2}" \
-                    -usepretex -cd -file-line-error -halt-on-error \
+                    -usepretex -cd -file-line-error -halt-on-error -shell-escape \
                     -r "$INPUT/share/.latexmkrc" \
                     "$INPUT/share/silhouette.tex"
                 mv -- "$DIR/silhouette.pdf" silhouette.pdf
