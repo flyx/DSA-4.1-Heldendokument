@@ -56,6 +56,11 @@
 \usepackage{pgf}
 \ifbgwallpaper \usepackage{wallpaper} \fi
 \usepackage{graphicx}
+\usepackage[usexcolor=false,usetransparent=false]{svg}
+\svgsetup{
+  inkscapepath=svgpath,
+  inkscapeversion=1,
+}
 
 % misc
 

@@ -1,7 +1,7 @@
 return {
   Varianten = {
-    Standard = {"standard.png", 0.8},
-    Regenbogen = {"regenbogen.png", 0.8},
+    Standard = {"standard", 2/3},
+    Regenbogen = {"regenbogen", 2/3},
   },
   Kopf = {
     Schild = {2.95, 11},
