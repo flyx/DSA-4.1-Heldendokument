@@ -40,12 +40,15 @@
     \setlength{\tabcolsep}{1pt}
     \normalfont\fontsize{8}{12}\selectfont
 
-    \begin{tabular}{p{5.3cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}}
+    \begin{NiceTabular}{p{5.3cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}|x{0.8cm}}
+    \CodeBefore
+        \rowcolors{2}{white}{gray!30}
+    \Body
         \dsaTHeading{\Large Proviant / Tränke} & \multicolumn{4}{c}{\normalfont\bfseries\scriptsize Rationen / Ladungen} \\ \hline
         \directlua{
             common.inner_rows(data.Proviant, 5, common.current_page.Proviant)
         }
-    \end{tabular}
+    \end{NiceTabular}
 \end{dsaSheetBox}
 }
 
@@ -55,12 +58,15 @@
     \setlength{\tabcolsep}{1pt}
     \normalfont\fontsize{8}{12}\selectfont
 
-    \begin{tabular}{p{2.6cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}}
-        \multicolumn{2}{l}{\dsaTHeading{\Large Vermögen}} & \multicolumn{7}{l}{\normalfont\tiny (1 Dukate = 10 Silbertaler = 100 Heller = 1000 Kreuzer)} \\ \hline
+    \begin{NiceTabular}{p{2.6cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}|x{0.7cm}}
+    \CodeBefore
+        \rowcolors{2}{white}{gray!30}
+    \Body
+        \multicolumn{2}{l}{\dsaTHeading{\Large Vermögen}} & \multicolumn{7}{l}{\normalfont\tiny (1 Dukate = 10 / Silbertaler = 100 / Heller = 1.000 Kreuzer)} \\ \hline
         \directlua{
             common.inner_rows(data.Vermoegen, 9, common.current_page.Vermoegen.Muenzen)
         } \\ \hline%
-    \end{tabular}
+    \end{NiceTabular}
     \begin{tabular}{p{\textwidth-1.33\tabcolsep}}
         \directlua{
             common.multiline_content({
