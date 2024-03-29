@@ -66,52 +66,10 @@
           };
         in {
           packages = with pkgs; rec {
-            silhouette = stdenvNoCC.mkDerivation rec {
-              name = "silhouette";
-              src = filtered-src;
-              propagatedBuildInputs = [
-                coreutils
-                bash
-                (texlive.combine {
-                  inherit (pkgs.texlive)
-                    scheme-minimal latex-bin collection-luatex latexmk
-                    standalone infwarerr ltxcmds grfext kvdefinekeys kvoptions
-                    kvsetkeys xkeyval tools fontspec epstopdf-pkg pgf;
-                })
-              ];
-              phases = [ "unpackPhase" "installPhase" ];
-              GENERATOR = ''
-                #!${pkgs.bash}/bin/bash
-                set -e
-
-                export PATH=${lib.makeBinPath propagatedBuildInputs}
-
-                DIR=$(mktemp -d)
-                INPUT="${builtins.placeholder "out"}"
-                mkdir -p "$DIR/.texcache/texmf-var"
-                env TEXHOME="$DIR/.cache" \
-                    TEXMFVAR="$DIR/.cache/texmf-var" \
-                    SOURCE_DATE_EPOCH=$(date -r "$INPUT/share/silhouette.tex" +%s) \
-                    latexmk -interaction=nonstopmode -output-directory="$DIR" \
-                    -pretex="\pdfvariable suppressoptionalinfo 512\relax\def\SilKind{$1}\def\SilVariant{$2}" \
-                    -usepretex -cd -file-line-error -halt-on-error \
-                    -r "$INPUT/share/.latexmkrc" \
-                    "$INPUT/share/silhouette.tex"
-                mv -- "$DIR/silhouette.pdf" silhouette.pdf
-              '';
-              installPhase = ''
-                mkdir -p $out/{bin,share/fonts}
-                cp src/silhouette.{tex,lua} $out/share
-                cp -r src/.latexmkrc img $out/share
-                cp ${newg8}/NewG8-{Reg,Bol,BolIta,Ita}.otf "$out/share/fonts"
-                printenv GENERATOR >$out/bin/silhouette
-                chmod u+x $out/bin/silhouette
-              '';
-            };
             dsa41held = stdenvNoCC.mkDerivation rec {
               name = "dsa41held";
               src = filtered-src;
-              nativeBuildInputs = [ poppler_utils imagemagick unzip ];
+              nativeBuildInputs = [ poppler_utils imagemagick unzip librsvg ];
               propagatedBuildInputs = [ coreutils tex coreutils bash libxslt ];
               phases = [ "unpackPhase" "installPhase" ];
               GENERATOR = (import ./dsa41held.sh.nix) {
@@ -121,7 +79,14 @@
               installPhase = ''
                 mkdir -p "$out"/{bin,share/fonts}
                 cp src/*.{lua,tex,cls} "$out/share"
-                cp -r src/.latexmkrc img "$out/share"
+                cp -r src/.latexmkrc "$out/share"
+                for folder in img/*; do
+                  mkdir -p "$out/share/$folder"
+                  cp "$folder/data.lua" "$out/share/$folder"
+                  for svgFile in "$folder"/*.svg; do
+                    rsvg-convert --format=pdf "$svgFile" > "$out/share/''${svgFile%svg}pdf"
+                  done
+                done
                 cp ${newg8}/NewG8-{Reg,Bol,BolIta,Ita}.otf "$out/share/fonts"
                 cp ${copse} "$out/share/fonts/Copse-Regular.ttf"
                 cp ${mason} "$out/share/fonts/Mason-Bold.ttf"
