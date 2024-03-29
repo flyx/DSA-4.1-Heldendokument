@@ -44,7 +44,7 @@ sub_pdf(){
       SOURCE_DATE_EPOCH=$(date -r "$ABS_INPUT" +%s) \
       latexmk -interaction=nonstopmode -output-directory="$DIR" \
       -pretex="\pdfvariable suppressoptionalinfo 512\relax"\
-      -usepretex -cd -file-line-error -halt-on-error \
+      -usepretex -cd -file-line-error -halt-on-error -shell-escape \
       -r "$SOURCES/share/.latexmkrc" \
       -lualatex="${tex}/bin/lualatex %O %S \"$ABS_INPUT\"" \
       "$SOURCES/share/$BASE_NAME.tex"
