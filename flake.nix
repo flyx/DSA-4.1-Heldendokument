@@ -1,7 +1,7 @@
 {
   description = "Heldendokument-Generator und Webinterface dazu";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     utils.url = "github:numtide/flake-utils";
     nix-filter.url = "github:numtide/nix-filter";
     wds-handouts = {
@@ -103,7 +103,7 @@
               name = "dsa41held_webui";
               src = filtered-src;
               vendorHash =
-                "sha256-SnM7NYq8kquzzDyOmafMu7rR6QrjDToqx7kNVO/GC5Y=";
+                "sha256-oHz7KNN6hcGzCRAoqTb/ArEI3cnWNy1pwotkKhcDTTg=";
               modRoot = "dsa41held_webui";
               nativeBuildInputs = [ makeWrapper ];
               propagatedBuildInputs = [ bash libxslt dsa41held ];

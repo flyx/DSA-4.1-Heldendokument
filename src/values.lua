@@ -997,7 +997,7 @@ function values:aktiviere(e)
   event[5] = self:ap_mod(kosten)
   local insta_steiger = nil
   if ziel_taw > 0 then
-    insta_steiger = schema.TaW {e.Subjekt.Name, ziel_taw, e.Methode, getmetatable(e.Subjekt)}
+    insta_steiger = schema.TaW {e.Subjekt.Name, ziel_taw, e.Methode, getmetatable(e.Subjekt), e.Subjekt.AT}
   elseif ziel_zfw > 0 then
     insta_steiger = schema.ZfW {e.Subjekt.Name, ziel_zfw, e.Methode}
   end
@@ -1097,7 +1097,7 @@ function values:permanent(e)
   event[3] = skt.faktor["1"]
   event[4] = event[2]
   event[5] = self:ap_mod(kosten)
-  return event 
+  return event
 end
 
 function values:grosseMeditation(e)
@@ -1109,7 +1109,7 @@ end
 local alveranischeGoetter = {
   Praios = true, Rondra = true, Efferd = true, Travia = true,
   Boron = true, Hesinde = true, Firun = true, Tsa = true,
-  Phex = true, Peraine = true, Ingerimm = true, Rahja = true  
+  Phex = true, Peraine = true, Ingerimm = true, Rahja = true
 }
 
 function values:karmalqueste(e)
@@ -1129,7 +1129,7 @@ function values:spaetweihe(e)
     end
   end
   self.eig.KE.Mod = alveranischeGoetter[e.Gottheit] and 24 or 12
-    
+
   return {"Spätweihe (" .. e.Gottheit .. ")", -1 * e.Kosten, skt.faktor["1"], -1 * e.Kosten, self:ap_mod(e.Kosten)}
 end
 
