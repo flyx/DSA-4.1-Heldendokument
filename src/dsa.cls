@@ -85,8 +85,8 @@
 
 \newfontfamily{\mansontt}[
   Path=fonts/,
-  Extension = .ttf,
-  UprightFont = Mason-Bold
+  Extension = .otf,
+  UprightFont = MansonBold
 ]{Manson}
 \DeclareTextFontCommand{\textmansontt}{\mansontt}
 \setmainfont{NewG8}[

@@ -37,10 +37,10 @@
             sha256 =
               "b852e682f0c66de4db1835f8545ff2e94761549987a4607447b069e973f50b1d";
           };
-          mason = pkgs.fetchurl {
-            url = "http://d.xiazaiziti.com/en_fonts/fonts/m/Mason-Bold.ttf";
-            sha256 =
-              "f1e9d84cfba5477a4a08fdb4ea1c39143bdb25e3e915adbce45bd9447d641794";
+          mason = pkgs.fetchzip {
+            url = "https://fontpark.com/en/download/36e2c2f1bbe6a284411f8c1a924a367c";
+            hash = "sha256-3jDPoha3Vk3VeDtljHLtBrz9OtAihEcdfPkhexnVRVk=";
+            extension = "zip";
           };
           tex = pkgs.texlive.combine {
             inherit (pkgs.texlive)
@@ -89,7 +89,7 @@
                 done
                 cp ${newg8}/NewG8-{Reg,Bol,BolIta,Ita}.otf "$out/share/fonts"
                 cp ${copse} "$out/share/fonts/Copse-Regular.ttf"
-                cp ${mason} "$out/share/fonts/Mason-Bold.ttf"
+                cp ${mason}/MansonBold.otf "$out/share/fonts/MansonBold.otf"
                 cp "${fanpaket}/DSA_Fanpaket_PNG/Fan-Produkt-Logo.png" "$out/share/img/logo-fanprodukt.png"
                 ${poppler_utils}/bin/pdfimages -f 2 -l 2 "${wds-handouts}" wds
                 ${imagemagick}/bin/convert wds-000.ppm "$out/share/img/wallpaper.jpg"
