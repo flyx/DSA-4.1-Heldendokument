@@ -38,9 +38,8 @@
               "b852e682f0c66de4db1835f8545ff2e94761549987a4607447b069e973f50b1d";
           };
           mason = pkgs.fetchzip {
-            url = "https://g.webfontfree.com/Download/20260331/en/83/Fonts_Package_83472c0edc8a3cd517fa08b75aba87f3.zip";
-            hash = "sha256-XGUTFpM0MKlca9LYbzqpG0MXCMItiJ8vX2YRtA2704k=";
-            stripRoot = false;
+            url = "https://cdf.maisfontes.com/mason-bold-maisfontes.edea.zip";
+            hash = "sha256-K1osKUP/yEd3nfs2Tl5SvyRJbeFm1iS8DnLRrvMAZtk=";
           };
           tex = pkgs.texlive.combine {
             inherit (pkgs.texlive)
@@ -89,7 +88,7 @@
                 done
                 cp ${newg8}/NewG8-{Reg,Bol,BolIta,Ita}.otf "$out/share/fonts"
                 cp ${copse} "$out/share/fonts/Copse-Regular.ttf"
-                cp "${mason}/Mason-Bold/Mason-Bold.ttf" "$out/share/fonts/MansonBold.ttf"
+                cp "${mason}/mason-bold.ttf" "$out/share/fonts/MansonBold.ttf"
                 ${pkgs.unzip}/bin/unzip -p ${fanpaket} "Das Schwarze Auge - Fanpaket - 2013.06.28/Logo - Fanprodukt.png" >"$out/share/img/logo-fanprodukt.png"
                 ${poppler-utils}/bin/pdfimages -f 1 -l 1 "${wds-handouts}" wds
                 ${imagemagick}/bin/convert wds-001.ppm "$out/share/img/wallpaper.jpg"
