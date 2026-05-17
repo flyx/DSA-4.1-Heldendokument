@@ -86,8 +86,9 @@
 \newfontfamily{\mansontt}[
   Path=fonts/,
   Extension = .ttf,
-  UprightFont = MansonBold
-]{Manson}
+  UprightFont = Carita-Bold,
+  Scale = 0.9125
+]{Carita}
 \DeclareTextFontCommand{\textmansontt}{\mansontt}
 \setmainfont{NewG8}[
   Path           = fonts/,

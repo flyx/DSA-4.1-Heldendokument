@@ -5,48 +5,70 @@
     utils.url = "github:numtide/flake-utils";
     nix-filter.url = "github:numtide/nix-filter";
     wds-handouts = {
-      url =
-        "https://ulisses-spiele.de/wp-content/uploads/2025/11/DSA4-Kampfprotokoll-und-Initiativeuebersicht.pdf";
+      url = "https://ulisses-spiele.de/wp-content/uploads/2025/11/DSA4-Kampfprotokoll-und-Initiativeuebersicht.pdf";
       flake = false;
     };
     fanpaket = {
-      url =
-        "file+https://www.ulisses-spiele.de/assets/download/dasschwarze_auge_fanpaket.zip";
+      url = "file+https://www.ulisses-spiele.de/assets/download/dasschwarze_auge_fanpaket.zip";
       flake = false;
     };
   };
 
-  outputs = { self, nixpkgs, utils, nix-filter, wds-handouts, fanpaket }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      utils,
+      nix-filter,
+      wds-handouts,
+      fanpaket,
+    }:
     let
       inherit (nixpkgs.lib) genAttrs substring;
-      version =
-        "${substring 0 8 self.lastModifiedDate}-${self.shortRev or "dirty"}";
-      systemDependents = utils.lib.eachSystem utils.lib.allSystems (system:
+      version = "${substring 0 8 self.lastModifiedDate}-${self.shortRev or "dirty"}";
+      systemDependents = utils.lib.eachSystem utils.lib.allSystems (
+        system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           newg8 = pkgs.fetchzip {
-            url =
-              "https://github.com/probonopd/font-newg8/releases/download/continuous/newg8-otf.zip";
-            sha256 =
-              "4c7f39a116de61c6806e28681cb6f2adda43226f7ad7e9b6b8d8f77b81c7cb60";
+            url = "https://github.com/probonopd/font-newg8/releases/download/continuous/newg8-otf.zip";
+            sha256 = "4c7f39a116de61c6806e28681cb6f2adda43226f7ad7e9b6b8d8f77b81c7cb60";
             stripRoot = false;
           };
           copse = pkgs.fetchurl {
-            url =
-              "https://github.com/google/fonts/raw/main/ofl/copse/Copse-Regular.ttf";
-            sha256 =
-              "b852e682f0c66de4db1835f8545ff2e94761549987a4607447b069e973f50b1d";
+            url = "https://github.com/google/fonts/raw/main/ofl/copse/Copse-Regular.ttf";
+            sha256 = "b852e682f0c66de4db1835f8545ff2e94761549987a4607447b069e973f50b1d";
           };
-          mason = pkgs.fetchzip {
-            url = "https://cdf.maisfontes.com/mason-bold-maisfontes.edea.zip";
-            hash = "sha256-K1osKUP/yEd3nfs2Tl5SvyRJbeFm1iS8DnLRrvMAZtk=";
+          carita = pkgs.fetchzip {
+            url = "https://www.ffonts.net/Carita-Bold.font.zip";
+            hash = "sha256-CmvyfeQE6O9bOZQxrwg5UJ/ebHDywoCMseT+NbqNspw=";
+            stripRoot = false;
           };
           tex = pkgs.texlive.combine {
             inherit (pkgs.texlive)
-              scheme-minimal latex-bin tools collection-luatex koma-script
-              geometry polyglossia hyphen-german environ makecell multirow
-              amsmath epstopdf-pkg fontawesome5 nicematrix xcolor pgf colortbl
-              wallpaper eso-pic shadowtext latexmk;
+              scheme-minimal
+              latex-bin
+              tools
+              collection-luatex
+              koma-script
+              geometry
+              polyglossia
+              hyphen-german
+              environ
+              makecell
+              multirow
+              amsmath
+              epstopdf-pkg
+              fontawesome5
+              nicematrix
+              xcolor
+              pgf
+              colortbl
+              wallpaper
+              eso-pic
+              shadowtext
+              latexmk
+              ;
           };
           binSh = pkgs.runCommand "bin-sh" { } ''
             mkdir -p $out/bin $out/tmp
@@ -63,14 +85,29 @@
               ./build.dockerfile
             ];
           };
-        in {
+        in
+        {
           packages = with pkgs; rec {
             dsa41held = stdenvNoCC.mkDerivation rec {
               name = "dsa41held";
               src = filtered-src;
-              nativeBuildInputs = [ poppler-utils imagemagick unzip librsvg ];
-              propagatedBuildInputs = [ coreutils tex coreutils bash libxslt ];
-              phases = [ "unpackPhase" "installPhase" ];
+              nativeBuildInputs = [
+                poppler-utils
+                imagemagick
+                unzip
+                librsvg
+              ];
+              propagatedBuildInputs = [
+                coreutils
+                tex
+                coreutils
+                bash
+                libxslt
+              ];
+              phases = [
+                "unpackPhase"
+                "installPhase"
+              ];
               GENERATOR = (import ./dsa41held.sh.nix) {
                 inherit pkgs propagatedBuildInputs tex;
                 inherit (nixpkgs) lib;
@@ -88,7 +125,7 @@
                 done
                 cp ${newg8}/NewG8-{Reg,Bol,BolIta,Ita}.otf "$out/share/fonts"
                 cp ${copse} "$out/share/fonts/Copse-Regular.ttf"
-                cp "${mason}/mason-bold.ttf" "$out/share/fonts/MansonBold.ttf"
+                cp "${carita}/Carita/Carita Bold.ttf" "$out/share/fonts/Carita-Bold.ttf"
                 ${pkgs.unzip}/bin/unzip -p ${fanpaket} "Das Schwarze Auge - Fanpaket - 2013.06.28/Logo - Fanprodukt.png" >"$out/share/img/logo-fanprodukt.png"
                 ${poppler-utils}/bin/pdfimages -f 1 -l 1 "${wds-handouts}" wds
                 ${imagemagick}/bin/convert wds-001.ppm "$out/share/img/wallpaper.jpg"
@@ -101,33 +138,50 @@
             dsa41held_webui = pkgs.buildGoModule {
               name = "dsa41held_webui";
               src = filtered-src;
-              vendorHash =
-                "sha256-oHz7KNN6hcGzCRAoqTb/ArEI3cnWNy1pwotkKhcDTTg=";
+              vendorHash = "sha256-oHz7KNN6hcGzCRAoqTb/ArEI3cnWNy1pwotkKhcDTTg=";
               modRoot = "dsa41held_webui";
               nativeBuildInputs = [ makeWrapper ];
-              propagatedBuildInputs = [ bash libxslt dsa41held ];
+              propagatedBuildInputs = [
+                bash
+                libxslt
+                dsa41held
+              ];
               postInstall = ''
                 mkdir "$out/share"
                 cp -r index.html ../templates ../import.xsl ../heldensoftware-meta.xml "$out/share"
                 wrapProgram "$out/bin/dsa41held_webui" --prefix PATH : "${
-                  lib.makeBinPath [ bash libxslt dsa41held ]
+                  lib.makeBinPath [
+                    bash
+                    libxslt
+                    dsa41held
+                  ]
                 }"
               '';
             };
             dsa41held_webui-docker = pkgs.dockerTools.buildLayeredImage {
               name = "dsa41held_webui-docker";
               tag = "latest";
-              contents = [ coreutils binSh dsa41held_webui ];
+              contents = [
+                coreutils
+                binSh
+                dsa41held_webui
+              ];
               config = {
                 Cmd = "/bin/dsa41held_webui";
-                ExposedPorts = { "80" = { }; };
+                ExposedPorts = {
+                  "80" = { };
+                };
               };
             };
             dsa41held-doc = stdenvNoCC.mkDerivation {
               name = "dsa41held-doc";
               src = filtered-src;
               buildInputs = [ tex ];
-              phases = [ "unpackPhase" "buildPhase" "installPhase" ];
+              phases = [
+                "unpackPhase"
+                "buildPhase"
+                "installPhase"
+              ];
               buildPhase = ''
                 (cd src && texlua tools.lua --standalone gendoc > ../format.html)
               '';
@@ -137,19 +191,32 @@
               '';
             };
           };
-          devShell = pkgs.mkShell { buildInputs = [ tex pkgs.go ]; };
-        });
-    in systemDependents // {
-      nixosModules.webui = { lib, pkgs, config, ... }:
+          devShell = pkgs.mkShell {
+            buildInputs = [
+              tex
+              pkgs.go
+            ];
+          };
+        }
+      );
+    in
+    systemDependents
+    // {
+      nixosModules.webui =
+        {
+          lib,
+          pkgs,
+          config,
+          ...
+        }:
         with lib;
         let
           cfg = config.services.dsa41generator;
-          webui =
-            systemDependents.packages.${config.nixpkgs.system}.dsa41held_webui;
-        in {
+          webui = systemDependents.packages.${config.nixpkgs.system}.dsa41held_webui;
+        in
+        {
           options.services.dsa41generator = {
-            enable =
-              mkEnableOption "DSA 4.1 Heldendokument-Generator Webinterface";
+            enable = mkEnableOption "DSA 4.1 Heldendokument-Generator Webinterface";
             address = mkOption {
               type = types.str;
               default = ":8080";
@@ -160,8 +227,7 @@
             systemd.services.dsa41generator = {
               wantedBy = [ "multi-user.target" ];
               after = [ "network.target" ];
-              serviceConfig.ExecStart =
-                ''${webui}/bin/dsa41held_webui -addr "${cfg.address}"'';
+              serviceConfig.ExecStart = ''${webui}/bin/dsa41held_webui -addr "${cfg.address}"'';
             };
           };
         };
