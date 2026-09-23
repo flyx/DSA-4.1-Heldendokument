@@ -39,11 +39,7 @@
             url = "https://github.com/google/fonts/raw/main/ofl/copse/Copse-Regular.ttf";
             sha256 = "b852e682f0c66de4db1835f8545ff2e94761549987a4607447b069e973f50b1d";
           };
-          carita = pkgs.fetchzip {
-            url = "https://www.ffonts.net/Carita-Bold.font.zip";
-            hash = "sha256-CmvyfeQE6O9bOZQxrwg5UJ/ebHDywoCMseT+NbqNspw=";
-            stripRoot = false;
-          };
+          carita = ./CaritaBold.ttf;
           tex = pkgs.texlive.combine {
             inherit (pkgs.texlive)
               scheme-minimal
@@ -125,7 +121,7 @@
                 done
                 cp ${newg8}/NewG8-{Reg,Bol,BolIta,Ita}.otf "$out/share/fonts"
                 cp ${copse} "$out/share/fonts/Copse-Regular.ttf"
-                cp "${carita}/Carita/Carita Bold.ttf" "$out/share/fonts/Carita-Bold.ttf"
+                cp "${carita}" "$out/share/fonts/Carita-Bold.ttf"
                 ${pkgs.unzip}/bin/unzip -p ${fanpaket} "Das Schwarze Auge - Fanpaket - 2013.06.28/Logo - Fanprodukt.png" >"$out/share/img/logo-fanprodukt.png"
                 ${poppler-utils}/bin/pdfimages -f 1 -l 1 "${wds-handouts}" wds
                 ${imagemagick}/bin/convert wds-001.ppm "$out/share/img/wallpaper.jpg"

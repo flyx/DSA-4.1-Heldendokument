@@ -19,8 +19,8 @@ Dies ist die *single source of truth* dafür, mit welchen Argumenten das Dokumen
 Die offensichtliche Abhängigkeit ist [TeX Live](https://www.tug.org/texlive/), welches LuaLaTeX, `latexmk` und die benutzten LaTeX-Pakete zur Verfügung stellt.
 Die Variable `tex` in der Datei `flake.nix` listet alle `tlmgr` Pakete auf, die man installieren muss, wenn man seine TeX Live installation manuell managed.
 
-Darüber hinaus werden die Schriftarten *NewG8*, *Mason* und *Copse* benötigt.
-Für den Bezug sei auf die in `flake.nix` gelisteten URLs verwiesen.
+Darüber hinaus werden die Schriftarten *NewG8*, *Carita* und *Copse* benötigt.
+Für den Bezug sei auf die in `flake.nix` gelisteten URLs verwiesen; Carita ist mangels verlässlicher Bezugsquellen Teil des Repositories, ist aber auch [hier](https://webfonts.ffonts.net/Carita-Bold.font) verfügbar.
 Es sei darauf hingewiesen, dass man für die Weiterverbreitung von Werken, die eine Schriftart benutzen, eine Lizenz für diese Schriftart braucht, die dies erlaubt.
 Eine solche liegt nur für *Copse* vor, entsprechend wird davon abgeraten, erstellte PDFs weiterzuverbreiten.
 
