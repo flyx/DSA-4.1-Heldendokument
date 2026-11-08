@@ -208,7 +208,7 @@
         with lib;
         let
           cfg = config.services.dsa41generator;
-          webui = systemDependents.packages.${config.nixpkgs.system}.dsa41held_webui;
+          webui = systemDependents.packages.${pkgs.stdenv.hostPlatform.system}.dsa41held_webui;
         in
         {
           options.services.dsa41generator = {
